@@ -22,7 +22,7 @@
 .search input { flex: 1; min-width: 0; border: 0; background: none; outline: 0; font-size: 16px; color: var(--fg); }
 .lang-title { font-size: 13px; font-weight: 600; color: var(--muted); margin: 24px 4px 6px; display: flex; gap: 8px; align-items: baseline; }
 .lang-title small { font-weight: 400; }
-.ver { display: flex; align-items: center; gap: 12px; padding: 12px 4px; border-bottom: 1px solid var(--line); width: 100%; text-align: left; }
+.ver { display: flex; align-items: center; gap: 12px; min-height: 76px; padding: 12px 4px; border-bottom: 1px solid var(--line); width: 100%; text-align: left; }
 .ver .grow { flex: 1; min-width: 0; }
 .ver .nm { font-size: 16px; }
 .ver .meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; align-items: center; }

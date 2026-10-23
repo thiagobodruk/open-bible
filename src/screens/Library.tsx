@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { CheckCircle, CloudArrowDown, MagnifyingGlass, RadioButton } from '@phosphor-icons/react';
+import { CloudArrowDown, MagnifyingGlass } from '@phosphor-icons/react';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { VERSIONS } from '../data/library';
 import { useLibrary } from '../state/library';
@@ -78,19 +78,18 @@ export function Library() {
                         <span className="abbr">{v.abbr}</span>
                         {v.coverage && <span className="chip">{COVERAGE[v.coverage]}</span>}
                         {v.rtl && <span className="chip">RTL</span>}
+                        {active ? <span className="chip accent">Em uso</span> : isDown && <span className="chip">Baixada</span>}
                         <span className="abbr" style={{ fontWeight: 400 }}>{v.sizeMb.toFixed(1)} MB</span>
                       </div>
                     </button>
                     <div className="state">
                       {prog !== undefined ? (
                         <div className="progress" role="progressbar" aria-valuenow={Math.round(prog * 100)}><i style={{ width: `${prog * 100}%` }} /></div>
-                      ) : isDown ? (
-                        active ? <CheckCircle size={26} weight="fill" /> : <RadioButton size={26} weight="light" />
-                      ) : (
+                      ) : !isDown ? (
                         <button className="icon-btn" aria-label={`Baixar ${v.name}`} onClick={() => download(v.id, () => choose(v.id, v.abbr))}>
                           <CloudArrowDown size={26} weight="light" />
                         </button>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                 );
