@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type SheetName = 'menu' | 'navigator' | 'text' | 'install' | 'note' | 'search' | null;
+export type SheetName = 'menu' | 'navigator' | 'text' | 'install' | 'feedback' | 'note' | 'search' | null;
 
 interface Toast {
   id: number;

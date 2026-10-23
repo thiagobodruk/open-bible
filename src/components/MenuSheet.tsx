@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import { BookOpenText, DeviceMobile, GearSix, Notebook, ShareNetwork, Translate, CaretRight } from '@phosphor-icons/react';
+import { BookOpenText, DeviceMobile, GearSix, Notebook, ChatCircleText, ShareNetwork, Translate, CaretRight } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
@@ -40,6 +40,7 @@ export function MenuSheet() {
     { icon: Translate, label: t('library'), run: () => nav('/library') },
     { icon: GearSix, label: t('settings'), run: () => nav('/settings') },
     { icon: ShareNetwork, label: t('shareApp'), run: share },
+    { icon: ChatCircleText, label: t('feedback'), run: () => open('feedback') },
     {
       icon: DeviceMobile,
       label: t('install'),
