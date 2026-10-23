@@ -16,9 +16,10 @@ Escopo da v0:
 4. UI em 7 idiomas: en, pt-BR, es, fr, de, zh-CN, ja.
 5. Tela Meu estudo, com todas as marcações e notas.
 6. PWA instalável em Android e iOS, publicado no GitHub Pages.
-7. Ícones com Phosphor Icons.
+7. Busca textual na versão atual, com atalho de referência ("jo 3:16").
+8. Ícones com Phosphor Icons.
 
-Fora da v0: busca, favoritos, comparação paralela, planos de leitura, sincronização entre dispositivos, áudio.
+Fora da v0: busca em várias versões ao mesmo tempo, favoritos, comparação paralela, planos de leitura, sincronização entre dispositivos, áudio.
 
 ## 2. Fonte de dados
 
@@ -125,7 +126,22 @@ Salva automaticamente com debounce: livro, capítulo e primeiro versículo visí
 
 Idiomas RTL aplicam `dir="rtl"` na área de texto, mas a UI continua na direção do idioma da interface.
 
-### 3.12 Privacidade
+### 3.12 Busca
+
+Busca textual na versão aberta, feita no aparelho, sem servidor.
+
+- Entrada: ícone de lupa na barra superior abre uma sheet alta com o campo de busca já focado.
+- Escopo: apenas a versão atual, que já está baixada. Se a versão for parcial (só NT, por exemplo), o resultado vem só do que ela contém e a sheet avisa.
+- Normalização: ignora maiúsculas e acentos. Em hebraico e árabe também ignora sinais de vogal e cantilação.
+- Várias palavras: todas precisam aparecer no versículo, em qualquer ordem. Mínimo de 2 caracteres.
+- Atalho de referência: "jo 3:16", "1 co 13", "salmos 23" ou "gn1" mostram uma linha "Ir para" no topo, que abre o capítulo (e o versículo, se informado). Vale o nome do livro na versão atual ou o `abbrev`.
+- Resultados: agrupados por livro na ordem canônica, com o trecho do versículo e os termos em destaque. Limite de 200 resultados com aviso "mostrando os primeiros 200".
+- Toque no resultado abre o capítulo, rola até o versículo e o destaca por um instante, como em Meu estudo.
+- Execução em Web Worker para não travar a rolagem em versões de 10 MB ou mais.
+- Chinês, japonês e tailandês não separam palavras por espaço. Nessas versões a busca é por trecho contínuo, com `Intl.Segmenter` quando disponível.
+- Fora da v0: busca em várias versões, frase exata com aspas, ranking por relevância e índice invertido. Só entram se a varredura simples ficar lenta.
+
+### 3.13 Privacidade
 
 Sem analytics, sem contas, sem chamadas a servidores além do download das versões. A página de ajustes diz isso de forma explícita.
 
@@ -157,6 +173,7 @@ UI (telas e componentes)
   └─ Hooks e stores (Zustand)
        └─ Serviços
             ├─ BibleRepository   catálogo, download, leitura de capítulo
+            ├─ SearchService     normalização, varredura e atalho de referência (em Web Worker)
             ├─ AnnotationService marcações e notas
             ├─ SettingsService   preferências
             └─ BackupService     exportar e importar
@@ -251,6 +268,7 @@ Regras do minimalismo:
 6. **Editor de nota.** Folha inferior com referência no topo.
 7. **Meu estudo.** Marcações e notas com filtros.
 8. **Ajustes do app.** Idioma da UI, downloads, backup, sobre, instalar app.
+9. **Busca.** Sheet alta com campo, atalho de referência e resultados agrupados por livro.
 
 Desktop: o mesmo layout centralizado com coluna de leitura limitada a cerca de 70 caracteres, painéis laterais no lugar de folhas inferiores.
 
@@ -282,6 +300,7 @@ Peso `light` por padrão e `fill` para estado ativo. Mapa inicial:
 | Excluir | `Trash` |
 | Fechar | `X` |
 | Instalar | `DeviceMobile` |
+| Buscar | `MagnifyingGlass` |
 
 Todo ícone isolado tem `aria-label` traduzido.
 
@@ -337,10 +356,11 @@ Navegação por teclado, foco visível, ordem de leitura correta, `lang` e `dir`
 | 2 | Biblioteca de idiomas e versões | Baixar, ver tamanho, remover, selos de cobertura, RTL |
 | 3 | Tipografia e navegação por capítulo | Preferências de 3.8, swipe e toque nas extremidades (3.9), pré-carga de capítulos |
 | 4 | Seleção, marcações, notas e Meu estudo | Regras 3.4 a 3.7 completas e persistentes, incluindo a tela Meu estudo |
-| 5 | i18n | 7 idiomas, sem chaves faltando |
-| 6 | PWA e deploy | Instalável em Android e iOS, offline, atualização, publicado no GitHub Pages por workflow |
-| 7 | Backup, a11y, polimento, testes | Export/import, auditoria de acessibilidade, e2e verde |
-| Depois | Busca, favoritos, versões em paralelo, planos, chinês tradicional | Fora do escopo desta aprovação |
+| 5 | Busca | Regras de 3.12: varredura na versão atual em Web Worker, normalização por idioma, atalho de referência, resultados que levam ao versículo |
+| 6 | i18n | 7 idiomas, sem chaves faltando |
+| 7 | PWA e deploy | Instalável em Android e iOS, offline, atualização, publicado no GitHub Pages por workflow |
+| 8 | Backup, a11y, polimento, testes | Export/import, auditoria de acessibilidade, e2e verde |
+| Depois | Busca em várias versões, favoritos, versões em paralelo, planos, chinês tradicional | Fora do escopo desta aprovação |
 
 ## 10. Riscos
 
@@ -362,6 +382,6 @@ Navegação por teclado, foco visível, ordem de leitura correta, `lang` e `dir`
 | D4 | Mandarim: simplificado apenas, ou também tradicional na UI | Simplificado na v0 |
 | D5 | Framework | React com Vite. Posso trocar por Svelte se preferir |
 | D6 | Hospedagem | Decidido: GitHub Pages. Falta definir o nome do repositório, que vira parte da URL |
-| D7 | Busca de texto entra na v0? | Não, fica para a fase seguinte |
+| D7 | Busca de texto entra na v0? | Decidido: sim, versão simples (3.12) |
 | D8 | Nome do app e identidade visual | A definir; uso "Leitor" como nome de trabalho |
 | D9 | Escopo da v0 | Decidido: inclui Meu estudo e troca de capítulo por swipe e toque nas extremidades. Não há paginação dentro do capítulo |

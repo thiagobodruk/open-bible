@@ -12,6 +12,7 @@ Leitor de Bíblia minimalista, offline e sem conta. Roda no navegador e pode ser
 - Todas as versões do repositório [thiagobodruk/bible](https://github.com/thiagobodruk/bible), em 85 idiomas, baixadas sob demanda.
 - Fonte, tamanho, tema (claro, sépia, escuro), margens e disposição do texto configuráveis.
 - Seleção de versículos, marcação em 5 cores, notas pessoais e a tela **Meu estudo**.
+- Busca textual na versão atual, com atalho de referência ("jo 3:16").
 - Interface em inglês, português (pt-BR), espanhol, francês, alemão, mandarim e japonês.
 - Sem login e sem backend. Configurações, marcações e notas ficam no navegador, com exportação e importação em arquivo.
 - Ícones [Phosphor](https://phosphoricons.com/).
@@ -25,6 +26,7 @@ Leitor de Bíblia minimalista, offline e sem conta. Roda no navegador e pode ser
 | Navegador de livros e capítulos | Interativo |
 | Ajustes de texto e temas | Interativo, persistido no navegador |
 | Meu estudo | Interativo, com dados de exemplo |
+| Busca e atalho de referência | Interativo, sobre os 3 capítulos reais de exemplo |
 | Biblioteca de idiomas e versões | Amostra do catálogo, download simulado |
 | Ajustes do app e guia de instalação | Interativo |
 | PWA (manifesto e service worker) | Configurado |

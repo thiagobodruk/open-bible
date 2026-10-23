@@ -10,6 +10,7 @@ export const t = {
   install: 'Instalar app',
   installSub: 'Use offline, em tela cheia',
   textSettings: 'Texto',
+  search: 'Buscar',
   books: 'Livros',
   prevChapter: 'Capítulo anterior',
   nextChapter: 'Próximo capítulo',
