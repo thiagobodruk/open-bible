@@ -1,3 +1,5 @@
+import { useUI } from './state/ui';
+
 interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
@@ -52,7 +54,14 @@ export async function requestInstall(): Promise<boolean> {
   const ev = deferred;
   deferred = null;
   emit();
-  await ev.prompt();
+  // O navegador pode tomar o endereço atual como página inicial: durante a instalação ele aponta para a raiz.
+  useUI.getState().setHomeUrl(true);
+  history.replaceState(history.state, '', import.meta.env.BASE_URL);
+  try {
+    await ev.prompt();
+  } finally {
+    useUI.getState().setHomeUrl(false);
+  }
   return true;
 }
 

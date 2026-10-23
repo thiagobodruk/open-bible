@@ -5,7 +5,7 @@ import { useStudy } from './state/study';
 import { useSettings } from './state/settings';
 import { useLibrary } from './state/library';
 import { useIncoming } from './state/incoming';
-import { readPath } from './link';
+import { appUrl, readPath } from './link';
 import { Reader } from './screens/Reader';
 import { Study } from './screens/Study';
 import { Library } from './screens/Library';
@@ -29,11 +29,12 @@ export default function App() {
   const installed = useLibrary((s) => !!s.installed[versionId]);
   const ready = useLibrary((s) => s.ready);
   const pending = useIncoming((s) => s.incoming !== null);
+  const homeUrl = useUI((s) => s.homeUrl);
   useEffect(() => {
     if (route !== '/' || !ready || !installed || pending) return;
-    const path = readPath(versionId, book, chapter);
+    const path = homeUrl ? new URL(appUrl()).pathname : readPath(versionId, book, chapter);
     if (location.pathname !== path || location.hash) history.replaceState(history.state, '', path + location.search);
-  }, [route, ready, installed, pending, versionId, book, chapter]);
+  }, [route, ready, installed, pending, homeUrl, versionId, book, chapter]);
 
   // Troca de tela fecha sheets e volta ao topo
   useEffect(() => {
