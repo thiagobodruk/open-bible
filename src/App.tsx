@@ -10,6 +10,7 @@ import { NavigatorSheet } from './components/NavigatorSheet';
 import { TextSettingsSheet } from './components/TextSettingsSheet';
 import { NoteSheet } from './components/NoteSheet';
 import { InstallSheet } from './components/InstallSheet';
+import { SearchSheet } from './components/SearchSheet';
 import { Toast } from './components/Toast';
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
       {sheet === 'navigator' && <NavigatorSheet />}
       {sheet === 'text' && <TextSettingsSheet />}
       {sheet === 'note' && <NoteSheet />}
+      {sheet === 'search' && <SearchSheet />}
       {sheet === 'install' && <InstallSheet />}
       <Toast />
     </>

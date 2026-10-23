@@ -92,3 +92,11 @@ export function getChapter(bookId: string, chapter: number): ChapterText {
     placeholder: true,
   };
 }
+
+/** Capítulos com texto real de exemplo, usados pela busca do protótipo. */
+export function sampleChapters(): { book: string; chapter: number; verses: string[] }[] {
+  return Object.entries(REAL).map(([key, verses]) => {
+    const [book, chapter] = key.split('.');
+    return { book, chapter: Number(chapter), verses };
+  });
+}

@@ -78,3 +78,9 @@
 .select { width: 100%; height: 44px; padding: 0 12px; border-radius: var(--radius-sm); border: 1px solid var(--line); background: var(--bg); font-size: 16px; }
 .steps { margin: 6px 0 0; padding-left: 20px; display: grid; gap: 8px; font-size: 15px; line-height: 1.5; }
 .steps li { list-style: decimal; }
+
+/* Busca */
+.row.goto { background: var(--surface); margin-top: 12px; padding: 10px 14px; }
+.entry.hit { border-left-color: var(--line); }
+.entry.hit .txt { font-size: 15.5px; }
+mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding: 0 1px; }

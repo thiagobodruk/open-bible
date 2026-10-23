@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { CaretDown, CaretLeft, CaretRight, List, NotePencil, TextAa } from '@phosphor-icons/react';
+import { CaretDown, CaretLeft, CaretRight, List, MagnifyingGlass, NotePencil, TextAa } from '@phosphor-icons/react';
 import { getBook } from '../data/books';
 import { getChapter } from '../data/chapters';
 import { getVersion } from '../data/library';
@@ -117,6 +117,7 @@ export function Reader() {
           <button className="ver-chip" onClick={() => go('/library')} aria-label="Escolher versão">
             {getVersion(settings.versionId).abbr}
           </button>
+          <button className="icon-btn" onClick={() => open('search')} aria-label={t.search}><MagnifyingGlass size={24} weight="light" /></button>
           <button className="icon-btn" onClick={() => open('text')} aria-label={t.textSettings}><TextAa size={24} weight="light" /></button>
           <button className="icon-btn" onClick={() => open('menu')} aria-label={t.menu}><List size={24} weight="light" /></button>
         </div>
