@@ -63,25 +63,6 @@
 .chapter-foot { display: flex; justify-content: space-between; gap: 12px; margin-top: 48px; font-family: var(--font-ui); user-select: none; }
 .chapter-foot .btn { flex: 1; }
 
-/* Barra de seleção */
-.selbar {
-  position: fixed; z-index: 35; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
-  display: flex; align-items: center; gap: 4px; padding: 6px 8px; max-width: calc(100vw - 16px);
-  background: var(--float-bg); color: var(--float-fg); border: 1px solid var(--float-line); border-radius: 999px; box-shadow: var(--shadow);
-  animation: toast 0.18s ease-out;
-}
-.selbar .swatch { width: 30px; height: 30px; border-radius: 50%; background: var(--c); border: 2px solid transparent; flex: none; margin: 0 2px; }
-.selbar .swatch[aria-pressed='true'] { border-color: var(--float-bg); box-shadow: 0 0 0 2px var(--float-fg) inset; }
-.selbar .sep { width: 1px; height: 22px; background: currentColor; opacity: 0.25; margin: 0 4px; flex: none; }
-.selbar .icon-btn { width: 38px; height: 38px; color: var(--float-fg); flex: none; }
-.selbar .icon-btn:hover, .selbar .icon-btn:active { background: rgba(127, 127, 127, 0.3); }
-.selbar .count { font-size: 12px; opacity: 0.7; padding: 0 6px 0 10px; white-space: nowrap; }
-:root[data-theme='dark'] .selbar .swatch { --c: var(--hl-yellow); }
-:root[data-theme='dark'] .selbar .swatch.c-green { --c: #5a9a5e; }
-:root[data-theme='dark'] .selbar .swatch.c-yellow { --c: #c9ae3d; }
-:root[data-theme='dark'] .selbar .swatch.c-blue { --c: #5a8fd1; }
-:root[data-theme='dark'] .selbar .swatch.c-pink { --c: #c9718f; }
-:root[data-theme='dark'] .selbar .swatch.c-orange { --c: #d28d4d; }
 
 /* Painel de texto */
 .preview { padding: 16px 18px; border-radius: var(--radius); background: var(--surface); max-height: 22dvh; overflow: hidden; }
@@ -102,4 +83,6 @@
 .sw.t-light { background: #faf9f7; color: #1d2027; }
 .sw.t-sepia { background: #f3ead8; color: #3a2f22; }
 .sw.t-dark { background: #14161b; color: #e4e6eb; }
-@media (max-width: 480px) { .selbar .count { display: none; } }
+
+/* Espaço para o sheet de seleção não cobrir o fim do capítulo */
+.page.has-sel { padding-bottom: 260px; }
