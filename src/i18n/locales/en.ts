@@ -77,6 +77,7 @@ const en = {
   listenVoice: 'Voice',
   listenSpeed: 'Speed',
   listenNext: 'Continue to the next chapter',
+  listenSilent: 'No sound? Check the silent switch and the volume.',
   feedback: 'Send feedback',
   feedbackType: 'Feedback type',
   feedbackMessage: 'Message',

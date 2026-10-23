@@ -79,6 +79,7 @@ const es: Messages = {
   listenVoice: 'Voz',
   listenSpeed: 'Velocidad',
   listenNext: 'Continuar con el siguiente capítulo',
+  listenSilent: '¿Sin sonido? Revisa el modo silencio y el volumen.',
   feedback: 'Enviar comentarios',
   feedbackType: 'Tipo de comentario',
   feedbackMessage: 'Mensaje',

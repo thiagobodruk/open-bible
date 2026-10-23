@@ -79,6 +79,7 @@ const ptBR: Messages = {
   listenVoice: 'Voz',
   listenSpeed: 'Velocidade',
   listenNext: 'Continuar no próximo capítulo',
+  listenSilent: 'Sem som? Confira o botão de silêncio e o volume.',
   feedback: 'Enviar feedback',
   feedbackType: 'Tipo de feedback',
   feedbackMessage: 'Mensagem',
