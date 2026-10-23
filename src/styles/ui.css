@@ -80,3 +80,5 @@
 @media (min-width: 720px) { .sheet.tall { height: min(80dvh, 720px); } }
 
 .chip.accent { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+
+.icon-btn.danger-icon { color: var(--danger); margin-left: -8px; }

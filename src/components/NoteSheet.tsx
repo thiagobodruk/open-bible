@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Trash } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
@@ -48,7 +49,9 @@ export function NoteSheet() {
       <div className="actions">
         {existing && (
           <button
-            className="btn danger"
+            className="icon-btn danger-icon"
+            aria-label={t.delete}
+            title={t.delete}
             onClick={() => {
               deleteNote(existing.id);
               clearSelection();
@@ -56,7 +59,7 @@ export function NoteSheet() {
               notify('Nota excluída');
             }}
           >
-            {t.delete}
+            <Trash size={24} weight="light" />
           </button>
         )}
         <span className="grow" />
