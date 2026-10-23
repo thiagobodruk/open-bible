@@ -8,7 +8,7 @@ const de: Messages = {
   settings: 'Einstellungen',
   install: 'App installieren',
   installSub: 'Offline und im Vollbild nutzen',
-  textSettings: 'Text',
+  textSettings: 'Leseeinstellungen',
   search: 'Suchen',
   books: 'Bücher',
   prevChapter: 'Vorheriges Kapitel',

@@ -8,7 +8,7 @@ const zhCN: Messages = {
   settings: '设置',
   install: '安装应用',
   installSub: '离线使用，全屏显示',
-  textSettings: '文字',
+  textSettings: '阅读设置',
   search: '搜索',
   books: '书卷',
   prevChapter: '上一章',
