@@ -13,8 +13,27 @@ addEventListener('beforeinstallprompt', (e) => {
   emit();
 });
 
+const INSTALLED = 'ob:installed';
+const DISMISSED = 'ob:install-dismissed';
+
+const flag = (key: string) => {
+  try {
+    return !!localStorage.getItem(key);
+  } catch {
+    return false;
+  }
+};
+const setFlag = (key: string) => {
+  try {
+    localStorage.setItem(key, '1');
+  } catch {
+    /* sem armazenamento, vale só nesta sessão */
+  }
+};
+
 addEventListener('appinstalled', () => {
   deferred = null;
+  setFlag(INSTALLED);
   emit();
 });
 
@@ -56,20 +75,17 @@ export function detectIOS(ua: string = navigator.userAgent, touchPoints: number 
 
 export const isIOS = () => detectIOS() !== null;
 
-const DISMISSED = 'ob:install-dismissed';
+let dismissedNow = false;
 
-export function installDismissed(): boolean {
-  try {
-    return !!localStorage.getItem(DISMISSED);
-  } catch {
-    return true;
-  }
-}
+/** O app já está instalado: aberto como app (standalone) ou instalado por este navegador. No iOS só o primeiro caso é detectável. */
+export const isInstalled = () => isStandalone() || flag(INSTALLED);
 
+/** O convite de instalação (banner) deve aparecer: não instalado e ainda não dispensado nem aberto o guia. */
+export const installOffered = () => !isInstalled() && !dismissedNow && !flag(DISMISSED);
+
+/** Esconde o banner para sempre, por dispensa ou por já ter aberto o guia de instalação. */
 export function dismissInstall() {
-  try {
-    localStorage.setItem(DISMISSED, '1');
-  } catch {
-    /* sem armazenamento, o banner só some nesta sessão */
-  }
+  dismissedNow = true;
+  setFlag(DISMISSED);
+  emit();
 }

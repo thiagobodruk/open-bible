@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useSyncExternalStore } from 'react';
 import { DeviceMobile, DownloadSimple, GithubLogo, Trash, Upload } from '@phosphor-icons/react';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { abbrOf, findVersion } from '../data/catalog';
@@ -7,7 +7,7 @@ import { downloadBackup, parseBackup } from '../backup';
 import { useSettings, type UiLang } from '../state/settings';
 import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
-import { requestInstall } from '../install';
+import { isInstalled, requestInstall, subscribeInstall } from '../install';
 import { useT } from '../i18n';
 
 const LANGS: { code: UiLang; label: string }[] = [
@@ -22,6 +22,7 @@ const LANGS: { code: UiLang; label: string }[] = [
 
 export function Settings() {
   const t = useT();
+  const appInstalled = useSyncExternalStore(subscribeInstall, isInstalled);
   const { uiLang, set } = useSettings();
   const { installed, remove } = useLibrary();
   const downloaded = Object.keys(installed);
@@ -101,10 +102,12 @@ export function Settings() {
         <section className="section">
           <h2>{t('app')}</h2>
           <div className="group">
-            <button className="row" onClick={async () => { if (!(await requestInstall())) open('install'); }}>
-              <DeviceMobile size={24} weight="light" />
-              <span className="grow"><span className="title">{t('install')}</span><span className="sub" style={{ display: 'block' }}>{t('installSub')}</span></span>
-            </button>
+            {!appInstalled && (
+              <button className="row" onClick={async () => { if (!(await requestInstall())) open('install'); }}>
+                <DeviceMobile size={24} weight="light" />
+                <span className="grow"><span className="title">{t('install')}</span><span className="sub" style={{ display: 'block' }}>{t('installSub')}</span></span>
+              </button>
+            )}
             <a className="row" href="https://github.com/thiagobodruk/open-bible" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
               <GithubLogo size={24} weight="light" />
               <span className="grow"><span className="title">{t('github')}</span><span className="sub" style={{ display: 'block' }}>{t('githubSub')}</span></span>

@@ -1,7 +1,8 @@
+import { useEffect } from 'react';
 import { Export, PlusSquare, DotsThreeVertical } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
-import { detectIOS, isStandalone } from '../install';
+import { detectIOS, dismissInstall, isInstalled } from '../install';
 import { splitIcon, useT } from '../i18n';
 
 function WithIcon({ text, icon }: { text: string; icon: React.ReactNode }) {
@@ -11,12 +12,14 @@ function WithIcon({ text, icon }: { text: string; icon: React.ReactNode }) {
 
 export function InstallSheet() {
   const t = useT();
+  // Quem abre o guia já sabe como instalar: o banner não precisa mais aparecer.
+  useEffect(() => dismissInstall(), []);
   const close = useUI((s) => s.close);
   const ios = detectIOS();
   const shareKey = !ios ? null : ios.browser === 'chrome' ? 'installShareChrome' : ios.browser === 'safari' ? (ios.device === 'iPad' ? 'installShareSafariPad' : 'installShareSafariPhone') : 'installShareOther';
   return (
     <Sheet title={t('install')} onClose={close}>
-      {isStandalone() ? (
+      {isInstalled() ? (
         <p>{t('installedAlready')}</p>
       ) : ios ? (
         <>
