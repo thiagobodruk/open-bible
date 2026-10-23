@@ -32,8 +32,18 @@ export function Library() {
       if (term && !label.includes(term)) continue;
       map.set(v.lang, [...(map.get(v.lang) ?? []), v]);
     }
-    return [...map.entries()];
-  }, [q, names]);
+    // Primeiro o idioma escolhido pelo usuário (por padrão, o do navegador), depois os demais idiomas do navegador
+    // e, por fim, o resto em ordem alfabética pelo nome localizado.
+    const prefs = [uiLang, ...(navigator.languages ?? [])].map((l) => l.toLowerCase().split('-')[0]);
+    const rank = (code: string) => {
+      const i = prefs.indexOf(code);
+      return i < 0 ? prefs.length : i;
+    };
+    const collator = new Intl.Collator(uiLang);
+    return [...map.entries()].sort(
+      ([a], [b]) => rank(a) - rank(b) || collator.compare(names.of(a) ?? a, names.of(b) ?? b),
+    );
+  }, [q, names, uiLang]);
 
   const choose = (id: string, abbr: string) => {
     set('versionId', id);
