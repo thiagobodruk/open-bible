@@ -7,9 +7,10 @@ interface Props {
   onClose: () => void;
   children: ReactNode;
   leading?: ReactNode;
+  tall?: boolean;
 }
 
-export function Sheet({ title, onClose, children, leading }: Props) {
+export function Sheet({ title, onClose, children, leading, tall }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,7 +27,7 @@ export function Sheet({ title, onClose, children, leading }: Props) {
   return (
     <>
       <div className="scrim" onClick={onClose} />
-      <div className="sheet" role="dialog" aria-modal="true" aria-label={title} ref={ref} tabIndex={-1}>
+      <div className={`sheet${tall ? ' tall' : ''}`} role="dialog" aria-modal="true" aria-label={title} ref={ref} tabIndex={-1}>
         <div className="sheet-grip" />
         <div className="sheet-head">
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, minWidth: 0 }}>
