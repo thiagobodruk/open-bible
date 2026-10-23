@@ -50,9 +50,10 @@
 .chapter-title .nr { display: block; font-size: 3.2em; font-weight: 300; line-height: 1.1; margin-top: 4px; }
 .chapter-note { text-align: center; font-family: var(--font-ui); font-size: 12px; color: var(--muted); margin: -22px 0 30px; }
 
-.verse { cursor: pointer; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 0.15s; }
-.verses .verse { display: block; margin-bottom: 0.55em; }
-.paragraph .verse { display: inline; }
+/* O wrapper define a área de toque e o layout; só o span interno recebe a cor, então a marca cobre apenas o texto. */
+.verse-wrap { cursor: pointer; }
+.verses .verse-wrap { display: block; margin-bottom: 0.55em; }
+.verse { border-radius: 3px; padding: 0 0.12em; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 0.15s; }
 .verse.hl { background: var(--c); }
 .verse.sel { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 0.22em; }
 .verse.flash { animation: flash 1.6s ease-out; }
