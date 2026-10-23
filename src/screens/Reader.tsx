@@ -128,7 +128,7 @@ export function Reader() {
       <button className="edge right" hidden={blocked} onClick={() => move(1)} aria-label={t.nextChapter}><CaretRight size={28} weight="light" /></button>
 
       <main
-        className={`page ${settings.font}`}
+        className="page"
         style={readingVars(settings)}
         onClick={onPageClick}
         onTouchStart={onTouchStart}
