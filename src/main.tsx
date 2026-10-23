@@ -10,17 +10,20 @@ import './styles/reader.css';
 import './styles/screens.css';
 import App from './App';
 import { initSettingsEffects } from './state/settings';
-import { useUI } from './state/ui';
-import { tr } from './i18n';
 import { boot } from './boot';
 
 initSettingsEffects();
 boot();
 
+// A versão nova espera em segundo plano e entra quando o app sai de cena, sem interromper a leitura.
+let waiting = false;
 const update = registerSW({
   onNeedRefresh() {
-    useUI.getState().notify(tr('updateAvailable'), { label: tr('updateAction'), run: () => update(true) });
+    waiting = true;
   },
+});
+document.addEventListener('visibilitychange', () => {
+  if (waiting && document.visibilityState === 'hidden') void update(true);
 });
 
 createRoot(document.getElementById('root')!).render(

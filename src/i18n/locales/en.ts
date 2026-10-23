@@ -22,8 +22,6 @@ const en = {
   delete: 'Delete',
   tagline: 'Bible reader, offline and account-free',
 
-  updateAvailable: 'New version available',
-  updateAction: 'Update',
 
   installedAlready: 'The app is already installed on this device.',
   installIosIntro: 'On your {device}, you install the app from the Share menu.',
