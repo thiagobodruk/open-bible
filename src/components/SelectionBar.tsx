@@ -1,4 +1,5 @@
-import { Copy, NotePencil, ShareNetwork, X } from '@phosphor-icons/react';
+import { Copy, NotePencil, ShareNetwork } from '@phosphor-icons/react';
+import { Sheet } from './Sheet';
 import { HL_COLORS, vkey, useStudy, type HlColor } from '../state/study';
 import { useUI } from '../state/ui';
 import { abbrOf } from '../data/catalog';
@@ -9,6 +10,7 @@ import { plural, t } from '../strings';
 
 const COLOR_NAMES: Record<HlColor, string> = { yellow: 'Amarelo', green: 'Verde', blue: 'Azul', pink: 'Rosa', orange: 'Laranja' };
 
+/** Ações para os versículos selecionados. É um bottom sheet sem fundo escurecido, para seguir tocando nos versículos. */
 export function SelectionBar() {
   const { book, chapter, selection, highlights, paint, clearSelection } = useStudy();
   const open = useUI((s) => s.open);
@@ -49,22 +51,27 @@ export function SelectionBar() {
   };
 
   return (
-    <div className="selbar" role="toolbar" aria-label="Ações do versículo">
-      <span className="count">{plural(selection.length, 'versículo', 'versículos')}</span>
-      {HL_COLORS.map((c) => (
-        <button
-          key={c}
-          className={`swatch c-${c}`}
-          aria-pressed={active(c)}
-          aria-label={`Marcar de ${COLOR_NAMES[c].toLowerCase()}`}
-          onClick={() => paint(c, texts)}
-        />
-      ))}
-      <span className="sep" />
-      <button className="icon-btn" aria-label={t.note} onClick={() => open('note')}><NotePencil size={22} weight="light" /></button>
-      <button className="icon-btn" aria-label={t.copy} onClick={copy}><Copy size={22} weight="light" /></button>
-      <button className="icon-btn" aria-label={t.share} onClick={share}><ShareNetwork size={22} weight="light" /></button>
-      <button className="icon-btn" aria-label={t.close} onClick={clearSelection}><X size={22} weight="light" /></button>
-    </div>
+    <Sheet
+      modeless
+      title={`${refLabel(bookName(book), chapter, selection[0], selection[selection.length - 1])} · ${plural(selection.length, 'versículo', 'versículos')}`}
+      onClose={clearSelection}
+    >
+      <div className="sheet-colors" role="group" aria-label="Cor da marcação">
+        {HL_COLORS.map((c) => (
+          <button
+            key={c}
+            className={`swatch c-${c}`}
+            aria-pressed={active(c)}
+            aria-label={`Marcar de ${COLOR_NAMES[c].toLowerCase()}`}
+            onClick={() => paint(c, texts)}
+          />
+        ))}
+      </div>
+      <div className="sheet-actions">
+        <button className="sheet-action" onClick={() => open('note')}><NotePencil size={24} weight="light" />{t.note}</button>
+        <button className="sheet-action" onClick={copy}><Copy size={24} weight="light" />{t.copy}</button>
+        <button className="sheet-action" onClick={share}><ShareNetwork size={24} weight="light" />{t.share}</button>
+      </div>
+    </Sheet>
   );
 }
