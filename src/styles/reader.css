@@ -93,3 +93,12 @@
 /* Espaço para o sheet de seleção não cobrir o fim do capítulo */
 .page.has-sel { padding-bottom: 260px; }
 .copyright { width: 100%; max-width: var(--rd-col, 38rem); margin: auto auto 0; padding: 14px var(--rd-pad, 20px) calc(18px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); font-family: var(--font-ui); font-size: 12px; line-height: 1.5; color: var(--muted); text-align: center; user-select: none; }
+
+/* Escolhas em botões (tamanho, altura da linha, margens, alinhamento) */
+.field > .lbl > span { font-weight: 500; letter-spacing: 0.02em; }
+.choice-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.choice-row.two { grid-template-columns: repeat(2, 1fr); }
+.choice { display: grid; place-items: center; min-height: 52px; border-radius: var(--radius-sm); background: var(--surface); color: var(--fg); border: 2px solid transparent; font-family: var(--font-serif); }
+.choice:hover:not(:disabled) { background: var(--surface-2); }
+.choice[aria-pressed='true'] { border-color: var(--accent); background: var(--bg); }
+.choice:disabled { opacity: 0.35; }
