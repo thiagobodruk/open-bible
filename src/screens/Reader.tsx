@@ -13,6 +13,7 @@ import { SwipeHint } from '../components/SwipeHint';
 import { Welcome } from '../components/Welcome';
 import { go } from '../router';
 import { hintPending, markHintSeen } from '../hint';
+import { isMobile } from '../install';
 import { useT } from '../i18n';
 
 export function Reader() {
@@ -94,7 +95,7 @@ export function Reader() {
 
   // Dica de gesto só na primeira abertura. Vale como vista quando aparece ou quando o usuário já troca de capítulo.
   useEffect(() => {
-    if (!installed || !hintPending()) return;
+    if (!installed || !isMobile() || !hintPending()) return;
     const id = setTimeout(() => {
       if (!hintPending()) return;
       setHint(true);

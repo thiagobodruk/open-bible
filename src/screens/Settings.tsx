@@ -7,7 +7,7 @@ import { downloadBackup, parseBackup } from '../backup';
 import { useSettings, type UiLang } from '../state/settings';
 import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
-import { isInstalled, requestInstall, subscribeInstall } from '../install';
+import { installAvailable, requestInstall, subscribeInstall } from '../install';
 import { useT } from '../i18n';
 
 const LANGS: { code: UiLang; label: string }[] = [
@@ -22,7 +22,7 @@ const LANGS: { code: UiLang; label: string }[] = [
 
 export function Settings() {
   const t = useT();
-  const appInstalled = useSyncExternalStore(subscribeInstall, isInstalled);
+  const canInstall = useSyncExternalStore(subscribeInstall, installAvailable);
   const { uiLang, set } = useSettings();
   const { installed, remove } = useLibrary();
   const downloaded = Object.keys(installed);
@@ -102,7 +102,7 @@ export function Settings() {
         <section className="section">
           <h2>{t('app')}</h2>
           <div className="group">
-            {!appInstalled && (
+            {canInstall && (
               <button className="row" onClick={async () => { if (!(await requestInstall())) open('install'); }}>
                 <DeviceMobile size={24} weight="light" />
                 <span className="grow"><span className="title">{t('install')}</span><span className="sub" style={{ display: 'block' }}>{t('installSub')}</span></span>
