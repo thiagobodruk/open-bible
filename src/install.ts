@@ -75,13 +75,19 @@ export function detectIOS(ua: string = navigator.userAgent, touchPoints: number 
 
 export const isIOS = () => detectIOS() !== null;
 
+/** Celular ou tablet: o toque é o ponteiro principal. No desktop não há dica de gesto nem convite de instalação. */
+export const isMobile = () => matchMedia('(pointer: coarse)').matches || isIOS() || /Android/i.test(navigator.userAgent);
+
 let dismissedNow = false;
 
 /** O app já está instalado: aberto como app (standalone) ou instalado por este navegador. No iOS só o primeiro caso é detectável. */
 export const isInstalled = () => isStandalone() || flag(INSTALLED);
 
+/** Vale mostrar qualquer entrada de instalação (item de menu, linha em Ajustes): aparelho móvel e ainda não instalado. */
+export const installAvailable = () => isMobile() && !isInstalled();
+
 /** O convite de instalação (banner) deve aparecer: não instalado e ainda não dispensado nem aberto o guia. */
-export const installOffered = () => !isInstalled() && !dismissedNow && !flag(DISMISSED);
+export const installOffered = () => installAvailable() && !dismissedNow && !flag(DISMISSED);
 
 /** Esconde o banner para sempre, por dispensa ou por já ter aberto o guia de instalação. */
 export function dismissInstall() {

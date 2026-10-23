@@ -5,12 +5,12 @@ import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
 import { go, type Route } from '../router';
 import { useT } from '../i18n';
-import { isInstalled, requestInstall, subscribeInstall } from '../install';
+import { installAvailable, requestInstall, subscribeInstall } from '../install';
 
 export function MenuSheet() {
   const t = useT();
   const { close, open } = useUI();
-  const installed = useSyncExternalStore(subscribeInstall, isInstalled);
+  const canInstall = useSyncExternalStore(subscribeInstall, installAvailable);
   const count = useStudy((s) => Object.keys(s.highlights).length + s.notes.length);
 
   const nav = (r: Route) => {
@@ -33,7 +33,7 @@ export function MenuSheet() {
       },
     },
   ];
-  const items = installed ? all.filter((i) => i.icon !== DeviceMobile) : all;
+  const items = canInstall ? all : all.filter((i) => i.icon !== DeviceMobile);
 
   return (
     <Sheet title={t('menu')} onClose={close}>
@@ -59,6 +59,7 @@ export function MenuSheet() {
           </li>
         ))}
       </ul>
+      <p className="menu-version">Open Bible v{__APP_VERSION__}</p>
     </Sheet>
   );
 }
