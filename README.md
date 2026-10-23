@@ -40,6 +40,7 @@ Open Bible reads its texts from the [Bible](https://github.com/thiagobodruk/bibl
 - **Search:** full-text search in the current version, plus quick references such as `jn 3:16`.
 - **Private by design:** highlights, notes, and settings stay in your browser (IndexedDB and localStorage), with JSON export and import for backups.
 - **Interface in 7 languages:** English, Portuguese (Brazil), Spanish, French, German, Simplified Chinese, and Japanese. The language follows your browser and can be changed in Settings, independently of the Bible language.
+- **Listen:** read a chapter aloud with your device's own voices (Web Speech API), with play and pause, speed, voice choice and automatic advance to the next chapter. No audio is downloaded or sent anywhere; the quality and the languages depend on the voices installed on the device.
 - **Feedback:** the menu and Settings have a form for bugs, suggestions, translation errors and version requests. It opens a prefilled GitHub issue with the app version, Bible version and passage attached. Nothing is sent until you submit it on GitHub.
 - **Shareable links:** every chapter has its own address, like `/open-bible/pt_nvi/jo/3` (version, book, chapter). The menu has a button to share the app. Book ids follow the [Bible data repo](https://github.com/thiagobodruk/bible) abbreviations.
 - **Installable and offline:** works as a PWA on Android and iOS. The app shell is cached by a service worker, and downloaded versions live in IndexedDB.
@@ -56,6 +57,7 @@ Open Bible reads its texts from the [Bible](https://github.com/thiagobodruk/bibl
 | PWA manifest, service worker, and install | Done |
 | Share button and chapter URLs (`/version/book/chapter`) | Done |
 | Feedback form that opens a prefilled GitHub issue | Done |
+| Read aloud with system voices | Done |
 | Interface translations (English, Portuguese, Spanish, French, German, Chinese, Japanese) | Done |
 
 ## How it works
