@@ -41,7 +41,7 @@ export function Welcome() {
           <button className="btn primary" onClick={start} disabled={busy}>
             {busy ? `Baixando… ${Math.round(progress * 100)}%` : `Baixar ${abbrOf(id)} · ${v.sizeMb.toFixed(1)} MB`}
           </button>
-          {busy && <div className="progress" role="progressbar" aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></div>}
+          {busy && <div className="progress" role="progressbar" aria-label="Baixando" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></div>}
           {failure && (
             <p className="error" role="alert">
               {failure === 'offline' ? 'Sem conexão. Conecte-se à internet para baixar.' : 'Não foi possível baixar. Tente de novo.'}

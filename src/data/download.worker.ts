@@ -10,14 +10,18 @@ export type WorkerOut =
 const post = (m: WorkerOut) => postMessage(m);
 
 async function fetchText(url: string, expected: number): Promise<string> {
-  const res = await fetch(url);
+  const ctl = new AbortController();
+  let stall = setTimeout(() => ctl.abort(), 30_000);
+  const res = await fetch(url, { signal: ctl.signal });
   if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
   const reader = res.body.getReader();
   const chunks: Uint8Array[] = [];
   let got = 0;
   for (;;) {
     const { done, value } = await reader.read();
+    clearTimeout(stall);
     if (done) break;
+    stall = setTimeout(() => ctl.abort(), 30_000);
     chunks.push(value);
     got += value.length;
     // O servidor pode comprimir, então o total real é uma estimativa: limita a 90% até terminar de baixar.

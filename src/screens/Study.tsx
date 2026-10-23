@@ -102,7 +102,7 @@ export function Study() {
                 <div className="ref">
                   {e.color && <span className={`dot c-${e.color}`} />}
                   {refLabel(bookName(e.book), e.chapter, e.v1, e.v2)}
-                  {e.versionId !== versionId && <span className="chip" style={{ marginLeft: 8 }}>{abbrOf(e.versionId)}</span>}
+                  {e.versionId && e.versionId !== versionId && <span className="chip" style={{ marginLeft: 8 }}>{abbrOf(e.versionId)}</span>}
                 </div>
                 <p className="txt">{e.text}</p>
                 {e.note && (

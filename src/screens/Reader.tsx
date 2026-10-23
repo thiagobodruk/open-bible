@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { CaretDown, CaretLeft, CaretRight, List, MagnifyingGlass, NotePencil, TextAa } from '@phosphor-icons/react';
-import { abbrOf } from '../data/catalog';
+import { abbrOf, findVersion } from '../data/catalog';
 import { useBookName, useBooks, useChapter } from '../hooks';
 import { useLibrary } from '../state/library';
 import { useSettings } from '../state/settings';
@@ -28,6 +28,7 @@ export function Reader() {
   const text = useChapter(book, chapter);
   const verses = text.status === 'ready' ? text.verses : [];
   const bName = bookName(book);
+  const versionInfo = findVersion(settings.versionId);
   const hasSelection = selection.length > 0;
   const blocked = hasSelection || sheet !== null;
 
@@ -66,6 +67,7 @@ export function Reader() {
   // Teclado
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (!installed) return;
       if (e.key === 'ArrowRight') move(1);
       if (e.key === 'ArrowLeft') move(-1);
       if (e.key === 'Escape') useStudy.getState().clearSelection();
@@ -77,13 +79,14 @@ export function Reader() {
   // Vem de Meu estudo com um versículo em foco
   useEffect(() => {
     if (focusVerse === null) return;
+    if (text.status === 'loading') return;
     const el = document.getElementById(`v-${focusVerse}`);
     if (el) {
       el.scrollIntoView({ block: 'center' });
       el.classList.add('flash');
     }
     clearFocus();
-  }, [focusVerse, clearFocus, book, chapter]);
+  }, [focusVerse, clearFocus, book, chapter, text.status]);
 
   // Dica de gestos só na primeira abertura. Vale como vista quando o toast aparece ou quando o usuário já troca de capítulo.
   useEffect(() => {
@@ -152,13 +155,15 @@ export function Reader() {
         <article
           key={`${book}.${chapter}`}
           className={`chapter ${dir ? `anim-${dir}` : ''} ${settings.textMode === 'verses' ? 'verses' : 'paragraph'} vn-${settings.verseNumbers}`}
-          lang={settings.versionId.slice(0, 2)}
+          lang={versionInfo?.lang}
+          dir={versionInfo?.rtl ? 'rtl' : undefined}
         >
           <h1 className="chapter-title">
             <span className="bk">{bName}</span>
             <span className="nr">{chapter}</span>
           </h1>
           {text.status === 'missing' && installed && <p className="chapter-note">Este capítulo não existe nesta versão.</p>}
+          {text.status === 'ready' && verses.length === 0 && <p className="chapter-note">Este capítulo está vazio nesta versão.</p>}
           {verses.map((text, i) => {
             const v = i + 1;
             const hl = highlights[vkey(book, chapter, v)];

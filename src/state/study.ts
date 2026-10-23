@@ -32,6 +32,8 @@ export interface Note {
   excerpt: string;
   versionId: string;
   createdAt: number;
+  /** Última edição. Sem ele, vale createdAt. */
+  updatedAt?: number;
 }
 
 /** Livros da versão em uso, na ordem canônica. Sem versão instalada, o cânone completo. */
@@ -94,9 +96,10 @@ export const useStudy = create<StudyStore>((set, get) => ({
   merge: async (highlights, notes) => {
     const s = get();
     const hl = { ...s.highlights };
-    for (const h of highlights) if (!hl[h.key] || hl[h.key].createdAt <= h.createdAt) hl[h.key] = h;
+    for (const h of highlights) if (!hl[h.key] || hl[h.key].createdAt < h.createdAt) hl[h.key] = h;
     const byId = new Map(s.notes.map((n) => [n.id, n]));
-    for (const n of notes) if (!byId.has(n.id) || byId.get(n.id)!.createdAt <= n.createdAt) byId.set(n.id, n);
+    const stamp = (n: Note) => n.updatedAt ?? n.createdAt;
+    for (const n of notes) if (!byId.has(n.id) || stamp(byId.get(n.id)!) < stamp(n)) byId.set(n.id, n);
     await dbPut('highlights', Object.values(hl));
     await dbPut('notes', [...byId.values()]);
     set({ highlights: hl, notes: [...byId.values()] });
@@ -160,7 +163,7 @@ export const useStudy = create<StudyStore>((set, get) => ({
     const { book, chapter, selection, notes } = get();
     let saved: Note;
     if (existingId) {
-      saved = { ...notes.find((n) => n.id === existingId)!, text };
+      saved = { ...notes.find((n) => n.id === existingId)!, text, updatedAt: Date.now() };
       set({ notes: notes.map((n) => (n.id === existingId ? saved : n)) });
     } else {
       saved = {

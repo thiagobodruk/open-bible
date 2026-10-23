@@ -37,7 +37,9 @@ export function parseReference(input: string, books: RefBook[]): RefTarget | nul
   if (!m) return null;
   const q = fold(m[1]);
   if (!q) return null;
-  const book = books.find((b) => fold(b.id) === q) ?? books.find((b) => fold(b.name).startsWith(q));
+  const exact = m[1].replace(/\s+/g, '').toLowerCase();
+  const book =
+    books.find((b) => b.id === exact) ?? books.find((b) => fold(b.id) === q) ?? books.find((b) => fold(b.name).startsWith(q));
   if (!book) return null;
   const chapter = Number(m[2]);
   if (chapter < 1 || chapter > book.chapters) return null;

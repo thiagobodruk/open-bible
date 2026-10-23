@@ -1,4 +1,6 @@
 import { BOOKS } from './data/books';
+
+const chaptersOf = new Map(BOOKS.map((b) => [b.id, b.chapters]));
 import { HL_COLORS, useStudy, vkey, type Highlight, type HlColor, type Note } from './state/study';
 
 const APP = 'open-bible';
@@ -47,7 +49,7 @@ export function parseBackup(text: string): { highlights: Highlight[]; notes: Not
   let skipped = 0;
   const highlights: Highlight[] = [];
   for (const h of Array.isArray(raw.highlights) ? raw.highlights : []) {
-    if (!h || !ids.has(h.book) || !isInt(h.chapter) || !isInt(h.verse) || !HL_COLORS.includes(h.color as HlColor)) {
+    if (!h || !ids.has(h.book) || !isInt(h.chapter) || h.chapter > chaptersOf.get(h.book)! || !isInt(h.verse) || !HL_COLORS.includes(h.color as HlColor)) {
       skipped++;
       continue;
     }
@@ -65,7 +67,7 @@ export function parseBackup(text: string): { highlights: Highlight[]; notes: Not
 
   const notes: Note[] = [];
   for (const n of Array.isArray(raw.notes) ? raw.notes : []) {
-    if (!n || !str(n.id) || !str(n.text) || !ids.has(n.book) || !isInt(n.chapter) || !isInt(n.verseStart) || !isInt(n.verseEnd)) {
+    if (!n || !str(n.id) || !str(n.text) || !ids.has(n.book) || !isInt(n.chapter) || n.chapter > chaptersOf.get(n.book)! || !isInt(n.verseStart) || !isInt(n.verseEnd)) {
       skipped++;
       continue;
     }
@@ -79,6 +81,7 @@ export function parseBackup(text: string): { highlights: Highlight[]; notes: Not
       excerpt: str(n.excerpt) ? n.excerpt : '',
       versionId: str(n.versionId) ? n.versionId : '',
       createdAt: Number.isFinite(n.createdAt) ? n.createdAt : Date.now(),
+      ...(Number.isFinite(n.updatedAt) ? { updatedAt: n.updatedAt } : {}),
     });
   }
   return { highlights, notes, skipped };

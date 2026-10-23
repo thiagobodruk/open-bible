@@ -99,7 +99,7 @@ export function Library() {
                     </button>
                     <div className="state">
                       {prog !== undefined ? (
-                        <div className="progress" role="progressbar" aria-valuenow={Math.round(prog * 100)}><i style={{ width: `${prog * 100}%` }} /></div>
+                        <div className="progress" role="progressbar" aria-label="Baixando" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(prog * 100)}><i style={{ width: `${prog * 100}%` }} /></div>
                       ) : !isDown ? (
                         <button className="icon-btn" aria-label={`${failed[v.id] ? 'Tentar de novo: ' : 'Baixar '}${v.name}`} onClick={() => get(v.id)}>
                           <CloudArrowDown size={26} weight="light" />
