@@ -79,7 +79,17 @@ node scripts/build-catalog.mjs [commit-sha]
 
 ## Stack
 
-React 19, TypeScript, Vite, Zustand, `vite-plugin-pwa` (Workbox), and `@phosphor-icons/react`. Inter and Literata fonts through Fontsource, bundled at build time.
+| Layer | Technology |
+|---|---|
+| UI | [React](https://react.dev) 19 |
+| Language | [TypeScript](https://www.typescriptlang.org) |
+| Build | [Vite](https://vite.dev) |
+| State | [Zustand](https://zustand.docs.pmnd.rs) |
+| Local storage | IndexedDB (versions, highlights, notes) and localStorage (settings) |
+| PWA and offline | [`vite-plugin-pwa`](https://vite-pwa-org.netlify.app) (Workbox) |
+| Icons | [Phosphor Icons](https://phosphoricons.com) |
+| Fonts | Inter and Literata via [Fontsource](https://fontsource.org), bundled at build time |
+| Hosting | GitHub Pages, deployed by GitHub Actions |
 
 ## Project structure
 
