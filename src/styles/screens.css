@@ -51,14 +51,16 @@
 .empty svg { margin-bottom: 12px; }
 
 /* Navegador */
-.book-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px 12px; }
-.book-grid button { min-height: 46px; text-align: left; padding: 0 12px; border-radius: var(--radius-sm); font-size: 16px; }
-.book-grid button:hover { background: var(--surface); }
-.book-grid button.cur { background: var(--surface); font-weight: 600; }
-.chap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: 8px; }
-.chap-grid button { height: 48px; border-radius: var(--radius-sm); background: var(--surface); font-size: 16px; font-variant-numeric: tabular-nums; }
+.book-list { margin: 0 -8px; }
+.book-row { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 52px; padding: 0 8px; font-size: 18px; text-align: left; border-radius: var(--radius-sm); color: var(--fg); }
+.book-row:hover { background: var(--surface); }
+.book-row.cur { font-weight: 600; }
+.book-row svg { color: var(--muted); flex: none; }
+.divider { height: 1px; background: var(--line); margin: 10px 8px; }
+.chap-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 6px 8px 14px; }
+.chap-grid button { height: 52px; border-radius: var(--radius-sm); background: var(--surface); font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .chap-grid button:hover { background: var(--surface-2); }
-.chap-grid button.cur { background: var(--accent); color: var(--accent-fg); font-weight: 600; }
+.chap-grid button.cur { background: var(--fg); color: var(--bg); font-weight: 700; }
 
 /* Nota */
 .note-ref { font-size: 13px; font-weight: 600; color: var(--muted); }

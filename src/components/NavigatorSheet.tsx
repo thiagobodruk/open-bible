@@ -1,68 +1,69 @@
-import { useState } from 'react';
-import { CaretLeft } from '@phosphor-icons/react';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import { CaretDown, CaretRight } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
-import { Segmented } from './Segmented';
-import { BOOKS, getBook } from '../data/books';
+import { BOOKS } from '../data/books';
 import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { t } from '../strings';
 
+const FIRST_NT = BOOKS.findIndex((b) => b.testament === 'NT');
+
+/** Lista única de livros, como no app Bíblia do iOS. O livro tocado abre a grade de capítulos logo abaixo dele. */
 export function NavigatorSheet() {
   const close = useUI((s) => s.close);
   const { book, chapter, goTo } = useStudy();
-  const current = getBook(book);
-  const [testament, setTestament] = useState<'AT' | 'NT'>(current.testament);
-  const [picked, setPicked] = useState<string | null>(null);
-  const pickedBook = picked ? getBook(picked) : null;
+  const [expanded, setExpanded] = useState<string | null>(book);
+  const rows = useRef<Record<string, HTMLLIElement | null>>({});
+  const first = useRef(true);
 
-  if (pickedBook) {
-    return (
-      <Sheet
-        title={pickedBook.name}
-        onClose={close}
-        leading={
-          <button className="icon-btn" onClick={() => setPicked(null)} aria-label={t.books} style={{ marginLeft: -12 }}>
-            <CaretLeft size={22} weight="light" />
-          </button>
-        }
-      >
-        <div className="chap-grid">
-          {Array.from({ length: pickedBook.chapters }, (_, i) => i + 1).map((n) => (
-            <button
-              key={n}
-              className={pickedBook.id === book && n === chapter ? 'cur' : ''}
-              onClick={() => {
-                goTo(pickedBook.id, n);
-                scrollTo(0, 0);
-                close();
-              }}
-            >
-              {n}
-            </button>
-          ))}
-        </div>
-      </Sheet>
-    );
-  }
+  // Ao abrir, leva o livro atual ao topo. Ao expandir outro livro, garante que a grade fique visível.
+  useEffect(() => {
+    if (!expanded) return;
+    const el = rows.current[expanded];
+    el?.scrollIntoView({ block: first.current ? 'start' : 'nearest' });
+    first.current = false;
+  }, [expanded]);
 
   return (
-    <Sheet title={t.books} onClose={close}>
-      <Segmented
-        label="Testamento"
-        value={testament}
-        onChange={setTestament}
-        options={[
-          { value: 'AT', label: 'Antigo Testamento' },
-          { value: 'NT', label: 'Novo Testamento' },
-        ]}
-      />
-      <div className="book-grid" style={{ marginTop: 14 }}>
-        {BOOKS.filter((b) => b.testament === testament).map((b) => (
-          <button key={b.id} className={b.id === book ? 'cur' : ''} onClick={() => setPicked(b.id)}>
-            {b.name}
-          </button>
-        ))}
-      </div>
+    <Sheet title={t.books} onClose={close} tall>
+      <ul className="book-list">
+        {BOOKS.map((b, i) => {
+          const isOpen = expanded === b.id;
+          return (
+            <Fragment key={b.id}>
+              {i === FIRST_NT && <li className="divider" role="separator" />}
+              <li ref={(el) => { rows.current[b.id] = el; }}>
+                <button
+                  className={`book-row ${b.id === book ? 'cur' : ''}`}
+                  aria-expanded={isOpen}
+                  onClick={() => setExpanded(isOpen ? null : b.id)}
+                >
+                  <span>{b.name}</span>
+                  {isOpen ? <CaretDown size={16} weight="bold" /> : <CaretRight size={16} weight="bold" />}
+                </button>
+                {isOpen && (
+                  <div className="chap-grid">
+                    {Array.from({ length: b.chapters }, (_, k) => k + 1).map((n) => (
+                      <button
+                        key={n}
+                        className={b.id === book && n === chapter ? 'cur' : ''}
+                        aria-label={`${b.name} ${n}`}
+                        onClick={() => {
+                          goTo(b.id, n);
+                          scrollTo(0, 0);
+                          close();
+                        }}
+                      >
+                        {n}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </li>
+            </Fragment>
+          );
+        })}
+      </ul>
     </Sheet>
   );
 }
