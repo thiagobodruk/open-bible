@@ -8,7 +8,7 @@ const ja: Messages = {
   settings: '設定',
   install: 'アプリをインストール',
   installSub: 'オフラインで全画面表示',
-  textSettings: 'テキスト',
+  textSettings: '表示',
   search: '検索',
   books: '書巻',
   prevChapter: '前の章',
