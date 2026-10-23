@@ -18,16 +18,18 @@ export function TextSettingsSheet() {
   const s = useSettings();
 
   return (
-    <Sheet title={t.textSettings} onClose={close}>
-      <div className="preview-wrap">
+    <Sheet
+      title={t.textSettings}
+      onClose={close}
+      pinned={
         <div className="preview" style={readingVars(s)} aria-hidden="true">
           <div className={`preview-text vn-${s.verseNumbers}`} lang="en">
             <span className="vn">16</span>
             For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish.
           </div>
         </div>
-      </div>
-
+      }
+    >
       <div className="themes" role="group" aria-label="Tema">
         {THEMES.map((th) => (
           <button key={th.v} className="theme-btn" aria-pressed={s.theme === th.v} onClick={() => s.set('theme', th.v)}>

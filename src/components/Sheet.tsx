@@ -8,9 +8,11 @@ interface Props {
   children: ReactNode;
   leading?: ReactNode;
   tall?: boolean;
+  /** Conteúdo fixo entre o título e a área rolável. */
+  pinned?: ReactNode;
 }
 
-export function Sheet({ title, onClose, children, leading, tall }: Props) {
+export function Sheet({ title, onClose, children, leading, tall, pinned }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -38,6 +40,7 @@ export function Sheet({ title, onClose, children, leading, tall }: Props) {
             <X size={22} weight="light" />
           </button>
         </div>
+        {pinned && <div className="sheet-pinned">{pinned}</div>}
         <div className="sheet-body">{children}</div>
       </div>
     </>
