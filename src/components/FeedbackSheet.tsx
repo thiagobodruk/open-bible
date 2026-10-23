@@ -17,10 +17,7 @@ export function FeedbackSheet() {
   const [kind, setKind] = useState<FeedbackKind>('bug');
   const [text, setText] = useState('');
 
-  const send = () => {
-    window.open(feedbackUrl(kind, text, refLabel(bookName(book), chapter)), '_blank', 'noopener');
-    close();
-  };
+  const empty = !text.trim();
 
   return (
     <Sheet title={t('feedback')} onClose={close}>
@@ -37,12 +34,22 @@ export function FeedbackSheet() {
         aria-label={t('feedbackMessage')}
         onChange={(e) => setText(e.target.value)}
       />
-      <p className="hint">{t('feedbackNote')}</p>
       <div className="actions">
         <span className="grow" />
         <button className="btn" onClick={close}>{t('cancel')}</button>
-        <button className="btn primary" disabled={!text.trim()} onClick={send}>{t('feedbackSend')}</button>
+        <a
+          className="btn primary"
+          href={empty ? undefined : feedbackUrl(kind, text, refLabel(bookName(book), chapter))}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-disabled={empty}
+          style={empty ? { opacity: 0.45, pointerEvents: 'none' } : undefined}
+          onClick={() => setTimeout(close, 0)}
+        >
+          {t('feedbackSend')}
+        </a>
       </div>
+      <p className="hint">{t('feedbackNote')}</p>
     </Sheet>
   );
 }
