@@ -1,7 +1,9 @@
+import { useRef } from 'react';
 import { DeviceMobile, DownloadSimple, GithubLogo, Trash, Upload } from '@phosphor-icons/react';
 import { ScreenHeader } from '../components/ScreenHeader';
-import { VERSIONS } from '../data/library';
-import { downloadedBytes, useLibrary } from '../state/library';
+import { abbrOf, findVersion } from '../data/catalog';
+import { downloadedMb, useLibrary } from '../state/library';
+import { downloadBackup, parseBackup } from '../backup';
 import { useSettings, type UiLang } from '../state/settings';
 import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
@@ -20,10 +22,25 @@ const LANGS: { code: UiLang; label: string }[] = [
 
 export function Settings() {
   const { uiLang, set } = useSettings();
-  const { downloaded, remove } = useLibrary();
+  const { installed, remove } = useLibrary();
+  const downloaded = Object.keys(installed);
+  const fileInput = useRef<HTMLInputElement>(null);
   const { open, notify } = useUI();
   const notes = useStudy((s) => s.notes.length);
   const highlights = useStudy((s) => Object.keys(s.highlights).length);
+
+  const onImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    try {
+      const { highlights: hs, notes: ns, skipped } = parseBackup(await file.text());
+      await useStudy.getState().merge(hs, ns);
+      notify(`Importado: ${hs.length} marcações e ${ns.length} notas${skipped ? `, ${skipped} ignoradas` : ''}`);
+    } catch {
+      notify('Arquivo de backup inválido');
+    }
+  };
 
   return (
     <div className="screen">
@@ -49,35 +66,37 @@ export function Settings() {
           <h2>Versões baixadas</h2>
           <div className="group">
             {downloaded.map((id) => {
-              const v = VERSIONS.find((x) => x.id === id)!;
+              const v = findVersion(id);
+              if (!v) return null;
               return (
                 <div key={id} className="row">
                   <span className="grow">
                     <span className="title">{v.name}</span>
-                    <span className="sub" style={{ display: 'block' }}>{v.abbr} · {v.sizeMb.toFixed(1)} MB</span>
+                    <span className="sub" style={{ display: 'block' }}>{abbrOf(id)} · {v.sizeMb.toFixed(1)} MB</span>
                   </span>
-                  <button className="icon-btn" aria-label={`Remover ${v.name}`} onClick={() => { remove(id); notify('Versão removida'); }}>
+                  <button className="icon-btn" aria-label={`Remover ${v.name}`} onClick={async () => { await remove(id); notify('Versão removida'); }}>
                     <Trash size={22} weight="light" />
                   </button>
                 </div>
               );
             })}
           </div>
-          <p className="hint">Ocupando {downloadedBytes(downloaded).toFixed(1)} MB neste dispositivo.</p>
+          <p className="hint">Ocupando {downloadedMb(downloaded).toFixed(1)} MB neste dispositivo.</p>
         </section>
 
         <section className="section">
           <h2>Seus dados</h2>
           <div className="group">
-            <button className="row" onClick={() => notify('Exportação disponível na camada lógica')}>
+            <button className="row" onClick={() => { downloadBackup(); notify('Backup exportado'); }}>
               <DownloadSimple size={24} weight="light" />
               <span className="grow"><span className="title">Exportar backup</span><span className="sub" style={{ display: 'block' }}>{highlights} marcações e {notes} notas</span></span>
             </button>
-            <button className="row" onClick={() => notify('Importação disponível na camada lógica')}>
+            <button className="row" onClick={() => fileInput.current?.click()}>
               <Upload size={24} weight="light" />
               <span className="grow"><span className="title">Importar backup</span></span>
             </button>
           </div>
+          <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={onImport} />
           <p className="hint">Tudo fica só neste navegador. Sem conta, sem nuvem. Exporte de vez em quando para não perder suas notas.</p>
         </section>
 

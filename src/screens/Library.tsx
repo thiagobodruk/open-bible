@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { CheckCircle, CloudArrowDown, CloudCheck, MagnifyingGlass } from '@phosphor-icons/react';
 import { ScreenHeader } from '../components/ScreenHeader';
-import { VERSIONS } from '../data/library';
+import { VERSIONS, abbrOf, type VersionInfo } from '../data/catalog';
 import { useLibrary } from '../state/library';
 import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
@@ -12,7 +12,7 @@ const COVERAGE = { nt: 'Só NT', ot: 'Só AT', partial: 'Incompleta' } as const;
 export function Library() {
   const [q, setQ] = useState('');
   const { versionId, uiLang, set } = useSettings();
-  const { downloaded, downloading, download } = useLibrary();
+  const { installed, downloading, failed, download } = useLibrary();
   const notify = useUI((s) => s.notify);
 
   const names = useMemo(() => new Intl.DisplayNames([uiLang], { type: 'language' }), [uiLang]);
@@ -26,9 +26,9 @@ export function Library() {
 
   const groups = useMemo(() => {
     const term = q.trim().toLowerCase();
-    const map = new Map<string, typeof VERSIONS>();
+    const map = new Map<string, VersionInfo[]>();
     for (const v of VERSIONS) {
-      const label = `${names.of(v.lang) ?? v.lang} ${native(v.lang)} ${v.name} ${v.abbr}`.toLowerCase();
+      const label = `${names.of(v.lang) ?? v.lang} ${native(v.lang)} ${v.name} ${abbrOf(v.id)}`.toLowerCase();
       if (term && !label.includes(term)) continue;
       map.set(v.lang, [...(map.get(v.lang) ?? []), v]);
     }
@@ -45,9 +45,14 @@ export function Library() {
     );
   }, [q, names, uiLang]);
 
-  const choose = (id: string, abbr: string) => {
+  const choose = (id: string) => {
     set('versionId', id);
-    notify(`Versão: ${abbr}`);
+    notify(`Versão: ${abbrOf(id)}`);
+  };
+
+  const get = async (id: string) => {
+    if (await download(id)) choose(id);
+    else notify(navigator.onLine ? 'Não foi possível baixar. Tente de novo.' : 'Sem conexão. Conecte-se para baixar.');
   };
 
   return (
@@ -71,7 +76,7 @@ export function Library() {
                 {nat && nat !== loc && <small>{nat}</small>}
               </h2>
               {versions.map((v) => {
-                const isDown = downloaded.includes(v.id);
+                const isDown = !!installed[v.id];
                 const prog = downloading[v.id];
                 const active = v.id === versionId;
                 return (
@@ -80,12 +85,12 @@ export function Library() {
                       className="grow"
                       style={{ textAlign: 'left', minWidth: 0 }}
                       disabled={!isDown}
-                      onClick={() => choose(v.id, v.abbr)}
+                      onClick={() => choose(v.id)}
                       aria-label={`${v.name}${active ? ', selecionada' : ''}`}
                     >
                       <div className="nm" dir={v.rtl ? 'rtl' : undefined} style={v.rtl ? { textAlign: 'left' } : undefined}>{v.name}</div>
                       <div className="meta">
-                        <span className="abbr">{v.abbr}</span>
+                        <span className="abbr">{abbrOf(v.id)}</span>
                         {v.coverage && <span className="chip">{COVERAGE[v.coverage]}</span>}
                         {v.rtl && <span className="chip">RTL</span>}
                         {active ? <span className="chip accent">Em uso</span> : isDown && <span className="chip">Baixada</span>}
@@ -94,9 +99,9 @@ export function Library() {
                     </button>
                     <div className="state">
                       {prog !== undefined ? (
-                        <div className="progress" role="progressbar" aria-valuenow={Math.round(prog * 100)}><i style={{ width: `${prog * 100}%` }} /></div>
+                        <div className="progress" role="progressbar" aria-label="Baixando" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(prog * 100)}><i style={{ width: `${prog * 100}%` }} /></div>
                       ) : !isDown ? (
-                        <button className="icon-btn" aria-label={`Baixar ${v.name}`} onClick={() => download(v.id, () => choose(v.id, v.abbr))}>
+                        <button className="icon-btn" aria-label={`${failed[v.id] ? 'Tentar de novo: ' : 'Baixar '}${v.name}`} onClick={() => get(v.id)}>
                           <CloudArrowDown size={26} weight="light" />
                         </button>
                       ) : active ? (
@@ -111,7 +116,7 @@ export function Library() {
             </section>
           );
         })}
-        <p className="hint" style={{ marginTop: 24 }}>Amostra do catálogo, só para validar a interface. O download é simulado.</p>
+        <p className="hint" style={{ marginTop: 24 }}>{VERSIONS.length} versões do repositório thiagobodruk/bible. Cada uma é baixada uma vez e depois funciona sem internet.</p>
       </div>
     </div>
   );

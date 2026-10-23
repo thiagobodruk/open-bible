@@ -11,8 +11,10 @@ import './styles/screens.css';
 import App from './App';
 import { initSettingsEffects } from './state/settings';
 import { useUI } from './state/ui';
+import { boot } from './boot';
 
 initSettingsEffects();
+boot();
 
 const update = registerSW({
   onNeedRefresh() {

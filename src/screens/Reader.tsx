@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { CaretDown, CaretLeft, CaretRight, List, MagnifyingGlass, NotePencil, TextAa } from '@phosphor-icons/react';
-import { getBook } from '../data/books';
-import { getChapter } from '../data/chapters';
-import { getVersion } from '../data/library';
+import { abbrOf, findVersion } from '../data/catalog';
+import { useBookName, useBooks, useChapter } from '../hooks';
+import { useLibrary } from '../state/library';
 import { useSettings } from '../state/settings';
 import { vkey, useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { readingVars } from '../components/readingVars';
 import { SelectionBar } from '../components/SelectionBar';
+import { Welcome } from '../components/Welcome';
 import { go } from '../router';
 import { hintPending, markHintSeen } from '../hint';
 import { t } from '../strings';
@@ -20,8 +21,14 @@ export function Reader() {
   const [dir, setDir] = useState<'next' | 'prev' | null>(null);
   const touch = useRef<{ x: number; y: number } | null>(null);
 
-  const b = getBook(book);
-  const { verses, placeholder } = getChapter(book, chapter);
+  const books = useBooks();
+  const bookName = useBookName();
+  const installed = useLibrary((s) => !!s.installed[settings.versionId]);
+  const libraryReady = useLibrary((s) => s.ready);
+  const text = useChapter(book, chapter);
+  const verses = text.status === 'ready' ? text.verses : [];
+  const bName = bookName(book);
+  const versionInfo = findVersion(settings.versionId);
   const hasSelection = selection.length > 0;
   const blocked = hasSelection || sheet !== null;
 
@@ -35,6 +42,13 @@ export function Reader() {
       notify(delta === 1 ? 'Este é o último capítulo' : 'Este é o primeiro capítulo');
     }
   };
+
+  // A posição salva pode não existir na versão atual (por exemplo, uma versão só com o NT).
+  useEffect(() => {
+    if (!installed || books.some((x) => x.id === book && chapter <= x.chapters)) return;
+    const target = books.find((x) => x.id === book) ?? books[0];
+    if (target) useStudy.getState().goTo(target.id, 1);
+  }, [installed, books, book, chapter]);
 
   // Barra retrátil: some ao rolar para baixo, volta ao rolar para cima.
   useEffect(() => {
@@ -53,6 +67,7 @@ export function Reader() {
   // Teclado
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (!installed) return;
       if (e.key === 'ArrowRight') move(1);
       if (e.key === 'ArrowLeft') move(-1);
       if (e.key === 'Escape') useStudy.getState().clearSelection();
@@ -64,24 +79,25 @@ export function Reader() {
   // Vem de Meu estudo com um versículo em foco
   useEffect(() => {
     if (focusVerse === null) return;
+    if (text.status === 'loading') return;
     const el = document.getElementById(`v-${focusVerse}`);
     if (el) {
       el.scrollIntoView({ block: 'center' });
       el.classList.add('flash');
     }
     clearFocus();
-  }, [focusVerse, clearFocus, book, chapter]);
+  }, [focusVerse, clearFocus, book, chapter, text.status]);
 
   // Dica de gestos só na primeira abertura. Vale como vista quando o toast aparece ou quando o usuário já troca de capítulo.
   useEffect(() => {
-    if (!hintPending()) return;
+    if (!installed || !hintPending()) return;
     const id = setTimeout(() => {
       if (!hintPending()) return;
       notify('Deslize ou toque nas bordas para trocar de capítulo');
       markHintSeen();
     }, 700);
     return () => clearTimeout(id);
-  }, [notify]);
+  }, [notify, installed]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     const p = e.touches[0];
@@ -106,17 +122,19 @@ export function Reader() {
 
   const noteAt = (v: number) => notes.some((n) => n.book === book && n.chapter === chapter && v >= n.verseStart && v <= n.verseEnd);
 
+  if (libraryReady && !installed) return <Welcome />;
+
   return (
     <div className="reader">
       <header className={`topbar ${barHidden && !blocked ? 'hidden' : ''}`}>
         <div className="topbar-in">
-          <button className="crumb" onClick={() => open('navigator')} aria-label={`${b.name} ${chapter}. Escolher livro e capítulo`}>
-            <span>{b.name} {chapter}</span>
+          <button className="crumb" onClick={() => open('navigator')} aria-label={`${bName} ${chapter}. Escolher livro e capítulo`}>
+            <span>{bName} {chapter}</span>
             <CaretDown size={14} weight="bold" />
           </button>
           <span className="spacer" />
           <button className="ver-chip" onClick={() => go('/library')} aria-label="Escolher versão">
-            {getVersion(settings.versionId).abbr}
+            {abbrOf(settings.versionId)}
           </button>
           <button className="icon-btn" onClick={() => open('search')} aria-label={t.search}><MagnifyingGlass size={24} weight="light" /></button>
           <button className="icon-btn" onClick={() => open('text')} aria-label={t.textSettings}><TextAa size={24} weight="light" /></button>
@@ -137,13 +155,15 @@ export function Reader() {
         <article
           key={`${book}.${chapter}`}
           className={`chapter ${dir ? `anim-${dir}` : ''} ${settings.textMode === 'verses' ? 'verses' : 'paragraph'} vn-${settings.verseNumbers}`}
-          lang={settings.versionId.slice(0, 2)}
+          lang={versionInfo?.lang}
+          dir={versionInfo?.rtl ? 'rtl' : undefined}
         >
           <h1 className="chapter-title">
-            <span className="bk">{b.name}</span>
+            <span className="bk">{bName}</span>
             <span className="nr">{chapter}</span>
           </h1>
-          {placeholder && <p className="chapter-note">Capítulo de exemplo, sem texto bíblico real</p>}
+          {text.status === 'missing' && installed && <p className="chapter-note">Este capítulo não existe nesta versão.</p>}
+          {text.status === 'ready' && verses.length === 0 && <p className="chapter-note">Este capítulo está vazio nesta versão.</p>}
           {verses.map((text, i) => {
             const v = i + 1;
             const hl = highlights[vkey(book, chapter, v)];

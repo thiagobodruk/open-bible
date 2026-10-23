@@ -86,3 +86,10 @@
 .entry.hit { border-left-color: var(--line); }
 .entry.hit .txt { font-size: 15.5px; }
 mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding: 0 1px; }
+
+.welcome { display: flex; flex-direction: column; align-items: center; gap: 14px; max-width: 360px; margin: 0 auto; padding-top: 18vh; }
+.welcome h1 { font-family: var(--font-ui); font-size: 20px; font-weight: 600; color: var(--fg); margin: 0; }
+.welcome p { margin: 0; font-size: 14px; line-height: 1.5; }
+.welcome .progress { width: 100%; max-width: 240px; }
+.error { color: var(--danger, #c0392b); }
+.brand-name { font-family: var(--font-ui); font-size: 16px; font-weight: 600; }
