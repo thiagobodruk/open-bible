@@ -19,14 +19,13 @@ export function TextSettingsSheet() {
 
   return (
     <Sheet title={t.textSettings} onClose={close}>
-      <div
-        className={`preview ${s.font}`}
-        style={{ ...readingVars(s), fontFamily: 'var(--rd-font)', fontSize: 'var(--rd-size)', lineHeight: 'var(--rd-lh)', textAlign: s.align }}
-      >
-        <span className={`vn-${s.verseNumbers}`}>
-          <span className="vn">16</span>
-          For God so loved the world, that he gave his only begotten Son.
-        </span>
+      <div className="preview-wrap">
+        <div className="preview" style={readingVars(s)} aria-hidden="true">
+          <div className={`preview-text vn-${s.verseNumbers}`} lang="en">
+            <span className="vn">16</span>
+            For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish.
+          </div>
+        </div>
       </div>
 
       <div className="themes" role="group" aria-label="Tema">

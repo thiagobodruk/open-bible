@@ -34,11 +34,8 @@
 .page {
   padding: calc(env(safe-area-inset-top, 0px) + 84px) 10vw calc(env(safe-area-inset-bottom, 0px) + 120px);
   font-family: var(--rd-font); font-size: var(--rd-size); line-height: var(--rd-lh);
-  text-align: var(--rd-align);
+  text-align: var(--rd-align); hyphens: var(--rd-hyph);
 }
-.page.serif { --rd-font: var(--font-serif); }
-.page.sans { --rd-font: var(--font-sans); }
-.page.mono { --rd-font: var(--font-mono); }
 .chapter { max-width: var(--rd-col); margin: 0 auto; padding-inline: var(--rd-pad); user-select: none; -webkit-user-select: none; }
 .chapter.anim-next { animation: in-next 0.28s ease-out; }
 .chapter.anim-prev { animation: in-prev 0.28s ease-out; }
@@ -87,7 +84,14 @@
 :root[data-theme='dark'] .selbar .swatch.c-orange { --c: #d28d4d; }
 
 /* Painel de texto */
-.preview { padding: 16px 18px; border-radius: var(--radius); background: var(--surface); margin-bottom: 18px; overflow: hidden; }
+/* O preview fica fixo no topo da sheet para continuar visível enquanto o usuário ajusta os controles abaixo. */
+.preview-wrap { position: sticky; top: 0; z-index: 2; background: var(--bg); padding: 4px 0 12px; margin-top: -4px; }
+.preview { padding: 16px 18px; border-radius: var(--radius); background: var(--surface); max-height: 22dvh; overflow: hidden; }
+.preview-text {
+  font-family: var(--rd-font); font-size: var(--rd-size); line-height: var(--rd-lh);
+  text-align: var(--rd-align); hyphens: var(--rd-hyph);
+  padding-inline: var(--rd-pv-pad); transition: padding 0.15s;
+}
 .field { display: grid; gap: 8px; margin-top: 18px; }
 .field > label, .field > .lbl { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; }
 .range { width: 100%; accent-color: var(--accent); height: 28px; }
