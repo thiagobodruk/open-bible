@@ -52,7 +52,7 @@
 .verses .verse-wrap { display: block; margin-bottom: 0.55em; }
 .verse { border-radius: 3px; padding: 0 0.12em; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 0.15s; }
 .verse.hl { background: var(--c); }
-.verse.sel { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 0.22em; }
+.verse.sel { text-decoration: underline dotted; text-decoration-color: color-mix(in srgb, var(--fg) 60%, transparent); text-decoration-thickness: 1.5px; text-underline-offset: 0.24em; }
 .verse.flash { animation: flash 1.6s ease-out; }
 @keyframes flash { 0%, 40% { background: color-mix(in srgb, var(--accent) 22%, transparent); } }
 .vn { font-family: var(--font-ui); font-weight: 600; font-size: 0.64em; vertical-align: super; line-height: 0; margin-right: 0.35em; color: var(--muted); }
