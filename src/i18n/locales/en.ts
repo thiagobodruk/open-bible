@@ -87,7 +87,7 @@ const en = {
 
   lastChapter: 'This is the last chapter',
   firstChapter: 'This is the first chapter',
-  hintSwipe: 'Swipe or tap the edges to change chapter',
+  hintSwipe: 'Swipe to turn pages',
   chapterMissing: 'This chapter does not exist in this version.',
   chapterEmpty: 'This chapter is empty in this version.',
   hasNote: 'Has a note',

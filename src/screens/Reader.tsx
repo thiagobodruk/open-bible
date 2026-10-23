@@ -9,6 +9,7 @@ import { useUI } from '../state/ui';
 import { readingVars } from '../components/readingVars';
 import { SelectionBar } from '../components/SelectionBar';
 import { InstallBanner } from '../components/InstallBanner';
+import { SwipeHint } from '../components/SwipeHint';
 import { Welcome } from '../components/Welcome';
 import { go } from '../router';
 import { hintPending, markHintSeen } from '../hint';
@@ -20,6 +21,7 @@ export function Reader() {
   const settings = useSettings();
   const { sheet, open, notify } = useUI();
   const [barMini, setBarMini] = useState(false);
+  const [hint, setHint] = useState(false);
   const [dir, setDir] = useState<'next' | 'prev' | null>(null);
   const touch = useRef<{ x: number; y: number } | null>(null);
 
@@ -90,16 +92,16 @@ export function Reader() {
     clearFocus();
   }, [focusVerse, clearFocus, book, chapter, text.status]);
 
-  // Dica de gestos só na primeira abertura. Vale como vista quando o toast aparece ou quando o usuário já troca de capítulo.
+  // Dica de gesto só na primeira abertura. Vale como vista quando aparece ou quando o usuário já troca de capítulo.
   useEffect(() => {
     if (!installed || !hintPending()) return;
     const id = setTimeout(() => {
       if (!hintPending()) return;
-      notify(t('hintSwipe'));
+      setHint(true);
       markHintSeen();
     }, 700);
     return () => clearTimeout(id);
-  }, [notify, installed, t]);
+  }, [installed]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     const p = e.touches[0];
@@ -195,7 +197,8 @@ export function Reader() {
         )}
       </main>
 
-      <InstallBanner hidden={blocked} />
+      {hint && <SwipeHint onDone={() => setHint(false)} />}
+      <InstallBanner hidden={blocked} hold={hint} />
       {hasSelection && !sheet && <SelectionBar />}
     </div>
   );

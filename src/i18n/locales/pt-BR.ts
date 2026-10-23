@@ -89,7 +89,7 @@ const ptBR: Messages = {
 
   lastChapter: 'Este é o último capítulo',
   firstChapter: 'Este é o primeiro capítulo',
-  hintSwipe: 'Deslize ou toque nas bordas para trocar de capítulo',
+  hintSwipe: 'Deslize para paginar',
   chapterMissing: 'Este capítulo não existe nesta versão.',
   chapterEmpty: 'Este capítulo está vazio nesta versão.',
   hasNote: 'Tem nota',

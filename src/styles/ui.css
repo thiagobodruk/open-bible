@@ -125,3 +125,23 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 }
 .install-banner .icon-btn { width: 36px; height: 36px; flex: none; }
 .install-banner .btn { flex: none; }
+
+/* Dica de gesto da primeira abertura */
+.swipe-hint {
+  position: fixed; inset: 0; z-index: 38;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  color: var(--fg); user-select: none; -webkit-tap-highlight-color: transparent;
+  animation: hint-in 0.6s ease-out both;
+}
+.swipe-hint.leaving { animation: hint-out 0.35s ease-in forwards; }
+.swipe-hint p { font-family: var(--font-ui); font-size: 16px; font-weight: 500; letter-spacing: 0.01em; }
+.swipe-icon { animation: hint-swipe 2.2s ease-in-out infinite; }
+@keyframes hint-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hint-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes hint-swipe {
+  0%, 15% { transform: translateX(26px) rotate(8deg); opacity: 0.35; }
+  55% { transform: translateX(-26px) rotate(-8deg); opacity: 1; }
+  100% { transform: translateX(26px) rotate(8deg); opacity: 0.35; }
+}
+@media (prefers-reduced-motion: reduce) { .swipe-icon { animation: none; } }

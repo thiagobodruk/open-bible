@@ -5,18 +5,19 @@ import { useUI } from '../state/ui';
 import { canPromptInstall, dismissInstall, installOffered, isIOS, requestInstall, subscribeInstall } from '../install';
 
 /** Convite discreto para instalar o app. Aparece depois do primeiro download, sem cobrir a leitura. */
-export function InstallBanner({ hidden }: { hidden: boolean }) {
+export function InstallBanner({ hidden, hold = false }: { hidden: boolean; hold?: boolean }) {
   const t = useT();
   const open = useUI((s) => s.open);
   const prompt = useSyncExternalStore(subscribeInstall, canPromptInstall);
   const offered = useSyncExternalStore(subscribeInstall, installOffered);
   const [ready, setReady] = useState(false);
 
-  // Espera um pouco, para não disputar a atenção com a dica de gestos.
+  // Espera a dica de gesto sair e mais um pouco, para não disputar a atenção com ela.
   useEffect(() => {
-    const id = setTimeout(() => setReady(true), 5000);
+    if (hold) return;
+    const id = setTimeout(() => setReady(true), 3000);
     return () => clearTimeout(id);
-  }, []);
+  }, [hold]);
 
   if (!offered || hidden || !ready || !(prompt || isIOS())) return null;
 
