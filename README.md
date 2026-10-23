@@ -4,6 +4,12 @@
 
 Offline-first and installable on Android and iOS. No account, no backend, no tracking.
 
+<p align="center">
+  <a href="https://thiagobodruk.github.io/open-bible/">
+    <img alt="Open the live demo" src="https://img.shields.io/badge/%E2%96%B6%EF%B8%8E%20OPEN%20THE%20LIVE%20DEMO-thiagobodruk.github.io%2Fopen--bible-2ea44f?style=for-the-badge&logo=bookstack&logoColor=white" height="56">
+  </a>
+</p>
+
 [![License: MIT](https://img.shields.io/github/license/thiagobodruk/open-bible)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/thiagobodruk/open-bible?style=flat&color=yellow)](https://github.com/thiagobodruk/open-bible/stargazers)
 [![Deploy](https://img.shields.io/github/actions/workflow/status/thiagobodruk/open-bible/deploy.yml?branch=main&label=deploy)](https://github.com/thiagobodruk/open-bible/actions/workflows/deploy.yml)
@@ -23,8 +29,6 @@ Offline-first and installable on Android and iOS. No account, no backend, no tra
 > — Matthew 24:14 (KJV)
 
 **Open Bible is an initiative to make the Bible available to as many people as possible, all around the world.** The code is free to use, study, and adapt under the [MIT License](LICENSE).
-
-**Live demo:** <https://thiagobodruk.github.io/open-bible/>
 
 ## Bible versions
 
