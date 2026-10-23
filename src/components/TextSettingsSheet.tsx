@@ -1,4 +1,4 @@
-import { ArrowCounterClockwise } from '@phosphor-icons/react';
+import { ArrowCounterClockwise, TextAlignJustify, TextAlignLeft } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { Segmented } from './Segmented';
 import { useSettings } from '../state/settings';
@@ -12,6 +12,33 @@ const THEMES = [
   { v: 'sepia', label: 'Sépia' },
   { v: 'dark', label: 'Escuro' },
 ] as const;
+
+const FONT_MIN = 14;
+const FONT_MAX = 32;
+const FONT_STEP = 2;
+const LINE_HEIGHTS = [
+  { v: 1.4, label: 'Compacta', gap: 4 },
+  { v: 1.7, label: 'Normal', gap: 6 },
+  { v: 2, label: 'Ampla', gap: 8 },
+] as const;
+const MARGINS = [
+  { v: 'narrow', label: 'Estreitas', inset: 2 },
+  { v: 'medium', label: 'Médias', inset: 6 },
+  { v: 'wide', label: 'Largas', inset: 10 },
+] as const;
+
+/** Linhas de texto em miniatura. `gap` muda o espaçamento vertical e `inset` o recuo lateral. */
+function Lines({ gap = 6, inset = 3 }: { gap?: number; inset?: number }) {
+  const start = (26 - 3 * gap) / 2;
+  const ys = [0, 1, 2, 3].map((i) => start + i * gap);
+  return (
+    <svg width="28" height="26" viewBox="0 0 28 26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+      {ys.map((y, i) => <line key={i} x1={inset} x2={28 - inset - (i === 3 ? 6 : 0)} y1={y} y2={y} />)}
+    </svg>
+  );
+}
+
+const nearest = (v: number) => LINE_HEIGHTS.reduce((a, b) => (Math.abs(b.v - v) < Math.abs(a.v - v) ? b : a));
 
 export function TextSettingsSheet() {
   const close = useUI((s) => s.close);
@@ -54,40 +81,59 @@ export function TextSettingsSheet() {
       </div>
 
       <div className="field">
-        <label htmlFor="fs">Tamanho <span>{s.fontSize} px</span></label>
-        <input id="fs" className="range" type="range" min={14} max={32} step={1} value={s.fontSize} onChange={(e) => s.set('fontSize', +e.target.value)} />
+        <span className="lbl">Tamanho <span>{s.fontSize} px</span></span>
+        <div className="choice-row two" role="group" aria-label="Tamanho da fonte">
+          <button
+            className="choice"
+            aria-label="Diminuir fonte"
+            disabled={s.fontSize <= FONT_MIN}
+            onClick={() => s.set('fontSize', Math.max(FONT_MIN, s.fontSize - FONT_STEP))}
+          >
+            <span style={{ fontSize: 15 }}>A</span>
+          </button>
+          <button
+            className="choice"
+            aria-label="Aumentar fonte"
+            disabled={s.fontSize >= FONT_MAX}
+            onClick={() => s.set('fontSize', Math.min(FONT_MAX, s.fontSize + FONT_STEP))}
+          >
+            <span style={{ fontSize: 26 }}>A</span>
+          </button>
+        </div>
       </div>
 
       <div className="field">
-        <label htmlFor="lh">Altura da linha <span>{s.lineHeight.toFixed(1)}</span></label>
-        <input id="lh" className="range" type="range" min={1.3} max={2} step={0.1} value={s.lineHeight} onChange={(e) => s.set('lineHeight', +e.target.value)} />
+        <span className="lbl">Altura da linha</span>
+        <div className="choice-row" role="group" aria-label="Altura da linha">
+          {LINE_HEIGHTS.map((l) => (
+            <button key={l.v} className="choice" aria-pressed={nearest(s.lineHeight).v === l.v} aria-label={l.label} title={l.label} onClick={() => s.set('lineHeight', l.v)}>
+              <Lines gap={l.gap} />
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="field">
         <span className="lbl">Margens</span>
-        <Segmented
-          label="Margens"
-          value={s.margins}
-          onChange={(v) => s.set('margins', v)}
-          options={[
-            { value: 'narrow', label: 'Estreitas' },
-            { value: 'medium', label: 'Médias' },
-            { value: 'wide', label: 'Largas' },
-          ]}
-        />
+        <div className="choice-row" role="group" aria-label="Margens">
+          {MARGINS.map((m) => (
+            <button key={m.v} className="choice" aria-pressed={s.margins === m.v} aria-label={m.label} title={m.label} onClick={() => s.set('margins', m.v)}>
+              <Lines inset={m.inset} />
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="field">
         <span className="lbl">Alinhamento</span>
-        <Segmented
-          label="Alinhamento"
-          value={s.align}
-          onChange={(v) => s.set('align', v)}
-          options={[
-            { value: 'left', label: 'Esquerda' },
-            { value: 'justify', label: 'Justificado' },
-          ]}
-        />
+        <div className="choice-row two" role="group" aria-label="Alinhamento">
+          <button className="choice" aria-pressed={s.align === 'left'} aria-label="Esquerda" title="Esquerda" onClick={() => s.set('align', 'left')}>
+            <TextAlignLeft size={26} weight="light" />
+          </button>
+          <button className="choice" aria-pressed={s.align === 'justify'} aria-label="Justificado" title="Justificado" onClick={() => s.set('align', 'justify')}>
+            <TextAlignJustify size={26} weight="light" />
+          </button>
+        </div>
       </div>
 
       <div className="field">
