@@ -70,7 +70,7 @@ export function Settings() {
                 <div key={id} className="row">
                   <span className="grow">
                     <span className="title">{v.name}</span>
-                    <span className="sub" style={{ display: 'block' }}>{abbrOf(id)} · {v.sizeMb.toFixed(1)} MB</span>
+                    <span className="sub" style={{ display: 'block' }}>{abbrOf(id)} · {t.mb(v.sizeMb)}</span>
                   </span>
                   <button className="icon-btn" aria-label={t('removeVersion', { name: v.name })} onClick={async () => { await remove(id); notify(t('versionRemoved')); }}>
                     <Trash size={22} weight="light" />
@@ -79,7 +79,7 @@ export function Settings() {
               );
             })}
           </div>
-          <p className="hint">{t('usingMb', { mb: downloadedMb(downloaded).toFixed(1) })}</p>
+          <p className="hint">{t('usingMb', { size: t.mb(downloadedMb(downloaded)) })}</p>
         </section>
 
         <section className="section">

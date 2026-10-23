@@ -61,7 +61,7 @@ export function SelectionBar() {
             key={c}
             className={`swatch c-${c}`}
             aria-pressed={active(c)}
-            aria-label={t('highlightWith', { color: t(c).toLowerCase() })}
+            aria-label={t('highlightWith', { color: t.lang === 'de' ? t(c) : t(c).toLowerCase() })}
             onClick={() => paint(c, texts)}
           />
         ))}

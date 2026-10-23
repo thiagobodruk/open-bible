@@ -32,12 +32,15 @@ export interface Translator {
   (key: Key, params?: Params): string;
   /** Texto com concordância de número: `t.n('verse', 3)`. */
   n: (key: PluralKey, n: number, params?: Params) => string;
+  /** Tamanho em megabytes, com o separador decimal e a unidade do idioma. */
+  mb: (n: number) => string;
   lang: UiLang;
 }
 
 export function makeTranslator(lang: UiLang): Translator {
   const t = ((key: Key, params?: Params) => translate(lang, key, params)) as Translator;
   t.n = (key, n, params) => translatePlural(lang, key, n, params);
+  t.mb = (n) => translate(lang, 'sizeMb', { n: new Intl.NumberFormat(lang, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(n) });
   t.lang = lang;
   return t;
 }

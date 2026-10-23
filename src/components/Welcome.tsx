@@ -40,7 +40,7 @@ export function Welcome() {
           <h1>{t('welcomeTitle')}</h1>
           <p>{t('welcomeBody')}</p>
           <button className="btn primary" onClick={start} disabled={busy}>
-            {busy ? t('downloadingBtn', { pct: Math.round(progress * 100) }) : t('downloadBtn', { abbr: abbrOf(id), mb: v.sizeMb.toFixed(1) })}
+            {busy ? t('downloadingBtn', { pct: Math.round(progress * 100) }) : t('downloadBtn', { abbr: abbrOf(id), size: t.mb(v.sizeMb) })}
           </button>
           {busy && <div className="progress" role="progressbar" aria-label={t('downloading')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></div>}
           {failure && (

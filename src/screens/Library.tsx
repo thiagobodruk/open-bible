@@ -89,7 +89,7 @@ export function Library() {
               {v.coverage && <span className="chip">{t(COVERAGE[v.coverage])}</span>}
               {v.rtl && <span className="chip">RTL</span>}
               {active ? <span className="chip accent">{t('inUse')}</span> : isDown && <span className="chip">{t('downloaded')}</span>}
-              <span className="abbr" style={{ fontWeight: 400 }}>{v.sizeMb.toFixed(1)} MB</span>
+              <span className="abbr" style={{ fontWeight: 400 }}>{t.mb(v.sizeMb)}</span>
             </div>
           </button>
           <div className="state">
