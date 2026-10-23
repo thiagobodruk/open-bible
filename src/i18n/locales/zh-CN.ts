@@ -89,7 +89,7 @@ const zhCN: Messages = {
 
   lastChapter: '这是最后一章',
   firstChapter: '这是第一章',
-  hintSwipe: '滑动或点按屏幕边缘即可切换章节',
+  hintSwipe: '滑动翻页',
   chapterMissing: '此译本没有这一章。',
   chapterEmpty: '此译本中这一章为空。',
   hasNote: '有笔记',

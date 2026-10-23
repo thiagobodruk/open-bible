@@ -89,7 +89,7 @@ const fr: Messages = {
 
   lastChapter: 'C’est le dernier chapitre',
   firstChapter: 'C’est le premier chapitre',
-  hintSwipe: 'Balayez ou touchez les bords pour changer de chapitre',
+  hintSwipe: 'Balayez pour tourner les pages',
   chapterMissing: 'Ce chapitre n’existe pas dans cette version.',
   chapterEmpty: 'Ce chapitre est vide dans cette version.',
   hasNote: 'Avec une note',

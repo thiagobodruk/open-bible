@@ -89,7 +89,7 @@ const de: Messages = {
 
   lastChapter: 'Das ist das letzte Kapitel',
   firstChapter: 'Das ist das erste Kapitel',
-  hintSwipe: 'Wische oder tippe auf die Ränder, um das Kapitel zu wechseln',
+  hintSwipe: 'Zum Blättern wischen',
   chapterMissing: 'Dieses Kapitel gibt es in dieser Version nicht.',
   chapterEmpty: 'Dieses Kapitel ist in dieser Version leer.',
   hasNote: 'Mit Notiz',

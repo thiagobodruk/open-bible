@@ -89,7 +89,7 @@ const es: Messages = {
 
   lastChapter: 'Este es el último capítulo',
   firstChapter: 'Este es el primer capítulo',
-  hintSwipe: 'Desliza o toca los bordes para cambiar de capítulo',
+  hintSwipe: 'Desliza para pasar de página',
   chapterMissing: 'Este capítulo no existe en esta versión.',
   chapterEmpty: 'Este capítulo está vacío en esta versión.',
   hasNote: 'Tiene nota',
