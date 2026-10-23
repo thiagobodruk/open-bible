@@ -28,13 +28,20 @@ const de: Messages = {
   updateAction: 'Aktualisieren',
 
   installedAlready: 'Die App ist auf diesem Gerät bereits installiert.',
-  installIosIntro: 'Auf dem iPhone oder iPad erfolgt die Installation über Safari.',
-  installIosStep1: 'Tippe in der Safari-Leiste auf {icon} Teilen.',
+  installIosIntro: 'Auf deinem {device} installierst du die App über das Teilen-Menü.',
+  installShareSafariPhone: 'Tippe in der Safari-Leiste unten auf {icon} Teilen.',
+  installShareSafariPad: 'Tippe in der Safari-Leiste oben auf {icon} Teilen.',
+  installShareChrome: 'Tippe am rechten Ende der Chrome-Adressleiste auf {icon} Teilen.',
+  installShareOther: 'Öffne diese Seite in Safari oder Chrome und tippe auf {icon} Teilen.',
   installIosStep2: 'Wähle {icon} Zum Home-Bildschirm.',
   installIosStep3: 'Bestätige mit Hinzufügen.',
   installOtherIntro: 'Dein Browser hat keine automatische Installation angeboten. Du kannst die App über das Browsermenü installieren.',
   installOtherStep1: 'Öffne das Browsermenü {icon}.',
   installOtherStep2: 'Wähle App installieren oder Zum Startbildschirm hinzufügen.',
+
+  installBanner: 'Installiere die App für schnellen Zugriff, auch offline.',
+  installBannerAction: 'Installieren',
+  dismiss: 'Schließen',
 
   noteSaved: 'Notiz gespeichert',
   noteDeleted: 'Notiz gelöscht',

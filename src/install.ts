@@ -4,21 +4,72 @@ interface InstallPromptEvent extends Event {
 }
 
 let deferred: InstallPromptEvent | null = null;
+const listeners = new Set<() => void>();
+const emit = () => listeners.forEach((l) => l());
 
 addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferred = e as InstallPromptEvent;
+  emit();
 });
+
+addEventListener('appinstalled', () => {
+  deferred = null;
+  emit();
+});
+
+/** Para `useSyncExternalStore`: avisa quando o prompt nativo fica disponível ou deixa de estar. */
+export function subscribeInstall(cb: () => void) {
+  listeners.add(cb);
+  return () => void listeners.delete(cb);
+}
+
+/** O navegador liberou o prompt nativo de instalação (Android, Chrome e Edge no desktop). */
+export const canPromptInstall = () => deferred !== null;
 
 /** Dispara o prompt nativo (Android/Chrome). Retorna false se não houver, e aí mostramos o guia manual. */
 export async function requestInstall(): Promise<boolean> {
   if (!deferred) return false;
-  await deferred.prompt();
+  const ev = deferred;
   deferred = null;
+  emit();
+  await ev.prompt();
   return true;
 }
 
 export const isStandalone = () =>
   matchMedia('(display-mode: standalone)').matches || (navigator as unknown as { standalone?: boolean }).standalone === true;
 
-export const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
+export interface IosInfo {
+  device: 'iPhone' | 'iPad';
+  browser: 'safari' | 'chrome' | 'other';
+}
+
+/** iPhone ou iPad e o navegador, pelo user-agent. No iPadOS o Safari se apresenta como Mac, então conta também o toque. */
+export function detectIOS(ua: string = navigator.userAgent, touchPoints: number = navigator.maxTouchPoints): IosInfo | null {
+  const phone = /iPhone|iPod/.test(ua);
+  const pad = /iPad/.test(ua) || (/Macintosh/.test(ua) && touchPoints > 1);
+  if (!phone && !pad) return null;
+  const browser = /CriOS/.test(ua) ? 'chrome' : /FxiOS|EdgiOS|OPiOS|OPT\/|DuckDuckGo|GSA\//.test(ua) ? 'other' : /Safari\//.test(ua) ? 'safari' : 'other';
+  return { device: phone ? 'iPhone' : 'iPad', browser };
+}
+
+export const isIOS = () => detectIOS() !== null;
+
+const DISMISSED = 'ob:install-dismissed';
+
+export function installDismissed(): boolean {
+  try {
+    return !!localStorage.getItem(DISMISSED);
+  } catch {
+    return true;
+  }
+}
+
+export function dismissInstall() {
+  try {
+    localStorage.setItem(DISMISSED, '1');
+  } catch {
+    /* sem armazenamento, o banner só some nesta sessão */
+  }
+}

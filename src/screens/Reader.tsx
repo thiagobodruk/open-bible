@@ -8,6 +8,7 @@ import { vkey, useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { readingVars } from '../components/readingVars';
 import { SelectionBar } from '../components/SelectionBar';
+import { InstallBanner } from '../components/InstallBanner';
 import { Welcome } from '../components/Welcome';
 import { go } from '../router';
 import { hintPending, markHintSeen } from '../hint';
@@ -194,6 +195,7 @@ export function Reader() {
         )}
       </main>
 
+      <InstallBanner hidden={blocked} />
       {hasSelection && !sheet && <SelectionBar />}
     </div>
   );

@@ -28,13 +28,20 @@ const fr: Messages = {
   updateAction: 'Mettre à jour',
 
   installedAlready: 'L’app est déjà installée sur cet appareil.',
-  installIosIntro: 'Sur iPhone ou iPad, l’installation se fait depuis Safari.',
-  installIosStep1: 'Touchez {icon} Partager dans la barre de Safari.',
+  installIosIntro: 'Sur votre {device}, l’installation se fait depuis le menu Partager.',
+  installShareSafariPhone: 'Touchez {icon} Partager dans la barre de Safari, en bas de l’écran.',
+  installShareSafariPad: 'Touchez {icon} Partager dans la barre de Safari, en haut de l’écran.',
+  installShareChrome: 'Touchez {icon} Partager, à l’extrémité droite de la barre d’adresse de Chrome.',
+  installShareOther: 'Ouvrez cette page dans Safari ou Chrome, puis touchez {icon} Partager.',
   installIosStep2: 'Choisissez {icon} Sur l’écran d’accueil.',
   installIosStep3: 'Confirmez avec Ajouter.',
   installOtherIntro: 'Votre navigateur n’a pas proposé l’installation automatique. Vous pouvez installer depuis son menu.',
   installOtherStep1: 'Ouvrez le menu {icon} du navigateur.',
   installOtherStep2: 'Choisissez Installer l’app ou Ajouter à l’écran d’accueil.',
+
+  installBanner: 'Installez l’app pour y accéder vite, même hors ligne.',
+  installBannerAction: 'Installer',
+  dismiss: 'Ignorer',
 
   noteSaved: 'Note enregistrée',
   noteDeleted: 'Note supprimée',

@@ -28,13 +28,20 @@ const ja: Messages = {
   updateAction: '更新',
 
   installedAlready: 'このデバイスにはすでにインストールされています。',
-  installIosIntro: 'iPhone と iPad では、Safari からインストールします。',
-  installIosStep1: 'Safari のツールバーで{icon}共有をタップします。',
+  installIosIntro: 'お使いの {device} では、共有メニューからインストールします。',
+  installShareSafariPhone: '画面下部の Safari ツールバーで{icon}共有をタップします。',
+  installShareSafariPad: '画面上部の Safari ツールバーで{icon}共有をタップします。',
+  installShareChrome: 'Chrome のアドレスバー右端の{icon}共有をタップします。',
+  installShareOther: 'このページを Safari または Chrome で開き、{icon}共有をタップします。',
   installIosStep2: '{icon}ホーム画面に追加を選びます。',
   installIosStep3: '「追加」をタップして確定します。',
   installOtherIntro: 'ブラウザが自動インストールを案内しませんでした。ブラウザのメニューからインストールできます。',
   installOtherStep1: 'ブラウザのメニュー{icon}を開きます。',
   installOtherStep2: '「アプリをインストール」または「ホーム画面に追加」を選びます。',
+
+  installBanner: 'アプリをインストールすると、すばやく開け、オフラインでも使えます。',
+  installBannerAction: 'インストール',
+  dismiss: '閉じる',
 
   noteSaved: 'メモを保存しました',
   noteDeleted: 'メモを削除しました',
