@@ -158,3 +158,4 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .listen-bar .icon-btn { width: 40px; height: 40px; flex: none; color: inherit; }
 .listen-bar .btn.sm { flex: none; min-width: 52px; padding: 0 10px; }
 .listen-bar .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.icon-btn.on { color: var(--accent); }
