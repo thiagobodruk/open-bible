@@ -5,6 +5,8 @@ interface Props {
   onClose: () => void;
   children: ReactNode;
   leading?: ReactNode;
+  /** Ação no canto direito do cabeçalho. */
+  trailing?: ReactNode;
   tall?: boolean;
   /** Conteúdo fixo entre o título e a área rolável. */
   pinned?: ReactNode;
@@ -17,7 +19,7 @@ const CLOSE_VELOCITY = 0.6; // px/ms
 const ANIM = 180;
 
 /** Bottom sheet padrão. Fecha ao arrastar para baixo, tocar fora (se houver fundo) ou com Esc. Não tem botão ×. */
-export function Sheet({ title, onClose, children, leading, tall, pinned, modeless }: Props) {
+export function Sheet({ title, onClose, children, leading, trailing, tall, pinned, modeless }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
   const close = useRef(onClose);
@@ -103,7 +105,8 @@ export function Sheet({ title, onClose, children, leading, tall, pinned, modeles
 
     // Mouse (desktop): só pelo cabeçalho.
     const md = (e: PointerEvent) => {
-      if (e.pointerType !== 'mouse' || !(e.target as HTMLElement).closest('.sheet-grip, .sheet-head')) return;
+      const t = e.target as HTMLElement;
+      if (e.pointerType !== 'mouse' || !t.closest('.sheet-grip, .sheet-head') || t.closest('button, a')) return;
       if (begin(e.clientY, e.target)) el.setPointerCapture(e.pointerId);
     };
     const mm = (e: PointerEvent) => e.pointerType === 'mouse' && move(e.clientY, e);
@@ -138,6 +141,7 @@ export function Sheet({ title, onClose, children, leading, tall, pinned, modeles
         <div className="sheet-head">
           {leading}
           <h2>{title}</h2>
+          {trailing && <div className="sheet-trailing">{trailing}</div>}
         </div>
         {pinned && <div className="sheet-pinned">{pinned}</div>}
         <div className="sheet-body" ref={body}>{children}</div>
