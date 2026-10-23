@@ -73,6 +73,12 @@ const fr: Messages = {
   linkCopied: 'Lien copié',
   linkCopyFailed: 'Impossible de copier le lien',
   keepCurrent: 'Continuer avec {abbr}',
+  updateApp: 'Mettre à jour',
+  updateSub: 'Chercher une nouvelle version',
+  updateChecking: 'Vérification…',
+  updateFound: 'Mise à jour vers la nouvelle version…',
+  updateLatest: 'Vous avez déjà la dernière version',
+  updateOffline: 'Hors ligne. Réessayez une fois connecté',
   copied: 'Copié',
   copyFailed: 'Copie impossible',
 

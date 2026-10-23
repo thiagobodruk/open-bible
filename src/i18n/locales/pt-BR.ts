@@ -73,6 +73,12 @@ const ptBR: Messages = {
   linkCopied: 'Link copiado',
   linkCopyFailed: 'Não foi possível copiar o link',
   keepCurrent: 'Continuar com {abbr}',
+  updateApp: 'Atualizar',
+  updateSub: 'Buscar uma versão nova',
+  updateChecking: 'Verificando…',
+  updateFound: 'Atualizando para a nova versão…',
+  updateLatest: 'Você já está na versão mais recente',
+  updateOffline: 'Sem conexão. Tente de novo online',
   copied: 'Copiado',
   copyFailed: 'Não foi possível copiar',
 

@@ -71,6 +71,12 @@ const en = {
   linkCopied: 'Link copied',
   linkCopyFailed: 'Could not copy the link',
   keepCurrent: 'Continue with {abbr}',
+  updateApp: 'Update',
+  updateSub: 'Check for a new version',
+  updateChecking: 'Checking…',
+  updateFound: 'Updating to the new version…',
+  updateLatest: 'You already have the latest version',
+  updateOffline: 'No connection. Try again online',
   copied: 'Copied',
   copyFailed: 'Could not copy',
 

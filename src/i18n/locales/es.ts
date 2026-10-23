@@ -73,6 +73,12 @@ const es: Messages = {
   linkCopied: 'Enlace copiado',
   linkCopyFailed: 'No se pudo copiar el enlace',
   keepCurrent: 'Seguir con {abbr}',
+  updateApp: 'Actualizar',
+  updateSub: 'Buscar una versión nueva',
+  updateChecking: 'Comprobando…',
+  updateFound: 'Actualizando a la nueva versión…',
+  updateLatest: 'Ya tienes la última versión',
+  updateOffline: 'Sin conexión. Inténtalo de nuevo en línea',
   copied: 'Copiado',
   copyFailed: 'No se pudo copiar',
 
