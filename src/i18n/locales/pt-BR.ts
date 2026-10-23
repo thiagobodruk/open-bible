@@ -28,13 +28,20 @@ const ptBR: Messages = {
   updateAction: 'Atualizar',
 
   installedAlready: 'O app já está instalado neste dispositivo.',
-  installIosIntro: 'No iPhone ou iPad, a instalação é feita pelo Safari.',
-  installIosStep1: 'Toque em {icon} Compartilhar na barra do Safari.',
+  installIosIntro: 'No seu {device}, a instalação é feita pelo menu Compartilhar.',
+  installShareSafariPhone: 'Toque em {icon} Compartilhar na barra do Safari, na parte de baixo.',
+  installShareSafariPad: 'Toque em {icon} Compartilhar na barra do Safari, na parte de cima.',
+  installShareChrome: 'Toque em {icon} Compartilhar, na ponta direita da barra de endereço do Chrome.',
+  installShareOther: 'Abra esta página no Safari ou no Chrome e toque em {icon} Compartilhar.',
   installIosStep2: 'Escolha {icon} Adicionar à Tela de Início.',
   installIosStep3: 'Confirme em Adicionar.',
   installOtherIntro: 'Seu navegador não ofereceu a instalação automática. Você pode instalar pelo menu.',
   installOtherStep1: 'Abra o menu {icon} do navegador.',
   installOtherStep2: 'Escolha Instalar app ou Adicionar à tela inicial.',
+
+  installBanner: 'Instale o app para abrir rápido, mesmo offline.',
+  installBannerAction: 'Instalar',
+  dismiss: 'Dispensar',
 
   noteSaved: 'Nota salva',
   noteDeleted: 'Nota excluída',

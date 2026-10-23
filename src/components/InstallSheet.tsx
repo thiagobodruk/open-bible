@@ -1,7 +1,7 @@
-import { ShareNetwork, PlusSquare, DotsThreeVertical } from '@phosphor-icons/react';
+import { Export, PlusSquare, DotsThreeVertical } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
-import { isIOS, isStandalone } from '../install';
+import { detectIOS, isStandalone } from '../install';
 import { splitIcon, useT } from '../i18n';
 
 function WithIcon({ text, icon }: { text: string; icon: React.ReactNode }) {
@@ -12,16 +12,17 @@ function WithIcon({ text, icon }: { text: string; icon: React.ReactNode }) {
 export function InstallSheet() {
   const t = useT();
   const close = useUI((s) => s.close);
-  const ios = isIOS();
+  const ios = detectIOS();
+  const shareKey = !ios ? null : ios.browser === 'chrome' ? 'installShareChrome' : ios.browser === 'safari' ? (ios.device === 'iPad' ? 'installShareSafariPad' : 'installShareSafariPhone') : 'installShareOther';
   return (
     <Sheet title={t('install')} onClose={close}>
       {isStandalone() ? (
         <p>{t('installedAlready')}</p>
       ) : ios ? (
         <>
-          <p>{t('installIosIntro')}</p>
+          <p>{t('installIosIntro', { device: ios.device })}</p>
           <ol className="steps">
-            <li><WithIcon text={t('installIosStep1')} icon={<ShareNetwork size={18} weight="light" style={{ verticalAlign: '-3px' }} />} /></li>
+            <li><WithIcon text={t(shareKey!)} icon={<Export size={18} weight="light" style={{ verticalAlign: '-3px' }} />} /></li>
             <li><WithIcon text={t('installIosStep2')} icon={<PlusSquare size={18} weight="light" style={{ verticalAlign: '-3px' }} />} /></li>
             <li>{t('installIosStep3')}</li>
           </ol>

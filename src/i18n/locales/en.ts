@@ -26,13 +26,20 @@ const en = {
   updateAction: 'Update',
 
   installedAlready: 'The app is already installed on this device.',
-  installIosIntro: 'On iPhone or iPad, installation is done from Safari.',
-  installIosStep1: 'Tap {icon} Share in the Safari toolbar.',
+  installIosIntro: 'On your {device}, you install the app from the Share menu.',
+  installShareSafariPhone: 'Tap {icon} Share in the Safari toolbar at the bottom.',
+  installShareSafariPad: 'Tap {icon} Share in the Safari toolbar at the top.',
+  installShareChrome: 'Tap {icon} Share at the right end of the Chrome address bar.',
+  installShareOther: 'Open this page in Safari or Chrome, then tap {icon} Share.',
   installIosStep2: 'Choose {icon} Add to Home Screen.',
   installIosStep3: 'Confirm with Add.',
   installOtherIntro: 'Your browser did not offer automatic installation. You can install from its menu.',
   installOtherStep1: 'Open the browser menu {icon}.',
   installOtherStep2: 'Choose Install app or Add to Home screen.',
+
+  installBanner: 'Install the app for quick access, even offline.',
+  installBannerAction: 'Install',
+  dismiss: 'Dismiss',
 
   noteSaved: 'Note saved',
   noteDeleted: 'Note deleted',

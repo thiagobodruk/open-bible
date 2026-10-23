@@ -113,3 +113,15 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .sheet-pinned:has(> .search) { padding: 4px 22px 12px; }
 .sheet-pinned:has(> .search) + .sheet-body { padding-top: 8px; }
 .btn.block { display: flex; width: 100%; }
+
+/* Convite de instalação: cartão flutuante discreto no pé da tela */
+.install-banner {
+  position: fixed; z-index: 30; left: 50%; transform: translateX(-50%);
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: flex; align-items: center; gap: 10px; width: min(calc(100vw - 24px), 520px);
+  padding: 8px 6px 8px 14px; border-radius: 18px;
+  background: var(--float-bg); color: var(--float-fg); border: 1px solid var(--float-line); box-shadow: var(--shadow);
+  font-size: 13.5px; line-height: 1.35; animation: rise 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.install-banner .icon-btn { width: 36px; height: 36px; flex: none; }
+.install-banner .btn { flex: none; }

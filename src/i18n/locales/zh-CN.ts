@@ -28,13 +28,20 @@ const zhCN: Messages = {
   updateAction: '更新',
 
   installedAlready: '此设备上已安装该应用。',
-  installIosIntro: '在 iPhone 或 iPad 上，请通过 Safari 安装。',
-  installIosStep1: '点按 Safari 工具栏中的{icon}分享。',
+  installIosIntro: '在你的 {device} 上，通过“分享”菜单安装。',
+  installShareSafariPhone: '点按屏幕底部 Safari 工具栏中的{icon}分享。',
+  installShareSafariPad: '点按屏幕顶部 Safari 工具栏中的{icon}分享。',
+  installShareChrome: '点按 Chrome 地址栏右端的{icon}分享。',
+  installShareOther: '请在 Safari 或 Chrome 中打开此页面，然后点按{icon}分享。',
   installIosStep2: '选择{icon}添加到主屏幕。',
   installIosStep3: '点按“添加”确认。',
   installOtherIntro: '浏览器没有提供自动安装，你可以通过浏览器菜单安装。',
   installOtherStep1: '打开浏览器菜单{icon}。',
   installOtherStep2: '选择“安装应用”或“添加到主屏幕”。',
+
+  installBanner: '安装应用，快速打开，离线也能用。',
+  installBannerAction: '安装',
+  dismiss: '关闭',
 
   noteSaved: '笔记已保存',
   noteDeleted: '笔记已删除',
