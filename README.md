@@ -16,7 +16,7 @@ Offline-first and installable on Android and iOS. No account, no backend, no tra
 [![TypeScript](https://img.shields.io/badge/TypeScript-7-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white)](https://vite.dev)
 
-[Live demo](https://thiagobodruk.github.io/open-bible/) · [Bible versions](#bible-versions) · [Features](#features) · [Development](#development) · [Bible data repo](https://github.com/thiagobodruk/bible)
+[Live demo](https://thiagobodruk.github.io/open-bible/) · [Bible versions](#bible-versions) · [Features](#features) · [Development](#development) · [Donate](#support-the-project) · [Bible data repo](https://github.com/thiagobodruk/bible)
 
 ---
 
@@ -111,6 +111,12 @@ One-time repository setting: **Settings > Pages > Build and deployment > Source:
 ## How can I help?
 
 Review the code, report bugs, suggest improvements, or help translate the interface. Every contribution is welcome. Issues and pull requests are open on [GitHub](https://github.com/thiagobodruk/open-bible).
+
+## Support the project
+
+Open Bible is free and has no ads. If it is useful to you, a voluntary donation helps keep it going.
+
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A9FM66AQT672L&lc=US&item_name=Bible%20Sources&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"><img src="https://raw.githubusercontent.com/thiagobodruk/bible/92e121c2c829eae351b76db1d32858ced77b16a6/assets/paypal-donate-button.png" alt="Donate" width="400"></a>
 
 ## License
 
