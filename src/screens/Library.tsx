@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { CheckCircle, CloudArrowDown, CloudCheck, MagnifyingGlass } from '@phosphor-icons/react';
+import { CheckCircle, CloudArrowDown, CloudCheck } from '@phosphor-icons/react';
+import { SearchField } from '../components/SearchField';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { VERSIONS, abbrOf, type VersionInfo } from '../data/catalog';
 import { useLibrary } from '../state/library';
@@ -24,10 +25,22 @@ export function Library() {
     }
   };
 
+  const matches = (v: VersionInfo) => {
+    const term = q.trim().toLowerCase();
+    return !term || `${names.of(v.lang) ?? v.lang} ${native(v.lang)} ${v.name} ${abbrOf(v.id)}`.toLowerCase().includes(term);
+  };
+
+  // Versões baixadas ficam num grupo próprio, com a que está em uso primeiro.
+  const mineIds = new Set(Object.keys(installed));
+  const mine = VERSIONS.filter((v) => mineIds.has(v.id) && matches(v)).sort(
+    (a, b) => Number(b.id === versionId) - Number(a.id === versionId) || a.name.localeCompare(b.name),
+  );
+
   const groups = useMemo(() => {
     const term = q.trim().toLowerCase();
     const map = new Map<string, VersionInfo[]>();
     for (const v of VERSIONS) {
+      if (installed[v.id]) continue;
       const label = `${names.of(v.lang) ?? v.lang} ${native(v.lang)} ${v.name} ${abbrOf(v.id)}`.toLowerCase();
       if (term && !label.includes(term)) continue;
       map.set(v.lang, [...(map.get(v.lang) ?? []), v]);
@@ -43,7 +56,7 @@ export function Library() {
     return [...map.entries()].sort(
       ([a], [b]) => rank(a) - rank(b) || collator.compare(names.of(a) ?? a, names.of(b) ?? b),
     );
-  }, [q, names, uiLang]);
+  }, [q, names, uiLang, installed]);
 
   const choose = (id: string) => {
     set('versionId', id);
@@ -55,16 +68,62 @@ export function Library() {
     else notify(navigator.onLine ? 'Não foi possível baixar. Tente de novo.' : 'Sem conexão. Conecte-se para baixar.');
   };
 
+  const renderRow = (v: VersionInfo) => {
+      const isDown = !!installed[v.id];
+      const prog = downloading[v.id];
+      const active = v.id === versionId;
+      return (
+        <div key={v.id} className={`ver ${active ? 'active' : ''}`}>
+          <button
+            className="grow"
+            style={{ textAlign: 'left', minWidth: 0 }}
+            disabled={!isDown}
+            onClick={() => choose(v.id)}
+            aria-label={`${v.name}${active ? ', selecionada' : ''}`}
+          >
+            <div className="nm" dir={v.rtl ? 'rtl' : undefined} style={v.rtl ? { textAlign: 'left' } : undefined}>{v.name}</div>
+            <div className="meta">
+              <span className="abbr">{abbrOf(v.id)}</span>
+            {mineIds.has(v.id) && <span className="chip">{names.of(v.lang) ?? v.lang}</span>}
+              {v.coverage && <span className="chip">{COVERAGE[v.coverage]}</span>}
+              {v.rtl && <span className="chip">RTL</span>}
+              {active ? <span className="chip accent">Em uso</span> : isDown && <span className="chip">Baixada</span>}
+              <span className="abbr" style={{ fontWeight: 400 }}>{v.sizeMb.toFixed(1)} MB</span>
+            </div>
+          </button>
+          <div className="state">
+            {prog !== undefined ? (
+              <div className="progress" role="progressbar" aria-label="Baixando" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(prog * 100)}><i style={{ width: `${prog * 100}%` }} /></div>
+            ) : !isDown ? (
+              <button className="icon-btn" aria-label={`${failed[v.id] ? 'Tentar de novo: ' : 'Baixar '}${v.name}`} onClick={() => get(v.id)}>
+                <CloudArrowDown size={26} weight="light" />
+              </button>
+            ) : active ? (
+              <CheckCircle size={26} weight="fill" aria-label="Em uso" />
+            ) : (
+              <CloudCheck size={26} weight="light" aria-label="Baixada" />
+            )}
+          </div>
+        </div>
+      );
+  };
+
   return (
     <div className="screen">
       <ScreenHeader title={t.library} />
       <div className="screen-body">
-        <label className="search">
-          <MagnifyingGlass size={20} weight="light" />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar idioma ou versão" aria-label="Buscar idioma ou versão" />
-        </label>
+        <div className="search-sticky">
+          <SearchField value={q} onChange={setQ} placeholder="Buscar idioma ou versão" aria-label="Buscar idioma ou versão" />
+        </div>
 
-        {groups.length === 0 && <p className="empty">Nenhuma versão encontrada.</p>}
+        {mine.length === 0 && groups.length === 0 && <p className="empty">Nenhuma versão encontrada.</p>}
+
+        {mine.length > 0 && (
+          <section>
+            <h2 className="lang-title">Minhas versões</h2>
+            {mine.map(renderRow)}
+          </section>
+        )}
 
         {groups.map(([lang, versions]) => {
           const nat = native(lang);
@@ -75,44 +134,7 @@ export function Library() {
                 {loc}
                 {nat && nat !== loc && <small>{nat}</small>}
               </h2>
-              {versions.map((v) => {
-                const isDown = !!installed[v.id];
-                const prog = downloading[v.id];
-                const active = v.id === versionId;
-                return (
-                  <div key={v.id} className={`ver ${active ? 'active' : ''}`}>
-                    <button
-                      className="grow"
-                      style={{ textAlign: 'left', minWidth: 0 }}
-                      disabled={!isDown}
-                      onClick={() => choose(v.id)}
-                      aria-label={`${v.name}${active ? ', selecionada' : ''}`}
-                    >
-                      <div className="nm" dir={v.rtl ? 'rtl' : undefined} style={v.rtl ? { textAlign: 'left' } : undefined}>{v.name}</div>
-                      <div className="meta">
-                        <span className="abbr">{abbrOf(v.id)}</span>
-                        {v.coverage && <span className="chip">{COVERAGE[v.coverage]}</span>}
-                        {v.rtl && <span className="chip">RTL</span>}
-                        {active ? <span className="chip accent">Em uso</span> : isDown && <span className="chip">Baixada</span>}
-                        <span className="abbr" style={{ fontWeight: 400 }}>{v.sizeMb.toFixed(1)} MB</span>
-                      </div>
-                    </button>
-                    <div className="state">
-                      {prog !== undefined ? (
-                        <div className="progress" role="progressbar" aria-label="Baixando" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(prog * 100)}><i style={{ width: `${prog * 100}%` }} /></div>
-                      ) : !isDown ? (
-                        <button className="icon-btn" aria-label={`${failed[v.id] ? 'Tentar de novo: ' : 'Baixar '}${v.name}`} onClick={() => get(v.id)}>
-                          <CloudArrowDown size={26} weight="light" />
-                        </button>
-                      ) : active ? (
-                        <CheckCircle size={26} weight="fill" aria-label="Em uso" />
-                      ) : (
-                        <CloudCheck size={26} weight="light" aria-label="Baixada" />
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+              {versions.map(renderRow)}
             </section>
           );
         })}

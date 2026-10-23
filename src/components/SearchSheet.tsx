@@ -1,5 +1,6 @@
 import { Fragment, useDeferredValue, useEffect, useMemo, useState } from 'react';
-import { CaretRight, MagnifyingGlass, X } from '@phosphor-icons/react';
+import { CaretRight, MagnifyingGlass } from '@phosphor-icons/react';
+import { SearchField } from './SearchField';
 import { Sheet } from './Sheet';
 import { loadSearchIndex, type IndexedChapter } from '../data/bible';
 import { abbrOf } from '../data/catalog';
@@ -68,24 +69,17 @@ export function SearchSheet() {
 
   return (
     <Sheet title={t.search} onClose={close} tall>
-      <label className="search" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-        <MagnifyingGlass size={20} weight="light" />
-        <input
-          autoFocus
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Palavra ou referência, como jo 3:16"
-          aria-label="Buscar no texto"
-          enterKeyHint="search"
-          autoCapitalize="none"
-          autoCorrect="off"
-        />
-        {q && (
-          <button className="icon-btn" style={{ width: 32, height: 32, margin: '0 -8px 0 0' }} onClick={() => setQ('')} aria-label="Limpar busca">
-            <X size={18} weight="light" />
-          </button>
-        )}
-      </label>
+      <SearchField
+        style={{ position: 'sticky', top: 0, zIndex: 1 }}
+        autoFocus
+        value={q}
+        onChange={setQ}
+        placeholder="Palavra ou referência, como jo 3:16"
+        aria-label="Buscar no texto"
+        enterKeyHint="search"
+        autoCapitalize="none"
+        autoCorrect="off"
+      />
 
       {ref && (
         <button className="row goto" onClick={() => open(ref.book.id, ref.chapter, ref.verse)}>
