@@ -80,6 +80,7 @@ const es: Messages = {
   listenSpeed: 'Velocidad',
   listenNext: 'Continuar con el siguiente capítulo',
   listenSilent: '¿Sin sonido? Revisa el modo silencio y el volumen.',
+  listenIosHint: '¿Sin sonido? Desactiva el modo silencio.',
   feedback: 'Enviar comentarios',
   feedbackType: 'Tipo de comentario',
   feedbackMessage: 'Mensaje',

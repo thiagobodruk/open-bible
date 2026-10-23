@@ -80,6 +80,7 @@ const ja: Messages = {
   listenSpeed: '速度',
   listenNext: '次の章へ続ける',
   listenSilent: '音が出ない場合は、消音スイッチと音量を確認してください。',
+  listenIosHint: '音が出ない場合は、消音モードをオフにしてください。',
   feedback: 'フィードバックを送る',
   feedbackType: '種類',
   feedbackMessage: '内容',

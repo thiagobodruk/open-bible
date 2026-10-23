@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { useStudy } from './state/study';
+import { detectIOS } from './install';
 
 // Leitura em voz alta com as vozes do sistema (Web Speech API). Lê um versículo por vez,
 // o que permite destacar o trecho atual e retomar de onde parou.
@@ -185,3 +186,19 @@ export function stop() {
   useListen.setState({ status: 'idle', verse: null, advancing: false });
 }
 
+
+const HINT_KEY = 'ob:listen-hint';
+const HINT_TIMES = 3;
+
+/** No iOS o botão de silêncio cala a fala e o app não tem como saber. Lembra nas primeiras vezes. */
+export function silentHintDue(): boolean {
+  if (!detectIOS()) return false;
+  try {
+    const n = Number(localStorage.getItem(HINT_KEY) || 0);
+    if (n >= HINT_TIMES) return false;
+    localStorage.setItem(HINT_KEY, String(n + 1));
+    return true;
+  } catch {
+    return false;
+  }
+}
