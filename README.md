@@ -4,16 +4,11 @@
 
 Offline-first and installable on Android and iOS. No account, no backend, no tracking.
 
-<p align="center">
-  <a href="https://thiagobodruk.github.io/open-bible/">
-    <img alt="Open the live demo" src="https://img.shields.io/badge/%E2%96%B6%EF%B8%8E%20OPEN%20THE%20LIVE%20DEMO-thiagobodruk.github.io%2Fopen--bible-2ea44f?style=for-the-badge&logo=bookstack&logoColor=white" height="56">
-  </a>
-</p>
+**[🚀 Live demo: thiagobodruk.github.io/open-bible](https://thiagobodruk.github.io/open-bible/)**
 
 [![License: MIT](https://img.shields.io/github/license/thiagobodruk/open-bible)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/thiagobodruk/open-bible?style=flat&color=yellow)](https://github.com/thiagobodruk/open-bible/stargazers)
 [![Deploy](https://img.shields.io/github/actions/workflow/status/thiagobodruk/open-bible/deploy.yml?branch=main&label=deploy)](https://github.com/thiagobodruk/open-bible/actions/workflows/deploy.yml)
-[![Live demo](https://img.shields.io/badge/demo-GitHub%20Pages-blue)](https://thiagobodruk.github.io/open-bible/)
 ![Versions](https://img.shields.io/badge/versions-141-blue)
 ![Languages](https://img.shields.io/badge/languages-85-blue)
 [![PWA](https://img.shields.io/badge/PWA-installable-5a0fc8)](https://thiagobodruk.github.io/open-bible/)
