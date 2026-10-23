@@ -112,7 +112,9 @@ export function Library() {
     <div className="screen">
       <ScreenHeader title={t.library} />
       <div className="screen-body">
-        <SearchField value={q} onChange={setQ} placeholder="Buscar idioma ou versão" aria-label="Buscar idioma ou versão" />
+        <div className="search-sticky">
+          <SearchField value={q} onChange={setQ} placeholder="Buscar idioma ou versão" aria-label="Buscar idioma ou versão" />
+        </div>
 
         {mine.length === 0 && groups.length === 0 && <p className="empty">Nenhuma versão encontrada.</p>}
 

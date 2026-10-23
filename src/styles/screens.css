@@ -95,3 +95,9 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .brand-name { font-family: var(--font-ui); font-size: 16px; font-weight: 600; }
 
 .search-clear { width: 32px; height: 32px; margin: 0 -8px 0 0; flex: none; }
+
+/* Campo de busca fixo logo abaixo do cabeçalho da tela. */
+.search-sticky {
+  position: sticky; top: calc(56px + env(safe-area-inset-top, 0px)); z-index: 5;
+  margin: -16px -20px 0; padding: 12px 20px 8px; background: var(--bg);
+}
