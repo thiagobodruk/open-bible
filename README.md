@@ -52,8 +52,8 @@ Open Bible reads its texts from the [Bible](https://github.com/thiagobodruk/bibl
 | Reader, navigator, search, and quick references | Done |
 | Highlights, notes, My study, backup export and import | Done |
 | Text settings and themes | Done |
-| PWA manifest, service worker, and install | Done. Offline reload verified in an automated browser test and installation verified on iOS. Not yet tested on a physical Android device |
-| Share button and chapter URLs (`/version/book/chapter`) | Done. Verified in an automated browser test |
+| PWA manifest, service worker, and install | Done |
+| Share button and chapter URLs (`/version/book/chapter`) | Done |
 | Interface translations (English, Portuguese, Spanish, French, German, Chinese, Japanese) | Done |
 
 ## How it works
