@@ -64,3 +64,25 @@ export async function checkForUpdate(): Promise<UpdateResult> {
   }
   return 'latest';
 }
+
+export interface BuildInfo {
+  version: string;
+  build: string;
+}
+
+export const currentBuild: BuildInfo = { version: __APP_VERSION__, build: __APP_BUILD__ };
+
+/** "1.0.0 (a1b2c3d)" */
+export const buildLabel = (b: BuildInfo) => `v${b.version} (${b.build})`;
+
+/** O que está publicado agora. Nulo sem conexão ou fora do site publicado. */
+export async function fetchLatestBuild(): Promise<BuildInfo | null> {
+  try {
+    const r = await fetch(`${import.meta.env.BASE_URL}version.json`, { cache: 'no-store' });
+    if (!r.ok) return null;
+    const j = (await r.json()) as Partial<BuildInfo>;
+    return typeof j.version === 'string' && typeof j.build === 'string' ? { version: j.version, build: j.build } : null;
+  } catch {
+    return null;
+  }
+}
