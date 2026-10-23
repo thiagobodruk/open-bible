@@ -48,10 +48,11 @@ export function voicesFor(lang: string): SpeechSynthesisVoice[] {
   return speechSynthesis.getVoices().filter((v) => base(v.lang) === b);
 }
 
-function pickVoice(lang: string): SpeechSynthesisVoice | undefined {
-  const list = voicesFor(lang);
+/** Só a voz que a pessoa escolheu. Sem escolha, o sistema usa a voz padrão do idioma: no iOS, algumas vozes
+ * listadas não estão baixadas e ficam mudas, e a padrão é a que sabemos que funciona. */
+function chosenVoice(lang: string): SpeechSynthesisVoice | undefined {
   const saved = loadPrefs().voices[base(lang)];
-  return list.find((v) => v.voiceURI === saved) ?? list.find((v) => v.default) ?? list[0];
+  return saved ? voicesFor(lang).find((v) => v.voiceURI === saved) : undefined;
 }
 
 type Status = 'idle' | 'playing' | 'paused';
@@ -94,6 +95,11 @@ let verses: string[] = [];
 let lang = 'en';
 // Cada fala recebe um número; respostas de falas canceladas são ignoradas.
 let token = 0;
+/** Chamado quando uma fala não começa. Definido pela interface para mostrar o aviso. */
+let onSilent: (() => void) | undefined;
+export function setSilentHandler(fn: () => void) {
+  onSilent = fn;
+}
 // O navegador pode coletar a fala em curso se ninguém guardar a referência.
 let current: SpeechSynthesisUtterance | null = null;
 
@@ -114,16 +120,25 @@ function say(n: number, token0: number) {
   const u = new SpeechSynthesisUtterance(verses[n - 1]);
   u.lang = lang;
   u.rate = useListen.getState().rate;
-  const voice = pickVoice(lang);
+  const voice = chosenVoice(lang);
   if (voice) u.voice = voice;
+  // Se a fala não começa, quase sempre é o botão de silêncio ou uma voz sem áudio: avisa em vez de ficar mudo.
+  const silent = setTimeout(() => {
+    if (token0 === token) onSilent?.();
+  }, 4000);
+  u.onstart = () => clearTimeout(silent);
   u.onend = () => {
+    clearTimeout(silent);
     if (token0 === token) speakAt(n + 1);
   };
   u.onerror = () => {
+    clearTimeout(silent);
     if (token0 === token) stop();
   };
   current = u;
   useListen.setState({ status: 'playing', verse: n, advancing: false });
+  // No iOS o sintetizador pode ficar preso em pausa depois de um cancel.
+  speechSynthesis.resume();
   speechSynthesis.speak(u);
 }
 

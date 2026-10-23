@@ -79,6 +79,7 @@ const de: Messages = {
   listenVoice: 'Stimme',
   listenSpeed: 'Tempo',
   listenNext: 'Mit dem nächsten Kapitel fortfahren',
+  listenSilent: 'Kein Ton? Prüfe den Stumm-Schalter und die Lautstärke.',
   feedback: 'Feedback senden',
   feedbackType: 'Art des Feedbacks',
   feedbackMessage: 'Nachricht',

@@ -79,6 +79,7 @@ const zhCN: Messages = {
   listenVoice: '语音',
   listenSpeed: '语速',
   listenNext: '继续朗读下一章',
+  listenSilent: '没有声音？请检查静音开关和音量。',
   feedback: '发送反馈',
   feedbackType: '反馈类型',
   feedbackMessage: '内容',

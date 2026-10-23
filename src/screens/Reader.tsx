@@ -16,7 +16,7 @@ import { go } from '../router';
 import { hintPending, markHintSeen } from '../hint';
 import { isMobile } from '../install';
 import { ListenBar } from '../components/ListenBar';
-import { listenSupported, resume, start, stop, useListen } from '../listen';
+import { listenSupported, resume, setSilentHandler, start, stop, useListen } from '../listen';
 import { useT } from '../i18n';
 
 export function Reader() {
@@ -80,6 +80,7 @@ export function Reader() {
     else if (text.status !== 'loading') stop();
   }, [advancing, text.status, verses, versionInfo?.lang]);
 
+  useEffect(() => setSilentHandler(() => notify(t('listenSilent'))), [notify, t]);
   useEffect(() => () => stop(), []);
 
   // Acompanha o versículo lido, sem rolar se ele já está à vista.
