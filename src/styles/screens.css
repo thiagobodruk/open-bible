@@ -98,3 +98,10 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .entry-row .entry { padding-right: 48px; }
 .entry-del { position: absolute; top: 6px; right: 0; margin: 0; width: 40px; height: 40px; }
 .confirm-text { font-size: 15px; line-height: 1.5; margin: 4px 0 8px; }
+.search-clear { width: 32px; height: 32px; margin: 0 -8px 0 0; flex: none; }
+
+/* Campo de busca fixo logo abaixo do cabeçalho da tela. */
+.search-sticky {
+  position: sticky; top: calc(56px + env(safe-area-inset-top, 0px)); z-index: 5;
+  margin: -16px -20px 0; padding: 12px 20px 8px; background: var(--bg);
+}
