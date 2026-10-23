@@ -67,20 +67,6 @@ export function TextSettingsSheet() {
       </div>
 
       <div className="field">
-        <span className="lbl">Fonte</span>
-        <Segmented
-          label="Fonte"
-          value={s.font}
-          onChange={(v) => s.set('font', v)}
-          options={[
-            { value: 'serif', label: <span style={{ fontFamily: 'var(--font-serif)' }}>Serifada</span> },
-            { value: 'sans', label: <span style={{ fontFamily: 'var(--font-sans)' }}>Sem serifa</span> },
-            { value: 'mono', label: <span style={{ fontFamily: 'var(--font-mono)' }}>Mono</span> },
-          ]}
-        />
-      </div>
-
-      <div className="field">
         <span className="lbl">Tamanho <span>{s.fontSize} px</span></span>
         <div className="choice-row two" role="group" aria-label="Tamanho da fonte">
           <button
@@ -100,6 +86,20 @@ export function TextSettingsSheet() {
             <span style={{ fontSize: 26 }}>A</span>
           </button>
         </div>
+      </div>
+
+      <div className="field">
+        <span className="lbl">Fonte</span>
+        <Segmented
+          label="Fonte"
+          value={s.font}
+          onChange={(v) => s.set('font', v)}
+          options={[
+            { value: 'serif', label: <span style={{ fontFamily: 'var(--font-serif)' }}>Serifada</span> },
+            { value: 'sans', label: <span style={{ fontFamily: 'var(--font-sans)' }}>Sem serifa</span> },
+            { value: 'mono', label: <span style={{ fontFamily: 'var(--font-mono)' }}>Mono</span> },
+          ]}
+        />
       </div>
 
       <div className="field">
