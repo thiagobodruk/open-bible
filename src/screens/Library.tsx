@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { CloudArrowDown, MagnifyingGlass } from '@phosphor-icons/react';
+import { CheckCircle, CloudArrowDown, CloudCheck, MagnifyingGlass } from '@phosphor-icons/react';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { VERSIONS } from '../data/library';
 import { useLibrary } from '../state/library';
@@ -89,7 +89,11 @@ export function Library() {
                         <button className="icon-btn" aria-label={`Baixar ${v.name}`} onClick={() => download(v.id, () => choose(v.id, v.abbr))}>
                           <CloudArrowDown size={26} weight="light" />
                         </button>
-                      ) : null}
+                      ) : active ? (
+                        <CheckCircle size={26} weight="fill" aria-label="Em uso" />
+                      ) : (
+                        <CloudCheck size={26} weight="light" aria-label="Baixada" />
+                      )}
                     </div>
                   </div>
                 );
