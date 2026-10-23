@@ -112,3 +112,4 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 /* Campo de busca fixo no topo de um sheet */
 .sheet-pinned:has(> .search) { padding: 4px 22px 12px; }
 .sheet-pinned:has(> .search) + .sheet-body { padding-top: 8px; }
+.btn.block { display: flex; width: 100%; }
