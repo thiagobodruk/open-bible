@@ -77,6 +77,10 @@ npm run build     # typecheck and production build into dist/
 npm run preview   # serve the build at http://localhost:4173/open-bible/
 ```
 
+### Releases
+
+Versions follow [SemVer](https://semver.org/). To release, bump `version` in `package.json` and add a section with that number to `CHANGELOG.md`. When the change reaches `main`, the Release workflow creates the tag and the GitHub release using that section as the notes (or the generated notes if the section is missing).
+
 ### Translations
 
 Every interface string lives in `src/i18n/locales/en.ts`. The other locale files are typed against it, so `npm run build` fails if a key is missing. To add a language, create a locale file, register it in `src/i18n/index.ts`, and add it to `UiLang` and the language list in Settings.
