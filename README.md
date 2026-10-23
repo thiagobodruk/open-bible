@@ -15,7 +15,7 @@ Offline-first and installable on Android and iOS. No account, no backend, no tra
 [![TypeScript](https://img.shields.io/badge/TypeScript-7-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white)](https://vite.dev)
 
-[Live demo](https://thiagobodruk.github.io/open-bible/) · [Bible versions](#bible-versions) · [Features](#features) · [Development](#development) · [Plan](PLAN.md) · [Bible data repo](https://github.com/thiagobodruk/bible)
+[Live demo](https://thiagobodruk.github.io/open-bible/) · [Bible versions](#bible-versions) · [Features](#features) · [Development](#development) · [Bible data repo](https://github.com/thiagobodruk/bible)
 
 ---
 
@@ -53,8 +53,6 @@ Open Bible reads its texts from the [Bible](https://github.com/thiagobodruk/bibl
 | Text settings and themes | Done |
 | PWA manifest and service worker | Configured, not yet tested on devices |
 | Interface translations (English, Portuguese, Spanish, French, German, Chinese, Japanese) | Planned. The interface is currently in Portuguese |
-
-See [PLAN.md](PLAN.md) for the product plan and decisions.
 
 ## How it works
 
