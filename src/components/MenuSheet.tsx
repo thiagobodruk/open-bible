@@ -35,15 +35,14 @@ export function MenuSheet() {
   };
 
   const all = [
-    { icon: BookOpenText, label: t('read'), sub: undefined, run: () => nav('/') },
-    { icon: Notebook, label: t('study'), sub: undefined, badge: count, run: () => nav('/study') },
-    { icon: Translate, label: t('library'), sub: t('librarySub'), run: () => nav('/library') },
-    { icon: GearSix, label: t('settings'), sub: undefined, run: () => nav('/settings') },
-    { icon: ShareNetwork, label: t('shareApp'), sub: t('shareAppSub'), run: share },
+    { icon: BookOpenText, label: t('read'), run: () => nav('/') },
+    { icon: Notebook, label: t('study'), badge: count, run: () => nav('/study') },
+    { icon: Translate, label: t('library'), run: () => nav('/library') },
+    { icon: GearSix, label: t('settings'), run: () => nav('/settings') },
+    { icon: ShareNetwork, label: t('shareApp'), run: share },
     {
       icon: DeviceMobile,
       label: t('install'),
-      sub: t('installSub'),
       run: async () => {
         close();
         if (!(await requestInstall())) open('install');
@@ -62,14 +61,11 @@ export function MenuSheet() {
         </div>
       </div>
       <ul>
-        {items.map(({ icon: Icon, label, sub, badge, run }) => (
+        {items.map(({ icon: Icon, label, badge, run }) => (
           <li key={label}>
             <button className="row" onClick={run}>
               <Icon size={26} weight="light" />
-              <span className="grow">
-                <span className="title">{label}</span>
-                {sub && <span className="sub" style={{ display: 'block' }}>{sub}</span>}
-              </span>
+              <span className="grow title">{label}</span>
               {badge !== undefined && <span className="badge">{badge}</span>}
               <CaretRight size={18} weight="light" color="var(--muted)" />
             </button>
