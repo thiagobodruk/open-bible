@@ -11,9 +11,10 @@ import { SelectionBar } from '../components/SelectionBar';
 import { Welcome } from '../components/Welcome';
 import { go } from '../router';
 import { hintPending, markHintSeen } from '../hint';
-import { t } from '../strings';
+import { useT } from '../i18n';
 
 export function Reader() {
+  const t = useT();
   const { book, chapter, selection, highlights, notes, focusVerse, step, toggleVerse, clearFocus } = useStudy();
   const settings = useSettings();
   const { sheet, open, notify } = useUI();
@@ -39,7 +40,7 @@ export function Reader() {
       setDir(delta === 1 ? 'next' : 'prev');
       scrollTo(0, 0);
     } else {
-      notify(delta === 1 ? 'Este é o último capítulo' : 'Este é o primeiro capítulo');
+      notify(delta === 1 ? t('lastChapter') : t('firstChapter'));
     }
   };
 
@@ -93,11 +94,11 @@ export function Reader() {
     if (!installed || !hintPending()) return;
     const id = setTimeout(() => {
       if (!hintPending()) return;
-      notify('Deslize ou toque nas bordas para trocar de capítulo');
+      notify(t('hintSwipe'));
       markHintSeen();
     }, 700);
     return () => clearTimeout(id);
-  }, [notify, installed]);
+  }, [notify, installed, t]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     const p = e.touches[0];
@@ -128,25 +129,25 @@ export function Reader() {
     <div className="reader">
       <header className={`topbar ${barMini && !blocked ? 'mini' : ''}`}>
         <div className="topbar-in">
-          <button className="mini-title" onClick={() => setBarMini(false)} aria-label={`${bName} ${chapter}, ${abbrOf(settings.versionId)}. Mostrar barra`} tabIndex={barMini && !blocked ? 0 : -1}>
+          <button className="mini-title" onClick={() => setBarMini(false)} aria-label={t('showBar', { ref: `${bName} ${chapter}`, abbr: abbrOf(settings.versionId) })} tabIndex={barMini && !blocked ? 0 : -1}>
             <span>{bName} {chapter}</span><i aria-hidden="true" /><span>{abbrOf(settings.versionId)}</span>
           </button>
-          <button className="crumb" onClick={() => open('navigator')} aria-label={`${bName} ${chapter}. Escolher livro e capítulo`}>
+          <button className="crumb" onClick={() => open('navigator')} aria-label={t('pickBook', { ref: `${bName} ${chapter}` })}>
             <span>{bName} {chapter}</span>
             <CaretDown size={14} weight="bold" />
           </button>
           <span className="spacer" />
-          <button className="ver-chip" onClick={() => go('/library')} aria-label="Escolher versão">
+          <button className="ver-chip" onClick={() => go('/library')} aria-label={t('chooseVersion')}>
             {abbrOf(settings.versionId)}
           </button>
-          <button className="icon-btn" onClick={() => open('search')} aria-label={t.search}><MagnifyingGlass size={24} weight="light" /></button>
-          <button className="icon-btn" onClick={() => open('text')} aria-label={t.textSettings}><TextAa size={24} weight="light" /></button>
-          <button className="icon-btn" onClick={() => open('menu')} aria-label={t.menu}><List size={24} weight="light" /></button>
+          <button className="icon-btn" onClick={() => open('search')} aria-label={t('search')}><MagnifyingGlass size={24} weight="light" /></button>
+          <button className="icon-btn" onClick={() => open('text')} aria-label={t('textSettings')}><TextAa size={24} weight="light" /></button>
+          <button className="icon-btn" onClick={() => open('menu')} aria-label={t('menu')}><List size={24} weight="light" /></button>
         </div>
       </header>
 
-      <button className="edge left" hidden={blocked} onClick={() => move(-1)} aria-label={t.prevChapter}><CaretLeft size={28} weight="light" /></button>
-      <button className="edge right" hidden={blocked} onClick={() => move(1)} aria-label={t.nextChapter}><CaretRight size={28} weight="light" /></button>
+      <button className="edge left" hidden={blocked} onClick={() => move(-1)} aria-label={t('prevChapter')}><CaretLeft size={28} weight="light" /></button>
+      <button className="edge right" hidden={blocked} onClick={() => move(1)} aria-label={t('nextChapter')}><CaretRight size={28} weight="light" /></button>
 
       <main
         className={`page${hasSelection && !sheet ? ' has-sel' : ''}`}
@@ -165,8 +166,8 @@ export function Reader() {
             <span className="bk">{bName}</span>
             <span className="nr">{chapter}</span>
           </h1>
-          {text.status === 'missing' && installed && <p className="chapter-note">Este capítulo não existe nesta versão.</p>}
-          {text.status === 'ready' && verses.length === 0 && <p className="chapter-note">Este capítulo está vazio nesta versão.</p>}
+          {text.status === 'missing' && installed && <p className="chapter-note">{t('chapterMissing')}</p>}
+          {text.status === 'ready' && verses.length === 0 && <p className="chapter-note">{t('chapterEmpty')}</p>}
           {verses.map((text, i) => {
             const v = i + 1;
             const hl = highlights[vkey(book, chapter, v)];
@@ -176,19 +177,19 @@ export function Reader() {
                 <span id={`v-${v}`} className={cls}>
                   <span className="vn">{v}</span>
                   {text}
-                  {noteAt(v) && <NotePencil className="note-mark" size={14} weight="fill" aria-label="Tem nota" />}
+                  {noteAt(v) && <NotePencil className="note-mark" size={14} weight="fill" aria-label={t('hasNote')} />}
                 </span>{' '}
               </span>
             );
           })}
           <div className="chapter-foot">
-            <button className="btn" onClick={() => move(-1)}><CaretLeft size={18} weight="light" /> Anterior</button>
-            <button className="btn" onClick={() => move(1)}>Próximo <CaretRight size={18} weight="light" /></button>
+            <button className="btn" onClick={() => move(-1)}><CaretLeft size={18} weight="light" /> {t('prev')}</button>
+            <button className="btn" onClick={() => move(1)}>{t('next')} <CaretRight size={18} weight="light" /></button>
           </div>
         </article>
         {versionInfo && (
           <footer className="copyright">
-            {versionInfo.name} ({abbrOf(versionInfo.id)}). © Todos os direitos reservados ao autor.
+            {t('copyright', { name: versionInfo.name, abbr: abbrOf(versionInfo.id) })}
           </footer>
         )}
       </main>

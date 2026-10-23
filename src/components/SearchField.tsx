@@ -1,4 +1,5 @@
 import { MagnifyingGlass, X } from '@phosphor-icons/react';
+import { useT } from '../i18n';
 
 interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
   value: string;
@@ -8,7 +9,8 @@ interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onCha
 }
 
 /** Campo de busca com botão × que limpa o texto e devolve o foco ao campo. */
-export function SearchField({ value, onChange, clearLabel = 'Limpar busca', style, ...input }: Props) {
+export function SearchField({ value, onChange, clearLabel, style, ...input }: Props) {
+  const t = useT();
   return (
     <label className="search" style={style}>
       <MagnifyingGlass size={20} weight="light" />
@@ -17,7 +19,7 @@ export function SearchField({ value, onChange, clearLabel = 'Limpar busca', styl
         <button
           type="button"
           className="icon-btn search-clear"
-          aria-label={clearLabel}
+          aria-label={clearLabel ?? t('clearSearch')}
           onMouseDown={(e) => e.preventDefault()}
           onClick={(e) => {
             onChange('');

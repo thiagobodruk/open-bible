@@ -5,13 +5,13 @@ import { Sheet } from './Sheet';
 import { loadSearchIndex, type IndexedChapter } from '../data/bible';
 import { abbrOf } from '../data/catalog';
 import { useBookName, useBooks } from '../hooks';
-import { MIN_CHARS, MAX_HITS, parseReference, searchVerses, type Hit } from '../search';
+import { minChars, MAX_HITS, parseReference, searchVerses, type Hit } from '../search';
 import { useSettings } from '../state/settings';
 import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { go } from '../router';
 import { refLabel } from '../ref';
-import { plural, t } from '../strings';
+import { useT } from '../i18n';
 
 function Highlighted({ hit }: { hit: Hit }) {
   const parts: React.ReactNode[] = [];
@@ -25,6 +25,7 @@ function Highlighted({ hit }: { hit: Hit }) {
 }
 
 export function SearchSheet() {
+  const t = useT();
   const close = useUI((s) => s.close);
   const goTo = useStudy((s) => s.goTo);
   const versionId = useSettings((s) => s.versionId);
@@ -65,17 +66,17 @@ export function SearchSheet() {
     scrollTo(0, 0);
   };
 
-  const typed = dq.trim().length >= MIN_CHARS;
+  const typed = dq.trim().length >= minChars(dq);
 
   return (
-    <Sheet title={t.search} onClose={close} tall>
+    <Sheet title={t('search')} onClose={close} tall>
       <SearchField
         style={{ position: 'sticky', top: 0, zIndex: 1 }}
         autoFocus
         value={q}
         onChange={setQ}
-        placeholder="Palavra ou referência, como jo 3:16"
-        aria-label="Buscar no texto"
+        placeholder={t('searchPlaceholder')}
+        aria-label={t('searchLabel')}
         enterKeyHint="search"
         autoCapitalize="none"
         autoCorrect="off"
@@ -84,7 +85,7 @@ export function SearchSheet() {
       {ref && (
         <button className="row goto" onClick={() => open(ref.book.id, ref.chapter, ref.verse)}>
           <span className="grow">
-            <span className="sub" style={{ display: 'block' }}>Ir para</span>
+            <span className="sub" style={{ display: 'block' }}>{t('goTo')}</span>
             <span className="title">{refLabel(ref.book.name, ref.chapter, ref.verse, ref.verseEnd)}</span>
           </span>
           <CaretRight size={18} weight="light" color="var(--muted)" />
@@ -94,23 +95,23 @@ export function SearchSheet() {
       {!typed && !ref && (
         <div className="empty" style={{ padding: '40px 8px' }}>
           <MagnifyingGlass size={36} weight="light" />
-          <p>Busque uma palavra ou vá direto a um trecho.</p>
-          <p style={{ fontSize: 13, marginTop: 8 }}>Busca no texto da versão {abbrOf(versionId)}, direto neste aparelho.</p>
+          <p>{t('searchEmpty')}</p>
+          <p style={{ fontSize: 13, marginTop: 8 }}>{t('searchEmptyHint', { abbr: abbrOf(versionId) })}</p>
         </div>
       )}
 
-      {typed && chapters === null && <div className="empty" style={{ padding: '40px 8px' }}><p>Preparando a busca…</p></div>}
+      {typed && chapters === null && <div className="empty" style={{ padding: '40px 8px' }}><p>{t('searchPreparing')}</p></div>}
 
       {typed && chapters !== null && hits.length === 0 && !ref && (
         <div className="empty" style={{ padding: '40px 8px' }}>
-          <p>Nenhum versículo com “{dq.trim()}”.</p>
+          <p>{t('searchNone', { q: dq.trim() })}</p>
         </div>
       )}
 
       {hits.length > 0 && (
         <>
           <p className="hint" role="status">
-            {truncated ? `Mostrando os primeiros ${MAX_HITS} resultados` : plural(hits.length, 'resultado', 'resultados')}
+            {truncated ? t('searchTruncated', { n: MAX_HITS }) : t.n('result', hits.length)}
           </p>
           {groups.map((g) => (
             <section key={g.book}>

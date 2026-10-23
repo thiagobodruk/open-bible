@@ -8,7 +8,7 @@ import { useSettings, type UiLang } from '../state/settings';
 import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { requestInstall } from '../install';
-import { t } from '../strings';
+import { useT } from '../i18n';
 
 const LANGS: { code: UiLang; label: string }[] = [
   { code: 'en', label: 'English' },
@@ -21,6 +21,7 @@ const LANGS: { code: UiLang; label: string }[] = [
 ];
 
 export function Settings() {
+  const t = useT();
   const { uiLang, set } = useSettings();
   const { installed, remove } = useLibrary();
   const downloaded = Object.keys(installed);
@@ -36,34 +37,31 @@ export function Settings() {
     try {
       const { highlights: hs, notes: ns, skipped } = parseBackup(await file.text());
       await useStudy.getState().merge(hs, ns);
-      notify(`Importado: ${hs.length} marcações e ${ns.length} notas${skipped ? `, ${skipped} ignoradas` : ''}`);
+      notify(skipped ? t('importedSkipped', { h: hs.length, n: ns.length, s: skipped }) : t('imported', { h: hs.length, n: ns.length }));
     } catch {
-      notify('Arquivo de backup inválido');
+      notify(t('backupInvalid'));
     }
   };
 
   return (
     <div className="screen">
-      <ScreenHeader title={t.settings} />
+      <ScreenHeader title={t('settings')} />
       <div className="screen-body">
         <section className="section">
-          <h2>Idioma da interface</h2>
+          <h2>{t('uiLanguage')}</h2>
           <select
             className="select"
             value={uiLang}
-            aria-label="Idioma da interface"
-            onChange={(e) => {
-              set('uiLang', e.target.value as UiLang);
-              notify('As traduções entram na próxima etapa');
-            }}
+            aria-label={t('uiLanguage')}
+            onChange={(e) => set('uiLang', e.target.value as UiLang)}
           >
             {LANGS.map((l) => <option key={l.code} value={l.code}>{l.label}</option>)}
           </select>
-          <p className="hint">Independe do idioma da Bíblia, que você escolhe na Biblioteca.</p>
+          <p className="hint">{t('uiLanguageHint')}</p>
         </section>
 
         <section className="section">
-          <h2>Versões baixadas</h2>
+          <h2>{t('downloadedVersions')}</h2>
           <div className="group">
             {downloaded.map((id) => {
               const v = findVersion(id);
@@ -74,42 +72,42 @@ export function Settings() {
                     <span className="title">{v.name}</span>
                     <span className="sub" style={{ display: 'block' }}>{abbrOf(id)} · {v.sizeMb.toFixed(1)} MB</span>
                   </span>
-                  <button className="icon-btn" aria-label={`Remover ${v.name}`} onClick={async () => { await remove(id); notify('Versão removida'); }}>
+                  <button className="icon-btn" aria-label={t('removeVersion', { name: v.name })} onClick={async () => { await remove(id); notify(t('versionRemoved')); }}>
                     <Trash size={22} weight="light" />
                   </button>
                 </div>
               );
             })}
           </div>
-          <p className="hint">Ocupando {downloadedMb(downloaded).toFixed(1)} MB neste dispositivo.</p>
+          <p className="hint">{t('usingMb', { mb: downloadedMb(downloaded).toFixed(1) })}</p>
         </section>
 
         <section className="section">
-          <h2>Seus dados</h2>
+          <h2>{t('yourData')}</h2>
           <div className="group">
-            <button className="row" onClick={() => { downloadBackup(); notify('Backup exportado'); }}>
+            <button className="row" onClick={() => { downloadBackup(); notify(t('backupExported')); }}>
               <DownloadSimple size={24} weight="light" />
-              <span className="grow"><span className="title">Exportar backup</span><span className="sub" style={{ display: 'block' }}>{highlights} marcações e {notes} notas</span></span>
+              <span className="grow"><span className="title">{t('exportBackup')}</span><span className="sub" style={{ display: 'block' }}>{t('exportSub', { h: highlights, n: notes })}</span></span>
             </button>
             <button className="row" onClick={() => fileInput.current?.click()}>
               <Upload size={24} weight="light" />
-              <span className="grow"><span className="title">Importar backup</span></span>
+              <span className="grow"><span className="title">{t('importBackup')}</span></span>
             </button>
           </div>
           <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={onImport} />
-          <p className="hint">Tudo fica só neste navegador. Sem conta, sem nuvem. Exporte de vez em quando para não perder suas notas.</p>
+          <p className="hint">{t('dataHint')}</p>
         </section>
 
         <section className="section">
-          <h2>Aplicativo</h2>
+          <h2>{t('app')}</h2>
           <div className="group">
             <button className="row" onClick={async () => { if (!(await requestInstall())) open('install'); }}>
               <DeviceMobile size={24} weight="light" />
-              <span className="grow"><span className="title">{t.install}</span><span className="sub" style={{ display: 'block' }}>{t.installSub}</span></span>
+              <span className="grow"><span className="title">{t('install')}</span><span className="sub" style={{ display: 'block' }}>{t('installSub')}</span></span>
             </button>
             <a className="row" href="https://github.com/thiagobodruk/open-bible" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
               <GithubLogo size={24} weight="light" />
-              <span className="grow"><span className="title">Código no GitHub</span><span className="sub" style={{ display: 'block' }}>Licença MIT · v0.0.0 (protótipo visual)</span></span>
+              <span className="grow"><span className="title">{t('github')}</span><span className="sub" style={{ display: 'block' }}>{t('githubSub')}</span></span>
             </a>
           </div>
         </section>

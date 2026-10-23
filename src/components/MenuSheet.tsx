@@ -3,10 +3,11 @@ import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
 import { go, type Route } from '../router';
-import { t } from '../strings';
+import { useT } from '../i18n';
 import { requestInstall } from '../install';
 
 export function MenuSheet() {
+  const t = useT();
   const { close, open } = useUI();
   const count = useStudy((s) => Object.keys(s.highlights).length + s.notes.length);
 
@@ -16,14 +17,14 @@ export function MenuSheet() {
   };
 
   const items = [
-    { icon: BookOpenText, label: t.read, sub: undefined, run: () => nav('/') },
-    { icon: Notebook, label: t.study, sub: undefined, badge: count, run: () => nav('/study') },
-    { icon: Translate, label: t.library, sub: t.librarySub, run: () => nav('/library') },
-    { icon: GearSix, label: t.settings, sub: undefined, run: () => nav('/settings') },
+    { icon: BookOpenText, label: t('read'), sub: undefined, run: () => nav('/') },
+    { icon: Notebook, label: t('study'), sub: undefined, badge: count, run: () => nav('/study') },
+    { icon: Translate, label: t('library'), sub: t('librarySub'), run: () => nav('/library') },
+    { icon: GearSix, label: t('settings'), sub: undefined, run: () => nav('/settings') },
     {
       icon: DeviceMobile,
-      label: t.install,
-      sub: t.installSub,
+      label: t('install'),
+      sub: t('installSub'),
       run: async () => {
         close();
         if (!(await requestInstall())) open('install');
@@ -32,12 +33,12 @@ export function MenuSheet() {
   ];
 
   return (
-    <Sheet title={t.menu} onClose={close}>
+    <Sheet title={t('menu')} onClose={close}>
       <div className="menu-brand">
         <img src={`${import.meta.env.BASE_URL}icons/icon-192.png`} alt="" />
         <div>
-          <b>{t.appName}</b>
-          <span>Leitor de Bíblia, offline e sem conta</span>
+          <b>Open Bible</b>
+          <span>{t('tagline')}</span>
         </div>
       </div>
       <ul>

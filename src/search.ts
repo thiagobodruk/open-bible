@@ -56,14 +56,15 @@ export interface Hit {
 }
 
 export const MAX_HITS = 200;
-export const MIN_CHARS = 2;
+/** Em chinês e japonês um único caractere já é uma palavra. */
+export const minChars = (q: string) => (/[\u3040-\u30ff\u3400-\u9fff]/.test(q) ? 1 : 2);
 
 export function searchVerses(
   query: string,
   chapters: { book: string; chapter: number; verses: string[] }[],
 ): { hits: Hit[]; truncated: boolean } {
   const terms = normalize(query.trim()).norm.split(/\s+/).filter(Boolean);
-  if (terms.length === 0 || terms.join('').length < MIN_CHARS) return { hits: [], truncated: false };
+  if (terms.length === 0 || terms.join('').length < minChars(query)) return { hits: [], truncated: false };
 
   const hits: Hit[] = [];
   const ordered = [...chapters].sort((a, b) => bookIndex(a.book) - bookIndex(b.book) || a.chapter - b.chapter);

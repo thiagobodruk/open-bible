@@ -6,12 +6,11 @@ import { abbrOf } from '../data/catalog';
 import { useBookName, useChapter } from '../hooks';
 import { useSettings } from '../state/settings';
 import { refLabel } from '../ref';
-import { plural, t } from '../strings';
-
-const COLOR_NAMES: Record<HlColor, string> = { yellow: 'Amarelo', green: 'Verde', blue: 'Azul', pink: 'Rosa', orange: 'Laranja' };
+import { useT } from '../i18n';
 
 /** Ações para os versículos selecionados. É um bottom sheet sem fundo escurecido, para seguir tocando nos versículos. */
 export function SelectionBar() {
+  const t = useT();
   const { book, chapter, selection, highlights, paint, clearSelection } = useStudy();
   const open = useUI((s) => s.open);
   const notify = useUI((s) => s.notify);
@@ -32,9 +31,9 @@ export function SelectionBar() {
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(citation());
-      notify('Copiado');
+      notify(t('copied'));
     } catch {
-      notify('Não foi possível copiar');
+      notify(t('copyFailed'));
     }
   };
 
@@ -53,24 +52,24 @@ export function SelectionBar() {
   return (
     <Sheet
       modeless
-      title={`${refLabel(bookName(book), chapter, selection[0], selection[selection.length - 1])} · ${plural(selection.length, 'versículo', 'versículos')}`}
+      title={`${refLabel(bookName(book), chapter, selection[0], selection[selection.length - 1])} · ${t.n('verse', selection.length)}`}
       onClose={clearSelection}
     >
-      <div className="sheet-colors" role="group" aria-label="Cor da marcação">
+      <div className="sheet-colors" role="group" aria-label={t('highlightColor')}>
         {HL_COLORS.map((c) => (
           <button
             key={c}
             className={`swatch c-${c}`}
             aria-pressed={active(c)}
-            aria-label={`Marcar de ${COLOR_NAMES[c].toLowerCase()}`}
+            aria-label={t('highlightWith', { color: t(c).toLowerCase() })}
             onClick={() => paint(c, texts)}
           />
         ))}
       </div>
       <div className="sheet-actions">
-        <button className="sheet-action" onClick={() => open('note')}><NotePencil size={24} weight="light" />{t.note}</button>
-        <button className="sheet-action" onClick={copy}><Copy size={24} weight="light" />{t.copy}</button>
-        <button className="sheet-action" onClick={share}><ShareNetwork size={24} weight="light" />{t.share}</button>
+        <button className="sheet-action" onClick={() => open('note')}><NotePencil size={24} weight="light" />{t('note')}</button>
+        <button className="sheet-action" onClick={copy}><Copy size={24} weight="light" />{t('copy')}</button>
+        <button className="sheet-action" onClick={share}><ShareNetwork size={24} weight="light" />{t('share')}</button>
       </div>
     </Sheet>
   );

@@ -4,28 +4,28 @@ import { Segmented } from './Segmented';
 import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
 import { readingVars } from './readingVars';
-import { t } from '../strings';
+import { useT, type Key } from '../i18n';
 
 const THEMES = [
-  { v: 'auto', label: 'Auto' },
-  { v: 'light', label: 'Claro' },
-  { v: 'sepia', label: 'Sépia' },
-  { v: 'dark', label: 'Escuro' },
-] as const;
+  { v: 'auto', label: 'themeAuto' },
+  { v: 'light', label: 'themeLight' },
+  { v: 'sepia', label: 'themeSepia' },
+  { v: 'dark', label: 'themeDark' },
+] as const satisfies readonly { v: string; label: Key }[];
 
 const FONT_MIN = 14;
 const FONT_MAX = 32;
 const FONT_STEP = 2;
 const LINE_HEIGHTS = [
-  { v: 1.4, label: 'Compacta', gap: 4 },
-  { v: 1.7, label: 'Normal', gap: 6 },
-  { v: 2, label: 'Ampla', gap: 8 },
-] as const;
+  { v: 1.4, label: 'lhCompact', gap: 4 },
+  { v: 1.7, label: 'lhNormal', gap: 6 },
+  { v: 2, label: 'lhLoose', gap: 8 },
+] as const satisfies readonly { v: number; label: Key; gap: number }[];
 const MARGINS = [
-  { v: 'narrow', label: 'Estreitas', inset: 2 },
-  { v: 'medium', label: 'Médias', inset: 6 },
-  { v: 'wide', label: 'Largas', inset: 10 },
-] as const;
+  { v: 'narrow', label: 'marginsNarrow', inset: 2 },
+  { v: 'medium', label: 'marginsMedium', inset: 6 },
+  { v: 'wide', label: 'marginsWide', inset: 10 },
+] as const satisfies readonly { v: string; label: Key; inset: number }[];
 
 /** Linhas de texto em miniatura. `gap` muda o espaçamento vertical e `inset` o recuo lateral. */
 function Lines({ gap = 6, inset = 3 }: { gap?: number; inset?: number }) {
@@ -41,12 +41,13 @@ function Lines({ gap = 6, inset = 3 }: { gap?: number; inset?: number }) {
 const nearest = (v: number) => LINE_HEIGHTS.reduce((a, b) => (Math.abs(b.v - v) < Math.abs(a.v - v) ? b : a));
 
 export function TextSettingsSheet() {
+  const t = useT();
   const close = useUI((s) => s.close);
   const s = useSettings();
 
   return (
     <Sheet
-      title={t.textSettings}
+      title={t('textSettings')}
       onClose={close}
       pinned={
         <div className="preview" style={readingVars(s)} aria-hidden="true">
@@ -57,21 +58,21 @@ export function TextSettingsSheet() {
         </div>
       }
     >
-      <div className="themes" role="group" aria-label="Tema">
+      <div className="themes" role="group" aria-label={t('theme')}>
         {THEMES.map((th) => (
           <button key={th.v} className="theme-btn" aria-pressed={s.theme === th.v} onClick={() => s.set('theme', th.v)}>
             <span className={`sw t-${th.v}`}>Aa</span>
-            {th.label}
+            {t(th.label)}
           </button>
         ))}
       </div>
 
       <div className="field">
-        <span className="lbl">Tamanho <span>{s.fontSize} px</span></span>
-        <div className="choice-row two" role="group" aria-label="Tamanho da fonte">
+        <span className="lbl">{t('size')} <span>{t('sizeValue', { n: s.fontSize })}</span></span>
+        <div className="choice-row two" role="group" aria-label={t('size')}>
           <button
             className="choice"
-            aria-label="Diminuir fonte"
+            aria-label={t('smaller')}
             disabled={s.fontSize <= FONT_MIN}
             onClick={() => s.set('fontSize', Math.max(FONT_MIN, s.fontSize - FONT_STEP))}
           >
@@ -79,7 +80,7 @@ export function TextSettingsSheet() {
           </button>
           <button
             className="choice"
-            aria-label="Aumentar fonte"
+            aria-label={t('larger')}
             disabled={s.fontSize >= FONT_MAX}
             onClick={() => s.set('fontSize', Math.min(FONT_MAX, s.fontSize + FONT_STEP))}
           >
@@ -89,24 +90,24 @@ export function TextSettingsSheet() {
       </div>
 
       <div className="field">
-        <span className="lbl">Fonte</span>
+        <span className="lbl">{t('font')}</span>
         <Segmented
-          label="Fonte"
+          label={t('font')}
           value={s.font}
           onChange={(v) => s.set('font', v)}
           options={[
-            { value: 'serif', label: <span style={{ fontFamily: 'var(--font-serif)' }}>Serifada</span> },
-            { value: 'sans', label: <span style={{ fontFamily: 'var(--font-sans)' }}>Sem serifa</span> },
-            { value: 'mono', label: <span style={{ fontFamily: 'var(--font-mono)' }}>Mono</span> },
+            { value: 'serif', label: <span style={{ fontFamily: 'var(--font-serif)' }}>{t('fontSerif')}</span> },
+            { value: 'sans', label: <span style={{ fontFamily: 'var(--font-sans)' }}>{t('fontSans')}</span> },
+            { value: 'mono', label: <span style={{ fontFamily: 'var(--font-mono)' }}>{t('fontMono')}</span> },
           ]}
         />
       </div>
 
       <div className="field">
-        <span className="lbl">Altura da linha</span>
-        <div className="choice-row" role="group" aria-label="Altura da linha">
+        <span className="lbl">{t('lineHeight')}</span>
+        <div className="choice-row" role="group" aria-label={t('lineHeight')}>
           {LINE_HEIGHTS.map((l) => (
-            <button key={l.v} className="choice" aria-pressed={nearest(s.lineHeight).v === l.v} aria-label={l.label} title={l.label} onClick={() => s.set('lineHeight', l.v)}>
+            <button key={l.v} className="choice" aria-pressed={nearest(s.lineHeight).v === l.v} aria-label={t(l.label)} title={t(l.label)} onClick={() => s.set('lineHeight', l.v)}>
               <Lines gap={l.gap} />
             </button>
           ))}
@@ -114,10 +115,10 @@ export function TextSettingsSheet() {
       </div>
 
       <div className="field">
-        <span className="lbl">Margens</span>
-        <div className="choice-row" role="group" aria-label="Margens">
+        <span className="lbl">{t('margins')}</span>
+        <div className="choice-row" role="group" aria-label={t('margins')}>
           {MARGINS.map((m) => (
-            <button key={m.v} className="choice" aria-pressed={s.margins === m.v} aria-label={m.label} title={m.label} onClick={() => s.set('margins', m.v)}>
+            <button key={m.v} className="choice" aria-pressed={s.margins === m.v} aria-label={t(m.label)} title={t(m.label)} onClick={() => s.set('margins', m.v)}>
               <Lines inset={m.inset} />
             </button>
           ))}
@@ -125,46 +126,46 @@ export function TextSettingsSheet() {
       </div>
 
       <div className="field">
-        <span className="lbl">Alinhamento</span>
-        <div className="choice-row two" role="group" aria-label="Alinhamento">
-          <button className="choice" aria-pressed={s.align === 'left'} aria-label="Esquerda" title="Esquerda" onClick={() => s.set('align', 'left')}>
+        <span className="lbl">{t('alignment')}</span>
+        <div className="choice-row two" role="group" aria-label={t('alignment')}>
+          <button className="choice" aria-pressed={s.align === 'left'} aria-label={t('alignLeft')} title={t('alignLeft')} onClick={() => s.set('align', 'left')}>
             <TextAlignLeft size={26} weight="light" />
           </button>
-          <button className="choice" aria-pressed={s.align === 'justify'} aria-label="Justificado" title="Justificado" onClick={() => s.set('align', 'justify')}>
+          <button className="choice" aria-pressed={s.align === 'justify'} aria-label={t('alignJustify')} title={t('alignJustify')} onClick={() => s.set('align', 'justify')}>
             <TextAlignJustify size={26} weight="light" />
           </button>
         </div>
       </div>
 
       <div className="field">
-        <span className="lbl">Números dos versículos</span>
+        <span className="lbl">{t('verseNumbers')}</span>
         <Segmented
-          label="Números dos versículos"
+          label={t('verseNumbers')}
           value={s.verseNumbers}
           onChange={(v) => s.set('verseNumbers', v)}
           options={[
-            { value: 'visible', label: 'Visíveis' },
-            { value: 'subtle', label: 'Discretos' },
-            { value: 'hidden', label: 'Ocultos' },
+            { value: 'visible', label: t('vnVisible') },
+            { value: 'subtle', label: t('vnSubtle') },
+            { value: 'hidden', label: t('vnHidden') },
           ]}
         />
       </div>
 
       <div className="field">
-        <span className="lbl">Disposição</span>
+        <span className="lbl">{t('layout')}</span>
         <Segmented
-          label="Disposição"
+          label={t('layout')}
           value={s.textMode}
           onChange={(v) => s.set('textMode', v)}
           options={[
-            { value: 'verses', label: 'Um versículo por linha' },
-            { value: 'paragraph', label: 'Parágrafo' },
+            { value: 'verses', label: t('layoutVerses') },
+            { value: 'paragraph', label: t('layoutParagraph') },
           ]}
         />
       </div>
 
       <button className="btn block" style={{ marginTop: 28 }} onClick={s.resetText}>
-        <ArrowCounterClockwise size={20} weight="light" /> Restaurar padrão
+        <ArrowCounterClockwise size={20} weight="light" /> {t('resetText')}
       </button>
     </Sheet>
   );

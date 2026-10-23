@@ -4,10 +4,11 @@ import { useLibrary } from '../state/library';
 import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
 import { go } from '../router';
-import { t } from '../strings';
+import { useT } from '../i18n';
 
 /** Primeira abertura: ainda não há nenhuma versão no aparelho. Oferece a sugerida para o idioma e leva à Biblioteca. */
 export function Welcome() {
+  const t = useT();
   const open = useUI((s) => s.open);
   const uiLang = useSettings((s) => s.uiLang);
   const set = useSettings((s) => s.set);
@@ -28,26 +29,26 @@ export function Welcome() {
     <div className="reader">
       <header className="topbar">
         <div className="topbar-in">
-          <b className="brand-name">{t.appName}</b>
+          <b className="brand-name">Open Bible</b>
           <span className="spacer" />
-          <button className="icon-btn" onClick={() => open('menu')} aria-label={t.menu}><List size={24} weight="light" /></button>
+          <button className="icon-btn" onClick={() => open('menu')} aria-label={t('menu')}><List size={24} weight="light" /></button>
         </div>
       </header>
       <main className="page">
         <div className="empty welcome">
           <CloudArrowDown size={44} weight="light" />
-          <h1>Baixe uma Bíblia para começar</h1>
-          <p>O texto fica salvo neste aparelho e depois funciona sem internet. Nada é enviado para servidor algum.</p>
+          <h1>{t('welcomeTitle')}</h1>
+          <p>{t('welcomeBody')}</p>
           <button className="btn primary" onClick={start} disabled={busy}>
-            {busy ? `Baixando… ${Math.round(progress * 100)}%` : `Baixar ${abbrOf(id)} · ${v.sizeMb.toFixed(1)} MB`}
+            {busy ? t('downloadingBtn', { pct: Math.round(progress * 100) }) : t('downloadBtn', { abbr: abbrOf(id), mb: v.sizeMb.toFixed(1) })}
           </button>
-          {busy && <div className="progress" role="progressbar" aria-label="Baixando" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></div>}
+          {busy && <div className="progress" role="progressbar" aria-label={t('downloading')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></div>}
           {failure && (
             <p className="error" role="alert">
-              {failure === 'offline' ? 'Sem conexão. Conecte-se à internet para baixar.' : 'Não foi possível baixar. Tente de novo.'}
+              {failure === 'offline' ? t('offlineError') : t('downloadError')}
             </p>
           )}
-          <button className="btn" onClick={() => go('/library')}><Translate size={18} weight="light" /> Escolher outra versão</button>
+          <button className="btn" onClick={() => go('/library')}><Translate size={18} weight="light" /> {t('chooseOther')}</button>
         </div>
       </main>
     </div>
