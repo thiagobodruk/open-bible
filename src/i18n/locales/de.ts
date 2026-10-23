@@ -80,6 +80,7 @@ const de: Messages = {
   listenSpeed: 'Tempo',
   listenNext: 'Mit dem nächsten Kapitel fortfahren',
   listenSilent: 'Kein Ton? Prüfe den Stumm-Schalter und die Lautstärke.',
+  listenIosHint: 'Kein Ton? Schalte den Stumm-Modus aus.',
   feedback: 'Feedback senden',
   feedbackType: 'Art des Feedbacks',
   feedbackMessage: 'Nachricht',

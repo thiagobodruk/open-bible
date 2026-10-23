@@ -16,7 +16,7 @@ import { go } from '../router';
 import { hintPending, markHintSeen } from '../hint';
 import { isMobile } from '../install';
 import { ListenBar } from '../components/ListenBar';
-import { listenSupported, resume, setSilentHandler, start, stop, useListen } from '../listen';
+import { listenSupported, resume, setSilentHandler, silentHintDue, start, stop, useListen } from '../listen';
 import { useT } from '../i18n';
 
 export function Reader() {
@@ -48,6 +48,7 @@ export function Reader() {
   const toggleListen = () => {
     if (useListen.getState().status !== 'idle') return stop();
     if (!start(verses, versionInfo?.lang ?? 'en')) notify(t('listenNoVoice'));
+    else if (silentHintDue()) notify(t('listenIosHint'));
   };
 
   const move = (delta: 1 | -1) => {

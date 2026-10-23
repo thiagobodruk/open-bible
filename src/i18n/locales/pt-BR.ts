@@ -80,6 +80,7 @@ const ptBR: Messages = {
   listenSpeed: 'Velocidade',
   listenNext: 'Continuar no próximo capítulo',
   listenSilent: 'Sem som? Confira o botão de silêncio e o volume.',
+  listenIosHint: 'Sem som? Desligue o modo silencioso.',
   feedback: 'Enviar feedback',
   feedbackType: 'Tipo de feedback',
   feedbackMessage: 'Mensagem',

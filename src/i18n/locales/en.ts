@@ -78,6 +78,7 @@ const en = {
   listenSpeed: 'Speed',
   listenNext: 'Continue to the next chapter',
   listenSilent: 'No sound? Check the silent switch and the volume.',
+  listenIosHint: 'No sound? Turn off the silent mode.',
   feedback: 'Send feedback',
   feedbackType: 'Feedback type',
   feedbackMessage: 'Message',
