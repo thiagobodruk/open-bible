@@ -9,6 +9,7 @@ import { useUI } from '../state/ui';
 import { readingVars } from '../components/readingVars';
 import { SelectionBar } from '../components/SelectionBar';
 import { go } from '../router';
+import { hintPending, markHintSeen } from '../hint';
 import { t } from '../strings';
 
 export function Reader() {
@@ -27,6 +28,7 @@ export function Reader() {
   const move = (delta: 1 | -1) => {
     if (blocked) return;
     if (step(delta)) {
+      markHintSeen();
       setDir(delta === 1 ? 'next' : 'prev');
       scrollTo(0, 0);
     } else {
@@ -70,15 +72,14 @@ export function Reader() {
     clearFocus();
   }, [focusVerse, clearFocus, book, chapter]);
 
-  // Dica de gestos na primeira abertura
+  // Dica de gestos só na primeira abertura. Vale como vista quando o toast aparece ou quando o usuário já troca de capítulo.
   useEffect(() => {
-    try {
-      if (localStorage.getItem('ob:hint')) return;
-      localStorage.setItem('ob:hint', '1');
-    } catch {
-      /* ignora */
-    }
-    const id = setTimeout(() => notify('Deslize ou toque nas bordas para trocar de capítulo'), 700);
+    if (!hintPending()) return;
+    const id = setTimeout(() => {
+      if (!hintPending()) return;
+      notify('Deslize ou toque nas bordas para trocar de capítulo');
+      markHintSeen();
+    }, 700);
     return () => clearTimeout(id);
   }, [notify]);
 
