@@ -11,6 +11,9 @@ interface Toast {
 interface UIStore {
   sheet: SheetName;
   toast: Toast | null;
+  /** Enquanto verdadeiro, o endereço da página fica na raiz do app em vez de apontar para o capítulo. */
+  homeUrl: boolean;
+  setHomeUrl: (on: boolean) => void;
   open: (s: Exclude<SheetName, null>) => void;
   close: () => void;
   notify: (message: string, action?: Toast['action']) => void;
@@ -23,6 +26,8 @@ let timer: ReturnType<typeof setTimeout> | undefined;
 export const useUI = create<UIStore>((set) => ({
   sheet: null,
   toast: null,
+  homeUrl: false,
+  setHomeUrl: (homeUrl) => set({ homeUrl }),
   open: (sheet) => set({ sheet }),
   close: () => set({ sheet: null }),
   notify: (message, action) => {
