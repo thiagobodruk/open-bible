@@ -8,7 +8,7 @@ const fr: Messages = {
   settings: 'Réglages',
   install: 'Installer l’app',
   installSub: 'Hors ligne et en plein écran',
-  textSettings: 'Réglages de lecture',
+  textSettings: 'Apparence',
   search: 'Rechercher',
   books: 'Livres',
   prevChapter: 'Chapitre précédent',

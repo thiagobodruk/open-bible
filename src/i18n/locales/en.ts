@@ -6,7 +6,7 @@ const en = {
   settings: 'Settings',
   install: 'Install app',
   installSub: 'Use offline, full screen',
-  textSettings: 'Reading settings',
+  textSettings: 'Appearance',
   search: 'Search',
   books: 'Books',
   prevChapter: 'Previous chapter',

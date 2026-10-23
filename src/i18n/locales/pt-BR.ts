@@ -8,7 +8,7 @@ const ptBR: Messages = {
   settings: 'Ajustes',
   install: 'Instalar app',
   installSub: 'Use offline, em tela cheia',
-  textSettings: 'Configurações de leitura',
+  textSettings: 'Aparência',
   search: 'Buscar',
   books: 'Livros',
   prevChapter: 'Capítulo anterior',
