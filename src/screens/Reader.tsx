@@ -149,8 +149,8 @@ export function Reader() {
             const hl = highlights[vkey(book, chapter, v)];
             const cls = ['verse', hl ? `hl c-${hl.color}` : '', selection.includes(v) ? 'sel' : ''].join(' ');
             return (
-              <span key={v}>
-                <span id={`v-${v}`} data-v={v} className={cls}>
+              <span key={v} data-v={v} className="verse-wrap">
+                <span id={`v-${v}`} className={cls}>
                   <span className="vn">{v}</span>
                   {text}
                   {noteAt(v) && <NotePencil className="note-mark" size={14} weight="fill" aria-label="Tem nota" />}
