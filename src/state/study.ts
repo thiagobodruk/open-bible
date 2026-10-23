@@ -62,6 +62,7 @@ interface StudyStore {
   paint: (color: HlColor, texts: Record<number, string>) => void;
   saveNote: (text: string, excerpt: string, existingId?: string) => void;
   deleteNote: (id: string) => void;
+  removeHighlight: (key: string) => void;
 }
 
 const start = loadPosition();
@@ -180,6 +181,11 @@ export const useStudy = create<StudyStore>((set, get) => ({
       set({ notes: [...notes, saved] });
     }
     dbPut('notes', [saved]).catch(persistFail);
+  },
+
+  removeHighlight: (key) => {
+    set((s) => ({ highlights: Object.fromEntries(Object.entries(s.highlights).filter(([k]) => k !== key)) }));
+    dbDelete('highlights', [key]).catch(persistFail);
   },
 
   deleteNote: (id) => {

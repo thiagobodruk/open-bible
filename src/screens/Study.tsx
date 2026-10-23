@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
-import { Notebook, NotePencil } from '@phosphor-icons/react';
+import { Notebook, NotePencil, Trash } from '@phosphor-icons/react';
+import { Sheet } from '../components/Sheet';
+import { useUI } from '../state/ui';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { Segmented } from '../components/Segmented';
 import { BOOKS, bookIndex } from '../data/books';
@@ -30,7 +32,9 @@ const COLOR_NAMES: Record<HlColor, string> = { yellow: 'Amarelo', green: 'Verde'
 const fmt = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'short' });
 
 export function Study() {
-  const { highlights, notes, goTo } = useStudy();
+  const { highlights, notes, goTo, deleteNote, removeHighlight } = useStudy();
+  const notify = useUI((s) => s.notify);
+  const [pending, setPending] = useState<Entry | null>(null);
   const bookName = useBookName();
   const versionId = useSettings((s) => s.versionId);
   const [kind, setKind] = useState<Kind>('all');
@@ -91,8 +95,8 @@ export function Study() {
           <section key={book.id}>
             <h2 className="book-title">{bookName(book.id)}</h2>
             {items.map((e) => (
+              <div key={e.key} className="entry-row">
               <button
-                key={e.key}
                 className={`entry ${e.color ? `c-${e.color}` : ''}`}
                 onClick={() => {
                   goTo(e.book, e.chapter, e.v1);
@@ -113,10 +117,42 @@ export function Study() {
                 )}
                 <div className="date">{fmt.format(e.createdAt)}</div>
               </button>
+              <button
+                className="icon-btn danger-icon entry-del"
+                aria-label={`Excluir ${refLabel(bookName(e.book), e.chapter, e.v1, e.v2)}`}
+                onClick={() => setPending(e)}
+              >
+                <Trash size={20} weight="light" />
+              </button>
+              </div>
             ))}
           </section>
         ))}
       </div>
+
+      {pending && (
+        <Sheet title="Excluir?" onClose={() => setPending(null)}>
+          <p className="confirm-text">
+            {pending.note && pending.color ? 'A marcação e a nota de ' : pending.note ? 'A nota de ' : 'A marcação de '}
+            <b>{refLabel(bookName(pending.book), pending.chapter, pending.v1, pending.v2)}</b> {pending.note && pending.color ? 'serão excluídas' : 'será excluída'}. Isso não pode ser desfeito.
+          </p>
+          <div className="actions">
+            <span className="grow" />
+            <button className="btn" onClick={() => setPending(null)}>{t.cancel}</button>
+            <button
+              className="btn danger"
+              onClick={() => {
+                if (pending.note) deleteNote(pending.key);
+                if (pending.color) removeHighlight(`${pending.book}.${pending.chapter}.${pending.v1}`);
+                setPending(null);
+                notify('Excluído');
+              }}
+            >
+              {t.delete}
+            </button>
+          </div>
+        </Sheet>
+      )}
     </div>
   );
 }
