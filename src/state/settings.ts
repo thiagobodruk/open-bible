@@ -61,13 +61,14 @@ function load(): Settings {
 
 interface SettingsStore extends Settings {
   set: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
-  reset: () => void;
+  /** Restaura só os ajustes de leitura. Idioma da interface e versão ficam como estão. */
+  resetText: () => void;
 }
 
 export const useSettings = create<SettingsStore>((set) => ({
   ...load(),
   set: (key, value) => set({ [key]: value } as Partial<Settings>),
-  reset: () => set({ ...DEFAULTS }),
+  resetText: () => set(({ uiLang, versionId }) => ({ ...DEFAULTS, uiLang, versionId })),
 }));
 
 const dark = matchMedia('(prefers-color-scheme: dark)');
@@ -84,7 +85,7 @@ export function initSettingsEffects() {
   dark.addEventListener('change', () => applyTheme(useSettings.getState().theme));
   useSettings.subscribe((s) => {
     applyTheme(s.theme);
-    const { set: _s, reset: _r, ...data } = s;
+    const { set: _s, resetText: _r, ...data } = s;
     try {
       localStorage.setItem(KEY, JSON.stringify(data));
     } catch {

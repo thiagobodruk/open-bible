@@ -163,11 +163,9 @@ export function TextSettingsSheet() {
         />
       </div>
 
-      <div className="actions" style={{ marginTop: 22 }}>
-        <button className="btn sm" onClick={s.reset}>
-          <ArrowCounterClockwise size={18} weight="light" /> Restaurar padrão
-        </button>
-      </div>
+      <button className="btn block" style={{ marginTop: 28 }} onClick={s.resetText}>
+        <ArrowCounterClockwise size={20} weight="light" /> Restaurar padrão
+      </button>
     </Sheet>
   );
 }

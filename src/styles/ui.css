@@ -107,3 +107,4 @@
 
 /* Com um sheet aberto, o toast sobe para o topo e não cobre as ações */
 body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top, 0px)); }
+.btn.block { display: flex; width: 100%; }
