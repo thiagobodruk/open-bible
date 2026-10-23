@@ -16,7 +16,7 @@ Offline-first and installable on Android and iOS. No account, no backend, no tra
 [![TypeScript](https://img.shields.io/badge/TypeScript-7-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white)](https://vite.dev)
 
-[Live demo](https://thiagobodruk.github.io/open-bible/) · [Bible versions](#bible-versions) · [Features](#features) · [Development](#development) · [Bible data repo](https://github.com/thiagobodruk/bible)
+[Live demo](https://thiagobodruk.github.io/open-bible/) · [Bible versions](#bible-versions) · [Features](#features) · [Development](#development) · [Donate](#support-the-project) · [Bible data repo](https://github.com/thiagobodruk/bible)
 
 ---
 
@@ -39,7 +39,8 @@ Open Bible reads its texts from the [Bible](https://github.com/thiagobodruk/bibl
 - **Study tools:** select verses, highlight them in five colors, write notes, copy or share, and review everything in **My study**.
 - **Search:** full-text search in the current version, plus quick references such as `jn 3:16`.
 - **Private by design:** highlights, notes, and settings stay in your browser (IndexedDB and localStorage), with JSON export and import for backups.
-- **Installable:** works as a PWA on Android and iOS.
+- **Interface in 7 languages:** English, Portuguese (Brazil), Spanish, French, German, Simplified Chinese, and Japanese. The language follows your browser and can be changed in Settings, independently of the Bible language.
+- **Installable and offline:** works as a PWA on Android and iOS. The app shell is cached by a service worker, and downloaded versions live in IndexedDB.
 - **Icons:** [Phosphor Icons](https://phosphoricons.com/).
 
 ## Status
@@ -50,8 +51,8 @@ Open Bible reads its texts from the [Bible](https://github.com/thiagobodruk/bibl
 | Reader, navigator, search, and quick references | Done |
 | Highlights, notes, My study, backup export and import | Done |
 | Text settings and themes | Done |
-| PWA manifest and service worker | Configured, not yet tested on devices |
-| Interface translations (English, Portuguese, Spanish, French, German, Chinese, Japanese) | Planned. The interface is currently in Portuguese |
+| PWA manifest and service worker | Done. Offline reload verified in an automated browser test. Not yet tested on physical Android and iOS devices |
+| Interface translations (English, Portuguese, Spanish, French, German, Chinese, Japanese) | Done |
 
 ## How it works
 
@@ -69,6 +70,10 @@ npm run dev       # dev server at http://localhost:5173/open-bible/
 npm run build     # typecheck and production build into dist/
 npm run preview   # serve the build at http://localhost:4173/open-bible/
 ```
+
+### Translations
+
+Every interface string lives in `src/i18n/locales/en.ts`. The other locale files are typed against it, so `npm run build` fails if a key is missing. To add a language, create a locale file, register it in `src/i18n/index.ts`, and add it to `UiLang` and the language list in Settings.
 
 To refresh the version catalog:
 
@@ -97,6 +102,7 @@ src/
 ├─ components/   sheets, selection sheet, toast, search field
 ├─ screens/      Reader, Study (My study), Library, Settings
 ├─ data/         books, catalog, IndexedDB access, download worker
+├─ i18n/         translator and one locale file per interface language
 ├─ state/        Zustand stores: settings, study, library, UI
 └─ styles/       theme tokens and CSS by area
 scripts/         catalog generator
@@ -110,7 +116,13 @@ One-time repository setting: **Settings > Pages > Build and deployment > Source:
 
 ## How can I help?
 
-Review the code, report bugs, suggest improvements, or help translate the interface. Every contribution is welcome. Issues and pull requests are open on [GitHub](https://github.com/thiagobodruk/open-bible).
+Review the code, report bugs, suggest improvements, or improve a translation in `src/i18n/locales/`. Every contribution is welcome. Issues and pull requests are open on [GitHub](https://github.com/thiagobodruk/open-bible).
+
+## Support the project
+
+Open Bible is free and has no ads. If it is useful to you, a voluntary donation helps keep it going.
+
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A9FM66AQT672L&lc=US&item_name=Bible%20Sources&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"><img src="https://raw.githubusercontent.com/thiagobodruk/bible/92e121c2c829eae351b76db1d32858ced77b16a6/assets/paypal-donate-button.png" alt="Donate" width="400"></a>
 
 ## License
 

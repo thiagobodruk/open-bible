@@ -11,7 +11,7 @@ import { useSettings } from '../state/settings';
 import { HL_COLORS, useStudy, type HlColor } from '../state/study';
 import { go } from '../router';
 import { refLabel } from '../ref';
-import { t } from '../strings';
+import { useT } from '../i18n';
 
 type Kind = 'all' | 'highlights' | 'notes';
 
@@ -28,10 +28,9 @@ interface Entry {
   createdAt: number;
 }
 
-const COLOR_NAMES: Record<HlColor, string> = { yellow: 'Amarelo', green: 'Verde', blue: 'Azul', pink: 'Rosa', orange: 'Laranja' };
-const fmt = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'short' });
-
 export function Study() {
+  const t = useT();
+  const fmt = useMemo(() => new Intl.DateTimeFormat(t.lang, { day: 'numeric', month: 'short' }), [t.lang]);
   const { highlights, notes, goTo, deleteNote, removeHighlight } = useStudy();
   const notify = useUI((s) => s.notify);
   const [pending, setPending] = useState<Entry | null>(null);
@@ -62,23 +61,23 @@ export function Study() {
 
   return (
     <div className="screen">
-      <ScreenHeader title={t.study} />
+      <ScreenHeader title={t('study')} />
       <div className="screen-body">
         <div className="filters">
           <Segmented
-            label="Tipo"
+            label={t('filterType')}
             value={kind}
             onChange={setKind}
             options={[
-              { value: 'all', label: 'Tudo' },
-              { value: 'highlights', label: 'Marcações' },
-              { value: 'notes', label: 'Notas' },
+              { value: 'all', label: t('all') },
+              { value: 'highlights', label: t('highlights') },
+              { value: 'notes', label: t('notes') },
             ]}
           />
-          <div className="colors" role="group" aria-label="Filtrar por cor">
-            <button className="all" aria-pressed={color === null} aria-label="Todas as cores" onClick={() => setColor(null)} />
+          <div className="colors" role="group" aria-label={t('filterColor')}>
+            <button className="all" aria-pressed={color === null} aria-label={t('allColors')} onClick={() => setColor(null)} />
             {HL_COLORS.map((c) => (
-              <button key={c} className={`c-${c}`} aria-pressed={color === c} aria-label={COLOR_NAMES[c]} onClick={() => setColor(color === c ? null : c)} />
+              <button key={c} className={`c-${c}`} aria-pressed={color === c} aria-label={t(c)} onClick={() => setColor(color === c ? null : c)} />
             ))}
           </div>
         </div>
@@ -86,8 +85,8 @@ export function Study() {
         {groups.length === 0 && (
           <div className="empty">
             <Notebook size={40} weight="light" />
-            <p>Nada por aqui ainda.</p>
-            <p style={{ fontSize: 14 }}>Toque em um versículo para marcar ou anotar.</p>
+            <p>{t('nothingYet')}</p>
+            <p style={{ fontSize: 14 }}>{t('nothingHint')}</p>
           </div>
         )}
 
@@ -119,7 +118,7 @@ export function Study() {
               </button>
               <button
                 className="icon-btn danger-icon entry-del"
-                aria-label={`Excluir ${refLabel(bookName(e.book), e.chapter, e.v1, e.v2)}`}
+                aria-label={t('deleteRef', { ref: refLabel(bookName(e.book), e.chapter, e.v1, e.v2) })}
                 onClick={() => setPending(e)}
               >
                 <Trash size={20} weight="light" />
@@ -131,24 +130,25 @@ export function Study() {
       </div>
 
       {pending && (
-        <Sheet title="Excluir?" onClose={() => setPending(null)}>
+        <Sheet title={t('deleteQ')} onClose={() => setPending(null)}>
           <p className="confirm-text">
-            {pending.note && pending.color ? 'A marcação e a nota de ' : pending.note ? 'A nota de ' : 'A marcação de '}
-            <b>{refLabel(bookName(pending.book), pending.chapter, pending.v1, pending.v2)}</b> {pending.note && pending.color ? 'serão excluídas' : 'será excluída'}. Isso não pode ser desfeito.
+            {t(pending.note && pending.color ? 'confirmBoth' : pending.note ? 'confirmNote' : 'confirmHl', {
+              ref: refLabel(bookName(pending.book), pending.chapter, pending.v1, pending.v2),
+            })}
           </p>
           <div className="actions">
             <span className="grow" />
-            <button className="btn" onClick={() => setPending(null)}>{t.cancel}</button>
+            <button className="btn" onClick={() => setPending(null)}>{t('cancel')}</button>
             <button
               className="btn danger"
               onClick={() => {
                 if (pending.note) deleteNote(pending.key);
                 if (pending.color) removeHighlight(`${pending.book}.${pending.chapter}.${pending.v1}`);
                 setPending(null);
-                notify('Excluído');
+                notify(t('deleted'));
               }}
             >
-              {t.delete}
+              {t('delete')}
             </button>
           </div>
         </Sheet>

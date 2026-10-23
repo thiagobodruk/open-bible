@@ -82,9 +82,11 @@ export function applyTheme(theme: Theme) {
 
 export function initSettingsEffects() {
   applyTheme(useSettings.getState().theme);
+  document.documentElement.lang = useSettings.getState().uiLang;
   dark.addEventListener('change', () => applyTheme(useSettings.getState().theme));
   useSettings.subscribe((s) => {
     applyTheme(s.theme);
+    document.documentElement.lang = s.uiLang;
     const { set: _s, resetText: _r, ...data } = s;
     try {
       localStorage.setItem(KEY, JSON.stringify(data));

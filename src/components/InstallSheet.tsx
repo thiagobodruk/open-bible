@@ -2,30 +2,36 @@ import { ShareNetwork, PlusSquare, DotsThreeVertical } from '@phosphor-icons/rea
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { isIOS, isStandalone } from '../install';
-import { t } from '../strings';
+import { splitIcon, useT } from '../i18n';
+
+function WithIcon({ text, icon }: { text: string; icon: React.ReactNode }) {
+  const [a, b] = splitIcon(text);
+  return <>{a}{icon}{b}</>;
+}
 
 export function InstallSheet() {
+  const t = useT();
   const close = useUI((s) => s.close);
   const ios = isIOS();
   return (
-    <Sheet title={t.install} onClose={close}>
+    <Sheet title={t('install')} onClose={close}>
       {isStandalone() ? (
-        <p>O app já está instalado neste dispositivo.</p>
+        <p>{t('installedAlready')}</p>
       ) : ios ? (
         <>
-          <p>No iPhone ou iPad, a instalação é feita pelo Safari.</p>
+          <p>{t('installIosIntro')}</p>
           <ol className="steps">
-            <li>Toque em <ShareNetwork size={18} weight="light" style={{ verticalAlign: '-3px' }} /> Compartilhar na barra do Safari.</li>
-            <li>Escolha <PlusSquare size={18} weight="light" style={{ verticalAlign: '-3px' }} /> Adicionar à Tela de Início.</li>
-            <li>Confirme em Adicionar.</li>
+            <li><WithIcon text={t('installIosStep1')} icon={<ShareNetwork size={18} weight="light" style={{ verticalAlign: '-3px' }} />} /></li>
+            <li><WithIcon text={t('installIosStep2')} icon={<PlusSquare size={18} weight="light" style={{ verticalAlign: '-3px' }} />} /></li>
+            <li>{t('installIosStep3')}</li>
           </ol>
         </>
       ) : (
         <>
-          <p>Seu navegador não ofereceu a instalação automática. Você pode instalar pelo menu.</p>
+          <p>{t('installOtherIntro')}</p>
           <ol className="steps">
-            <li>Abra o menu <DotsThreeVertical size={18} weight="bold" style={{ verticalAlign: '-3px' }} /> do navegador.</li>
-            <li>Escolha Instalar app ou Adicionar à tela inicial.</li>
+            <li><WithIcon text={t('installOtherStep1')} icon={<DotsThreeVertical size={18} weight="bold" style={{ verticalAlign: '-3px' }} />} /></li>
+            <li>{t('installOtherStep2')}</li>
           </ol>
         </>
       )}

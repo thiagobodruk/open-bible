@@ -1,27 +1,33 @@
 import { useEffect, useMemo, useState } from 'react';
 import { loadBook } from './data/bible';
 import { BOOKS, type Book } from './data/books';
+import { localBookName } from './i18n/books';
 import { useLibrary } from './state/library';
 import { useSettings } from './state/settings';
 
-/** Livros da versão em uso, com os nomes do arquivo da versão. Sem versão instalada, o cânone com nomes em pt-BR. */
+/** Livros da versão em uso, com os nomes do arquivo da versão. Sem versão instalada, o cânone com nomes no idioma da interface. */
 export function useBooks(): Book[] {
   const versionId = useSettings((s) => s.versionId);
+  const uiLang = useSettings((s) => s.uiLang);
   const meta = useLibrary((s) => s.installed[versionId]);
   return useMemo(() => {
-    if (!meta) return BOOKS;
+    if (!meta) return BOOKS.map((b, i) => ({ ...b, name: localBookName(uiLang, i) ?? b.name }));
     return meta.books.map((b) => ({
       id: b.id,
       name: b.name,
       chapters: b.chapters,
       testament: BOOKS.find((x) => x.id === b.id)!.testament,
     }));
-  }, [meta]);
+  }, [meta, uiLang]);
 }
 
 export function useBookName() {
   const books = useBooks();
-  return (id: string) => books.find((b) => b.id === id)?.name ?? BOOKS.find((b) => b.id === id)?.name ?? id;
+  const uiLang = useSettings((s) => s.uiLang);
+  return (id: string) => {
+    const i = BOOKS.findIndex((b) => b.id === id);
+    return books.find((b) => b.id === id)?.name ?? (i >= 0 ? localBookName(uiLang, i) ?? BOOKS[i].name : id);
+  };
 }
 
 export type ChapterState =

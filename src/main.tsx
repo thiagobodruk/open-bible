@@ -11,6 +11,7 @@ import './styles/screens.css';
 import App from './App';
 import { initSettingsEffects } from './state/settings';
 import { useUI } from './state/ui';
+import { tr } from './i18n';
 import { boot } from './boot';
 
 initSettingsEffects();
@@ -18,7 +19,7 @@ boot();
 
 const update = registerSW({
   onNeedRefresh() {
-    useUI.getState().notify('Nova versão disponível', { label: 'Atualizar', run: () => update(true) });
+    useUI.getState().notify(tr('updateAvailable'), { label: tr('updateAction'), run: () => update(true) });
   },
 });
 

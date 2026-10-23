@@ -5,11 +5,12 @@ import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
 import { useBookName, useChapter } from '../hooks';
 import { refLabel } from '../ref';
-import { t } from '../strings';
+import { useT } from '../i18n';
 
 const MAX = 5000;
 
 export function NoteSheet() {
+  const t = useT();
   const close = useUI((s) => s.close);
   const notify = useUI((s) => s.notify);
   const { book, chapter, selection, notes, saveNote, deleteNote, clearSelection } = useStudy();
@@ -27,14 +28,14 @@ export function NoteSheet() {
       if (existing) deleteNote(existing.id);
     } else {
       saveNote(text.trim(), excerpt, existing?.id);
-      notify('Nota salva');
+      notify(t('noteSaved'));
     }
     clearSelection();
     close();
   };
 
   return (
-    <Sheet title={existing ? 'Editar nota' : 'Nova nota'} onClose={close}>
+    <Sheet title={existing ? t('noteEdit') : t('noteNew')} onClose={close}>
       <div className="note-ref">{refLabel(bookName(book), chapter, existing?.verseStart ?? first, existing?.verseEnd ?? last)}</div>
       <blockquote className="note-quote" style={{ marginInline: 0 }}>{existing?.excerpt ?? excerpt}</blockquote>
       <textarea
@@ -42,8 +43,8 @@ export function NoteSheet() {
         value={text}
         maxLength={MAX}
         autoFocus
-        placeholder="Escreva sua nota"
-        aria-label="Texto da nota"
+        placeholder={t('notePlaceholder')}
+        aria-label={t('noteLabel')}
         onChange={(e) => setText(e.target.value)}
       />
       <div className="counter">{text.length} / {MAX}</div>
@@ -51,21 +52,21 @@ export function NoteSheet() {
         {existing && (
           <button
             className="icon-btn danger-icon"
-            aria-label={t.delete}
-            title={t.delete}
+            aria-label={t('delete')}
+            title={t('delete')}
             onClick={() => {
               deleteNote(existing.id);
               clearSelection();
               close();
-              notify('Nota excluída');
+              notify(t('noteDeleted'));
             }}
           >
             <Trash size={24} weight="light" />
           </button>
         )}
         <span className="grow" />
-        <button className="btn" onClick={close}>{t.cancel}</button>
-        <button className="btn primary" onClick={onSave}>{t.save}</button>
+        <button className="btn" onClick={close}>{t('cancel')}</button>
+        <button className="btn primary" onClick={onSave}>{t('save')}</button>
       </div>
     </Sheet>
   );

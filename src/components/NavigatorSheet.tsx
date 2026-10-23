@@ -6,10 +6,11 @@ import { Sheet } from './Sheet';
 import { useBooks } from '../hooks';
 import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
-import { t } from '../strings';
+import { useT } from '../i18n';
 
 /** Lista única de livros, como no app Bíblia do iOS. O livro tocado abre a grade de capítulos logo abaixo dele. */
 export function NavigatorSheet() {
+  const t = useT();
   const close = useUI((s) => s.close);
   const { book, chapter, goTo } = useStudy();
   const books = useBooks();
@@ -33,13 +34,13 @@ export function NavigatorSheet() {
 
   return (
     <Sheet
-      title={t.books}
+      title={t('books')}
       onClose={close}
       tall
       trailing={
         <button
           className="icon-btn"
-          aria-label={searching ? 'Fechar busca' : 'Buscar livro'}
+          aria-label={searching ? t('closeSearch') : t('bookSearch')}
           aria-pressed={searching}
           onClick={() => {
             setSearching(!searching);
@@ -51,11 +52,11 @@ export function NavigatorSheet() {
       }
       pinned={
         searching ? (
-          <SearchField autoFocus value={q} onChange={setQ} placeholder="Buscar livro" aria-label="Buscar livro" enterKeyHint="search" autoCapitalize="none" autoCorrect="off" />
+          <SearchField autoFocus value={q} onChange={setQ} placeholder={t('bookSearch')} aria-label={t('bookSearch')} enterKeyHint="search" autoCapitalize="none" autoCorrect="off" />
         ) : undefined
       }
     >
-      {term && visible.length === 0 && <p className="empty" style={{ padding: '32px 8px' }}>Nenhum livro encontrado.</p>}
+      {term && visible.length === 0 && <p className="empty" style={{ padding: '32px 8px' }}>{t('noBooks')}</p>}
       <ul className="book-list">
         {visible.map((b, i) => {
           const isOpen = expanded === b.id;

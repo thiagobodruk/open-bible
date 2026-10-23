@@ -6,11 +6,12 @@ import { VERSIONS, abbrOf, type VersionInfo } from '../data/catalog';
 import { useLibrary } from '../state/library';
 import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
-import { t } from '../strings';
+import { useT } from '../i18n';
 
-const COVERAGE = { nt: 'Só NT', ot: 'Só AT', partial: 'Incompleta' } as const;
+const COVERAGE = { nt: 'covNt', ot: 'covOt', partial: 'covPartial' } as const;
 
 export function Library() {
+  const t = useT();
   const [q, setQ] = useState('');
   const { versionId, uiLang, set } = useSettings();
   const { installed, downloading, failed, download } = useLibrary();
@@ -60,12 +61,12 @@ export function Library() {
 
   const choose = (id: string) => {
     set('versionId', id);
-    notify(`Versão: ${abbrOf(id)}`);
+    notify(t('versionToast', { abbr: abbrOf(id) }));
   };
 
   const get = async (id: string) => {
     if (await download(id)) choose(id);
-    else notify(navigator.onLine ? 'Não foi possível baixar. Tente de novo.' : 'Sem conexão. Conecte-se para baixar.');
+    else notify(navigator.onLine ? t('downloadError') : t('offlineShort'));
   };
 
   const renderRow = (v: VersionInfo) => {
@@ -79,29 +80,29 @@ export function Library() {
             style={{ textAlign: 'left', minWidth: 0 }}
             disabled={!isDown}
             onClick={() => choose(v.id)}
-            aria-label={`${v.name}${active ? ', selecionada' : ''}`}
+            aria-label={`${v.name}${active ? `, ${t('selected')}` : ''}`}
           >
             <div className="nm" dir={v.rtl ? 'rtl' : undefined} style={v.rtl ? { textAlign: 'left' } : undefined}>{v.name}</div>
             <div className="meta">
               <span className="abbr">{abbrOf(v.id)}</span>
             {mineIds.has(v.id) && <span className="chip">{names.of(v.lang) ?? v.lang}</span>}
-              {v.coverage && <span className="chip">{COVERAGE[v.coverage]}</span>}
+              {v.coverage && <span className="chip">{t(COVERAGE[v.coverage])}</span>}
               {v.rtl && <span className="chip">RTL</span>}
-              {active ? <span className="chip accent">Em uso</span> : isDown && <span className="chip">Baixada</span>}
-              <span className="abbr" style={{ fontWeight: 400 }}>{v.sizeMb.toFixed(1)} MB</span>
+              {active ? <span className="chip accent">{t('inUse')}</span> : isDown && <span className="chip">{t('downloaded')}</span>}
+              <span className="abbr" style={{ fontWeight: 400 }}>{t.mb(v.sizeMb)}</span>
             </div>
           </button>
           <div className="state">
             {prog !== undefined ? (
-              <div className="progress" role="progressbar" aria-label="Baixando" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(prog * 100)}><i style={{ width: `${prog * 100}%` }} /></div>
+              <div className="progress" role="progressbar" aria-label={t('downloading')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(prog * 100)}><i style={{ width: `${prog * 100}%` }} /></div>
             ) : !isDown ? (
-              <button className="icon-btn" aria-label={`${failed[v.id] ? 'Tentar de novo: ' : 'Baixar '}${v.name}`} onClick={() => get(v.id)}>
+              <button className="icon-btn" aria-label={failed[v.id] ? t('retryDownload', { name: v.name }) : t('downloadVersion', { name: v.name })} onClick={() => get(v.id)}>
                 <CloudArrowDown size={26} weight="light" />
               </button>
             ) : active ? (
-              <CheckCircle size={26} weight="fill" aria-label="Em uso" />
+              <CheckCircle size={26} weight="fill" aria-label={t('inUse')} />
             ) : (
-              <CloudCheck size={26} weight="light" aria-label="Baixada" />
+              <CloudCheck size={26} weight="light" aria-label={t('downloaded')} />
             )}
           </div>
         </div>
@@ -110,17 +111,17 @@ export function Library() {
 
   return (
     <div className="screen">
-      <ScreenHeader title={t.library} />
+      <ScreenHeader title={t('library')} />
       <div className="screen-body">
         <div className="search-sticky">
-          <SearchField value={q} onChange={setQ} placeholder="Buscar idioma ou versão" aria-label="Buscar idioma ou versão" />
+          <SearchField value={q} onChange={setQ} placeholder={t('searchLibrary')} aria-label={t('searchLibrary')} />
         </div>
 
-        {mine.length === 0 && groups.length === 0 && <p className="empty">Nenhuma versão encontrada.</p>}
+        {mine.length === 0 && groups.length === 0 && <p className="empty">{t('noVersions')}</p>}
 
         {mine.length > 0 && (
           <section>
-            <h2 className="lang-title">Minhas versões</h2>
+            <h2 className="lang-title">{t('myVersions')}</h2>
             {mine.map(renderRow)}
           </section>
         )}
@@ -138,7 +139,7 @@ export function Library() {
             </section>
           );
         })}
-        <p className="hint" style={{ marginTop: 24 }}>{VERSIONS.length} versões do repositório thiagobodruk/bible. Cada uma é baixada uma vez e depois funciona sem internet.</p>
+        <p className="hint" style={{ marginTop: 24 }}>{t('libraryFooter', { n: VERSIONS.length })}</p>
       </div>
     </div>
   );
