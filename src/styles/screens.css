@@ -93,3 +93,5 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .welcome .progress { width: 100%; max-width: 240px; }
 .error { color: var(--danger, #c0392b); }
 .brand-name { font-family: var(--font-ui); font-size: 16px; font-weight: 600; }
+
+.search-clear { width: 32px; height: 32px; margin: 0 -8px 0 0; flex: none; }
