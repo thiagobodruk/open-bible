@@ -1,15 +1,26 @@
 # Open Bible
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+**A free, minimalist Bible reader for everyone, everywhere 🇧🇷 🇬🇧 🇪🇸 🇨🇳 🇫🇷 🇩🇪 🇯🇵**
+
+Offline-first and installable on Android and iOS. No account, no backend, no tracking.
+
+[![License: MIT](https://img.shields.io/github/license/thiagobodruk/open-bible)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/thiagobodruk/open-bible?style=flat&color=yellow)](https://github.com/thiagobodruk/open-bible/stargazers)
 [![Deploy](https://img.shields.io/github/actions/workflow/status/thiagobodruk/open-bible/deploy.yml?branch=main&label=deploy)](https://github.com/thiagobodruk/open-bible/actions/workflows/deploy.yml)
 [![Live demo](https://img.shields.io/badge/demo-GitHub%20Pages-blue)](https://thiagobodruk.github.io/open-bible/)
+![Versions](https://img.shields.io/badge/versions-141-blue)
+![Languages](https://img.shields.io/badge/languages-85-blue)
 [![PWA](https://img.shields.io/badge/PWA-installable-5a0fc8)](https://thiagobodruk.github.io/open-bible/)
-[![Offline first](https://img.shields.io/badge/offline-first-informational)](#how-it-works)
 [![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-7-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white)](https://vite.dev)
 
-A minimalist, offline-first Bible reader that runs in the browser and installs as an app on Android and iOS. No account, no backend, no tracking.
+[Live demo](https://thiagobodruk.github.io/open-bible/) · [Bible versions](#bible-versions) · [Features](#features) · [Development](#development) · [Plan](PLAN.md) · [Bible data repo](https://github.com/thiagobodruk/bible)
+
+---
+
+> "And this gospel of the kingdom shall be preached in all the world for a witness unto all nations; and then shall the end come."
+> — Matthew 24:14 (KJV)
 
 **Open Bible is an initiative to make the Bible available to as many people as possible, all around the world.** The code is free to use, study, and adapt under the [MIT License](LICENSE).
 
@@ -89,6 +100,10 @@ scripts/         catalog generator
 GitHub Pages deploys the app through `.github/workflows/deploy.yml` on every push to `main`. The app is served from `/open-bible/`, set in `vite.config.ts` (`base`) and reused by the PWA manifest.
 
 One-time repository setting: **Settings > Pages > Build and deployment > Source: GitHub Actions**.
+
+## How can I help?
+
+Review the code, report bugs, suggest improvements, or help translate the interface. Every contribution is welcome. Issues and pull requests are open on [GitHub](https://github.com/thiagobodruk/open-bible).
 
 ## License
 
