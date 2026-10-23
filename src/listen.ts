@@ -99,8 +99,18 @@ let current: SpeechSynthesisUtterance | null = null;
 
 function speakAt(n: number) {
   const token0 = ++token;
-  speechSynthesis.cancel();
   if (n > verses.length) return finishChapter();
+  // Chamar speak() logo depois de cancel() faz iOS e Chrome engolirem a fala. Só cancela se há algo em curso
+  // e, nesse caso, dá um instante antes de falar de novo. O primeiro toque fala na hora, ainda dentro do gesto.
+  if (speechSynthesis.speaking || speechSynthesis.pending) {
+    speechSynthesis.cancel();
+    setTimeout(() => {
+      if (token0 === token) say(n, token0);
+    }, 80);
+  } else say(n, token0);
+}
+
+function say(n: number, token0: number) {
   const u = new SpeechSynthesisUtterance(verses[n - 1]);
   u.lang = lang;
   u.rate = useListen.getState().rate;
