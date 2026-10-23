@@ -37,11 +37,12 @@
 
 /* Texto */
 .page {
-  padding: calc(env(safe-area-inset-top, 0px) + 84px) 10vw calc(env(safe-area-inset-bottom, 0px) + 120px);
+  display: flex; flex-direction: column; min-height: 100dvh;
+  padding: calc(env(safe-area-inset-top, 0px) + 84px) 10vw 0;
   font-family: var(--rd-font); font-size: var(--rd-size); line-height: var(--rd-lh);
   text-align: var(--rd-align); hyphens: var(--rd-hyph);
 }
-.chapter { max-width: var(--rd-col); margin: 0 auto; padding-inline: var(--rd-pad); user-select: none; -webkit-user-select: none; }
+.chapter { width: 100%; max-width: var(--rd-col); margin: 0 auto 40px; padding-inline: var(--rd-pad); user-select: none; -webkit-user-select: none; }
 .chapter.anim-next { animation: in-next 0.28s ease-out; }
 .chapter.anim-prev { animation: in-prev 0.28s ease-out; }
 @keyframes in-next { from { opacity: 0; transform: translateX(28px); } }
@@ -91,7 +92,7 @@
 
 /* Espaço para o sheet de seleção não cobrir o fim do capítulo */
 .page.has-sel { padding-bottom: 260px; }
-.copyright { max-width: var(--rd-col, 38rem); margin: 28px auto 0; padding: 16px var(--rd-pad, 20px) calc(32px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); font-family: var(--font-ui); font-size: 12px; line-height: 1.5; color: var(--muted); text-align: center; user-select: none; }
+.copyright { width: 100%; max-width: var(--rd-col, 38rem); margin: auto auto 0; padding: 14px var(--rd-pad, 20px) calc(18px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); font-family: var(--font-ui); font-size: 12px; line-height: 1.5; color: var(--muted); text-align: center; user-select: none; }
 
 /* Escolhas em botões (tamanho, altura da linha, margens, alinhamento) */
 .field > .lbl > span { font-weight: 500; letter-spacing: 0.02em; }
