@@ -24,8 +24,6 @@ const de: Messages = {
   delete: 'Löschen',
   tagline: 'Bibelleser, offline und ohne Konto',
 
-  updateAvailable: 'Neue Version verfügbar',
-  updateAction: 'Aktualisieren',
 
   installedAlready: 'Die App ist auf diesem Gerät bereits installiert.',
   installIosIntro: 'Auf deinem {device} installierst du die App über das Teilen-Menü.',

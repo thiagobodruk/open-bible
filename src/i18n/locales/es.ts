@@ -24,8 +24,6 @@ const es: Messages = {
   delete: 'Eliminar',
   tagline: 'Lector de la Biblia, sin conexión y sin cuenta',
 
-  updateAvailable: 'Nueva versión disponible',
-  updateAction: 'Actualizar',
 
   installedAlready: 'La app ya está instalada en este dispositivo.',
   installIosIntro: 'En tu {device}, la instalación se hace desde el menú Compartir.',

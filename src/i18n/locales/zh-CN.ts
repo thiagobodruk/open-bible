@@ -24,8 +24,6 @@ const zhCN: Messages = {
   delete: '删除',
   tagline: '圣经阅读器，离线可用，无需账号',
 
-  updateAvailable: '有新版本',
-  updateAction: '更新',
 
   installedAlready: '此设备上已安装该应用。',
   installIosIntro: '在你的 {device} 上，通过“分享”菜单安装。',

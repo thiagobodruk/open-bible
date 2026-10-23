@@ -24,8 +24,6 @@ const ptBR: Messages = {
   delete: 'Excluir',
   tagline: 'Leitor de Bíblia, offline e sem conta',
 
-  updateAvailable: 'Nova versão disponível',
-  updateAction: 'Atualizar',
 
   installedAlready: 'O app já está instalado neste dispositivo.',
   installIosIntro: 'No seu {device}, a instalação é feita pelo menu Compartilhar.',

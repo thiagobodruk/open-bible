@@ -24,8 +24,6 @@ const ja: Messages = {
   delete: '削除',
   tagline: 'オフラインで使える、アカウント不要の聖書リーダー',
 
-  updateAvailable: '新しいバージョンがあります',
-  updateAction: '更新',
 
   installedAlready: 'このデバイスにはすでにインストールされています。',
   installIosIntro: 'お使いの {device} では、共有メニューからインストールします。',
