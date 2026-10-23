@@ -64,7 +64,7 @@
   position: fixed; z-index: 60; left: 50%; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
   display: flex; align-items: center; gap: 14px; width: max-content; max-width: calc(100vw - 32px);
   padding: 12px 18px; border-radius: 22px;
-  background: var(--fg); color: var(--bg); font-size: 14px; box-shadow: var(--shadow);
+  background: var(--float-bg); color: var(--float-fg); border: 1px solid var(--float-line); font-size: 14px; box-shadow: var(--shadow);
   animation: toast 0.2s ease-out;
 }
 .toast button { color: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }

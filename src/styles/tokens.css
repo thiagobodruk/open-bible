@@ -26,10 +26,17 @@
   --radius: 14px;
   --radius-sm: 10px;
   --shadow: 0 10px 30px rgba(20, 22, 28, 0.16);
+  /* Barra de seleção e toast: branco no claro, preto no escuro */
+  --float-bg: #ffffff;
+  --float-fg: var(--fg);
+  --float-line: var(--line);
   color-scheme: light;
 }
 
 :root[data-theme='sepia'] {
+  --float-bg: #fbf6e9;
+  --float-fg: var(--fg);
+  --float-line: #dccfb4;
   --bg: #f3ead8;
   --surface: #eadfc8;
   --surface-2: #e0d3b8;
@@ -58,6 +65,9 @@
   --scrim: rgba(0, 0, 0, 0.55);
   --bar-bg: rgba(20, 22, 27, 0.82);
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --float-bg: #000000;
+  --float-fg: var(--fg);
+  --float-line: #2b2f39;
   --hl-yellow: #6d5f1f;
   --hl-green: #2f5a33;
   --hl-blue: #2b4a74;
