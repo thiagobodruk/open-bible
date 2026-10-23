@@ -103,3 +103,4 @@
 .sw.t-sepia { background: #f3ead8; color: #3a2f22; }
 .sw.t-dark { background: #14161b; color: #e4e6eb; }
 @media (max-width: 480px) { .selbar .count { display: none; } }
+.copyright { max-width: var(--rd-col, 38rem); margin: 28px auto 0; padding: 16px var(--rd-pad, 20px) calc(32px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); font-family: var(--font-ui); font-size: 12px; line-height: 1.5; color: var(--muted); text-align: center; user-select: none; }
