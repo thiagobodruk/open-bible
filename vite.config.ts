@@ -6,6 +6,16 @@ import pkg from './package.json' with { type: 'json' };
 // O app é servido em https://<usuario>.github.io/open-bible/
 const base = '/open-bible/';
 
+const build = (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env.GITHUB_SHA?.slice(0, 7) ?? 'dev';
+
+// Publica a versão e o commit do build, para o app saber o que há de novo sem baixar o service worker.
+const versionFile: Plugin = {
+  name: 'version-file',
+  generateBundle() {
+    this.emitFile({ type: 'asset', fileName: 'version.json', source: JSON.stringify({ version: pkg.version, build }) });
+  },
+};
+
 // GitHub Pages devolve 404.html para caminhos desconhecidos. Com o mesmo conteúdo do index, links como /open-bible/pt_nvi/jn/3 abrem o app.
 const spaFallback: Plugin = {
   name: 'spa-fallback',
@@ -20,10 +30,11 @@ const spaFallback: Plugin = {
 
 export default defineConfig({
   base,
-  define: { __APP_VERSION__: JSON.stringify(pkg.version) },
+  define: { __APP_VERSION__: JSON.stringify(pkg.version), __APP_BUILD__: JSON.stringify(build) },
   plugins: [
     react(),
     spaFallback,
+    versionFile,
     VitePWA({
       registerType: 'prompt',
       includeAssets: ['icons/apple-touch-icon.png', 'icons/favicon.svg'],
