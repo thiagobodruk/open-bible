@@ -9,8 +9,13 @@
   border-bottom: 1px solid var(--line);
   transition: transform 0.25s ease;
 }
-.topbar.hidden { transform: translateY(-100%); }
-.topbar-in { display: flex; align-items: center; gap: 2px; height: 52px; max-width: 760px; margin: 0 auto; }
+.topbar-in { display: flex; align-items: center; gap: 2px; height: 52px; max-width: 760px; margin: 0 auto; transition: height 0.2s ease; }
+/* Minimizada: só o título e a versão, em uma linha. Volta ao normal ao rolar no sentido oposto. */
+.mini-title { display: none; align-items: center; gap: 10px; height: 100%; padding: 0 12px; font-size: 13px; font-weight: 600; color: var(--fg); min-width: 0; }
+.mini-title i { width: 1px; height: 14px; background: var(--muted); opacity: 0.6; }
+.topbar.mini .topbar-in { height: 32px; }
+.topbar.mini .topbar-in > :not(.mini-title) { display: none; }
+.topbar.mini .mini-title { display: flex; }
 .crumb { display: flex; align-items: center; gap: 6px; height: 44px; padding: 0 12px; border-radius: 999px; font-size: 16px; font-weight: 600; min-width: 0; }
 .crumb:hover { background: var(--surface); }
 .crumb span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

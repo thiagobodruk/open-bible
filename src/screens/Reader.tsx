@@ -17,7 +17,7 @@ export function Reader() {
   const { book, chapter, selection, highlights, notes, focusVerse, step, toggleVerse, clearFocus } = useStudy();
   const settings = useSettings();
   const { sheet, open, notify } = useUI();
-  const [barHidden, setBarHidden] = useState(false);
+  const [barMini, setBarMini] = useState(false);
   const [dir, setDir] = useState<'next' | 'prev' | null>(null);
   const touch = useRef<{ x: number; y: number } | null>(null);
 
@@ -55,9 +55,9 @@ export function Reader() {
     let last = scrollY;
     const onScroll = () => {
       const y = scrollY;
-      if (y < 60) setBarHidden(false);
-      else if (y > last + 8) setBarHidden(true);
-      else if (y < last - 8) setBarHidden(false);
+      if (y < 60) setBarMini(false);
+      else if (y > last + 8) setBarMini(true);
+      else if (y < last - 8) setBarMini(false);
       last = y;
     };
     addEventListener('scroll', onScroll, { passive: true });
@@ -114,7 +114,7 @@ export function Reader() {
   };
 
   const onPageClick = (e: React.MouseEvent) => {
-    if (e.clientY < 90) setBarHidden(false);
+    if (e.clientY < 90) setBarMini(false);
     const el = (e.target as HTMLElement).closest<HTMLElement>('[data-v]');
     if (el) toggleVerse(Number(el.dataset.v));
     else if (hasSelection) useStudy.getState().clearSelection();
@@ -126,8 +126,11 @@ export function Reader() {
 
   return (
     <div className="reader">
-      <header className={`topbar ${barHidden && !blocked ? 'hidden' : ''}`}>
+      <header className={`topbar ${barMini && !blocked ? 'mini' : ''}`}>
         <div className="topbar-in">
+          <button className="mini-title" onClick={() => setBarMini(false)} aria-label={`${bName} ${chapter}, ${abbrOf(settings.versionId)}. Mostrar barra`} tabIndex={barMini && !blocked ? 0 : -1}>
+            <span>{bName} {chapter}</span><i aria-hidden="true" /><span>{abbrOf(settings.versionId)}</span>
+          </button>
           <button className="crumb" onClick={() => open('navigator')} aria-label={`${bName} ${chapter}. Escolher livro e capítulo`}>
             <span>{bName} {chapter}</span>
             <CaretDown size={14} weight="bold" />
