@@ -2,7 +2,10 @@ import { useMemo, useState } from 'react';
 import { Notebook, NotePencil } from '@phosphor-icons/react';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { Segmented } from '../components/Segmented';
-import { BOOKS, bookIndex, getBook } from '../data/books';
+import { BOOKS, bookIndex } from '../data/books';
+import { abbrOf } from '../data/catalog';
+import { useBookName } from '../hooks';
+import { useSettings } from '../state/settings';
 import { HL_COLORS, useStudy, type HlColor } from '../state/study';
 import { go } from '../router';
 import { refLabel } from '../ref';
@@ -19,6 +22,7 @@ interface Entry {
   color?: HlColor;
   text: string;
   note?: string;
+  versionId: string;
   createdAt: number;
 }
 
@@ -27,6 +31,8 @@ const fmt = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'short' })
 
 export function Study() {
   const { highlights, notes, goTo } = useStudy();
+  const bookName = useBookName();
+  const versionId = useSettings((s) => s.versionId);
   const [kind, setKind] = useState<Kind>('all');
   const [color, setColor] = useState<HlColor | null>(null);
 
@@ -36,11 +42,11 @@ export function Study() {
     for (const n of notes) {
       const hl = highlights[`${n.book}.${n.chapter}.${n.verseStart}`];
       if (hl) used.add(`${n.book}.${n.chapter}.${n.verseStart}`);
-      list.push({ key: n.id, book: n.book, chapter: n.chapter, v1: n.verseStart, v2: n.verseEnd, color: hl?.color, text: n.excerpt, note: n.text, createdAt: n.createdAt });
+      list.push({ key: n.id, book: n.book, chapter: n.chapter, v1: n.verseStart, v2: n.verseEnd, color: hl?.color, text: n.excerpt, note: n.text, versionId: n.versionId, createdAt: n.createdAt });
     }
     for (const [k, h] of Object.entries(highlights)) {
       if (used.has(k)) continue;
-      list.push({ key: k, book: h.book, chapter: h.chapter, v1: h.verse, v2: h.verse, color: h.color, text: h.text, createdAt: h.createdAt });
+      list.push({ key: k, book: h.book, chapter: h.chapter, v1: h.verse, v2: h.verse, color: h.color, text: h.text, versionId: h.versionId, createdAt: h.createdAt });
     }
     return list
       .filter((e) => (kind === 'notes' ? e.note : kind === 'highlights' ? e.color : true))
@@ -83,7 +89,7 @@ export function Study() {
 
         {groups.map(({ book, items }) => (
           <section key={book.id}>
-            <h2 className="book-title">{book.name}</h2>
+            <h2 className="book-title">{bookName(book.id)}</h2>
             {items.map((e) => (
               <button
                 key={e.key}
@@ -95,7 +101,8 @@ export function Study() {
               >
                 <div className="ref">
                   {e.color && <span className={`dot c-${e.color}`} />}
-                  {refLabel(getBook(e.book).name, e.chapter, e.v1, e.v2)}
+                  {refLabel(bookName(e.book), e.chapter, e.v1, e.v2)}
+                  {e.versionId !== versionId && <span className="chip" style={{ marginLeft: 8 }}>{abbrOf(e.versionId)}</span>}
                 </div>
                 <p className="txt">{e.text}</p>
                 {e.note && (

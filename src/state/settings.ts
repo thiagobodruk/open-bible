@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { suggestedVersion } from '../data/catalog';
 
 export type Theme = 'auto' | 'light' | 'sepia' | 'dark';
 export type FontFamily = 'serif' | 'sans' | 'mono';
@@ -33,9 +34,11 @@ export function detectUiLang(langs: readonly string[] = navigator.languages?.len
   return 'en';
 }
 
+const initialLang = detectUiLang();
+
 export const DEFAULTS: Settings = {
-  uiLang: detectUiLang(),
-  versionId: 'en_kjv',
+  uiLang: initialLang,
+  versionId: suggestedVersion(initialLang),
   theme: 'auto',
   font: 'serif',
   fontSize: 19,

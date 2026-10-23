@@ -3,8 +3,7 @@ import { Trash } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
-import { getBook } from '../data/books';
-import { getChapter } from '../data/chapters';
+import { useBookName, useChapter } from '../hooks';
 import { refLabel } from '../ref';
 import { t } from '../strings';
 
@@ -17,7 +16,9 @@ export function NoteSheet() {
   const first = selection[0];
   const existing = notes.find((n) => n.book === book && n.chapter === chapter && first >= n.verseStart && first <= n.verseEnd);
   const [text, setText] = useState(existing?.text ?? '');
-  const verses = getChapter(book, chapter).verses;
+  const bookName = useBookName();
+  const text0 = useChapter(book, chapter);
+  const verses = text0.status === 'ready' ? text0.verses : [];
   const last = selection[selection.length - 1];
   const excerpt = selection.map((v) => verses[v - 1]).join(' ');
 
@@ -34,7 +35,7 @@ export function NoteSheet() {
 
   return (
     <Sheet title={existing ? 'Editar nota' : 'Nova nota'} onClose={close}>
-      <div className="note-ref">{refLabel(getBook(book).name, chapter, existing?.verseStart ?? first, existing?.verseEnd ?? last)}</div>
+      <div className="note-ref">{refLabel(bookName(book), chapter, existing?.verseStart ?? first, existing?.verseEnd ?? last)}</div>
       <blockquote className="note-quote" style={{ marginInline: 0 }}>{existing?.excerpt ?? excerpt}</blockquote>
       <textarea
         className="note-input"

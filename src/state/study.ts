@@ -1,5 +1,9 @@
 import { create } from 'zustand';
-import { BOOKS, bookIndex } from '../data/books';
+import { BOOKS } from '../data/books';
+import { dbAll, dbDelete, dbPut } from '../db';
+import { useLibrary } from './library';
+import { useSettings } from './settings';
+import { loadPosition, savePosition } from './position';
 
 export type HlColor = 'yellow' | 'green' | 'blue' | 'pink' | 'orange';
 export const HL_COLORS: HlColor[] = ['yellow', 'green', 'blue', 'pink', 'orange'];
@@ -7,11 +11,14 @@ export const HL_COLORS: HlColor[] = ['yellow', 'green', 'blue', 'pink', 'orange'
 export const vkey = (book: string, chapter: number, verse: number) => `${book}.${chapter}.${verse}`;
 
 export interface Highlight {
+  key: string;
   book: string;
   chapter: number;
   verse: number;
   color: HlColor;
+  /** Texto e versão no momento da marcação, para exibir em Meu estudo. */
   text: string;
+  versionId: string;
   createdAt: number;
 }
 
@@ -23,34 +30,28 @@ export interface Note {
   verseEnd: number;
   text: string;
   excerpt: string;
+  versionId: string;
   createdAt: number;
 }
 
-const day = 86_400_000;
-const now = Date.now();
-
-const seedHighlights: Highlight[] = [
-  { book: 'gn', chapter: 1, verse: 1, color: 'yellow', text: 'In the beginning God created the heaven and the earth.', createdAt: now - 6 * day },
-  { book: 'gn', chapter: 1, verse: 3, color: 'blue', text: 'And God said, Let there be light: and there was light.', createdAt: now - 6 * day },
-  { book: 'gn', chapter: 1, verse: 27, color: 'green', text: 'So God created man in his own image, in the image of God created he him; male and female created he them.', createdAt: now - 5 * day },
-  { book: 'sl', chapter: 23, verse: 1, color: 'pink', text: 'The LORD is my shepherd; I shall not want.', createdAt: now - 3 * day },
-  { book: 'jo', chapter: 3, verse: 16, color: 'orange', text: 'For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.', createdAt: now - 2 * day },
-  { book: 'rm', chapter: 8, verse: 28, color: 'yellow', text: 'Texto de exemplo para Romanos 8:28, usado só para mostrar o agrupamento por livro.', createdAt: now - day },
-];
-
-const seedNotes: Note[] = [
-  { id: 'n1', book: 'gn', chapter: 1, verseStart: 3, verseEnd: 3, text: 'A palavra vem antes da luz. Voltar a este ponto no estudo sobre criação.', excerpt: 'And God said, Let there be light: and there was light.', createdAt: now - 6 * day },
-  { id: 'n2', book: 'gn', chapter: 1, verseStart: 26, verseEnd: 27, text: 'Imago Dei. Comparar com Salmos 8 e Efésios 4:24.', excerpt: 'And God said, Let us make man in our image, after our likeness…', createdAt: now - 5 * day },
-  { id: 'n3', book: 'jo', chapter: 3, verseStart: 16, verseEnd: 16, text: 'Versículo para memorizar. Começar pelo "God so loved".', excerpt: 'For God so loved the world, that he gave his only begotten Son…', createdAt: now - 2 * day },
-];
+/** Livros da versão em uso, na ordem canônica. Sem versão instalada, o cânone completo. */
+export function currentBooks() {
+  const meta = useLibrary.getState().installed[useSettings.getState().versionId];
+  if (!meta) return BOOKS.map((b) => ({ id: b.id, chapters: b.chapters }));
+  return meta.books;
+}
 
 interface StudyStore {
+  hydrated: boolean;
   book: string;
   chapter: number;
   focusVerse: number | null;
   selection: number[];
   highlights: Record<string, Highlight>;
   notes: Note[];
+  hydrate: () => Promise<void>;
+  /** Substitui marcações e notas (importação de backup). */
+  merge: (highlights: Highlight[], notes: Note[]) => Promise<void>;
   goTo: (book: string, chapter: number, verse?: number) => void;
   step: (delta: 1 | -1) => boolean;
   toggleVerse: (v: number) => void;
@@ -61,53 +62,108 @@ interface StudyStore {
   deleteNote: (id: string) => void;
 }
 
+const start = loadPosition();
+
+const persistFail = () => {
+  // Falha de gravação não derruba a leitura. O aviso fica a cargo de quem chamou, se quiser.
+};
+
 export const useStudy = create<StudyStore>((set, get) => ({
-  book: 'gn',
-  chapter: 1,
+  hydrated: false,
+  book: start?.book ?? 'gn',
+  chapter: start?.chapter ?? 1,
   focusVerse: null,
   selection: [],
-  highlights: Object.fromEntries(seedHighlights.map((h) => [vkey(h.book, h.chapter, h.verse), h])),
-  notes: seedNotes,
-  goTo: (book, chapter, verse) => set({ book, chapter, focusVerse: verse ?? null, selection: [] }),
+  highlights: {},
+  notes: [],
+
+  hydrate: async () => {
+    try {
+      const [hs, ns] = await Promise.all([dbAll<Highlight>('highlights'), dbAll<Note>('notes')]);
+      // Marcações feitas antes da carga terminar continuam valendo.
+      set((s) => ({
+        highlights: { ...Object.fromEntries(hs.map((h) => [h.key, h])), ...s.highlights },
+        notes: [...ns.filter((n) => !s.notes.some((x) => x.id === n.id)), ...s.notes],
+        hydrated: true,
+      }));
+    } catch {
+      set({ hydrated: true });
+    }
+  },
+
+  merge: async (highlights, notes) => {
+    const s = get();
+    const hl = { ...s.highlights };
+    for (const h of highlights) if (!hl[h.key] || hl[h.key].createdAt <= h.createdAt) hl[h.key] = h;
+    const byId = new Map(s.notes.map((n) => [n.id, n]));
+    for (const n of notes) if (!byId.has(n.id) || byId.get(n.id)!.createdAt <= n.createdAt) byId.set(n.id, n);
+    await dbPut('highlights', Object.values(hl));
+    await dbPut('notes', [...byId.values()]);
+    set({ highlights: hl, notes: [...byId.values()] });
+  },
+
+  goTo: (book, chapter, verse) => {
+    savePosition(book, chapter);
+    set({ book, chapter, focusVerse: verse ?? null, selection: [] });
+  },
+
   step: (delta) => {
     const { book, chapter } = get();
-    const i = bookIndex(book);
-    let nb = i;
+    const list = currentBooks();
+    const i = list.findIndex((b) => b.id === book);
+    let nb = i < 0 ? 0 : i;
     let nc = chapter + delta;
-    if (nc > BOOKS[i].chapters) {
+    if (i >= 0 && nc > list[i].chapters) {
       nb = i + 1;
       nc = 1;
     } else if (nc < 1) {
       nb = i - 1;
-      nc = nb >= 0 ? BOOKS[nb].chapters : 0;
+      nc = nb >= 0 ? list[nb].chapters : 0;
     }
-    if (nb < 0 || nb >= BOOKS.length) return false;
-    set({ book: BOOKS[nb].id, chapter: nc, focusVerse: null, selection: [] });
+    if (nb < 0 || nb >= list.length) return false;
+    savePosition(list[nb].id, nc);
+    set({ book: list[nb].id, chapter: nc, focusVerse: null, selection: [] });
     return true;
   },
+
   toggleVerse: (v) =>
     set((s) => ({
       selection: s.selection.includes(v) ? s.selection.filter((x) => x !== v) : [...s.selection, v].sort((a, b) => a - b),
     })),
   clearSelection: () => set({ selection: [] }),
   clearFocus: () => set({ focusVerse: null }),
-  paint: (color, texts) =>
-    set((s) => {
-      const { book, chapter, selection } = s;
-      const keys = selection.map((v) => vkey(book, chapter, v));
-      const allSame = keys.every((k) => s.highlights[k]?.color === color);
-      const next = { ...s.highlights };
-      selection.forEach((v, i) => {
-        if (allSame) delete next[keys[i]];
-        else next[keys[i]] = { book, chapter, verse: v, color, text: texts[v] ?? '', createdAt: Date.now() };
-      });
-      return { highlights: next };
-    }),
-  saveNote: (text, excerpt, existingId) =>
-    set((s) => {
-      const { book, chapter, selection } = s;
-      if (existingId) return { notes: s.notes.map((n) => (n.id === existingId ? { ...n, text } : n)) };
-      const note: Note = {
+
+  paint: (color, texts) => {
+    const { book, chapter, selection, highlights } = get();
+    const versionId = useSettings.getState().versionId;
+    const keys = selection.map((v) => vkey(book, chapter, v));
+    const allSame = keys.every((k) => highlights[k]?.color === color);
+    const next = { ...highlights };
+    const puts: Highlight[] = [];
+    const dels: string[] = [];
+    selection.forEach((v, i) => {
+      if (allSame) {
+        delete next[keys[i]];
+        dels.push(keys[i]);
+      } else {
+        const h: Highlight = { key: keys[i], book, chapter, verse: v, color, text: texts[v] ?? '', versionId, createdAt: Date.now() };
+        next[keys[i]] = h;
+        puts.push(h);
+      }
+    });
+    set({ highlights: next });
+    if (puts.length) dbPut('highlights', puts).catch(persistFail);
+    if (dels.length) dbDelete('highlights', dels).catch(persistFail);
+  },
+
+  saveNote: (text, excerpt, existingId) => {
+    const { book, chapter, selection, notes } = get();
+    let saved: Note;
+    if (existingId) {
+      saved = { ...notes.find((n) => n.id === existingId)!, text };
+      set({ notes: notes.map((n) => (n.id === existingId ? saved : n)) });
+    } else {
+      saved = {
         id: crypto.randomUUID(),
         book,
         chapter,
@@ -115,9 +171,16 @@ export const useStudy = create<StudyStore>((set, get) => ({
         verseEnd: selection[selection.length - 1],
         text,
         excerpt,
+        versionId: useSettings.getState().versionId,
         createdAt: Date.now(),
       };
-      return { notes: [...s.notes, note] };
-    }),
-  deleteNote: (id) => set((s) => ({ notes: s.notes.filter((n) => n.id !== id) })),
+      set({ notes: [...notes, saved] });
+    }
+    dbPut('notes', [saved]).catch(persistFail);
+  },
+
+  deleteNote: (id) => {
+    set((s) => ({ notes: s.notes.filter((n) => n.id !== id) }));
+    dbDelete('notes', [id]).catch(persistFail);
+  },
 }));

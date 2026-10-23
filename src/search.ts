@@ -1,4 +1,4 @@
-import { BOOKS, bookIndex, type Book } from './data/books';
+import { bookIndex } from './data/books';
 
 /** Minúsculas, sem acentos e sem sinais combinantes. Devolve também o mapa de índices para o texto original. */
 export function normalize(text: string): { norm: string; map: number[] } {
@@ -16,8 +16,14 @@ export function normalize(text: string): { norm: string; map: number[] } {
 
 const fold = (s: string) => normalize(s).norm.replace(/\s+/g, '');
 
+export interface RefBook {
+  id: string;
+  name: string;
+  chapters: number;
+}
+
 export interface RefTarget {
-  book: Book;
+  book: RefBook;
   chapter: number;
   verse?: number;
   verseEnd?: number;
@@ -26,12 +32,12 @@ export interface RefTarget {
 const REF = /^\s*((?:[123]\s*)?[^\d:.,\-\s][^\d:.,-]*?)\s*(\d+)(?:\s*[:.,]\s*(\d+)(?:\s*-\s*(\d+))?)?\s*$/u;
 
 /** "jo 3:16", "1 co 13", "salmos 23", "gn1". Nome do livro na versão atual ou abbrev. */
-export function parseReference(input: string): RefTarget | null {
+export function parseReference(input: string, books: RefBook[]): RefTarget | null {
   const m = REF.exec(input);
   if (!m) return null;
   const q = fold(m[1]);
   if (!q) return null;
-  const book = BOOKS.find((b) => b.id === q) ?? BOOKS.find((b) => fold(b.name).startsWith(q));
+  const book = books.find((b) => fold(b.id) === q) ?? books.find((b) => fold(b.name).startsWith(q));
   if (!book) return null;
   const chapter = Number(m[2]);
   if (chapter < 1 || chapter > book.chapters) return null;

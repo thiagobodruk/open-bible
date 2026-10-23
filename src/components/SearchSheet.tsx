@@ -1,9 +1,9 @@
-import { Fragment, useDeferredValue, useMemo, useState } from 'react';
+import { Fragment, useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { CaretRight, MagnifyingGlass, X } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
-import { getBook } from '../data/books';
-import { sampleChapters } from '../data/chapters';
-import { getVersion } from '../data/library';
+import { loadSearchIndex, type IndexedChapter } from '../data/bible';
+import { abbrOf } from '../data/catalog';
+import { useBookName, useBooks } from '../hooks';
 import { MIN_CHARS, MAX_HITS, parseReference, searchVerses, type Hit } from '../search';
 import { useSettings } from '../state/settings';
 import { useStudy } from '../state/study';
@@ -30,10 +30,22 @@ export function SearchSheet() {
   const [q, setQ] = useState('');
   const dq = useDeferredValue(q);
 
-  // O protótipo busca só nos três capítulos com texto real. Na camada lógica isso lê os livros da versão no IndexedDB.
-  const chapters = useMemo(sampleChapters, []);
-  const ref = useMemo(() => parseReference(dq), [dq]);
-  const { hits, truncated } = useMemo(() => searchVerses(dq, chapters), [dq, chapters]);
+  const books = useBooks();
+  const bookName = useBookName();
+  const [chapters, setChapters] = useState<IndexedChapter[] | null>(null);
+
+  // Lê a versão inteira do IndexedDB uma vez, ao abrir a busca.
+  useEffect(() => {
+    let live = true;
+    setChapters(null);
+    loadSearchIndex(versionId).then((c) => live && setChapters(c)).catch(() => live && setChapters([]));
+    return () => {
+      live = false;
+    };
+  }, [versionId]);
+
+  const ref = useMemo(() => parseReference(dq, books), [dq, books]);
+  const { hits, truncated } = useMemo(() => searchVerses(dq, chapters ?? []), [dq, chapters]);
 
   const groups = useMemo(() => {
     const out: { book: string; items: Hit[] }[] = [];
@@ -89,11 +101,13 @@ export function SearchSheet() {
         <div className="empty" style={{ padding: '40px 8px' }}>
           <MagnifyingGlass size={36} weight="light" />
           <p>Busque uma palavra ou vá direto a um trecho.</p>
-          <p style={{ fontSize: 13, marginTop: 8 }}>Busca no texto da versão {getVersion(versionId).abbr}. Neste protótipo, só em Gênesis 1, Salmos 23 e João 3.</p>
+          <p style={{ fontSize: 13, marginTop: 8 }}>Busca no texto da versão {abbrOf(versionId)}, direto neste aparelho.</p>
         </div>
       )}
 
-      {typed && hits.length === 0 && !ref && (
+      {typed && chapters === null && <div className="empty" style={{ padding: '40px 8px' }}><p>Preparando a busca…</p></div>}
+
+      {typed && chapters !== null && hits.length === 0 && !ref && (
         <div className="empty" style={{ padding: '40px 8px' }}>
           <p>Nenhum versículo com “{dq.trim()}”.</p>
         </div>
@@ -106,10 +120,10 @@ export function SearchSheet() {
           </p>
           {groups.map((g) => (
             <section key={g.book}>
-              <h3 className="book-title" style={{ position: 'static', fontSize: 17, padding: '14px 0 2px' }}>{getBook(g.book).name}</h3>
+              <h3 className="book-title" style={{ position: 'static', fontSize: 17, padding: '14px 0 2px' }}>{bookName(g.book)}</h3>
               {g.items.map((h) => (
                 <button key={`${h.chapter}.${h.verse}`} className="entry hit" onClick={() => open(h.book, h.chapter, h.verse)}>
-                  <div className="ref">{refLabel(getBook(h.book).name, h.chapter, h.verse)}</div>
+                  <div className="ref">{refLabel(bookName(h.book), h.chapter, h.verse)}</div>
                   <p className="txt"><Highlighted hit={h} /></p>
                 </button>
               ))}

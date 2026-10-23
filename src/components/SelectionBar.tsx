@@ -1,10 +1,9 @@
 import { Copy, NotePencil, ShareNetwork, X } from '@phosphor-icons/react';
 import { HL_COLORS, vkey, useStudy, type HlColor } from '../state/study';
 import { useUI } from '../state/ui';
-import { getBook } from '../data/books';
-import { getChapter } from '../data/chapters';
+import { abbrOf } from '../data/catalog';
+import { useBookName, useChapter } from '../hooks';
 import { useSettings } from '../state/settings';
-import { getVersion } from '../data/library';
 import { refLabel } from '../ref';
 import { plural, t } from '../strings';
 
@@ -15,7 +14,9 @@ export function SelectionBar() {
   const open = useUI((s) => s.open);
   const notify = useUI((s) => s.notify);
   const versionId = useSettings((s) => s.versionId);
-  const verses = getChapter(book, chapter).verses;
+  const bookName = useBookName();
+  const text = useChapter(book, chapter);
+  const verses = text.status === 'ready' ? text.verses : [];
   const texts = Object.fromEntries(selection.map((v) => [v, verses[v - 1]]));
   const active = (c: HlColor) => selection.every((v) => highlights[vkey(book, chapter, v)]?.color === c);
 
@@ -23,7 +24,7 @@ export function SelectionBar() {
     const first = selection[0];
     const last = selection[selection.length - 1];
     const body = selection.map((v) => `${v} ${verses[v - 1]}`).join('\n');
-    return `${body}\n${refLabel(getBook(book).name, chapter, first, last)} (${getVersion(versionId).abbr})`;
+    return `${body}\n${refLabel(bookName(book), chapter, first, last)} (${abbrOf(versionId)})`;
   };
 
   const copy = async () => {
