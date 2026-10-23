@@ -1,14 +1,16 @@
+import { useSyncExternalStore } from 'react';
 import { BookOpenText, DeviceMobile, GearSix, Notebook, Translate, CaretRight } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
 import { go, type Route } from '../router';
 import { useT } from '../i18n';
-import { requestInstall } from '../install';
+import { isInstalled, requestInstall, subscribeInstall } from '../install';
 
 export function MenuSheet() {
   const t = useT();
   const { close, open } = useUI();
+  const installed = useSyncExternalStore(subscribeInstall, isInstalled);
   const count = useStudy((s) => Object.keys(s.highlights).length + s.notes.length);
 
   const nav = (r: Route) => {
@@ -16,7 +18,7 @@ export function MenuSheet() {
     go(r);
   };
 
-  const items = [
+  const all = [
     { icon: BookOpenText, label: t('read'), sub: undefined, run: () => nav('/') },
     { icon: Notebook, label: t('study'), sub: undefined, badge: count, run: () => nav('/study') },
     { icon: Translate, label: t('library'), sub: t('librarySub'), run: () => nav('/library') },
@@ -31,6 +33,7 @@ export function MenuSheet() {
       },
     },
   ];
+  const items = installed ? all.filter((i) => i.icon !== DeviceMobile) : all;
 
   return (
     <Sheet title={t('menu')} onClose={close}>

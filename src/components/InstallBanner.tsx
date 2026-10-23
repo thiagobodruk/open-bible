@@ -2,14 +2,14 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 import { DeviceMobile, X } from '@phosphor-icons/react';
 import { useT } from '../i18n';
 import { useUI } from '../state/ui';
-import { canPromptInstall, dismissInstall, installDismissed, isIOS, isStandalone, requestInstall, subscribeInstall } from '../install';
+import { canPromptInstall, dismissInstall, installOffered, isIOS, requestInstall, subscribeInstall } from '../install';
 
 /** Convite discreto para instalar o app. Aparece depois do primeiro download, sem cobrir a leitura. */
 export function InstallBanner({ hidden }: { hidden: boolean }) {
   const t = useT();
   const open = useUI((s) => s.open);
   const prompt = useSyncExternalStore(subscribeInstall, canPromptInstall);
-  const [gone, setGone] = useState(() => isStandalone() || installDismissed());
+  const offered = useSyncExternalStore(subscribeInstall, installOffered);
   const [ready, setReady] = useState(false);
 
   // Espera um pouco, para não disputar a atenção com a dica de gestos.
@@ -18,12 +18,7 @@ export function InstallBanner({ hidden }: { hidden: boolean }) {
     return () => clearTimeout(id);
   }, []);
 
-  if (gone || hidden || !ready || !(prompt || isIOS())) return null;
-
-  const dismiss = () => {
-    dismissInstall();
-    setGone(true);
-  };
+  if (!offered || hidden || !ready || !(prompt || isIOS())) return null;
 
   return (
     <div className="install-banner" role="region" aria-label={t('install')}>
@@ -33,12 +28,11 @@ export function InstallBanner({ hidden }: { hidden: boolean }) {
         className="btn primary sm"
         onClick={async () => {
           if (!(await requestInstall())) open('install');
-          else setGone(true);
         }}
       >
         {t('installBannerAction')}
       </button>
-      <button className="icon-btn" aria-label={t('dismiss')} onClick={dismiss}>
+      <button className="icon-btn" aria-label={t('dismiss')} onClick={dismissInstall}>
         <X size={20} weight="light" />
       </button>
     </div>
