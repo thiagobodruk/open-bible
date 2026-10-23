@@ -21,8 +21,20 @@ export interface Settings {
   textMode: TextMode;
 }
 
+const SUPPORTED: UiLang[] = ['en', 'pt-BR', 'es', 'fr', 'de', 'zh-CN', 'ja'];
+
+/** Idioma da interface a partir das preferências do navegador. Sem correspondência, inglês. */
+export function detectUiLang(langs: readonly string[] = navigator.languages?.length ? navigator.languages : [navigator.language]): UiLang {
+  for (const l of langs) {
+    const base = l.toLowerCase().split('-')[0];
+    const hit = SUPPORTED.find((s) => s.toLowerCase().split('-')[0] === base);
+    if (hit) return hit;
+  }
+  return 'en';
+}
+
 export const DEFAULTS: Settings = {
-  uiLang: 'pt-BR',
+  uiLang: detectUiLang(),
   versionId: 'en_kjv',
   theme: 'auto',
   font: 'serif',
