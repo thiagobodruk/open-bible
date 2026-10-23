@@ -69,6 +69,12 @@ const ptBR: Messages = {
   blue: 'Azul',
   pink: 'Rosa',
   orange: 'Laranja',
+  shareApp: 'Compartilhar app',
+  shareAppSub: 'Envie o link para um amigo',
+  shareText: 'Open Bible: leitor de Bíblia gratuito, offline e sem conta.',
+  linkCopied: 'Link copiado',
+  linkCopyFailed: 'Não foi possível copiar o link',
+  keepCurrent: 'Continuar com {abbr}',
   copied: 'Copiado',
   copyFailed: 'Não foi possível copiar',
 

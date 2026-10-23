@@ -40,6 +40,7 @@ Open Bible reads its texts from the [Bible](https://github.com/thiagobodruk/bibl
 - **Search:** full-text search in the current version, plus quick references such as `jn 3:16`.
 - **Private by design:** highlights, notes, and settings stay in your browser (IndexedDB and localStorage), with JSON export and import for backups.
 - **Interface in 7 languages:** English, Portuguese (Brazil), Spanish, French, German, Simplified Chinese, and Japanese. The language follows your browser and can be changed in Settings, independently of the Bible language.
+- **Shareable links:** every chapter has its own address, like `/open-bible/pt_nvi/jo/3` (version, book, chapter). The menu has a button to share the app. Book ids follow the [Bible data repo](https://github.com/thiagobodruk/bible) abbreviations.
 - **Installable and offline:** works as a PWA on Android and iOS. The app shell is cached by a service worker, and downloaded versions live in IndexedDB.
 - **Icons:** [Phosphor Icons](https://phosphoricons.com/).
 
@@ -52,6 +53,7 @@ Open Bible reads its texts from the [Bible](https://github.com/thiagobodruk/bibl
 | Highlights, notes, My study, backup export and import | Done |
 | Text settings and themes | Done |
 | PWA manifest, service worker, and install | Done. Offline reload verified in an automated browser test and installation verified on iOS. Not yet tested on a physical Android device |
+| Share button and chapter URLs (`/version/book/chapter`) | Done. Verified in an automated browser test |
 | Interface translations (English, Portuguese, Spanish, French, German, Chinese, Japanese) | Done |
 
 ## How it works
@@ -110,7 +112,7 @@ scripts/         catalog generator
 
 ## Deployment
 
-GitHub Pages deploys the app through `.github/workflows/deploy.yml` on every push to `main`. The app is served from `/open-bible/`, set in `vite.config.ts` (`base`) and reused by the PWA manifest.
+GitHub Pages deploys the app through `.github/workflows/deploy.yml` on every push to `main`. The app is served from `/open-bible/`, set in `vite.config.ts` (`base`) and reused by the PWA manifest. The build also emits `404.html` with the same content as `index.html`, so GitHub Pages opens chapter links such as `/open-bible/pt_nvi/jo/3`.
 
 One-time repository setting: **Settings > Pages > Build and deployment > Source: GitHub Actions**.
 

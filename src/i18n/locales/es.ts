@@ -69,6 +69,12 @@ const es: Messages = {
   blue: 'Azul',
   pink: 'Rosa',
   orange: 'Naranja',
+  shareApp: 'Compartir app',
+  shareAppSub: 'Envía el enlace a un amigo',
+  shareText: 'Open Bible: lector de la Biblia gratuito, sin conexión y sin cuenta.',
+  linkCopied: 'Enlace copiado',
+  linkCopyFailed: 'No se pudo copiar el enlace',
+  keepCurrent: 'Seguir con {abbr}',
   copied: 'Copiado',
   copyFailed: 'No se pudo copiar',
 

@@ -2,6 +2,8 @@ import { useEffect, useRef, type ReactNode } from 'react';
 
 interface Props {
   title: string;
+  /** Mantém o título só para leitores de tela. */
+  hideTitle?: boolean;
   onClose: () => void;
   children: ReactNode;
   leading?: ReactNode;
@@ -19,7 +21,7 @@ const CLOSE_VELOCITY = 0.6; // px/ms
 const ANIM = 180;
 
 /** Bottom sheet padrão. Fecha ao arrastar para baixo, tocar fora (se houver fundo) ou com Esc. Não tem botão ×. */
-export function Sheet({ title, onClose, children, leading, trailing, tall, pinned, modeless }: Props) {
+export function Sheet({ title, hideTitle, onClose, children, leading, trailing, tall, pinned, modeless }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
   const close = useRef(onClose);
@@ -140,7 +142,7 @@ export function Sheet({ title, onClose, children, leading, trailing, tall, pinne
         <div className="sheet-grip" />
         <div className="sheet-head">
           {leading}
-          <h2>{title}</h2>
+          {!hideTitle && <h2>{title}</h2>}
           {trailing && <div className="sheet-trailing">{trailing}</div>}
         </div>
         {pinned && <div className="sheet-pinned">{pinned}</div>}

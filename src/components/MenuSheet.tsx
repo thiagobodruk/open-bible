@@ -1,15 +1,16 @@
 import { useSyncExternalStore } from 'react';
-import { BookOpenText, DeviceMobile, GearSix, Notebook, Translate, CaretRight } from '@phosphor-icons/react';
+import { BookOpenText, DeviceMobile, GearSix, Notebook, ShareNetwork, Translate, CaretRight } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
 import { go, type Route } from '../router';
 import { useT } from '../i18n';
+import { appUrl } from '../link';
 import { installAvailable, requestInstall, subscribeInstall } from '../install';
 
 export function MenuSheet() {
   const t = useT();
-  const { close, open } = useUI();
+  const { close, open, notify } = useUI();
   const canInstall = useSyncExternalStore(subscribeInstall, installAvailable);
   const count = useStudy((s) => Object.keys(s.highlights).length + s.notes.length);
 
@@ -18,11 +19,27 @@ export function MenuSheet() {
     go(r);
   };
 
+  const share = async () => {
+    const url = appUrl();
+    close();
+    try {
+      if (navigator.share) await navigator.share({ title: 'Open Bible', text: t('shareText'), url });
+      else {
+        await navigator.clipboard.writeText(url);
+        notify(t('linkCopied'));
+      }
+    } catch (e) {
+      // Fechar a folha de compartilhamento do sistema não é erro.
+      if (!(e instanceof DOMException && e.name === 'AbortError')) notify(t('linkCopyFailed'));
+    }
+  };
+
   const all = [
     { icon: BookOpenText, label: t('read'), sub: undefined, run: () => nav('/') },
     { icon: Notebook, label: t('study'), sub: undefined, badge: count, run: () => nav('/study') },
     { icon: Translate, label: t('library'), sub: t('librarySub'), run: () => nav('/library') },
     { icon: GearSix, label: t('settings'), sub: undefined, run: () => nav('/settings') },
+    { icon: ShareNetwork, label: t('shareApp'), sub: t('shareAppSub'), run: share },
     {
       icon: DeviceMobile,
       label: t('install'),
@@ -36,7 +53,7 @@ export function MenuSheet() {
   const items = canInstall ? all : all.filter((i) => i.icon !== DeviceMobile);
 
   return (
-    <Sheet title={t('menu')} onClose={close}>
+    <Sheet title={t('menu')} hideTitle onClose={close}>
       <div className="menu-brand">
         <img src={`${import.meta.env.BASE_URL}icons/icon-192.png`} alt="" />
         <div>
