@@ -1,5 +1,5 @@
-import { useRef, useSyncExternalStore } from 'react';
-import { DeviceMobile, DownloadSimple, GithubLogo, Trash, Upload } from '@phosphor-icons/react';
+import { useRef, useState, useSyncExternalStore } from 'react';
+import { ArrowsClockwise, DeviceMobile, DownloadSimple, GithubLogo, Trash, Upload } from '@phosphor-icons/react';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { abbrOf, findVersion } from '../data/catalog';
 import { downloadedMb, useLibrary } from '../state/library';
@@ -8,6 +8,7 @@ import { useSettings, type UiLang } from '../state/settings';
 import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { installAvailable, requestInstall, subscribeInstall } from '../install';
+import { checkForUpdate } from '../update';
 import { useT } from '../i18n';
 
 const LANGS: { code: UiLang; label: string }[] = [
@@ -28,6 +29,14 @@ export function Settings() {
   const downloaded = Object.keys(installed);
   const fileInput = useRef<HTMLInputElement>(null);
   const { open, notify } = useUI();
+  const [checking, setChecking] = useState(false);
+
+  const update = async () => {
+    setChecking(true);
+    const r = await checkForUpdate();
+    setChecking(false);
+    notify(t(r === 'updating' ? 'updateFound' : r === 'offline' ? 'updateOffline' : 'updateLatest'));
+  };
   const notes = useStudy((s) => s.notes.length);
   const highlights = useStudy((s) => Object.keys(s.highlights).length);
 
@@ -108,6 +117,10 @@ export function Settings() {
                 <span className="grow"><span className="title">{t('install')}</span><span className="sub" style={{ display: 'block' }}>{t('installSub')}</span></span>
               </button>
             )}
+            <button className="row" onClick={update} disabled={checking}>
+              <ArrowsClockwise size={24} weight="light" />
+              <span className="grow"><span className="title">{checking ? t('updateChecking') : t('updateApp')}</span><span className="sub" style={{ display: 'block' }}>{t('updateSub')}</span></span>
+            </button>
             <a className="row" href="https://github.com/thiagobodruk/open-bible" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
               <GithubLogo size={24} weight="light" />
               <span className="grow"><span className="title">{t('github')}</span><span className="sub" style={{ display: 'block' }}>{t('githubSub')}</span></span>

@@ -73,6 +73,12 @@ const ja: Messages = {
   linkCopied: 'リンクをコピーしました',
   linkCopyFailed: 'リンクをコピーできませんでした',
   keepCurrent: '{abbr} を使い続ける',
+  updateApp: '更新',
+  updateSub: '新しいバージョンを確認',
+  updateChecking: '確認中…',
+  updateFound: '新しいバージョンに更新しています…',
+  updateLatest: '最新バージョンです',
+  updateOffline: '接続がありません。オンラインでもう一度お試しください',
   copied: 'コピーしました',
   copyFailed: 'コピーできませんでした',
 

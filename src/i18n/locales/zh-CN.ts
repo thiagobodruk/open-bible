@@ -73,6 +73,12 @@ const zhCN: Messages = {
   linkCopied: '链接已复制',
   linkCopyFailed: '无法复制链接',
   keepCurrent: '继续使用 {abbr}',
+  updateApp: '更新',
+  updateSub: '检查新版本',
+  updateChecking: '正在检查…',
+  updateFound: '正在更新到新版本…',
+  updateLatest: '已是最新版本',
+  updateOffline: '没有网络连接，请联网后重试',
   copied: '已复制',
   copyFailed: '无法复制',
 
