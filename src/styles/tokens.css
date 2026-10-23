@@ -1,0 +1,67 @@
+/* Tokens de cor. Três temas completos; "auto" resolve para claro ou escuro antes do primeiro paint. */
+:root {
+  --bg: #faf9f7;
+  --surface: #f1efeb;
+  --surface-2: #e9e6e0;
+  --fg: #1d2027;
+  --muted: #6a6f7c;
+  --line: #e4e1db;
+  --accent: #2c4a8f;
+  --accent-fg: #ffffff;
+  --danger: #b4443a;
+  --scrim: rgba(20, 22, 28, 0.38);
+  --bar-bg: rgba(250, 249, 247, 0.82);
+
+  --hl-yellow: #f6e08c;
+  --hl-green: #bfe3b4;
+  --hl-blue: #b7d3f2;
+  --hl-pink: #f4c3d2;
+  --hl-orange: #f8cfa4;
+
+  --font-ui: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', 'Noto Sans', sans-serif;
+  --font-serif: 'Literata Variable', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --radius: 14px;
+  --radius-sm: 10px;
+  --shadow: 0 10px 30px rgba(20, 22, 28, 0.16);
+  color-scheme: light;
+}
+
+:root[data-theme='sepia'] {
+  --bg: #f3ead8;
+  --surface: #eadfc8;
+  --surface-2: #e0d3b8;
+  --fg: #3a2f22;
+  --muted: #7b6c58;
+  --line: #dccfb4;
+  --accent: #8a4b1f;
+  --bar-bg: rgba(243, 234, 216, 0.84);
+  --hl-yellow: #efd579;
+  --hl-green: #b5d3a0;
+  --hl-blue: #a9c4d6;
+  --hl-pink: #e8b5b5;
+  --hl-orange: #eeb98a;
+}
+
+:root[data-theme='dark'] {
+  --bg: #14161b;
+  --surface: #1d2027;
+  --surface-2: #272b34;
+  --fg: #e4e6eb;
+  --muted: #9097a5;
+  --line: #2b2f39;
+  --accent: #8fb0ff;
+  --accent-fg: #101319;
+  --danger: #ff8a7d;
+  --scrim: rgba(0, 0, 0, 0.55);
+  --bar-bg: rgba(20, 22, 27, 0.82);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --hl-yellow: #6d5f1f;
+  --hl-green: #2f5a33;
+  --hl-blue: #2b4a74;
+  --hl-pink: #6b3347;
+  --hl-orange: #704620;
+  color-scheme: dark;
+}
