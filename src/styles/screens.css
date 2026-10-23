@@ -93,3 +93,8 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .welcome .progress { width: 100%; max-width: 240px; }
 .error { color: var(--danger, #c0392b); }
 .brand-name { font-family: var(--font-ui); font-size: 16px; font-weight: 600; }
+
+.entry-row { position: relative; }
+.entry-row .entry { padding-right: 48px; }
+.entry-del { position: absolute; top: 6px; right: 0; margin: 0; width: 40px; height: 40px; }
+.confirm-text { font-size: 15px; line-height: 1.5; margin: 4px 0 8px; }
