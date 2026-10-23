@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish a release when package.json has a new version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          tag="v$version"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "$tag already has a release"
+            exit 0
+          fi
+          # Notes come from the matching section of CHANGELOG.md, or are generated from the merged PRs.
+          awk -v v="$version" '$0 ~ "^## \\[?"v"\\]?( |$)" {on=1; next} /^## / {on=0} on' CHANGELOG.md > notes.md
+          if [ -s notes.md ]; then
+            gh release create "$tag" --target "$GITHUB_SHA" --title "$tag" --latest --notes-file notes.md
+          else
+            gh release create "$tag" --target "$GITHUB_SHA" --title "$tag" --latest --generate-notes
+          fi
