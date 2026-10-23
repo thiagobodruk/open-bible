@@ -183,6 +183,11 @@ export function Reader() {
             <button className="btn" onClick={() => move(1)}>Próximo <CaretRight size={18} weight="light" /></button>
           </div>
         </article>
+        {versionInfo && (
+          <footer className="copyright">
+            {versionInfo.name} ({abbrOf(versionInfo.id)}). © Todos os direitos reservados ao autor.
+          </footer>
+        )}
       </main>
 
       {hasSelection && !sheet && <SelectionBar />}
