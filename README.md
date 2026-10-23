@@ -1,70 +1,95 @@
 # Open Bible
 
-Leitor de Bíblia minimalista, offline e sem conta. Roda no navegador e pode ser instalado como app no Android e no iOS.
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Deploy](https://img.shields.io/github/actions/workflow/status/thiagobodruk/open-bible/deploy.yml?branch=main&label=deploy)](https://github.com/thiagobodruk/open-bible/actions/workflows/deploy.yml)
+[![Live demo](https://img.shields.io/badge/demo-GitHub%20Pages-blue)](https://thiagobodruk.github.io/open-bible/)
+[![PWA](https://img.shields.io/badge/PWA-installable-5a0fc8)](https://thiagobodruk.github.io/open-bible/)
+[![Offline first](https://img.shields.io/badge/offline-first-informational)](#how-it-works)
+[![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-7-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white)](https://vite.dev)
 
-**Demo:** https://thiagobodruk.github.io/open-bible/
+A minimalist, offline-first Bible reader that runs in the browser and installs as an app on Android and iOS. No account, no backend, no tracking.
 
-> Status: **v0, protótipo visual.** Esta versão traz o app shell com conteúdo de exemplo para validar o look and feel. A camada lógica (leitura das versões reais, persistência, i18n) ainda não foi implementada. Veja o [PLAN.md](PLAN.md).
+**Open Bible is an initiative to make the Bible available to as many people as possible, all around the world.** The code is free to use, study, and adapt under the [MIT License](LICENSE).
 
-## O que é
+**Live demo:** <https://thiagobodruk.github.io/open-bible/>
 
-- Leitura em rolagem vertical, um capítulo por "página". Troca de capítulo por swipe, toque nas extremidades ou setas do teclado.
-- Todas as versões do repositório [thiagobodruk/bible](https://github.com/thiagobodruk/bible), em 85 idiomas, baixadas sob demanda.
-- Fonte, tamanho, tema (claro, sépia, escuro), margens e disposição do texto configuráveis.
-- Seleção de versículos, marcação em 5 cores, notas pessoais e a tela **Meu estudo**.
-- Busca textual na versão atual, com atalho de referência ("jo 3:16").
-- Interface em inglês, português (pt-BR), espanhol, francês, alemão, mandarim e japonês.
-- Sem login e sem backend. Configurações, marcações e notas ficam no navegador, com exportação e importação em arquivo.
-- Ícones [Phosphor](https://phosphoricons.com/).
+## Bible versions
 
-## O que a v0 já tem
+Open Bible reads its texts from the [Bible](https://github.com/thiagobodruk/bible) repository, which collects many versions of the Bible in dozens of languages. The app's catalog is pinned to a specific commit of that repository and currently lists **141 versions in 85 languages**. Each version is downloaded once, on demand, and then works without an internet connection.
 
-| Área | Estado |
+> **Copyright of the translations.** The rights to each translation belong to their respective authors and copyright holders. This project's MIT License covers the source code only, not the Bible texts. See the [license notes](https://github.com/thiagobodruk/bible#whats-about-the-license-and-the-copyrights) of the Bible repository. Every chapter shows the name of the version being read and a copyright notice.
+
+## Features
+
+- **Reading:** vertical scrolling, one chapter per page. Change chapters by swiping, tapping the screen edges, or using the arrow keys. The top bar collapses while you read.
+- **Library:** browse versions by language, download the ones you want, and switch between them.
+- **Appearance:** font, size, line height, margins, alignment, and light, sepia, and dark themes.
+- **Study tools:** select verses, highlight them in five colors, write notes, copy or share, and review everything in **My study**.
+- **Search:** full-text search in the current version, plus quick references such as `jn 3:16`.
+- **Private by design:** highlights, notes, and settings stay in your browser (IndexedDB and localStorage), with JSON export and import for backups.
+- **Installable:** works as a PWA on Android and iOS.
+- **Icons:** [Phosphor Icons](https://phosphoricons.com/).
+
+## Status
+
+| Area | State |
 |---|---|
-| Leitor com barra retrátil, rolagem, swipe e toque nas bordas | Interativo, com texto de exemplo (KJV, domínio público) |
-| Seleção de versículos, cores, nota, copiar, compartilhar | Interativo, em memória |
-| Navegador de livros e capítulos | Interativo |
-| Ajustes de texto e temas | Interativo, persistido no navegador |
-| Meu estudo | Interativo, com dados de exemplo |
-| Busca e atalho de referência | Interativo, sobre os 3 capítulos reais de exemplo |
-| Biblioteca de idiomas e versões | Amostra do catálogo, download simulado |
-| Ajustes do app e guia de instalação | Interativo |
-| PWA (manifesto e service worker) | Configurado |
+| Catalog, download, and offline storage of real versions | Done |
+| Reader, navigator, search, and quick references | Done |
+| Highlights, notes, My study, backup export and import | Done |
+| Text settings and themes | Done |
+| PWA manifest and service worker | Configured, not yet tested on devices |
+| Interface translations (English, Portuguese, Spanish, French, German, Chinese, Japanese) | Planned. The interface is currently in Portuguese |
 
-Tudo que depende de dados reais ou de persistência de marcações e notas entra na próxima etapa.
+See [PLAN.md](PLAN.md) for the product plan and decisions.
 
-## Desenvolvimento
+## How it works
 
-Requer Node 20 ou superior.
+1. The catalog (`src/data/catalog.json`) is generated by `scripts/build-catalog.mjs` from the Bible repository.
+2. Downloading a version fetches its JSON file from jsDelivr, with a fallback to GitHub, inside a Web Worker. The data is validated and stored by book in IndexedDB.
+3. Reading, search, highlights, and notes all work from local data, so the app keeps working offline.
+
+## Development
+
+Requires Node 20 or later.
 
 ```bash
 npm install
-npm run dev       # servidor de desenvolvimento em http://localhost:5173/open-bible/
-npm run build     # typecheck e build de produção em dist/
-npm run preview   # serve o build em http://localhost:4173/open-bible/
+npm run dev       # dev server at http://localhost:5173/open-bible/
+npm run build     # typecheck and production build into dist/
+npm run preview   # serve the build at http://localhost:4173/open-bible/
+```
+
+To refresh the version catalog:
+
+```bash
+node scripts/build-catalog.mjs [commit-sha]
 ```
 
 ## Stack
 
-React 19, TypeScript, Vite, Zustand, `vite-plugin-pwa` (Workbox) e `@phosphor-icons/react`. Fontes Inter e Literata via Fontsource, empacotadas no build.
+React 19, TypeScript, Vite, Zustand, `vite-plugin-pwa` (Workbox), and `@phosphor-icons/react`. Inter and Literata fonts through Fontsource, bundled at build time.
 
-## Estrutura
+## Project structure
 
 ```
 src/
-├─ components/   sheets, barra de seleção, toast
-├─ screens/      Reader, Study (Meu estudo), Library, Settings
-├─ data/         livros, capítulos de exemplo, amostra do catálogo
-├─ state/        stores Zustand: configurações, estudo, biblioteca, UI
-└─ styles/       tokens de tema e CSS por área
+├─ components/   sheets, selection sheet, toast, search field
+├─ screens/      Reader, Study (My study), Library, Settings
+├─ data/         books, catalog, IndexedDB access, download worker
+├─ state/        Zustand stores: settings, study, library, UI
+└─ styles/       theme tokens and CSS by area
+scripts/         catalog generator
 ```
 
-## Publicação
+## Deployment
 
-O deploy no GitHub Pages é feito pelo workflow `.github/workflows/deploy.yml` a cada push na `main`. O app é servido em `/open-bible/`, definido em `vite.config.ts` (`base`) e usado também pelo manifesto PWA.
+GitHub Pages deploys the app through `.github/workflows/deploy.yml` on every push to `main`. The app is served from `/open-bible/`, set in `vite.config.ts` (`base`) and reused by the PWA manifest.
 
-Configuração única no repositório: **Settings > Pages > Build and deployment > Source: GitHub Actions**.
+One-time repository setting: **Settings > Pages > Build and deployment > Source: GitHub Actions**.
 
-## Licença
+## License
 
-Código sob [MIT](LICENSE). Os textos bíblicos pertencem aos respectivos detentores de direitos, conforme descrito em [thiagobodruk/bible](https://github.com/thiagobodruk/bible#whats-about-the-license-and-the-copyrights).
+The source code is released under the [MIT License](LICENSE). The Bible texts belong to their respective authors and copyright holders.
