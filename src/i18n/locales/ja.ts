@@ -69,6 +69,12 @@ const ja: Messages = {
   blue: '青',
   pink: 'ピンク',
   orange: 'オレンジ',
+  shareApp: 'アプリを共有',
+  shareAppSub: '友だちにリンクを送る',
+  shareText: 'Open Bible：オフラインで使える、アカウント不要の無料聖書リーダー。',
+  linkCopied: 'リンクをコピーしました',
+  linkCopyFailed: 'リンクをコピーできませんでした',
+  keepCurrent: '{abbr} を使い続ける',
   copied: 'コピーしました',
   copyFailed: 'コピーできませんでした',
 

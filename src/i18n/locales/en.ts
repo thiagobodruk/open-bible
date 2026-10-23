@@ -67,6 +67,12 @@ const en = {
   blue: 'Blue',
   pink: 'Pink',
   orange: 'Orange',
+  shareApp: 'Share app',
+  shareAppSub: 'Send the link to a friend',
+  shareText: 'Open Bible: a free Bible reader that works offline, with no account.',
+  linkCopied: 'Link copied',
+  linkCopyFailed: 'Could not copy the link',
+  keepCurrent: 'Continue with {abbr}',
   copied: 'Copied',
   copyFailed: 'Could not copy',
 

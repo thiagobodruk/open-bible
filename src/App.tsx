@@ -1,6 +1,11 @@
 import { useEffect } from 'react';
 import { useRoute } from './router';
 import { useUI } from './state/ui';
+import { useStudy } from './state/study';
+import { useSettings } from './state/settings';
+import { useLibrary } from './state/library';
+import { useIncoming } from './state/incoming';
+import { readPath } from './link';
 import { Reader } from './screens/Reader';
 import { Study } from './screens/Study';
 import { Library } from './screens/Library';
@@ -16,6 +21,19 @@ import { Toast } from './components/Toast';
 export default function App() {
   const route = useRoute();
   const { sheet, close } = useUI();
+
+  // O endereço acompanha a leitura: /open-bible/<versão>/<livro>/<capítulo>
+  const book = useStudy((s) => s.book);
+  const chapter = useStudy((s) => s.chapter);
+  const versionId = useSettings((s) => s.versionId);
+  const installed = useLibrary((s) => !!s.installed[versionId]);
+  const ready = useLibrary((s) => s.ready);
+  const pending = useIncoming((s) => s.incoming !== null);
+  useEffect(() => {
+    if (route !== '/' || !ready || !installed || pending) return;
+    const path = readPath(versionId, book, chapter);
+    if (location.pathname !== path || location.hash) history.replaceState(history.state, '', path + location.search);
+  }, [route, ready, installed, pending, versionId, book, chapter]);
 
   // Troca de tela fecha sheets e volta ao topo
   useEffect(() => {

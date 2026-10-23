@@ -3,6 +3,7 @@ import { abbrOf, findVersion, suggestedVersion } from '../data/catalog';
 import { useLibrary } from '../state/library';
 import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
+import { useIncoming, applyIncoming } from '../state/incoming';
 import { go } from '../router';
 import { useT } from '../i18n';
 
@@ -13,8 +14,11 @@ export function Welcome() {
   const uiLang = useSettings((s) => s.uiLang);
   const set = useSettings((s) => s.set);
   const { downloading, failed, download } = useLibrary();
+  const incoming = useIncoming((s) => s.incoming);
+  const hasOther = useLibrary((s) => Object.keys(s.installed).length > 0);
+  const current = useSettings((s) => s.versionId);
 
-  const id = suggestedVersion(uiLang);
+  const id = incoming?.versionId ?? suggestedVersion(uiLang);
   const v = findVersion(id)!;
   const progress = downloading[id];
   const busy = progress !== undefined;
@@ -22,7 +26,7 @@ export function Welcome() {
 
   const start = async () => {
     set('versionId', id);
-    await download(id);
+    if ((await download(id)) && incoming) applyIncoming();
   };
 
   return (
@@ -47,6 +51,9 @@ export function Welcome() {
             <p className="error" role="alert">
               {failure === 'offline' ? t('offlineError') : t('downloadError')}
             </p>
+          )}
+          {incoming && hasOther && (
+            <button className="btn" onClick={() => useIncoming.getState().clear()}>{t('keepCurrent', { abbr: abbrOf(current) })}</button>
           )}
           <button className="btn" onClick={() => go('/library')}><Translate size={18} weight="light" /> {t('chooseOther')}</button>
         </div>

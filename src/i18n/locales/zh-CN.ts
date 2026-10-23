@@ -69,6 +69,12 @@ const zhCN: Messages = {
   blue: '蓝色',
   pink: '粉色',
   orange: '橙色',
+  shareApp: '分享应用',
+  shareAppSub: '把链接发给朋友',
+  shareText: 'Open Bible：免费的圣经阅读器，可离线使用，无需账号。',
+  linkCopied: '链接已复制',
+  linkCopyFailed: '无法复制链接',
+  keepCurrent: '继续使用 {abbr}',
   copied: '已复制',
   copyFailed: '无法复制',
 

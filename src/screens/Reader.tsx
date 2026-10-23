@@ -11,6 +11,7 @@ import { SelectionBar } from '../components/SelectionBar';
 import { InstallBanner } from '../components/InstallBanner';
 import { SwipeHint } from '../components/SwipeHint';
 import { Welcome } from '../components/Welcome';
+import { useIncoming } from '../state/incoming';
 import { go } from '../router';
 import { hintPending, markHintSeen } from '../hint';
 import { isMobile } from '../install';
@@ -29,6 +30,7 @@ export function Reader() {
   const books = useBooks();
   const bookName = useBookName();
   const installed = useLibrary((s) => !!s.installed[settings.versionId]);
+  const awaitingLink = useIncoming((s) => s.incoming !== null);
   const libraryReady = useLibrary((s) => s.ready);
   const text = useChapter(book, chapter);
   const verses = text.status === 'ready' ? text.verses : [];
@@ -127,7 +129,7 @@ export function Reader() {
 
   const noteAt = (v: number) => notes.some((n) => n.book === book && n.chapter === chapter && v >= n.verseStart && v <= n.verseEnd);
 
-  if (libraryReady && !installed) return <Welcome />;
+  if (libraryReady && (!installed || awaitingLink)) return <Welcome />;
 
   return (
     <div className="reader">
