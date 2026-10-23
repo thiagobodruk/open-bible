@@ -15,6 +15,8 @@ import { useIncoming } from '../state/incoming';
 import { go } from '../router';
 import { hintPending, markHintSeen } from '../hint';
 import { isMobile } from '../install';
+import { ListenBar } from '../components/ListenBar';
+import { resume, stop, useListen } from '../listen';
 import { useT } from '../i18n';
 
 export function Reader() {
@@ -26,6 +28,10 @@ export function Reader() {
   const [hint, setHint] = useState(false);
   const [dir, setDir] = useState<'next' | 'prev' | null>(null);
   const touch = useRef<{ x: number; y: number } | null>(null);
+
+  const listenStatus = useListen((s) => s.status);
+  const listenVerse = useListen((s) => s.verse);
+  const advancing = useListen((s) => s.advancing);
 
   const books = useBooks();
   const bookName = useBookName();
@@ -56,6 +62,29 @@ export function Reader() {
     const target = books.find((x) => x.id === book) ?? books[0];
     if (target) useStudy.getState().goTo(target.id, 1);
   }, [installed, books, book, chapter]);
+
+  // Trocar de capítulo por conta própria encerra a leitura. Quando ela mesma avança, continua no novo texto.
+  useEffect(() => {
+    const l = useListen.getState();
+    if (l.status !== 'idle' && !l.advancing) stop();
+  }, [book, chapter]);
+
+  useEffect(() => {
+    if (!advancing) return;
+    if (text.status === 'ready' && verses.length) resume(verses, versionInfo?.lang ?? 'en');
+    else if (text.status !== 'loading') stop();
+  }, [advancing, text.status, verses, versionInfo?.lang]);
+
+  useEffect(() => () => stop(), []);
+
+  // Acompanha o versículo lido, sem rolar se ele já está à vista.
+  useEffect(() => {
+    if (listenVerse === null) return;
+    const el = document.getElementById(`v-${listenVerse}`);
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    if (r.top < 110 || r.bottom > innerHeight - 110) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }, [listenVerse]);
 
   // Barra retrátil: some ao rolar para baixo, volta ao rolar para cima.
   useEffect(() => {
@@ -177,7 +206,7 @@ export function Reader() {
           {verses.map((text, i) => {
             const v = i + 1;
             const hl = highlights[vkey(book, chapter, v)];
-            const cls = ['verse', hl ? `hl c-${hl.color}` : '', selection.includes(v) ? 'sel' : ''].join(' ');
+            const cls = ['verse', hl ? `hl c-${hl.color}` : '', selection.includes(v) ? 'sel' : '', listenStatus !== 'idle' && listenVerse === v ? 'speaking' : ''].join(' ');
             return (
               <span key={v} data-v={v} className="verse-wrap">
                 <span id={`v-${v}`} className={cls}>
@@ -201,7 +230,8 @@ export function Reader() {
       </main>
 
       {hint && <SwipeHint onDone={() => setHint(false)} />}
-      <InstallBanner hidden={blocked} hold={hint} />
+      {listenStatus !== 'idle' && !hasSelection && sheet !== 'menu' && <ListenBar />}
+      <InstallBanner hidden={blocked || listenStatus !== 'idle'} hold={hint} />
       {hasSelection && !sheet && <SelectionBar />}
     </div>
   );

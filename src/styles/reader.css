@@ -102,3 +102,4 @@
 .choice:hover:not(:disabled) { background: var(--surface-2); }
 .choice[aria-pressed='true'] { border-color: var(--accent); background: var(--bg); }
 .choice:disabled { opacity: 0.35; }
+.verse.speaking { background: color-mix(in srgb, var(--accent) 20%, transparent); }

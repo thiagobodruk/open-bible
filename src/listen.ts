@@ -1,0 +1,162 @@
+import { create } from 'zustand';
+import { useStudy } from './state/study';
+
+// Leitura em voz alta com as vozes do sistema (Web Speech API). Lê um versículo por vez,
+// o que permite destacar o trecho atual e retomar de onde parou.
+
+const KEY = 'ob:listen';
+
+export const RATES = [0.75, 1, 1.25, 1.5] as const;
+
+interface Prefs {
+  rate: number;
+  /** Identificador da voz escolhida, por prefixo de idioma. */
+  voices: Record<string, string>;
+  next: boolean;
+}
+
+const DEFAULT_PREFS: Prefs = { rate: 1, voices: {}, next: true };
+
+function loadPrefs(): Prefs {
+  try {
+    return { ...DEFAULT_PREFS, ...JSON.parse(localStorage.getItem(KEY) || '{}') };
+  } catch {
+    return DEFAULT_PREFS;
+  }
+}
+
+function savePrefs(p: Prefs) {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(p));
+  } catch {
+    /* sem persistência */
+  }
+}
+
+export const listenSupported = () => typeof speechSynthesis !== 'undefined' && typeof SpeechSynthesisUtterance !== 'undefined';
+
+// Alguns navegadores só carregam a lista de vozes depois da primeira consulta. Fazer isso na abertura
+// evita esperar no toque do usuário, que no iOS precisa iniciar a fala.
+if (listenSupported()) speechSynthesis.getVoices();
+
+const base = (lang: string) => lang.toLowerCase().split(/[-_]/)[0];
+
+/** Vozes do sistema para o idioma da versão. */
+export function voicesFor(lang: string): SpeechSynthesisVoice[] {
+  if (!listenSupported()) return [];
+  const b = base(lang);
+  return speechSynthesis.getVoices().filter((v) => base(v.lang) === b);
+}
+
+function pickVoice(lang: string): SpeechSynthesisVoice | undefined {
+  const list = voicesFor(lang);
+  const saved = loadPrefs().voices[base(lang)];
+  return list.find((v) => v.voiceURI === saved) ?? list.find((v) => v.default) ?? list[0];
+}
+
+type Status = 'idle' | 'playing' | 'paused';
+
+interface ListenStore extends Prefs {
+  status: Status;
+  /** Versículo em leitura (1 a n). */
+  verse: number | null;
+  /** O capítulo acabou e o próximo ainda precisa ser carregado para continuar. */
+  advancing: boolean;
+  setRate: (r: number) => void;
+  setVoice: (lang: string, uri: string) => void;
+  setNext: (on: boolean) => void;
+}
+
+export const useListen = create<ListenStore>((set, get) => ({
+  ...loadPrefs(),
+  status: 'idle',
+  verse: null,
+  advancing: false,
+  setRate: (rate) => {
+    set({ rate });
+    savePrefs(pick(get()));
+    if (get().status === 'playing') speakAt(get().verse ?? 1);
+  },
+  setVoice: (lang, uri) => {
+    set({ voices: { ...get().voices, [base(lang)]: uri } });
+    savePrefs(pick(get()));
+    if (get().status === 'playing') speakAt(get().verse ?? 1);
+  },
+  setNext: (next) => {
+    set({ next });
+    savePrefs(pick(get()));
+  },
+}));
+
+const pick = ({ rate, voices, next }: Prefs): Prefs => ({ rate, voices, next });
+
+let verses: string[] = [];
+let lang = 'en';
+// Cada fala recebe um número; respostas de falas canceladas são ignoradas.
+let token = 0;
+// O navegador pode coletar a fala em curso se ninguém guardar a referência.
+let current: SpeechSynthesisUtterance | null = null;
+
+function speakAt(n: number) {
+  const token0 = ++token;
+  speechSynthesis.cancel();
+  if (n > verses.length) return finishChapter();
+  const u = new SpeechSynthesisUtterance(verses[n - 1]);
+  u.lang = lang;
+  u.rate = useListen.getState().rate;
+  const voice = pickVoice(lang);
+  if (voice) u.voice = voice;
+  u.onend = () => {
+    if (token0 === token) speakAt(n + 1);
+  };
+  u.onerror = () => {
+    if (token0 === token) stop();
+  };
+  current = u;
+  useListen.setState({ status: 'playing', verse: n, advancing: false });
+  speechSynthesis.speak(u);
+}
+
+function finishChapter() {
+  if (useListen.getState().next && useStudy.getState().step(1)) {
+    // O Reader retoma a leitura quando o texto do próximo capítulo chegar.
+    useListen.setState({ advancing: true });
+    scrollTo(0, 0);
+  } else stop();
+}
+
+/** Começa a ler. Devolve falso quando não há voz para o idioma. */
+export function start(text: string[], language: string, from = 1): boolean {
+  if (!listenSupported() || text.length === 0) return false;
+  if (voicesFor(language).length === 0) return false;
+  verses = text;
+  lang = language;
+  speakAt(from);
+  return true;
+}
+
+/** Continua a leitura no capítulo recém-aberto. */
+export function resume(text: string[], language: string) {
+  start(text, language, 1);
+}
+
+export function pause() {
+  if (useListen.getState().status !== 'playing') return;
+  token++;
+  speechSynthesis.cancel();
+  useListen.setState({ status: 'paused' });
+}
+
+export function play() {
+  const { status, verse } = useListen.getState();
+  if (status === 'paused') speakAt(verse ?? 1);
+}
+
+export function stop() {
+  token++;
+  if (listenSupported()) speechSynthesis.cancel();
+  if (current) current.onend = current.onerror = null;
+  current = null;
+  useListen.setState({ status: 'idle', verse: null, advancing: false });
+}
+
