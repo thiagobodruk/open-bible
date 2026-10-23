@@ -1,5 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { CaretDown, CaretRight } from '@phosphor-icons/react';
+import { CaretDown, CaretRight, MagnifyingGlass } from '@phosphor-icons/react';
+import { SearchField } from './SearchField';
+import { normalize } from '../search';
 import { Sheet } from './Sheet';
 import { useBooks } from '../hooks';
 import { useStudy } from '../state/study';
@@ -13,6 +15,11 @@ export function NavigatorSheet() {
   const books = useBooks();
   const firstNt = books.findIndex((b) => b.testament === 'NT');
   const [expanded, setExpanded] = useState<string | null>(book);
+  const [searching, setSearching] = useState(false);
+  const [q, setQ] = useState('');
+  const term = normalize(q.trim()).norm.replace(/\s+/g, '');
+  const visible = term ? books.filter((b) => normalize(b.name).norm.replace(/\s+/g, '').includes(term) || b.id === term) : books;
+  const showDivider = (i: number) => !term && i === firstNt && i > 0;
   const rows = useRef<Record<string, HTMLLIElement | null>>({});
   const first = useRef(true);
 
@@ -25,13 +32,36 @@ export function NavigatorSheet() {
   }, [expanded]);
 
   return (
-    <Sheet title={t.books} onClose={close} tall>
+    <Sheet
+      title={t.books}
+      onClose={close}
+      tall
+      trailing={
+        <button
+          className="icon-btn"
+          aria-label={searching ? 'Fechar busca' : 'Buscar livro'}
+          aria-pressed={searching}
+          onClick={() => {
+            setSearching(!searching);
+            setQ('');
+          }}
+        >
+          <MagnifyingGlass size={22} weight={searching ? 'fill' : 'light'} />
+        </button>
+      }
+      pinned={
+        searching ? (
+          <SearchField autoFocus value={q} onChange={setQ} placeholder="Buscar livro" aria-label="Buscar livro" enterKeyHint="search" autoCapitalize="none" autoCorrect="off" />
+        ) : undefined
+      }
+    >
+      {term && visible.length === 0 && <p className="empty" style={{ padding: '32px 8px' }}>Nenhum livro encontrado.</p>}
       <ul className="book-list">
-        {books.map((b, i) => {
+        {visible.map((b, i) => {
           const isOpen = expanded === b.id;
           return (
             <Fragment key={b.id}>
-              {i === firstNt && i > 0 && <li className="divider" role="separator" />}
+              {showDivider(i) && <li className="divider" role="separator" />}
               <li ref={(el) => { rows.current[b.id] = el; }}>
                 <button
                   className={`book-row ${b.id === book ? 'cur' : ''}`}
