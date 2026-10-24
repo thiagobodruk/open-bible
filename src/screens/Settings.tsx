@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { ArrowsClockwise, ChatCircleText, DeviceMobile, DownloadSimple, GithubLogo, Trash, Upload } from '@phosphor-icons/react';
+import { ArrowsClockwise, DeviceMobile, DownloadSimple, GithubLogo, Trash, Upload } from '@phosphor-icons/react';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { abbrOf, findVersion } from '../data/catalog';
 import { downloadedMb, useLibrary } from '../state/library';
@@ -128,10 +128,6 @@ export function Settings() {
               <ArrowsClockwise size={24} weight="light" />
               <span className="grow"><span className="title">{checking ? t('updateChecking') : t('updateApp')}</span><span className="sub" style={{ display: 'block' }}>{t('updateCurrent', { v: buildLabel(currentBuild) })}</span>
                 {newer && <span className="sub" style={{ display: 'block' }}>{t('updateNew', { v: buildLabel(newer) })}</span>}</span>
-            </button>
-            <button className="row" onClick={() => open('feedback')}>
-              <ChatCircleText size={24} weight="light" />
-              <span className="grow"><span className="title">{t('feedback')}</span></span>
             </button>
             <a className="row" href="https://github.com/thiagobodruk/open-bible" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
               <GithubLogo size={24} weight="light" />
