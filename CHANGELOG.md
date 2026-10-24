@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.7.4
+
+### Fixed
+
+- A opção de instalar o app volta a aparecer no Android depois de desinstalar o app.
+
 ## 1.7.3
 
 ### Changed
