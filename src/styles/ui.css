@@ -162,6 +162,7 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 /* Ícone acima do texto, ambos à direita; o texto fica na altura do botão, à esquerda dele. */
 .swipe-hint.ai .hint-step { align-items: flex-end; gap: 0; padding-right: 84px; text-align: right; max-width: 100%; }
 .swipe-hint.ai .tap-icon { margin: 0 4px 0 0; }
+.swipe-hint.ai .hint-step { animation-delay: 0.4s; }
 .swipe-hint.ai p { display: flex; align-items: center; justify-content: flex-end; height: 56px; }
 .tap-icon { margin-right: 4px; animation: hint-tap 1.4s ease-in-out infinite; }
 body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accent), var(--shadow); animation: fab-ring 1.4s ease-out infinite; }

@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { HandSwipeLeft, HandTap } from '@phosphor-icons/react';
 import { useAsk } from '../state/ask';
 import { useT } from '../i18n';
 
 const SWIPE_MS = 4400; // duas voltas do gesto
+const GUARD_MS = 1000; // depois de cada passo, toques rápidos não pulam o próximo
 
 /**
  * Dicas da primeira abertura. Primeiro mostra o gesto de paginar; depois, com a IA ativa, aponta para o botão
@@ -15,17 +16,28 @@ export function SwipeHint({ onDone, withAi }: { onDone: () => void; withAi: bool
   const [leaving, setLeaving] = useState(false);
   const askOpen = useAsk((s) => s.bar);
 
-  const next = () => (withAi && step === 'swipe' ? setStep('ai') : setLeaving(true));
+  const shownAt = useRef(Date.now());
+
+  const next = (auto = false) => {
+    if (!auto && Date.now() - shownAt.current < GUARD_MS) return;
+    if (withAi && step === 'swipe') {
+      shownAt.current = Date.now();
+      setStep('ai');
+    } else {
+      setLeaving(true);
+    }
+  };
 
   useEffect(() => {
     if (step !== 'swipe') return;
-    const id = setTimeout(next, SWIPE_MS);
+    const id = setTimeout(() => next(true), SWIPE_MS);
     return () => clearTimeout(id);
   });
 
   useEffect(() => {
-    addEventListener('keydown', next);
-    return () => removeEventListener('keydown', next);
+    const onKey = () => next();
+    addEventListener('keydown', onKey);
+    return () => removeEventListener('keydown', onKey);
   });
 
   useEffect(() => {
@@ -36,7 +48,7 @@ export function SwipeHint({ onDone, withAi }: { onDone: () => void; withAi: bool
     <div
       className={`swipe-hint${step === 'ai' ? ' ai' : ''}${leaving ? ' leaving' : ''}`}
       role="status"
-      onPointerDown={next}
+      onPointerDown={() => next()}
       onAnimationEnd={(e) => leaving && e.target === e.currentTarget && onDone()}
     >
       {step === 'swipe' ? (
