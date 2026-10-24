@@ -110,7 +110,7 @@ node scripts/build-catalog.mjs [commit-sha]
 
 ## Ask AI Worker
 
-The Worker in `worker/` is deployed separately from the site, with [Wrangler](https://developers.cloudflare.com/workers/wrangler/). It keeps the AI service key as a secret, accepts calls only from the allowed origins, limits requests per minute and per day for each IP, and caps the size of the question, the passage and the answer. Its system prompt keeps answers short and on topic. See [`worker/README.md`](worker/README.md) for the setup, the settings and troubleshooting. The site is built with the Worker address from the `AI_URL` repository variable (**Settings > Secrets and variables > Actions > Variables**).
+The Worker in `worker/` is deployed separately from the site, with [Wrangler](https://developers.cloudflare.com/workers/wrangler/). It keeps the AI service key as a secret, accepts calls only from the allowed origins, limits requests per minute and per day for each IP, and caps the size of the question, the passage and the answer. Its system prompt keeps answers short and on topic. The settings (allowed origins, model, limits) are in `worker/wrangler.toml`, and the API key is stored with `npx wrangler secret put GROQ_API_KEY`. The site is built with the Worker address from the `AI_URL` repository variable (**Settings > Secrets and variables > Actions > Variables**).
 
 ## Stack
 
