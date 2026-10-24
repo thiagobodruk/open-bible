@@ -39,7 +39,8 @@
 .sheet.dragging { transition: none; }
 .sheet-grip { width: 38px; height: 4px; border-radius: 2px; background: var(--line); margin: 10px auto 2px; flex: none; touch-action: none; }
 .sheet-head { display: flex; align-items: center; gap: 4px; min-height: 44px; padding: 4px 22px; flex: none; touch-action: none; }
-.sheet-head h2 { font-size: 17px; font-weight: 600; }
+.sheet-head h2 { display: flex; align-items: center; gap: 10px; min-width: 0; font-size: 17px; font-weight: 600; }
+.sheet-head h2 svg { flex: none; }
 .sheet-trailing { margin-left: auto; margin-right: -10px; display: flex; }
 .sheet-pinned { flex: none; padding: 8px 22px 24px; border-bottom: 1px solid var(--line); }
 .sheet-pinned + .sheet-body { padding-top: 28px; }

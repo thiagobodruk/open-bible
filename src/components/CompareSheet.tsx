@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CloudArrowDown } from '@phosphor-icons/react';
+import { CloudArrowDown, TextColumns } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
@@ -64,7 +64,7 @@ export function CompareSheet() {
   };
 
   return (
-    <Sheet title={t('compareTitle')} onClose={close}>
+    <Sheet title={t('compareTitle')} icon={TextColumns} onClose={close}>
       <div className="compare">
         {rows?.map((r) => (
           <button key={r.id} className="compare-item" onClick={() => read(r.id)}>

@@ -1,3 +1,4 @@
+import { SpeakerHigh } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { Segmented } from './Segmented';
 import { RATES, useListen, voicesFor } from '../listen';
@@ -16,7 +17,7 @@ export function ListenSheet() {
   const chosen = voices[lang.toLowerCase().split(/[-_]/)[0]] ?? list.find((v) => v.default)?.voiceURI ?? list[0]?.voiceURI ?? '';
 
   return (
-    <Sheet title={t('listenTitle')} onClose={close}>
+    <Sheet title={t('listenTitle')} icon={SpeakerHigh} onClose={close}>
       <section className="section">
         <h2>{t('listenVoice')}</h2>
         <select className="select" value={chosen} aria-label={t('listenVoice')} onChange={(e) => setVoice(lang, e.target.value)}>

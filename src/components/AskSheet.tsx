@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { ArrowClockwise, Copy, PaperPlaneTilt } from '@phosphor-icons/react';
+import { ArrowClockwise, Copy, PaperPlaneTilt, Sparkle } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useAsk } from '../state/ask';
 import { useSettings } from '../state/settings';
@@ -50,6 +50,7 @@ export function AskSheet() {
   return (
     <Sheet
       title={t('askTitle')}
+      icon={Sparkle}
       onClose={close}
       tall
       footer={

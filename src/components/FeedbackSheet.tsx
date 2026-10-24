@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { GithubLogo, X } from '@phosphor-icons/react';
+import { ChatCircleText, GithubLogo, X } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
@@ -21,7 +21,7 @@ export function FeedbackSheet() {
   const empty = !text.trim();
 
   return (
-    <Sheet title={t('feedback')} onClose={close}>
+    <Sheet title={t('feedback')} icon={ChatCircleText} onClose={close}>
       <select className="select" value={kind} aria-label={t('feedbackType')} onChange={(e) => setKind(e.target.value as FeedbackKind)}>
         {FEEDBACK_KINDS.map((k) => <option key={k} value={k}>{t(`feedback_${k}`)}</option>)}
       </select>

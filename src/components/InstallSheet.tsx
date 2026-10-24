@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Export, PlusSquare, DotsThreeVertical } from '@phosphor-icons/react';
+import { DeviceMobile, Export, PlusSquare, DotsThreeVertical } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { detectIOS, dismissInstall, isInstalled } from '../install';
@@ -23,7 +23,7 @@ export function InstallSheet() {
   const ios = detectIOS();
   const shareKey = !ios ? null : ios.browser === 'chrome' ? 'installShareChrome' : ios.browser === 'safari' ? (ios.device === 'iPad' ? 'installShareSafariPad' : 'installShareSafariPhone') : 'installShareOther';
   return (
-    <Sheet title={t('install')} onClose={close}>
+    <Sheet title={t('install')} icon={DeviceMobile} onClose={close}>
       {isInstalled() ? (
         <p>{t('installedAlready')}</p>
       ) : ios ? (

@@ -71,6 +71,7 @@ export function SearchSheet() {
   return (
     <Sheet
       title={t('search')}
+      icon={MagnifyingGlass}
       onClose={close}
       tall
       pinned={

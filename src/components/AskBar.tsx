@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PaperPlaneTilt } from '@phosphor-icons/react';
+import { PaperPlaneTilt, Sparkle } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { consented, setConsented, type AiPassage } from '../ai';
 import { useAsk } from '../state/ask';
@@ -47,7 +47,7 @@ export function AskBar() {
 
   if (!accepted) {
     return (
-      <Sheet modeless title={t('askTitle')} onClose={closeBar}>
+      <Sheet modeless title={t('askTitle')} icon={Sparkle} onClose={closeBar}>
         <div className="ask-body">
           <p className="ask-notice">{t('askNotice')}</p>
           <button className="btn primary block" onClick={() => { setConsented(); setAccepted(true); }}>{t('askAccept')}</button>
@@ -57,7 +57,7 @@ export function AskBar() {
   }
 
   return (
-    <Sheet modeless title={ref} onClose={closeBar}>
+    <Sheet modeless title={ref} icon={Sparkle} onClose={closeBar}>
       <div className="ask-body">
         <div className="ask-chips">
           <button className="chip-btn" onClick={() => ask(t('askExplainQ'))}>{t('askExplain')}</button>

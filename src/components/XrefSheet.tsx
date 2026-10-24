@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { LinkSimple } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
@@ -55,7 +56,7 @@ export function XrefSheet() {
   };
 
   return (
-    <Sheet title={t('xrefsTitle')} onClose={close}>
+    <Sheet title={t('xrefsTitle')} icon={LinkSimple} onClose={close}>
       {state.status === 'loading' && <div className="compare-wait" aria-busy="true" />}
       {state.status === 'error' && <p className="hint" role="status">{t('xrefsError')}</p>}
       {state.status === 'ready' && state.items.length === 0 && <p className="hint" role="status">{t('xrefsEmpty')}</p>}
