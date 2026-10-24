@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PaperPlaneTilt, Sparkle } from '@phosphor-icons/react';
+import { BookOpenText, PaperPlaneTilt, Sparkle, X } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { consented, setConsented, type AiPassage } from '../ai';
 import { useAsk } from '../state/ask';
@@ -57,25 +57,36 @@ export function AskBar() {
   }
 
   return (
-    <Sheet modeless compact title={ref} icon={Sparkle} onClose={closeBar}>
+    <Sheet modeless compact title={t('askTitle')} icon={Sparkle} onClose={closeBar}>
       <div className="ask-body">
         <div className="ask-chips">
           <button className="chip-btn" onClick={() => ask(t('askExplainQ'))}>{t('askExplain')}</button>
           <button className="chip-btn" onClick={() => ask(t('askContextQ'))}>{t('askContext')}</button>
           <button className="chip-btn" onClick={() => ask(t('askApplyQ'))}>{t('askApply')}</button>
         </div>
-        <form className="ask-form" onSubmit={(e) => { e.preventDefault(); ask(question); }}>
-          <input
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            placeholder={t('askPlaceholder')}
-            aria-label={t('askPlaceholder')}
-            maxLength={600}
-            enterKeyHint="send"
-          />
-          <button type="submit" className="ask-send" disabled={!question.trim() || !verses.length} aria-label={t('askSend')}>
-            <PaperPlaneTilt size={20} weight="fill" />
-          </button>
+        <form className="ask-field" onSubmit={(e) => { e.preventDefault(); ask(question); }}>
+          <span className="ask-pill">
+            <BookOpenText size={15} weight="light" aria-hidden="true" />
+            <span>{ref}</span>
+            {selection.length > 0 && (
+              <button type="button" onClick={() => useStudy.getState().clearSelection()} aria-label={t('askRemoveContext')}>
+                <X size={13} weight="bold" />
+              </button>
+            )}
+          </span>
+          <div className="ask-row">
+            <input
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder={t('askPlaceholder')}
+              aria-label={t('askPlaceholder')}
+              maxLength={600}
+              enterKeyHint="send"
+            />
+            <button type="submit" className="ask-send" disabled={!question.trim() || !verses.length} aria-label={t('askSend')}>
+              <PaperPlaneTilt size={20} weight="fill" />
+            </button>
+          </div>
         </form>
       </div>
     </Sheet>
