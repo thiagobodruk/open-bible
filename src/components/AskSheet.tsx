@@ -1,5 +1,6 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
-import { ArrowClockwise, Copy, PaperPlaneTilt, Sparkle } from '@phosphor-icons/react';
+import { Fragment, useEffect, useRef } from 'react';
+import { ArrowClockwise, Copy, Sparkle } from '@phosphor-icons/react';
+import { PromptField } from './PromptField';
 import { Sheet } from './Sheet';
 import { useAsk } from '../state/ask';
 import { useSettings } from '../state/settings';
@@ -21,7 +22,6 @@ export function AskSheet() {
   const notify = useUI((s) => s.notify);
   const uiLang = useSettings((s) => s.uiLang);
   const { passage, messages, status, error, followUp, retry, stop } = useAsk();
-  const [question, setQuestion] = useState('');
   const end = useRef<HTMLDivElement>(null);
   const busy = status === 'loading' || status === 'streaming';
   const answer = messages[messages.length - 1];
@@ -38,13 +38,6 @@ export function AskSheet() {
     }
   };
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!question.trim() || busy) return;
-    followUp(question.trim(), uiLang);
-    setQuestion('');
-  };
-
   const errorKey = ({ offline: 'askOffline', limit: 'askRateLimited', daily: 'askDaily', busy: 'askBusy', failed: 'askError' } as const)[error ?? 'failed'];
 
   return (
@@ -57,22 +50,12 @@ export function AskSheet() {
       footer={
         <div className="ask-foot">
           {status !== 'error' && (
-            <form className="ask-field plain" onSubmit={submit}>
-              <div className="ask-row">
-                <input
-                  value={question}
-                  onChange={(e) => setQuestion(e.target.value)}
-                  placeholder={t('askFollowUp')}
-                  aria-label={t('askFollowUp')}
-                  maxLength={600}
-                  enterKeyHint="send"
-                  disabled={busy}
-                />
-                <button type="submit" className="ask-send" disabled={!question.trim() || busy} aria-label={t('askSend')}>
-                  <PaperPlaneTilt size={20} weight="fill" />
-                </button>
-              </div>
-            </form>
+            <PromptField
+              context={passage?.ref ?? ''}
+              placeholder={t('askFollowUp')}
+              disabled={busy}
+              onSubmit={(q) => followUp(q, uiLang)}
+            />
           )}
         </div>
       }

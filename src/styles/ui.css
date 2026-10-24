@@ -204,7 +204,6 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .ask-pill > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ask-pill button { display: grid; place-items: center; flex: none; width: 18px; height: 18px; margin-right: -2px; border-radius: 50%; color: var(--muted); }
 .ask-pill button:hover { background: var(--surface-2); }
-.ask-field.plain { padding: 6px 6px 6px 16px; }
 .ask-row { display: flex; align-items: center; gap: 8px; }
 .ask-row input { flex: 1; min-width: 0; height: 40px; padding: 0 4px; border: 0; background: none; font-size: 16px; color: var(--fg); outline: 0; }
 .ask-row .ask-send { width: 40px; height: 40px; }
@@ -221,7 +220,7 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .ask-msg.user { justify-self: end; max-width: 88%; padding: 10px 14px; border-radius: 18px 18px 4px 18px; background: var(--surface); }
 .ask-msg.assistant { font-family: var(--font-serif); font-size: 17px; }
 .ask-error { display: grid; gap: 10px; justify-items: start; color: var(--danger); font-size: 15px; }
-.ask-foot { display: grid; gap: 8px; }
+.ask-foot { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
 .ask-note { margin-top: -6px; font-size: 11px; line-height: 1.4; color: var(--muted); }
 .ask-dots { display: inline-block; width: 36px; height: 8px; background: radial-gradient(circle, var(--muted) 3px, transparent 3.5px) 0 50% / 12px 8px repeat-x; animation: ask-pulse 1s ease-in-out infinite; }
 @keyframes ask-pulse { 50% { opacity: 0.3; } }
