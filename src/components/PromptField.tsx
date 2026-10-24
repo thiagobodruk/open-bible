@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { BookOpenText, Microphone, PaperPlaneTilt, X } from '@phosphor-icons/react';
+import { BookmarkSimple, Microphone, PaperPlaneTilt, X } from '@phosphor-icons/react';
 import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
 import { dictationSupported, startDictation } from '../stt';
@@ -70,7 +70,7 @@ export function PromptField({ context, onClearContext, placeholder, disabled, on
   return (
     <form className="ask-field" onSubmit={submit}>
       <span className="ask-pill">
-        <BookOpenText size={15} weight="light" aria-hidden="true" />
+        <BookmarkSimple size={15} weight="light" aria-hidden="true" />
         <span>{context}</span>
         {onClearContext && (
           <button type="button" onClick={onClearContext} aria-label={t('askRemoveContext')}>
