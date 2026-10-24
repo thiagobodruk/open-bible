@@ -62,7 +62,8 @@
 .verse.flash { animation: flash 1.6s ease-out; }
 @keyframes flash { 0%, 40% { background: color-mix(in srgb, var(--accent) 22%, transparent); } }
 .vn { font-family: var(--font-ui); font-weight: 600; font-size: 0.64em; vertical-align: super; line-height: 0; margin-right: 0.35em; color: var(--muted); }
-.vn-visible .vn { color: var(--accent); }
+.vn-subtle .vn { font-size: 0.56em; font-weight: 500; opacity: 0.7; }
+.vn-visible .vn { font-size: 0.74em; font-weight: 700; color: var(--accent); }
 .vn-hidden .vn { display: none; }
 .note-mark { display: inline-block; vertical-align: -0.1em; margin-left: 4px; color: var(--accent); }
 

@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). Each release is published from the section with its number, so add a section here when you bump `version` in `package.json`.
 
+## 1.2.5
+
+### Fixed
+
+- Verse numbers: "Visible" and "Subtle" looked the same. Visible is now larger, bold and in the accent color, and Subtle is smaller and fainter.
+
 ## 1.2.3
 
 ### Changed
