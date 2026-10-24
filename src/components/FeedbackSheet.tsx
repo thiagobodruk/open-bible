@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GithubLogo, X } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
@@ -36,7 +37,7 @@ export function FeedbackSheet() {
       />
       <div className="actions">
         <span className="grow" />
-        <button className="btn" onClick={close}>{t('cancel')}</button>
+        <button className="btn" onClick={close}><X size={18} weight="regular" />{t('cancel')}</button>
         <a
           className="btn primary"
           href={empty ? undefined : feedbackUrl(kind, text, refLabel(bookName(book), chapter))}
@@ -46,6 +47,7 @@ export function FeedbackSheet() {
           style={empty ? { opacity: 0.45, pointerEvents: 'none' } : undefined}
           onClick={() => setTimeout(close, 0)}
         >
+          <GithubLogo size={18} weight="regular" />
           {t('feedbackSend')}
         </a>
       </div>
