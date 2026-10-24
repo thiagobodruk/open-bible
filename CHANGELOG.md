@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). Each release is published from the section with its number, so add a section here when you bump `version` in `package.json`.
 
+## 1.2.4
+
+### Changed
+
+- The "Restore default" button in Appearance has its icon at the left edge, with the label centered, like the buttons on the first screen.
+
 ## 1.2.3
 
 ### Changed

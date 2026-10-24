@@ -43,7 +43,7 @@ export function Welcome() {
           <CloudArrowDown size={44} weight="light" />
           <h1>{t('welcomeTitle')}</h1>
           <p>{t('welcomeBody')}</p>
-          <button className="btn primary" onClick={start} disabled={busy}>
+          <button className="btn primary lead" onClick={start} disabled={busy}>
             {!busy && <DownloadSimple size={18} weight="regular" />}
             {busy ? t('downloadingBtn', { pct: Math.round(progress * 100) }) : t('downloadBtn', { abbr: abbrOf(id), size: t.mb(v.sizeMb) })}
           </button>
@@ -56,7 +56,7 @@ export function Welcome() {
           {incoming && hasOther && (
             <button className="btn" onClick={() => useIncoming.getState().clear()}>{t('keepCurrent', { abbr: abbrOf(current) })}</button>
           )}
-          <button className="btn" onClick={() => go('/library')}><Translate size={18} weight="regular" />{t('chooseOther')}</button>
+          <button className="btn lead" onClick={() => go('/library')}><Translate size={18} weight="regular" />{t('chooseOther')}</button>
         </div>
       </main>
     </div>
