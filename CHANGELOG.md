@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.6.1
+
+### Changed
+
+- The AI prompt has more space below its heading.
+
 ## 1.6.0
 
 ### Added
