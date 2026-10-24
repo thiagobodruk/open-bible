@@ -133,7 +133,7 @@ const ja: Messages = {
   keepCurrent: '{abbr} を使い続ける',
   updateApp: '更新',
   updateCurrent: '現在：{v}',
-  updateNew: '新：{v}',
+  updateNew: '最新：{v}',
   updateChecking: '確認中…',
   updateFound: '新しいバージョンに更新しています…',
   updateLatest: '最新バージョンです',
