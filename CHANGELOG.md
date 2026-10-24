@@ -2,12 +2,6 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow when a PR is merged, from the PR's `## Changelog` section. Do not edit it in a PR.
 
-## 1.2.5
-
-### Fixed
-
-- Verse numbers: "Visible" and "Subtle" looked the same. Visible is now larger, bold and in the accent color, and Subtle is smaller and fainter.
-
 ## 1.2.3
 
 ### Changed
