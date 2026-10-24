@@ -20,7 +20,6 @@
 .crumb:hover { background: var(--surface-2); }
 .crumb span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .topbar .spacer { flex: 1; }
-.topbar .icon-btn { width: 38px; }
 .ver-chip { height: 32px; padding: 0 12px; border-radius: 999px; background: var(--surface); font-size: 13px; font-weight: 600; letter-spacing: 0.02em; flex: none; }
 .ver-chip:hover { background: var(--surface-2); }
 
