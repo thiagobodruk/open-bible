@@ -71,7 +71,7 @@ export function AskSheet() {
         {passage && <div className="ask-ref">{passage.ref} · {passage.version}</div>}
         {messages.map((m, i) => (
           <div key={i} className={`ask-msg ${m.role}`}>
-            {m.content ? <Inline text={m.content} /> : busy && i === messages.length - 1 ? <span className="ask-dots" aria-label={t('askThinking')} /> : null}
+            {m.content ? <Inline text={m.content} /> : busy && i === messages.length - 1 ? <span className="ask-dots" role="status" aria-label={t('askThinking')}><i /><i /><i /></span> : null}
           </div>
         ))}
         {answer?.role === 'assistant' && answer.content && !busy && status !== 'error' && (
