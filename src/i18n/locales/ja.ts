@@ -89,7 +89,10 @@ const ja: Messages = {
   searchEmptyHint: 'このデバイス上で {abbr} 訳の本文を検索します。',
   searchPreparing: '検索を準備しています…',
   searchNone: '「{q}」を含む節はありません。',
-  searchTruncated: '最初の {n} 件を表示しています',
+  searchShown: '{total} 件中 {n} 件を表示しています',
+  searchMore: 'さらに表示',
+  searchMin: '{n} 文字以上入力してください',
+  searchNoneHint: '別の語句か聖句の参照を試してください。',
   result_one: '{n} 件',
   result_other: '{n} 件',
 

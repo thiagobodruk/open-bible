@@ -89,7 +89,10 @@ const zhCN: Messages = {
   searchEmptyHint: '在本机搜索 {abbr} 译本的经文。',
   searchPreparing: '正在准备搜索…',
   searchNone: '没有包含“{q}”的经文。',
-  searchTruncated: '仅显示前 {n} 条结果',
+  searchShown: '显示 {total} 条结果中的 {n} 条',
+  searchMore: '显示更多',
+  searchMin: '请至少输入 {n} 个字',
+  searchNoneHint: '试试其他词语或经文出处。',
   result_one: '{n} 条结果',
   result_other: '{n} 条结果',
 

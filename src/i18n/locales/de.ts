@@ -89,7 +89,10 @@ const de: Messages = {
   searchEmptyHint: 'Durchsucht den Text der Version {abbr} direkt auf diesem Gerät.',
   searchPreparing: 'Suche wird vorbereitet…',
   searchNone: 'Kein Vers mit „{q}“.',
-  searchTruncated: 'Die ersten {n} Ergebnisse werden angezeigt',
+  searchShown: '{n} von {total} Ergebnissen',
+  searchMore: 'Mehr anzeigen',
+  searchMin: 'Gib mindestens {n} Buchstaben ein',
+  searchNoneHint: 'Versuche ein anderes Wort oder eine Stellenangabe.',
   result_one: '{n} Ergebnis',
   result_other: '{n} Ergebnisse',
 

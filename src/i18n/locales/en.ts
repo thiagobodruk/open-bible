@@ -87,7 +87,10 @@ const en = {
   searchEmptyHint: 'Searches the text of the {abbr} version, right on this device.',
   searchPreparing: 'Preparing search…',
   searchNone: 'No verse with “{q}”.',
-  searchTruncated: 'Showing the first {n} results',
+  searchShown: 'Showing {n} of {total} results',
+  searchMore: 'Show more',
+  searchMin: 'Type at least {n} letters',
+  searchNoneHint: 'Try another word or a reference.',
   result_one: '{n} result',
   result_other: '{n} results',
 
