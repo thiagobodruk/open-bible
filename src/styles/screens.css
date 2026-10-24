@@ -92,6 +92,8 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .welcome p { margin: 0; font-size: 14px; line-height: 1.5; }
 .welcome .btn { width: min(100%, 280px); justify-content: center; }
 .welcome .progress { width: 100%; max-width: 240px; }
+.welcome.crash { text-align: center; }
+.welcome.crash code { max-width: 100%; padding: 8px 10px; border-radius: 10px; background: var(--surface); font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
 .error { color: var(--danger, #c0392b); }
 .brand-name { display: flex; align-items: center; height: 44px; padding: 0 12px; font-family: var(--font-ui); font-size: 16px; font-weight: 600; }
 
