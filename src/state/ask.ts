@@ -22,6 +22,9 @@ interface AskStore {
   stop: () => void;
 }
 
+/** A resposta só aparece depois disso, para os pontinhos não piscarem. */
+const MIN_THINKING = 1000;
+
 let controller: AbortController | undefined;
 
 export const useAsk = create<AskStore>((set, get) => {
@@ -30,6 +33,8 @@ export const useAsk = create<AskStore>((set, get) => {
     const c = new AbortController();
     controller = c;
     set({ passage, messages: [...history, { role: 'user', content: question }, { role: 'assistant', content: '' }], status: 'loading', error: null });
+    const ready = new Promise<void>((resolve) => setTimeout(resolve, MIN_THINKING));
+    let queue = ready;
     try {
       await askAI({
         question,
@@ -37,16 +42,22 @@ export const useAsk = create<AskStore>((set, get) => {
         lang,
         history,
         signal: c.signal,
-        onText: (chunk) =>
-          set((s) => {
-            const messages = s.messages.slice();
-            const last = messages[messages.length - 1];
-            messages[messages.length - 1] = { ...last, content: last.content + chunk };
-            return { messages, status: 'streaming' };
-          }),
+        onText: (chunk) => {
+          queue = queue.then(() => {
+            if (c.signal.aborted) return;
+            set((s) => {
+              const messages = s.messages.slice();
+              const last = messages[messages.length - 1];
+              messages[messages.length - 1] = { ...last, content: last.content + chunk };
+              return { messages, status: 'streaming' };
+            });
+          });
+        },
       });
+      await queue;
       if (controller === c) set({ status: 'idle' });
     } catch (e) {
+      await ready;
       if (c.signal.aborted) return;
       set({ status: 'error', error: e instanceof AiError ? e.kind : 'failed' });
     }
