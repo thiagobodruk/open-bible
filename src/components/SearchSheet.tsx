@@ -69,19 +69,23 @@ export function SearchSheet() {
   const typed = dq.trim().length >= minChars(dq);
 
   return (
-    <Sheet title={t('search')} onClose={close} tall>
-      <SearchField
-        style={{ position: 'sticky', top: 0, zIndex: 1 }}
-        autoFocus
-        value={q}
-        onChange={setQ}
-        placeholder={t('searchPlaceholder')}
-        aria-label={t('searchLabel')}
-        enterKeyHint="search"
-        autoCapitalize="none"
-        autoCorrect="off"
-      />
-
+    <Sheet
+      title={t('search')}
+      onClose={close}
+      tall
+      pinned={
+        <SearchField
+          autoFocus
+          value={q}
+          onChange={setQ}
+          placeholder={t('searchPlaceholder')}
+          aria-label={t('searchLabel')}
+          enterKeyHint="search"
+          autoCapitalize="none"
+          autoCorrect="off"
+        />
+      }
+    >
       {ref && (
         <button className="row goto" onClick={() => open(ref.book.id, ref.chapter, ref.verse)}>
           <span className="grow">
