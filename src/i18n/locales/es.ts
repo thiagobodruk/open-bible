@@ -11,6 +11,8 @@ const es: Messages = {
   textSettings: 'Apariencia',
   search: 'Buscar',
   books: 'Libros',
+  testamentOld: 'Antiguo Testamento',
+  testamentNew: 'Nuevo Testamento',
   prevChapter: 'Capítulo anterior',
   nextChapter: 'Capítulo siguiente',
   back: 'Atrás',

@@ -9,6 +9,8 @@ const en = {
   textSettings: 'Appearance',
   search: 'Search',
   books: 'Books',
+  testamentOld: 'Old Testament',
+  testamentNew: 'New Testament',
   prevChapter: 'Previous chapter',
   nextChapter: 'Next chapter',
   back: 'Back',

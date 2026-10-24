@@ -6,6 +6,7 @@ import { VERSIONS, abbrOf, type VersionInfo } from '../data/catalog';
 import { useLibrary } from '../state/library';
 import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
+import { back } from '../router';
 import { useT } from '../i18n';
 
 const COVERAGE = { nt: 'covNt', ot: 'covOt', partial: 'covPartial' } as const;
@@ -62,6 +63,8 @@ export function Library() {
   const choose = (id: string, key: 'versionToast' | 'versionDownloaded' = 'versionToast') => {
     set('versionId', id);
     notify(t(key, { abbr: abbrOf(id) }));
+    // Volta ao texto, a menos que a pessoa já tenha saído desta tela (download demorado).
+    if (location.hash === '#/library') back();
   };
 
   const get = async (id: string) => {

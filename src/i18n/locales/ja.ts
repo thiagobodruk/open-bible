@@ -11,6 +11,8 @@ const ja: Messages = {
   textSettings: '表示',
   search: '検索',
   books: '書巻',
+  testamentOld: '旧約聖書',
+  testamentNew: '新約聖書',
   prevChapter: '前の章',
   nextChapter: '次の章',
   back: '戻る',

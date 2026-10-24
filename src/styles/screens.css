@@ -56,9 +56,10 @@
 .book-row:hover { background: var(--surface); }
 .book-row.cur { font-weight: 600; }
 .book-row svg { color: var(--muted); flex: none; }
-.divider { height: 1px; background: var(--line); margin: 10px 8px; }
-.chap-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 6px 8px 14px; }
-.chap-grid button { height: 52px; border-radius: var(--radius-sm); background: var(--surface); font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.testament h3 { padding: 8px 8px 2px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.testament.sep { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 8px; }
+.chap-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; padding: 6px 8px 14px; }
+.chap-grid button { height: 44px; border-radius: var(--radius-sm); background: var(--surface); font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .chap-grid button:hover { background: var(--surface-2); }
 .chap-grid button.cur { background: var(--fg); color: var(--bg); font-weight: 700; }
 

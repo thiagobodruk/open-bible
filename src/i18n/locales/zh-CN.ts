@@ -11,6 +11,8 @@ const zhCN: Messages = {
   textSettings: '外观',
   search: '搜索',
   books: '书卷',
+  testamentOld: '旧约',
+  testamentNew: '新约',
   prevChapter: '上一章',
   nextChapter: '下一章',
   back: '返回',
