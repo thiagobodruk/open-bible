@@ -43,6 +43,7 @@ Open Bible reads its texts from the [Bible](https://github.com/thiagobodruk/bibl
 - **Library:** browse versions by language, download the ones you want, and switch between them.
 - **Appearance:** font, size, line height, margins, alignment, and light, sepia, and dark themes.
 - **Study tools:** select verses, highlight them in five colors, write notes, copy or share, and review everything in **My study**.
+- **Cross-references:** select verses and tap References to see related passages from the public-domain Treasury of Scripture Knowledge, shown in the version you are reading. Each book's file is downloaded the first time you use it and then works offline.
 - **Search:** full-text search in the current version, plus quick references such as `jn 3:16`.
 - **Private by design:** highlights, notes, and settings stay in your browser (IndexedDB and localStorage), with JSON export and import for backups.
 - **Interface in 7 languages:** English, Portuguese (Brazil), Spanish, French, German, Simplified Chinese, and Japanese. The language follows your browser and can be changed in Settings, independently of the Bible language.

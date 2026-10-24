@@ -70,6 +70,10 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
         // Os textos das versões vêm de CDN e ficam no IndexedDB. O service worker guarda só o app.
         navigateFallback: `${base}index.html`,
+        // As referências cruzadas são baixadas por livro, na primeira vez, e depois funcionam offline.
+        runtimeCaching: [
+          { urlPattern: ({ url }) => url.pathname.startsWith(`${base}xrefs/`), handler: 'StaleWhileRevalidate', options: { cacheName: 'xrefs' } },
+        ],
       },
     }),
   ],

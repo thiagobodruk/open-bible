@@ -11,6 +11,8 @@ const SHA = process.argv[2] ?? '92e121c2c829eae351b76db1d32858ced77b16a6';
 const TSK_URL = 'https://crosswire.org/ftpmirror/pub/sword/packages/rawzip/TSK.zip';
 const KJV_URL = `https://cdn.jsdelivr.net/gh/thiagobodruk/bible@${SHA}/json/en_kjv.json`;
 const LIMIT = 10;
+// Nome de arquivo só com ASCII (o id de Jó tem acento). Mantenha igual a fileOf em src/data/xrefs.ts.
+const fileOf = (id) => id.replace(/[^\x00-\x7f]/g, (c) => `u${c.charCodeAt(0).toString(16)}`);
 
 // Abreviações do TSK na ordem canônica; os ids vêm do repo de dados, na mesma ordem.
 const TSK_BOOKS = 'Ge Ex Le Nu De Jos Jud Ru 1Sa 2Sa 1Ki 2Ki 1Ch 2Ch Ezr Ne Es Job Ps Pr Ec So Isa Jer La Eze Da Ho Joe Am Ob Jon Mic Na Hab Zep Hag Zec Mal Mt Mr Lu Joh Ac Ro 1Co 2Co Ga Eph Php Col 1Th 2Th 1Ti 2Ti Tit Phm Heb Jas 1Pe 2Pe 1Jo 2Jo 3Jo Jude Re'.split(' ');
@@ -140,7 +142,7 @@ try {
       });
       const json = JSON.stringify(book);
       bytes += json.length;
-      await writeFile(new URL(`${ids[b]}.json`, outDir), json + '\n');
+      await writeFile(new URL(`${fileOf(ids[b])}.json`, outDir), json + '\n');
     }
   }
   console.log(`${verses} versículos, ${refs} referências, ${(bytes / 1048576).toFixed(2)} MB em ${ids.length} arquivos`);
