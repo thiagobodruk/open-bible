@@ -85,7 +85,7 @@ npm run preview   # serve the build at http://localhost:4173/open-bible/
 
 ### Releases
 
-Versions follow [SemVer](https://semver.org/). To release, bump `version` in `package.json` and add a section with that number to `CHANGELOG.md`. When the change reaches `main`, the Release workflow creates the tag and the GitHub release using that section as the notes (or the generated notes if the section is missing).
+Versions follow [SemVer](https://semver.org/) and are bumped when a PR is merged, not inside the PR. Label the PR `patch` (the default), `minor` (new feature) or `major` (breaking change), or `no-release` for docs and workflows. Write what users will notice under `## Changelog` in the PR description. On merge, the Release workflow bumps `package.json` and `CHANGELOG.md`, tags and publishes the release with those notes, and deploys the site.
 
 ### Translations
 
