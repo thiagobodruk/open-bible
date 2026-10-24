@@ -11,6 +11,8 @@ const ptBR: Messages = {
   textSettings: 'Aparência',
   search: 'Buscar',
   books: 'Livros',
+  testamentOld: 'Antigo Testamento',
+  testamentNew: 'Novo Testamento',
   prevChapter: 'Capítulo anterior',
   nextChapter: 'Próximo capítulo',
   back: 'Voltar',

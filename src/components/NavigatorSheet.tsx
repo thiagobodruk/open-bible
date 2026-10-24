@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { Books, CaretDown, CaretRight, MagnifyingGlass } from '@phosphor-icons/react';
 import { SearchField } from './SearchField';
-import { normalize } from '../search';
+import { normalize, parseReference } from '../search';
+import { refLabel } from '../ref';
 import { Sheet } from './Sheet';
 import { useBooks } from '../hooks';
 import { useStudy } from '../state/study';
@@ -20,7 +21,14 @@ export function NavigatorSheet() {
   const [q, setQ] = useState('');
   const term = normalize(q.trim()).norm.replace(/\s+/g, '');
   const visible = term ? books.filter((b) => normalize(b.name).norm.replace(/\s+/g, '').includes(term) || b.id === term) : books;
-  const showDivider = (i: number) => !term && i === firstNt && i > 0;
+  const heading = (i: number) => (term ? null : i === firstNt ? 'testamentNew' : i === 0 ? 'testamentOld' : null);
+  // "sal 23" também funciona aqui: oferece ir direto ao capítulo.
+  const ref = searching ? parseReference(q, books) : null;
+  const pick = (id: string, n: number, v?: number) => {
+    goTo(id, n, v);
+    scrollTo(0, 0);
+    close();
+  };
   const rows = useRef<Record<string, HTMLLIElement | null>>({});
   const first = useRef(true);
 
@@ -53,17 +61,31 @@ export function NavigatorSheet() {
       }
       pinned={
         searching ? (
-          <SearchField autoFocus value={q} onChange={setQ} placeholder={t('bookSearch')} aria-label={t('bookSearch')} enterKeyHint="search" autoCapitalize="none" autoCorrect="off" />
+          <SearchField autoFocus value={q} onChange={setQ} placeholder={t('bookSearch')} aria-label={t('bookSearch')} enterKeyHint="search" autoCapitalize="none" autoCorrect="off" onKeyDown={(e) => {
+            if (e.key !== 'Enter') return;
+            e.preventDefault();
+            if (ref) pick(ref.book.id, ref.chapter, ref.verse);
+            else e.currentTarget.blur();
+          }} />
         ) : undefined
       }
     >
-      {term && visible.length === 0 && <p className="empty" style={{ padding: '32px 8px' }}>{t('noBooks')}</p>}
+      {ref && (
+        <button className="row goto" onClick={() => pick(ref.book.id, ref.chapter, ref.verse)}>
+          <span className="grow">
+            <span className="sub" style={{ display: 'block' }}>{t('goTo')}</span>
+            <span className="title">{refLabel(ref.book.name, ref.chapter, ref.verse, ref.verseEnd)}</span>
+          </span>
+          <CaretRight size={18} weight="light" color="var(--muted)" />
+        </button>
+      )}
+      {term && !ref && visible.length === 0 && <p className="empty" style={{ padding: '32px 8px' }}>{t('noBooks')}</p>}
       <ul className="book-list">
         {visible.map((b, i) => {
           const isOpen = expanded === b.id;
           return (
             <Fragment key={b.id}>
-              {showDivider(i) && <li className="divider" role="separator" />}
+              {heading(i) && <li className={`testament${i > 0 ? ' sep' : ''}`}><h3>{t(heading(i)!)}</h3></li>}
               <li ref={(el) => { rows.current[b.id] = el; }}>
                 <button
                   className={`book-row ${b.id === book ? 'cur' : ''}`}
@@ -80,11 +102,7 @@ export function NavigatorSheet() {
                         key={n}
                         className={b.id === book && n === chapter ? 'cur' : ''}
                         aria-label={`${b.name} ${n}`}
-                        onClick={() => {
-                          goTo(b.id, n);
-                          scrollTo(0, 0);
-                          close();
-                        }}
+                        onClick={() => pick(b.id, n)}
                       >
                         {n}
                       </button>
