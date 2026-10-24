@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). Each release is published from the section with its number, so add a section here when you bump `version` in `package.json`.
 
+## 1.2.6
+
+### Changed
+
+- Splash screen: the version moves to the bottom of the screen, in a lighter gray.
+
 ## 1.2.3
 
 ### Changed
