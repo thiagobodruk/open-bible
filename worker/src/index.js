@@ -16,14 +16,14 @@ const LANGS = {
 };
 
 const LIMITS = { question: 600, ref: 120, version: 80, text: 3000, history: 6, turn: 3000 };
-const DEFAULT_MODEL = 'llama-3.1-8b-instant';
+const DEFAULT_MODEL = 'openai/gpt-oss-20b';
 const DEFAULT_DAILY_LIMIT = 30;
 
 const SYSTEM = (language) =>
   [
     'You are a careful Bible study assistant inside a Bible reader app.',
     `Always answer in ${language}.`,
-    'Be brief and clear: a few short paragraphs at most, no headings and no long lists.',
+    'Keep it short: answer in 1 to 3 short paragraphs, never more, and usually in about 120 words. No headings and no lists. Start with the answer, with no introduction and no closing summary.',
     'Stay faithful to the passage the reader selected. Explain what the text says in its literary and historical context before giving an application.',
     'When a point is an interpretation or when traditions differ, say so plainly and do not present one view as the only one.',
     'If you are not sure about a fact, say that you are not sure instead of guessing. Never invent quotations, references or sources.',
@@ -83,6 +83,19 @@ export function buildMessages(body) {
   return messages;
 }
 
+/** The chat request. The gpt-oss models think before they answer, and that thinking counts against max_tokens, so keep it short and hidden. */
+export function payload(env, messages) {
+  const model = env.MODEL || DEFAULT_MODEL;
+  return {
+    model,
+    messages,
+    stream: true,
+    temperature: 0.3,
+    max_tokens: Number(env.MAX_TOKENS) || 700,
+    ...(model.includes('gpt-oss') ? { reasoning_effort: 'low', include_reasoning: false } : {}),
+  };
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -116,16 +129,14 @@ export default {
       upstream = await fetch(GROQ_URL, {
         method: 'POST',
         headers: { authorization: `Bearer ${env.GROQ_API_KEY}`, 'content-type': 'application/json' },
-        body: JSON.stringify({
-          model: env.MODEL || DEFAULT_MODEL,
-          messages,
-          stream: true,
-          temperature: 0.3,
-          max_tokens: Number(env.MAX_TOKENS) || 700,
-        }),
+        body: JSON.stringify(payload(env, messages)),
       });
     } catch {
       return json(502, 'upstream_unreachable', headers);
+    }
+    if (!upstream.ok || !upstream.body) {
+      // Only the owner sees this, in `wrangler tail` and the Cloudflare dashboard. The app gets a generic error.
+      console.error('groq', upstream.status, (await upstream.text().catch(() => '')).slice(0, 300));
     }
     if (!upstream.ok || !upstream.body) return upstream.status === 429 ? json(429, 'quota', headers) : json(502, 'upstream_error', headers);
 

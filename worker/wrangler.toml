@@ -2,13 +2,17 @@ name = "open-bible-ai"
 main = "src/index.js"
 compatibility_date = "2025-01-01"
 
+[observability]
+enabled = true
+
 [vars]
 # Comma-separated list of sites allowed to call the Worker from a browser.
 ALLOWED_ORIGINS = "https://thiagobodruk.github.io"
-# Fits the Groq free tier. For better answers try "llama-3.3-70b-versatile" (about 1,000 requests a day on the free tier).
-MODEL = "llama-3.1-8b-instant"
+# Any chat model your Groq account lists (curl https://api.groq.com/openai/v1/models). "openai/gpt-oss-120b" answers better and costs more.
+MODEL = "openai/gpt-oss-20b"
 # Questions per IP per day. Only applies when the DAILY namespace below is set up.
 DAILY_LIMIT = "30"
+# A hard cap on the answer, including the short thinking the model does first. The prompt asks for 1 to 3 short paragraphs.
 MAX_TOKENS = "700"
 
 # Per-IP rate limit. Remove this block to run without it.

@@ -18,12 +18,16 @@ npx wrangler deploy
 Edit `wrangler.toml`:
 
 - `ALLOWED_ORIGINS`: sites allowed to call the Worker from a browser. Add `http://localhost:5173` for local development.
-- `MODEL`: any Groq chat model. The default, `llama-3.1-8b-instant`, fits the Groq free tier. The free limits apply to your whole Groq organization, not per user, so a lighter model and per-IP limits keep one person from using everyone's share.
+- `MODEL`: any Groq chat model. The default, `openai/gpt-oss-20b`, is light enough for the Groq free tier. Model names change over time, so list the ones your account has with `curl https://api.groq.com/openai/v1/models -H "Authorization: Bearer $GROQ_API_KEY"`. The free limits apply to your whole Groq organization, not per user, so a lighter model and per-IP limits keep one person from using everyone's share.
 - `MAX_TOKENS`: the longest answer, in tokens.
 - `[[ratelimits]]`: requests per IP per minute (6 by default).
 - Daily limit per IP (optional): run `npx wrangler kv namespace create DAILY`, uncomment the `[[kv_namespaces]]` block in `wrangler.toml` with the id it prints, and set `DAILY_LIMIT`. Redeploy.
 
 Set a spending limit in the Groq console as well. The Worker limits the size of each request and the length of each answer, but it cannot see your total usage.
+
+## Troubleshooting
+
+When a request fails with `upstream_error`, the Worker logs the status and the start of Groq's reply (never the key). See it with `npx wrangler tail` while repeating the request, or in the Cloudflare dashboard under Workers & Pages > open-bible-ai > Logs. A `401` means the key is wrong: run `npx wrangler secret put GROQ_API_KEY` again.
 
 ## Local test
 
