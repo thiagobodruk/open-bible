@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { CaretLeft, CaretRight, List, MagnifyingGlass, NotePencil, Sparkle, TextAa } from '@phosphor-icons/react';
+import { CaretLeft, CaretRight, List, MagnifyingGlass, NotePencil, TextAa } from '@phosphor-icons/react';
 import { abbrOf, findVersion } from '../data/catalog';
 import { useBookName, useBooks, useChapter } from '../hooks';
 import { useLibrary } from '../state/library';
@@ -9,6 +9,7 @@ import { useUI } from '../state/ui';
 import { readingVars } from '../components/readingVars';
 import { SelectionBar } from '../components/SelectionBar';
 import { AskBar } from '../components/AskBar';
+import { AskFab } from '../components/AskFab';
 import { aiEnabled } from '../ai';
 import { useAsk } from '../state/ask';
 import { InstallBanner } from '../components/InstallBanner';
@@ -180,11 +181,6 @@ export function Reader() {
           </button>
           <span className="spacer" />
           <button className="icon-btn" onClick={() => open('search')} aria-label={t('search')}><MagnifyingGlass size={24} weight="light" /></button>
-          {aiEnabled && (
-            <button className={`icon-btn${askBar ? ' on' : ''}`} onClick={() => useAsk.getState().toggleBar()} aria-pressed={askBar} aria-label={t('ask')}>
-              <Sparkle size={24} weight={askBar ? 'fill' : 'light'} />
-            </button>
-          )}
           <button className="icon-btn" onClick={() => open('text')} aria-label={t('textSettings')}><TextAa size={24} weight="light" /></button>
           <button className="icon-btn" onClick={() => open('menu')} aria-label={t('menu')}><List size={24} weight="light" /></button>
         </div>
@@ -243,6 +239,7 @@ export function Reader() {
       <InstallBanner hidden={blocked || listenStatus !== 'idle'} hold={hint} />
       {hasSelection && !sheet && !askBar && <SelectionBar />}
       {askBar && !sheet && <AskBar />}
+      {aiEnabled && !askBar && !hasSelection && !sheet && <AskFab />}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { PaperPlaneTilt, Sparkle } from '@phosphor-icons/react';
+import { PaperPlaneTilt } from '@phosphor-icons/react';
+import { Sheet } from './Sheet';
 import { consented, setConsented, type AiPassage } from '../ai';
 import { useAsk } from '../state/ask';
 import { useStudy } from '../state/study';
@@ -19,6 +20,7 @@ export function AskBar() {
   const versionId = useSettings((s) => s.versionId);
   const uiLang = useSettings((s) => s.uiLang);
   const open = useUI((s) => s.open);
+  const closeBar = useAsk((s) => s.closeBar);
   const bookName = useBookName();
   const text = useChapter(book, chapter);
   const [question, setQuestion] = useState('');
@@ -45,34 +47,37 @@ export function AskBar() {
 
   if (!accepted) {
     return (
-      <div className="ask-bar" role="region" aria-label={t('askTitle')}>
-        <p className="ask-notice">{t('askNotice')}</p>
-        <button className="btn primary block" onClick={() => { setConsented(); setAccepted(true); }}>{t('askAccept')}</button>
-      </div>
+      <Sheet modeless title={t('askTitle')} onClose={closeBar}>
+        <div className="ask-body">
+          <p className="ask-notice">{t('askNotice')}</p>
+          <button className="btn primary block" onClick={() => { setConsented(); setAccepted(true); }}>{t('askAccept')}</button>
+        </div>
+      </Sheet>
     );
   }
 
   return (
-    <div className="ask-bar" role="region" aria-label={t('askTitle')}>
-      <div className="ask-ctx"><Sparkle size={16} weight="fill" /><span>{ref}</span></div>
-      <div className="ask-chips">
-        <button className="chip-btn" onClick={() => ask(t('askExplainQ'))}>{t('askExplain')}</button>
-        <button className="chip-btn" onClick={() => ask(t('askContextQ'))}>{t('askContext')}</button>
-        <button className="chip-btn" onClick={() => ask(t('askApplyQ'))}>{t('askApply')}</button>
+    <Sheet modeless title={ref} onClose={closeBar}>
+      <div className="ask-body">
+        <div className="ask-chips">
+          <button className="chip-btn" onClick={() => ask(t('askExplainQ'))}>{t('askExplain')}</button>
+          <button className="chip-btn" onClick={() => ask(t('askContextQ'))}>{t('askContext')}</button>
+          <button className="chip-btn" onClick={() => ask(t('askApplyQ'))}>{t('askApply')}</button>
+        </div>
+        <form className="ask-form" onSubmit={(e) => { e.preventDefault(); ask(question); }}>
+          <input
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            placeholder={t('askPlaceholder')}
+            aria-label={t('askPlaceholder')}
+            maxLength={600}
+            enterKeyHint="send"
+          />
+          <button type="submit" className="ask-send" disabled={!question.trim() || !verses.length} aria-label={t('askSend')}>
+            <PaperPlaneTilt size={20} weight="fill" />
+          </button>
+        </form>
       </div>
-      <form className="ask-form" onSubmit={(e) => { e.preventDefault(); ask(question); }}>
-        <input
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder={t('askPlaceholder')}
-          aria-label={t('askPlaceholder')}
-          maxLength={600}
-          enterKeyHint="send"
-        />
-        <button type="submit" className="ask-send" disabled={!question.trim() || !verses.length} aria-label={t('askSend')}>
-          <PaperPlaneTilt size={20} weight="fill" />
-        </button>
-      </form>
-    </div>
+    </Sheet>
   );
 }
