@@ -28,7 +28,7 @@ const CLOSE_DISTANCE = 110; // px arrastados para fechar
 const CLOSE_VELOCITY = 0.6; // px/ms
 const ANIM = 180;
 
-/** Bottom sheet padrão. Fecha ao arrastar para baixo, tocar fora (se houver fundo) ou com Esc. Não tem botão ×. */
+/** Bottom sheet padrão. Fecha ao arrastar para baixo, tocar fora (se houver fundo) ou com Esc. O botão × fica visível no desktop e só para teclado e leitor de tela no celular. */
 export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, leading, trailing, tall, pinned, footer, compact, modeless }: Props) {
   const t = useT();
   const ref = useRef<HTMLDivElement>(null);
@@ -39,7 +39,26 @@ export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, lea
   useEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
     if (!modeless) ref.current?.focus();
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && close.current();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') return close.current();
+      if (e.key !== 'Tab' || modeless || !ref.current) return;
+      // Foco preso: Tab circula dentro do sheet em vez de ir para a página atrás.
+      const items = [...ref.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])')];
+      if (items.length === 0) return e.preventDefault();
+      const first = items[0];
+      const last = items[items.length - 1];
+      const at = document.activeElement;
+      if (!ref.current.contains(at) || at === ref.current) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      } else if (e.shiftKey && at === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && at === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
     addEventListener('keydown', onKey);
     return () => {
       removeEventListener('keydown', onKey);

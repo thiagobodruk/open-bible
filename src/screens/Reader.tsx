@@ -31,6 +31,8 @@ export function Reader() {
   const askBar = useAsk((s) => s.bar) && aiEnabled;
   const [barMini, setBarMini] = useState(false);
   const [hint, setHint] = useState(false);
+  /** Versículo que recebe o Tab: só um por capítulo, as setas movem entre eles. */
+  const [tabV, setTabV] = useState(1);
   const [dir, setDir] = useState<'next' | 'prev' | null>(null);
   const touch = useRef<{ x: number; y: number } | null>(null);
 
@@ -74,6 +76,8 @@ export function Reader() {
     if (l.status !== 'idle' && !l.advancing) stop();
   }, [book, chapter]);
 
+  useEffect(() => setTabV(1), [book, chapter]);
+
   useEffect(() => {
     if (!advancing) return;
     if (text.status === 'ready' && verses.length) resume(verses, versionInfo?.lang ?? 'en');
@@ -89,7 +93,7 @@ export function Reader() {
     const el = document.getElementById(`v-${listenVerse}`);
     if (!el) return;
     const r = el.getBoundingClientRect();
-    if (r.top < 110 || r.bottom > innerHeight - 110) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    if (r.top < 110 || r.bottom > innerHeight - 110) el.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }, [listenVerse]);
 
   // Barra retrátil: some ao rolar para baixo, volta ao rolar para cima.
@@ -213,11 +217,29 @@ export function Reader() {
             const hl = highlights[vkey(book, chapter, v)];
             const cls = ['verse', hl ? `hl c-${hl.color}` : '', selection.includes(v) ? 'sel' : '', listenStatus !== 'idle' && listenVerse === v ? 'speaking' : ''].join(' ');
             return (
-              <span key={v} data-v={v} className="verse-wrap">
+              <span
+                key={v}
+                data-v={v}
+                className="verse-wrap"
+                role="button"
+                tabIndex={v === Math.min(tabV, verses.length) ? 0 : -1}
+                aria-pressed={selection.includes(v)}
+                onFocus={() => setTabV(v)}
+                onKeyDown={(e) => {
+                  if (e.target !== e.currentTarget) return;
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleVerse(v);
+                  } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    document.getElementById(`v-${v + (e.key === 'ArrowDown' ? 1 : -1)}`)?.parentElement?.focus();
+                  }
+                }}
+              >
                 <span id={`v-${v}`} className={cls}>
                   <span className="vn">{v}</span>
                   {text}
-                  {noteAt(v) && <NotePencil className="note-mark" size={14} weight="fill" aria-label={t('hasNote')} />}
+                  {noteAt(v) && <NotePencil className="note-mark" size={14} weight="fill" role="img" aria-label={t('hasNote')} />}
                 </span>{' '}
               </span>
             );
