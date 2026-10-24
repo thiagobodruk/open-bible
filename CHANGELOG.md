@@ -2,6 +2,13 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.2.6
+
+### Changed
+
+- Feedback: the buttons now match the rest of the app (no underline on "Continue on GitHub") and have icons.
+- Copy and Share: the verse numbers are no longer included in the text.
+
 ## 1.2.5
 
 ### Changed
