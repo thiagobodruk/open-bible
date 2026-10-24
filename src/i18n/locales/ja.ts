@@ -199,6 +199,7 @@ const ja: Messages = {
   retryDownload: '再試行: {name}',
   downloadVersion: '{name} をダウンロード',
   versionToast: '訳: {abbr}',
+  versionDownloaded: '{abbr} をダウンロードして切り替えました',
   libraryFooter: 'thiagobodruk/bible リポジトリの {n} 訳。それぞれ一度ダウンロードすれば、インターネットなしで使えます。',
   offlineShort: '接続がありません。接続してからダウンロードしてください。',
 

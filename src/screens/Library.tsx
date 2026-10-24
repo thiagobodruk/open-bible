@@ -59,13 +59,13 @@ export function Library() {
     );
   }, [q, names, uiLang, installed]);
 
-  const choose = (id: string) => {
+  const choose = (id: string, key: 'versionToast' | 'versionDownloaded' = 'versionToast') => {
     set('versionId', id);
-    notify(t('versionToast', { abbr: abbrOf(id) }));
+    notify(t(key, { abbr: abbrOf(id) }));
   };
 
   const get = async (id: string) => {
-    if (await download(id)) choose(id);
+    if (await download(id)) choose(id, 'versionDownloaded');
     else notify(navigator.onLine ? t('downloadError') : t('offlineShort'));
   };
 
