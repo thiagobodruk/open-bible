@@ -2,6 +2,18 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.6.0
+
+### Added
+
+- Dictate your question to the AI with the microphone.
+- Bottom sheets have a × button on desktop.
+
+### Changed
+
+- The AI prompt is lower and shows the passage as a pill inside the field.
+- The AI prompt shortcut "Apply" is now "Practical".
+
 ## 1.5.1
 
 ### Changed
