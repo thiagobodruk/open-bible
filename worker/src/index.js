@@ -132,7 +132,7 @@ export default {
 
     let upstream;
     try {
-      upstream = await fetch(GROQ_URL, {
+      upstream = await fetch(env.API_URL || GROQ_URL, {
         method: 'POST',
         headers: { authorization: `Bearer ${env.GROQ_API_KEY}`, 'content-type': 'application/json' },
         body: JSON.stringify(payload(env, messages)),
