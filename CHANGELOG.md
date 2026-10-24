@@ -2,6 +2,30 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.7.6
+
+### Changed
+
+- Search shows whole-word matches first, then word starts, then the rest ("amor" no longer opens on "amorreus").
+- Search shows how many results exist ("100 of 515") with a Show more button, instead of stopping at 200 in book order.
+- Enter in the search field opens a recognized reference (like jo 3:16) or closes the keyboard to show the results.
+- Search explains the 2-letter minimum and suggests what to try when nothing is found.
+- The books list names the Old and New Testament instead of a bare line.
+- The chapter grid has 6 columns of 44 px buttons, so long books like Psalms take less scrolling.
+- Typing a reference such as "ps 23" in the book search offers to go straight to that chapter, and Enter opens it.
+- Choosing a version in the Library takes you back to the text.
+
+### Fixed
+
+- Sheets keep the keyboard focus inside them, and the close button is reachable by keyboard and screen reader on phones.
+- The Back button (Android) and the browser Back close the open sheet instead of leaving the screen.
+- Verses can be selected with the keyboard (Tab to the text, arrows to move, Enter or Space to select) and announce their state to screen readers.
+- The book and version chips have a 44 px touch area.
+- Better contrast for the sepia theme and for subtle verse numbers.
+- The reading-aloud follow scroll respects the reduced motion setting.
+- Menu items (My study, Library, Settings) open again instead of returning to the text.
+- The address bar follows the chapter after opening a search result or picking a chapter.
+
 ## 1.7.5
 
 ### Added
