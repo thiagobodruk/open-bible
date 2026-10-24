@@ -43,8 +43,6 @@ const ptBR: Messages = {
   askExplainQ: 'Explique esta passagem em linguagem simples.',
   askContextQ: 'Qual é o contexto histórico e literário desta passagem?',
   askSummaryQ: 'Resuma esta passagem em poucas frases.',
-  askNotice: 'Pergunte sobre o texto para a IA. Sua pergunta e o trecho são enviados à Groq, e ela pode cometer erros.',
-  askAccept: 'Entendi',
   askDisclaimer: "A IA pode cometer erros. Sempre confira as respostas.",
   askError: 'Não foi possível obter a resposta. Tente de novo.',
   askOffline: 'Você está offline. Conecte-se para perguntar à IA.',

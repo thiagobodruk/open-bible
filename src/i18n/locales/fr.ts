@@ -43,8 +43,6 @@ const fr: Messages = {
   askExplainQ: 'Explique ce passage en termes simples.',
   askContextQ: 'Quel est le contexte historique et littéraire de ce passage ?',
   askSummaryQ: 'Résume ce passage en quelques phrases.',
-  askNotice: "Posez vos questions à l'IA sur le texte. Votre question et le passage sont envoyés à Groq, et l'IA peut se tromper.",
-  askAccept: 'Compris',
   askDisclaimer: "L'IA peut faire des erreurs. Vérifiez toujours les réponses.",
   askError: "Impossible d'obtenir une réponse. Réessayez.",
   askOffline: "Vous êtes hors ligne. Connectez-vous pour interroger l'IA.",

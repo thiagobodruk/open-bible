@@ -24,25 +24,6 @@ export class AiError extends Error {
   }
 }
 
-const CONSENT = 'ob:ai-consent';
-
-/** O aviso de que a pergunta e o trecho vão para um serviço de IA aparece até o usuário aceitar. */
-export function consented(): boolean {
-  try {
-    return localStorage.getItem(CONSENT) === '1';
-  } catch {
-    return false;
-  }
-}
-
-export function setConsented() {
-  try {
-    localStorage.setItem(CONSENT, '1');
-  } catch {
-    /* sem armazenamento: o aviso volta na próxima vez */
-  }
-}
-
 interface Request {
   question: string;
   passage: AiPassage;
