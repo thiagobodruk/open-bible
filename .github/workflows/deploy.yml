@@ -1,8 +1,7 @@
 name: Deploy to GitHub Pages
 
+# Started by the Release workflow after each merge (pushes made with the default token do not trigger workflows).
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

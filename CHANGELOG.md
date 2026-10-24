@@ -1,6 +1,6 @@
 # Changelog
 
-Versions follow [SemVer](https://semver.org/). Each release is published from the section with its number, so add a section here when you bump `version` in `package.json`.
+Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow when a PR is merged, from the PR's `## Changelog` section. Do not edit it in a PR.
 
 ## 1.2.4
 
