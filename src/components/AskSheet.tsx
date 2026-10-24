@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef } from 'react';
-import { ArrowClockwise, Copy, Sparkle } from '@phosphor-icons/react';
+import { ArrowClockwise, Copy, Sparkle, WarningCircle } from '@phosphor-icons/react';
 import { PromptField } from './PromptField';
 import { Sheet } from './Sheet';
 import { useAsk } from '../state/ask';
@@ -73,7 +73,10 @@ export function AskSheet() {
           </div>
         ))}
         {answer?.role === 'assistant' && answer.content && !busy && status !== 'error' && (
-          <p className="ask-note">{t('askDisclaimer')}</p>
+          <p className="ask-note">
+            <WarningCircle size={14} weight="regular" aria-hidden="true" />
+            {t('askDisclaimer')}
+          </p>
         )}
         {status === 'error' && (
           <div className="ask-error" role="alert">

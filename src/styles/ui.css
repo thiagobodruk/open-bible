@@ -221,7 +221,8 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .ask-msg.assistant { font-family: var(--font-serif); font-size: 17px; }
 .ask-error { display: grid; gap: 10px; justify-items: start; color: var(--danger); font-size: 15px; }
 .ask-foot { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
-.ask-note { margin-top: -6px; font-size: 11px; line-height: 1.4; color: var(--muted); }
+.ask-note { display: flex; align-items: center; gap: 6px; margin-top: -6px; font-size: 11px; line-height: 1.4; color: var(--muted); }
+.ask-note svg { flex: none; }
 .ask-dots { display: inline-block; width: 36px; height: 8px; background: radial-gradient(circle, var(--muted) 3px, transparent 3.5px) 0 50% / 12px 8px repeat-x; animation: ask-pulse 1s ease-in-out infinite; }
 @keyframes ask-pulse { 50% { opacity: 0.3; } }
 @media (prefers-reduced-motion: reduce) { .ask-dots { animation: none; } }
