@@ -1,15 +1,19 @@
-// Bumps the version after a PR is merged, using the PR's labels and its "Changelog" section.
-// Input (env): LABELS (comma separated), TITLE, BODY. Prints the new version to stdout.
+// Cuts a release from the PRs merged since the last version.
+// Input: prs.json, a list of { number, title, body, labels } (labels is a list of names). Prints the new version, or nothing if there is nothing to release.
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const labels = (process.env.LABELS ?? '').split(',').map((l) => l.trim().toLowerCase());
-const level = labels.includes('major') ? 'major' : labels.includes('minor') ? 'minor' : 'patch';
+const prs = JSON.parse(readFileSync('prs.json', 'utf8')).filter((p) => !p.labels.includes('no-release'));
+if (!prs.length) process.exit(0);
+
+// The highest label wins: major > minor > patch (the default).
+const has = (name) => prs.some((p) => p.labels.map((l) => l.toLowerCase()).includes(name));
+const level = has('major') ? 'major' : has('minor') ? 'minor' : 'patch';
 
 const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
 const [maj, min, pat] = pkg.version.split('.').map(Number);
 const next = level === 'major' ? `${maj + 1}.0.0` : level === 'minor' ? `${maj}.${min + 1}.0` : `${maj}.${min}.${pat + 1}`;
 
-/** Text under "## Changelog" in the PR body, up to the next "## " heading or the attribution footer. */
+/** Text under "## Changelog" in a PR body, up to the next "## " heading or the attribution footer. */
 function changelogOf(body) {
   const lines = (body ?? '').replace(/\r/g, '').split('\n');
   const start = lines.findIndex((l) => /^##\s+changelog\s*$/i.test(l));
@@ -22,9 +26,23 @@ function changelogOf(body) {
   return out.join('\n').trim();
 }
 
-let notes = changelogOf(process.env.BODY);
-if (!notes) notes = `- ${process.env.TITLE ?? 'Update'}`;
-if (!/^###\s/m.test(notes)) notes = `### Changed\n\n${notes}`;
+// Joins the Changelog sections of all PRs, grouped under one heading each (Added, Changed, Fixed, then any other).
+const groups = new Map();
+for (const p of prs) {
+  let text = changelogOf(p.body) || `- ${p.title}`;
+  if (!/^###\s/m.test(text)) text = `### Changed\n\n${text}`;
+  let heading = 'Changed';
+  for (const line of text.split('\n')) {
+    const h = line.match(/^###\s+(.*\S)\s*$/);
+    if (h) { heading = h[1]; continue; }
+    if (!line.trim()) continue;
+    if (!groups.has(heading)) groups.set(heading, []);
+    groups.get(heading).push(line);
+  }
+}
+const order = ['Added', 'Changed', 'Fixed'];
+const names = [...order.filter((n) => groups.has(n)), ...[...groups.keys()].filter((n) => !order.includes(n))];
+const notes = names.map((n) => `### ${n}\n\n${groups.get(n).join('\n')}`).join('\n\n');
 
 pkg.version = next;
 writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
