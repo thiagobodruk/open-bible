@@ -178,10 +178,10 @@ export function Reader() {
             <span>{bName} {chapter}</span>
             <CaretDown size={14} weight="bold" />
           </button>
-          <span className="spacer" />
           <button className="ver-chip" onClick={() => go('/library')} aria-label={t('chooseVersion')}>
             {abbrOf(settings.versionId)}
           </button>
+          <span className="spacer" />
           <button className="icon-btn" onClick={() => open('search')} aria-label={t('search')}><MagnifyingGlass size={24} weight="light" /></button>
           {listenSupported() && (
             <button className={`icon-btn${listenStatus !== 'idle' ? ' on' : ''}`} onClick={toggleListen} aria-pressed={listenStatus !== 'idle'} aria-label={listenStatus !== 'idle' ? t('listenStop') : t('listen')}>
