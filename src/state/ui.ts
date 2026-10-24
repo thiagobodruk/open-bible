@@ -41,8 +41,9 @@ export const useUI = create<UIStore>((set) => ({
     const wasPushed = pushed;
     pushed = false;
     set({ sheet: null });
-    // Só desfaz a entrada se ela ainda é a atual; se a rota mudou antes, não há o que voltar.
-    if (wasPushed && history.state?.ob === 'sheet') history.back();
+    // Quem fecha o sheet costuma navegar logo depois (close(); go(rota)). Por isso o back() espera esse trecho síncrono
+    // e só desfaz a entrada se ela ainda é a atual; se a rota mudou, a navegação vale e não há o que voltar.
+    if (wasPushed) queueMicrotask(() => history.state?.ob === 'sheet' && history.back());
   },
   notify: (message, action) => {
     clearTimeout(timer);
