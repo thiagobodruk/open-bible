@@ -1,0 +1,24 @@
+name = "open-bible-ai"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+# Comma-separated list of sites allowed to call the Worker from a browser.
+ALLOWED_ORIGINS = "https://thiagobodruk.github.io"
+# Fits the Groq free tier. For better answers try "llama-3.3-70b-versatile" (about 1,000 requests a day on the free tier).
+MODEL = "llama-3.1-8b-instant"
+# Questions per IP per day. Only applies when the DAILY namespace below is set up.
+DAILY_LIMIT = "30"
+MAX_TOKENS = "700"
+
+# Per-IP rate limit. Remove this block to run without it.
+[[ratelimits]]
+name = "LIMITER"
+namespace_id = "1001"
+simple = { limit = 6, period = 60 }
+
+# Optional daily limit per IP. Create the namespace with `npx wrangler kv namespace create DAILY`,
+# then uncomment this block and paste the id it prints.
+# [[kv_namespaces]]
+# binding = "DAILY"
+# id = "PASTE_THE_ID_HERE"
