@@ -20,8 +20,21 @@
         document.documentElement.dataset.theme = t;
       } catch (e) {}
     </script>
+    <style>
+      /* Splash: vive no HTML para aparecer antes de o JavaScript carregar. */
+      #splash { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; color: #1d2027; background: #faf9f7; transition: opacity 0.3s ease; }
+      :root[data-theme='sepia'] #splash { background: #f3ead8; color: #3a2f22; }
+      :root[data-theme='dark'] #splash { background: #14161b; color: #e4e6eb; }
+      #splash small { margin-top: -12px; font: 500 13px/1 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif; opacity: 0.55; }
+      #splash span { font: 700 26px/1 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif; letter-spacing: -0.01em; }
+      #splash.hide { opacity: 0; pointer-events: none; }
+      #splash img { width: 96px; height: 96px; animation: splash-pulse 1.6s ease-in-out infinite; }
+      @keyframes splash-pulse { 0%, 100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.06); opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { #splash img { animation: none; } #splash { transition: none; } }
+    </style>
   </head>
   <body>
+    <div id="splash" aria-hidden="true"><img src="/open-bible/icons/icon-192.png" alt="" width="96" height="96" /><span>Open Bible</span><small>v%APP_VERSION%</small></div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -22,3 +22,15 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 );
+
+/** Tira a splash quando o app já desenhou e as fontes carregaram (no máximo 1,5 s de espera). */
+const splash = document.getElementById('splash');
+if (splash) {
+  const fonts = document.fonts ? document.fonts.ready.then(() => undefined) : Promise.resolve();
+  void Promise.race([fonts, new Promise((r) => setTimeout(r, 1500))]).then(() =>
+    requestAnimationFrame(() => {
+      splash.classList.add('hide');
+      setTimeout(() => splash.remove(), 400);
+    }),
+  );
+}

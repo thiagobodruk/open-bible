@@ -16,6 +16,12 @@ const versionFile: Plugin = {
   },
 };
 
+// Preenche a versão na splash, que vive no index.html e aparece antes do JavaScript.
+const htmlVersion: Plugin = {
+  name: 'html-version',
+  transformIndexHtml: (html) => html.replace('%APP_VERSION%', pkg.version),
+};
+
 // GitHub Pages devolve 404.html para caminhos desconhecidos. Com o mesmo conteúdo do index, links como /open-bible/pt_nvi/jn/3 abrem o app.
 const spaFallback: Plugin = {
   name: 'spa-fallback',
@@ -35,6 +41,7 @@ export default defineConfig({
     react(),
     spaFallback,
     versionFile,
+    htmlVersion,
     VitePWA({
       registerType: 'prompt',
       includeAssets: ['icons/apple-touch-icon.png', 'icons/favicon-64.png'],
