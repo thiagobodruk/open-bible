@@ -199,6 +199,7 @@ const es: Messages = {
   retryDownload: 'Reintentar: {name}',
   downloadVersion: 'Descargar {name}',
   versionToast: 'Versión: {abbr}',
+  versionDownloaded: '{abbr} descargada y activada',
   libraryFooter: '{n} versiones del repositorio thiagobodruk/bible. Cada una se descarga una vez y luego funciona sin internet.',
   offlineShort: 'Sin conexión. Conéctate para descargar.',
 

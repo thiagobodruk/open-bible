@@ -199,6 +199,7 @@ const ptBR: Messages = {
   retryDownload: 'Tentar de novo: {name}',
   downloadVersion: 'Baixar {name}',
   versionToast: 'Versão: {abbr}',
+  versionDownloaded: '{abbr} baixada e ativada',
   libraryFooter: '{n} versões do repositório thiagobodruk/bible. Cada uma é baixada uma vez e depois funciona sem internet.',
   offlineShort: 'Sem conexão. Conecte-se para baixar.',
 

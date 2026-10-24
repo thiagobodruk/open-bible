@@ -199,6 +199,7 @@ const zhCN: Messages = {
   retryDownload: '重试：{name}',
   downloadVersion: '下载 {name}',
   versionToast: '译本：{abbr}',
+  versionDownloaded: '已下载并切换到{abbr}',
   libraryFooter: '来自 thiagobodruk/bible 仓库的 {n} 个译本。每个译本只需下载一次，之后无需联网即可使用。',
   offlineShort: '没有网络连接，请联网后下载。',
 

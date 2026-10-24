@@ -197,6 +197,7 @@ const en = {
   retryDownload: 'Try again: {name}',
   downloadVersion: 'Download {name}',
   versionToast: 'Version: {abbr}',
+  versionDownloaded: '{abbr} downloaded and in use',
   libraryFooter: '{n} versions from the thiagobodruk/bible repository. Each one is downloaded once and then works without internet.',
   offlineShort: 'No connection. Connect to download.',
 
