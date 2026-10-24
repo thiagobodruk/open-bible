@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.6.3
+
+### Changed
+
+- Ao arrastar a resposta da IA para baixo, ela desliza até o prompt compacto em vez de fechar e só depois mostrar o prompt.
+
 ## 1.6.2
 
 ### Changed
