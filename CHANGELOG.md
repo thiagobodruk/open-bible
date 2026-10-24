@@ -2,6 +2,13 @@
 
 Versions follow [SemVer](https://semver.org/). Each release is published from the section with its number, so add a section here when you bump `version` in `package.json`.
 
+## 1.2.2
+
+### Changed
+
+- The splash screen now stays visible for at least 1.5 seconds.
+- On the first screen, the download button and the "Choose another version" button have the same width.
+
 ## 1.2.1
 
 ### Changed
