@@ -203,6 +203,10 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .ask-row { display: flex; align-items: center; gap: 8px; }
 .ask-row input { flex: 1; min-width: 0; height: 40px; padding: 0 4px; border: 0; background: none; font-size: 16px; color: var(--fg); outline: 0; }
 .ask-row .ask-send { width: 40px; height: 40px; }
+.ask-mic { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; color: var(--muted); }
+.ask-mic:hover { background: var(--surface-2); }
+.ask-mic.on { color: var(--accent-fg); background: var(--accent); animation: ask-pulse 1.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .ask-mic.on { animation: none; } }
 .ask-send { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--accent); color: var(--accent-fg); }
 .ask-send:disabled { opacity: 0.35; }
 .ask-notice { font-size: 14px; line-height: 1.5; color: var(--muted); }

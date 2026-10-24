@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { BookOpenText, PaperPlaneTilt, Sparkle, X } from '@phosphor-icons/react';
+import { useEffect, useRef, useState } from 'react';
+import { BookOpenText, Microphone, PaperPlaneTilt, Sparkle, X } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { consented, setConsented, type AiPassage } from '../ai';
 import { useAsk } from '../state/ask';
@@ -9,9 +9,19 @@ import { useUI } from '../state/ui';
 import { abbrOf } from '../data/catalog';
 import { useBookName, useChapter } from '../hooks';
 import { refLabel } from '../ref';
+import { dictationSupported, startDictation } from '../stt';
 import { useT } from '../i18n';
 
 const MAX_TEXT = 3000;
+const MIC_NOTICE = 'ob:stt-notice';
+
+const noticeSeen = () => {
+  try {
+    return localStorage.getItem(MIC_NOTICE) === '1';
+  } catch {
+    return true;
+  }
+};
 
 /** Barra de pergunta no rodapé do leitor. O contexto é a seleção ou, sem seleção, o capítulo inteiro. */
 export function AskBar() {
@@ -20,11 +30,38 @@ export function AskBar() {
   const versionId = useSettings((s) => s.versionId);
   const uiLang = useSettings((s) => s.uiLang);
   const open = useUI((s) => s.open);
+  const notify = useUI((s) => s.notify);
   const closeBar = useAsk((s) => s.closeBar);
   const bookName = useBookName();
   const text = useChapter(book, chapter);
   const [question, setQuestion] = useState('');
   const [accepted, setAccepted] = useState(consented);
+  const [listening, setListening] = useState(false);
+  const stopRef = useRef<(() => void) | null>(null);
+
+  useEffect(() => () => stopRef.current?.(), []);
+
+  const toggleMic = () => {
+    if (listening) return stopRef.current?.();
+    if (!noticeSeen()) {
+      notify(t('sttNotice'));
+      try {
+        localStorage.setItem(MIC_NOTICE, '1');
+      } catch {
+        /* o aviso volta na próxima vez */
+      }
+    }
+    const base = question.trim();
+    stopRef.current = startDictation(uiLang, {
+      onText: (spoken) => setQuestion(base ? `${base} ${spoken}` : spoken),
+      onEnd: () => {
+        setListening(false);
+        stopRef.current = null;
+      },
+      onError: (kind) => notify(t(kind === 'denied' ? 'sttDenied' : kind === 'network' ? 'sttNetwork' : 'sttFailed')),
+    });
+    setListening(stopRef.current !== null);
+  };
 
   const verses = text.status === 'ready' ? text.verses : [];
   const numbers = selection.length ? selection : verses.map((_, i) => i + 1);
@@ -40,6 +77,7 @@ export function AskBar() {
       version: abbrOf(versionId),
       text: numbers.map((n) => `${n} ${verses[n - 1]}`).join('\n').slice(0, MAX_TEXT),
     };
+    stopRef.current?.();
     useAsk.getState().start(asked, passage, uiLang);
     setQuestion('');
     open('ask');
@@ -83,6 +121,17 @@ export function AskBar() {
               maxLength={600}
               enterKeyHint="send"
             />
+            {dictationSupported() && (
+              <button
+                type="button"
+                className={`ask-mic${listening ? ' on' : ''}`}
+                onClick={toggleMic}
+                aria-pressed={listening}
+                aria-label={listening ? t('askMicStop') : t('askMic')}
+              >
+                <Microphone size={22} weight="regular" />
+              </button>
+            )}
             <button type="submit" className="ask-send" disabled={!question.trim() || !verses.length} aria-label={t('askSend')}>
               <PaperPlaneTilt size={20} weight="fill" />
             </button>
