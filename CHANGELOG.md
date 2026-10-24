@@ -2,12 +2,6 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow when a PR is merged, from the PR's `## Changelog` section. Do not edit it in a PR.
 
-## 1.2.6
-
-### Changed
-
-- Splash screen: the version moves to the bottom of the screen, in a lighter gray, and the minimum time goes back to 1.2 seconds.
-
 ## 1.2.3
 
 ### Changed
