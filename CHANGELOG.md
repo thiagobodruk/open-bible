@@ -2,6 +2,16 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.3.2
+
+### Changed
+
+- Reading header: book and chapter in a pill, with the version next to it.
+
+### Fixed
+
+- Search: results no longer scroll behind the search field.
+
 ## 1.3.1
 
 ### Changed
