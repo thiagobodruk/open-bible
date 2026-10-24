@@ -90,7 +90,10 @@ const es: Messages = {
   searchEmptyHint: 'Busca en el texto de la versión {abbr}, en este mismo dispositivo.',
   searchPreparing: 'Preparando la búsqueda…',
   searchNone: 'Ningún versículo con “{q}”.',
-  searchTruncated: 'Mostrando los primeros {n} resultados',
+  searchShown: 'Mostrando {n} de {total} resultados',
+  searchMore: 'Mostrar más',
+  searchMin: 'Escribe al menos {n} letras',
+  searchNoneHint: 'Prueba con otra palabra o una referencia.',
   result_one: '{n} resultado',
   result_other: '{n} resultados',
 

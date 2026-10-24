@@ -90,7 +90,10 @@ const ptBR: Messages = {
   searchEmptyHint: 'Busca no texto da versão {abbr}, direto neste aparelho.',
   searchPreparing: 'Preparando a busca…',
   searchNone: 'Nenhum versículo com “{q}”.',
-  searchTruncated: 'Mostrando os primeiros {n} resultados',
+  searchShown: 'Mostrando {n} de {total} resultados',
+  searchMore: 'Mostrar mais',
+  searchMin: 'Digite ao menos {n} letras',
+  searchNoneHint: 'Tente outra palavra ou uma referência.',
   result_one: '{n} resultado',
   result_other: '{n} resultados',
 

@@ -5,7 +5,7 @@ import { Sheet } from './Sheet';
 import { loadSearchIndex, type IndexedChapter } from '../data/bible';
 import { abbrOf } from '../data/catalog';
 import { useBookName, useBooks } from '../hooks';
-import { minChars, MAX_HITS, parseReference, searchVerses, type Hit } from '../search';
+import { minChars, PAGE_SIZE, parseReference, searchVerses, type Hit } from '../search';
 import { useSettings } from '../state/settings';
 import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
@@ -31,6 +31,7 @@ export function SearchSheet() {
   const versionId = useSettings((s) => s.versionId);
   const [q, setQ] = useState('');
   const dq = useDeferredValue(q);
+  const [limit, setLimit] = useState(PAGE_SIZE);
 
   const books = useBooks();
   const bookName = useBookName();
@@ -47,17 +48,11 @@ export function SearchSheet() {
   }, [versionId]);
 
   const ref = useMemo(() => parseReference(dq, books), [dq, books]);
-  const { hits, truncated } = useMemo(() => searchVerses(dq, chapters ?? []), [dq, chapters]);
+  const hits = useMemo(() => searchVerses(dq, chapters ?? []), [dq, chapters]);
+  const shown = hits.slice(0, limit);
 
-  const groups = useMemo(() => {
-    const out: { book: string; items: Hit[] }[] = [];
-    for (const h of hits) {
-      const last = out[out.length - 1];
-      if (last && last.book === h.book) last.items.push(h);
-      else out.push({ book: h.book, items: [h] });
-    }
-    return out;
-  }, [hits]);
+  // Nova busca volta para a primeira página.
+  useEffect(() => setLimit(PAGE_SIZE), [dq, chapters]);
 
   const open = (book: string, chapter: number, verse?: number) => {
     goTo(book, chapter, verse);
@@ -67,6 +62,7 @@ export function SearchSheet() {
   };
 
   const typed = dq.trim().length >= minChars(dq);
+  const tooShort = !typed && dq.trim().length > 0;
 
   return (
     <Sheet
@@ -84,6 +80,13 @@ export function SearchSheet() {
           enterKeyHint="search"
           autoCapitalize="none"
           autoCorrect="off"
+          onKeyDown={(e) => {
+            if (e.key !== 'Enter') return;
+            e.preventDefault();
+            // Referência reconhecida abre a passagem; senão recolhe o teclado para mostrar os resultados.
+            if (ref) open(ref.book.id, ref.chapter, ref.verse);
+            else e.currentTarget.blur();
+          }}
         />
       }
     >
@@ -100,7 +103,7 @@ export function SearchSheet() {
       {!typed && !ref && (
         <div className="empty" style={{ padding: '40px 8px' }}>
           <MagnifyingGlass size={36} weight="light" />
-          <p>{t('searchEmpty')}</p>
+          <p>{tooShort ? t('searchMin', { n: minChars(dq) }) : t('searchEmpty')}</p>
           <p style={{ fontSize: 13, marginTop: 8 }}>{t('searchEmptyHint', { abbr: abbrOf(versionId) })}</p>
         </div>
       )}
@@ -110,25 +113,26 @@ export function SearchSheet() {
       {typed && chapters !== null && hits.length === 0 && !ref && (
         <div className="empty" style={{ padding: '40px 8px' }}>
           <p>{t('searchNone', { q: dq.trim() })}</p>
+          <p style={{ fontSize: 13, marginTop: 8 }}>{t('searchNoneHint')}</p>
         </div>
       )}
 
       {hits.length > 0 && (
         <>
           <p className="hint" role="status">
-            {truncated ? t('searchTruncated', { n: MAX_HITS }) : t.n('result', hits.length)}
+            {shown.length < hits.length ? t('searchShown', { n: shown.length, total: hits.length }) : t.n('result', hits.length)}
           </p>
-          {groups.map((g) => (
-            <section key={g.book}>
-              <h3 className="book-title" style={{ position: 'static', fontSize: 17, padding: '14px 0 2px' }}>{bookName(g.book)}</h3>
-              {g.items.map((h) => (
-                <button key={`${h.chapter}.${h.verse}`} className="entry hit" onClick={() => open(h.book, h.chapter, h.verse)}>
-                  <div className="ref">{refLabel(bookName(h.book), h.chapter, h.verse)}</div>
-                  <p className="txt"><Highlighted hit={h} /></p>
-                </button>
-              ))}
-            </section>
+          {shown.map((h) => (
+            <button key={`${h.book}.${h.chapter}.${h.verse}`} className="entry hit" onClick={() => open(h.book, h.chapter, h.verse)}>
+              <div className="ref">{refLabel(bookName(h.book), h.chapter, h.verse)}</div>
+              <p className="txt"><Highlighted hit={h} /></p>
+            </button>
           ))}
+          {shown.length < hits.length && (
+            <button className="row" style={{ justifyContent: 'center' }} onClick={() => setLimit((n) => n + PAGE_SIZE)}>
+              {t('searchMore')}
+            </button>
+          )}
         </>
       )}
     </Sheet>
