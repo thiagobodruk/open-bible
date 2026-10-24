@@ -18,7 +18,8 @@ import { InstallSheet } from './components/InstallSheet';
 import { FeedbackSheet } from './components/FeedbackSheet';
 import { CompareSheet } from './components/CompareSheet';
 import { XrefSheet } from './components/XrefSheet';
-import { AskSheet } from './components/AskSheet';
+import { AskCrash, AskSheet } from './components/AskSheet';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { ListenSheet } from './components/ListenSheet';
 import { SearchSheet } from './components/SearchSheet';
 import { Toast } from './components/Toast';
@@ -59,7 +60,11 @@ export default function App() {
       {sheet === 'note' && <NoteSheet />}
       {sheet === 'compare' && <CompareSheet />}
       {sheet === 'xrefs' && <XrefSheet />}
-      {sheet === 'ask' && <AskSheet />}
+      {sheet === 'ask' && (
+        <ErrorBoundary fallback={(reset) => <AskCrash onRetry={reset} />}>
+          <AskSheet />
+        </ErrorBoundary>
+      )}
       {sheet === 'search' && <SearchSheet />}
       {sheet === 'install' && <InstallSheet />}
       {sheet === 'feedback' && <FeedbackSheet />}

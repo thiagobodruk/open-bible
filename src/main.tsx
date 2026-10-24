@@ -8,7 +8,6 @@ import './styles/ui.css';
 import './styles/reader.css';
 import './styles/screens.css';
 import App from './App';
-import { ErrorBoundary } from './components/ErrorBoundary';
 import { initSettingsEffects } from './state/settings';
 import { boot } from './boot';
 import { initUpdates } from './update';
@@ -20,9 +19,7 @@ initUpdates();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ErrorBoundary>
-      <App />
-    </ErrorBoundary>
+    <App />
   </StrictMode>,
 );
 

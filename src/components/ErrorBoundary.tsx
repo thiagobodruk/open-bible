@@ -1,32 +1,24 @@
-import { Component, type ErrorInfo, type ReactNode } from 'react';
-import { tr } from '../i18n';
+import { Component, type ReactNode } from 'react';
 
-interface State {
-  error: Error | null;
+interface Props {
+  children: ReactNode;
+  /** O que mostrar no lugar do conteúdo que quebrou. `reset` tenta desenhar o conteúdo de novo. */
+  fallback: (reset: () => void) => ReactNode;
 }
 
-/** Última rede de proteção: se algo quebrar ao desenhar a tela, mostra o erro em vez de deixar a página em branco. */
-export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
-  state: State = { error: null };
+/** Contém uma falha de desenho: só esta parte da tela é trocada, o resto do app segue funcionando. */
+export class ErrorBoundary extends Component<Props, { failed: boolean }> {
+  state = { failed: false };
 
-  static getDerivedStateFromError(error: unknown): State {
-    return { error: error instanceof Error ? error : new Error(String(error)) };
+  static getDerivedStateFromError() {
+    return { failed: true };
   }
 
-  componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error(error, info.componentStack);
+  componentDidCatch(error: Error) {
+    console.error(error);
   }
 
   render() {
-    const { error } = this.state;
-    if (!error) return this.props.children;
-    return (
-      <main className="welcome crash" role="alert">
-        <h1>{tr('errorTitle')}</h1>
-        <p>{tr('errorBody')}</p>
-        <code>{error.message}</code>
-        <button className="btn primary" onClick={() => location.reload()}>{tr('errorReload')}</button>
-      </main>
-    );
+    return this.state.failed ? this.props.fallback(() => this.setState({ failed: false })) : this.props.children;
   }
 }

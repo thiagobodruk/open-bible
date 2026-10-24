@@ -93,3 +93,31 @@ export function AskSheet() {
     </Sheet>
   );
 }
+
+/** Se a tela de resposta quebrar, a falha aparece como uma mensagem da própria IA, sem detalhes técnicos. */
+export function AskCrash({ onRetry }: { onRetry: () => void }) {
+  const t = useT();
+  const close = useUI((s) => s.close);
+  const uiLang = useSettings((s) => s.uiLang);
+  const asked = useAsk.getState().messages.find((m) => m.role === 'user');
+  return (
+    <Sheet title={t('askTitle')} icon={Sparkle} onClose={close} tall compact>
+      <div className="ask-chat">
+        {asked && <div className="ask-msg user">{asked.content}</div>}
+        <div className="ask-msg assistant" role="alert">{t('askCrash')}</div>
+        {asked && (
+          <button
+            className="btn sm"
+            onClick={() => {
+              useAsk.getState().retry(uiLang);
+              onRetry();
+            }}
+          >
+            <ArrowClockwise size={16} weight="regular" />
+            {t('askRetry')}
+          </button>
+        )}
+      </div>
+    </Sheet>
+  );
+}
