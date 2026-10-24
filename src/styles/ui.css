@@ -155,6 +155,14 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
   animation: hint-in 0.6s ease-out both;
 }
 .swipe-hint.leaving { animation: hint-out 0.35s ease-in forwards; }
+.hint-step { display: flex; flex-direction: column; align-items: center; gap: 16px; animation: hint-in 0.5s ease-out both; }
+/* Passo da IA: o texto e o dedo ficam sobre o botão flutuante, que sobe acima do fundo para receber o toque. */
+.swipe-hint.ai { justify-content: flex-end; align-items: flex-end; padding: 0 max(18px, env(safe-area-inset-right, 0px)) calc(22px + 56px + 10px + env(safe-area-inset-bottom, 0px)) 24px; }
+.swipe-hint.ai .hint-step { align-items: flex-end; gap: 8px; text-align: right; max-width: 260px; }
+.tap-icon { margin-right: 4px; animation: hint-tap 1.4s ease-in-out infinite; }
+body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accent), var(--shadow); animation: fab-ring 1.4s ease-out infinite; }
+@keyframes hint-tap { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(10px); } }
+@keyframes fab-ring { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent), var(--shadow); } to { box-shadow: 0 0 0 16px transparent, var(--shadow); } }
 .swipe-hint p { font-family: var(--font-ui); font-size: 16px; font-weight: 500; letter-spacing: 0.01em; }
 .swipe-icon { animation: hint-swipe 2.2s ease-in-out infinite; }
 @keyframes hint-in { from { opacity: 0; } to { opacity: 1; } }
@@ -164,7 +172,7 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
   55% { transform: translateX(-26px) rotate(-8deg); opacity: 1; }
   100% { transform: translateX(26px) rotate(8deg); opacity: 0.35; }
 }
-@media (prefers-reduced-motion: reduce) { .swipe-icon { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .swipe-icon, .tap-icon, body:has(.swipe-hint.ai) .ask-fab { animation: none; } }
 
 /* Leitura em voz alta */
 .listen-bar {

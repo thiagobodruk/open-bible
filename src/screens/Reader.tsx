@@ -234,7 +234,7 @@ export function Reader() {
         )}
       </main>
 
-      {hint && <SwipeHint onDone={() => setHint(false)} />}
+      {hint && <SwipeHint withAi={aiEnabled} onDone={() => setHint(false)} />}
       {listenStatus !== 'idle' && !hasSelection && !askBar && sheet !== 'menu' && <ListenBar />}
       <InstallBanner hidden={blocked || listenStatus !== 'idle'} hold={hint} />
       {hasSelection && !sheet && !askBar && <SelectionBar />}
