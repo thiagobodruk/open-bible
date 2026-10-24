@@ -2,12 +2,6 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow when a PR is merged, from the PR's `## Changelog` section. Do not edit it in a PR.
 
-## 1.2.4
-
-### Changed
-
-- The "Restore default" button in Appearance has its icon at the left edge, with the label centered, like the buttons on the first screen.
-
 ## 1.2.3
 
 ### Changed
