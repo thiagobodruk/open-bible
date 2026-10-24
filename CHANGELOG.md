@@ -6,7 +6,7 @@ Versions follow [SemVer](https://semver.org/). Each release is published from th
 
 ### Added
 
-- **Splash screen:** the app logo, with a soft pulse, shows right away when the app opens and fades out once the app is ready. It follows the theme (light, sepia or dark) and respects reduced motion.
+- **Splash screen:** the app logo and name, with a soft pulse on the logo, show right away when the app opens and fades out once the app is ready. It follows the theme (light, sepia or dark) and respects reduced motion.
 
 ## 1.1.6
 
