@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). Each release is published from the section with its number, so add a section here when you bump `version` in `package.json`.
 
+## 1.2.0
+
+### Added
+
+- **Splash screen:** the app logo, with a soft pulse, shows right away when the app opens and fades out once the app is ready. It follows the theme (light, sepia or dark) and respects reduced motion.
+
 ## 1.1.6
 
 ### Fixed
