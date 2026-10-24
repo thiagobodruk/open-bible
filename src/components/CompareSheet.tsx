@@ -83,12 +83,10 @@ export function CompareSheet() {
           </button>
         ))}
       </div>
-      {ids.length < 2 && (
-        <button className="btn block lead" onClick={more}>
-          <CloudArrowDown size={18} weight="regular" />
-          {t('compareMore')}
-        </button>
-      )}
+      <button className="btn block lead" onClick={more}>
+        <CloudArrowDown size={18} weight="regular" />
+        {t('compareMore')}
+      </button>
     </Sheet>
   );
 }
