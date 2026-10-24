@@ -45,7 +45,7 @@ const ja: Messages = {
   askApplyQ: 'この箇所を自分の生活にどう生かせますか？',
   askNotice: '質問と選択した本文は、回答を作成するためにAIサービス（Groq）へ送信されます。それ以外はお使いの端末の外に出ません。',
   askAccept: 'わかりました',
-  askDisclaimer: "AIは間違えることがあります。本文で確認を。",
+  askDisclaimer: "AIは間違えることがあります。回答は必ず確認してください。",
   askError: '回答を取得できませんでした。もう一度お試しください。',
   askOffline: 'オフラインです。AIに質問するには接続してください。',
   askRateLimited: '短時間に質問が多すぎます。1分後にもう一度お試しください。',

@@ -45,7 +45,7 @@ const fr: Messages = {
   askApplyQ: 'Comment appliquer ce passage à ma vie ?',
   askNotice: "Votre question et le texte sélectionné sont envoyés à un service d'IA (Groq) pour rédiger la réponse. Rien d'autre ne quitte votre appareil.",
   askAccept: 'Compris',
-  askDisclaimer: "L'IA peut se tromper. Vérifiez dans le texte.",
+  askDisclaimer: "L'IA peut faire des erreurs. Vérifiez toujours les réponses.",
   askError: "Impossible d'obtenir une réponse. Réessayez.",
   askOffline: "Vous êtes hors ligne. Connectez-vous pour interroger l'IA.",
   askRateLimited: 'Trop de questions en peu de temps. Réessayez dans une minute.',
