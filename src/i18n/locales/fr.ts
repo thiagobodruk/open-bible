@@ -41,6 +41,8 @@ const fr: Messages = {
   askError: "Impossible d'obtenir une réponse. Réessayez.",
   askOffline: "Vous êtes hors ligne. Connectez-vous pour interroger l'IA.",
   askRateLimited: 'Trop de questions en peu de temps. Réessayez dans une minute.',
+  askDaily: "Vous avez atteint la limite de questions du jour. Réessayez demain.",
+  askBusy: "L'IA est occupée en ce moment. Réessayez dans quelques minutes.",
   askRetry: 'Réessayer',
   askFollowUp: 'Poser une autre question',
   askThinking: 'Réflexion',

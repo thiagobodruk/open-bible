@@ -39,6 +39,8 @@ const en = {
   askError: 'Could not get an answer. Try again.',
   askOffline: 'You are offline. Connect to ask the AI.',
   askRateLimited: 'Too many questions in a short time. Try again in a minute.',
+  askDaily: "You reached today's limit of questions. Try again tomorrow.",
+  askBusy: "The AI is busy right now. Try again in a few minutes.",
   askRetry: 'Try again',
   askFollowUp: 'Ask a follow-up',
   askThinking: 'Thinking',

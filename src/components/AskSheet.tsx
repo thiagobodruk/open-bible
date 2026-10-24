@@ -45,7 +45,7 @@ export function AskSheet() {
     setQuestion('');
   };
 
-  const errorKey = error === 'offline' ? 'askOffline' : error === 'limit' ? 'askRateLimited' : 'askError';
+  const errorKey = ({ offline: 'askOffline', limit: 'askRateLimited', daily: 'askDaily', busy: 'askBusy', failed: 'askError' } as const)[error ?? 'failed'];
 
   return (
     <Sheet
@@ -68,7 +68,7 @@ export function AskSheet() {
         {status === 'error' && (
           <div className="ask-error" role="alert">
             <p>{t(errorKey)}</p>
-            <button className="btn sm" onClick={() => retry(uiLang)}><ArrowClockwise size={16} weight="regular" />{t('askRetry')}</button>
+            {error !== 'daily' && <button className="btn sm" onClick={() => retry(uiLang)}><ArrowClockwise size={16} weight="regular" />{t('askRetry')}</button>}
           </div>
         )}
         {status !== 'error' && (

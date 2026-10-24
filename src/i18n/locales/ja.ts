@@ -41,6 +41,8 @@ const ja: Messages = {
   askError: '回答を取得できませんでした。もう一度お試しください。',
   askOffline: 'オフラインです。AIに質問するには接続してください。',
   askRateLimited: '短時間に質問が多すぎます。1分後にもう一度お試しください。',
+  askDaily: "本日の質問の上限に達しました。明日もう一度お試しください。",
+  askBusy: "AIは現在混み合っています。数分後にもう一度お試しください。",
   askRetry: '再試行',
   askFollowUp: '続けて質問',
   askThinking: '考え中',

@@ -41,6 +41,8 @@ const es: Messages = {
   askError: 'No se pudo obtener la respuesta. Inténtalo de nuevo.',
   askOffline: 'Estás sin conexión. Conéctate para preguntar a la IA.',
   askRateLimited: 'Demasiadas preguntas en poco tiempo. Inténtalo de nuevo en un minuto.',
+  askDaily: "Alcanzaste el límite de preguntas de hoy. Inténtalo de nuevo mañana.",
+  askBusy: "La IA está ocupada ahora. Inténtalo de nuevo en unos minutos.",
   askRetry: 'Reintentar',
   askFollowUp: 'Haz otra pregunta',
   askThinking: 'Pensando',

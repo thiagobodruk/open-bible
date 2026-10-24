@@ -41,6 +41,8 @@ const ptBR: Messages = {
   askError: 'Não foi possível obter a resposta. Tente de novo.',
   askOffline: 'Você está offline. Conecte-se para perguntar à IA.',
   askRateLimited: 'Perguntas demais em pouco tempo. Tente de novo em um minuto.',
+  askDaily: "Você atingiu o limite de perguntas de hoje. Tente de novo amanhã.",
+  askBusy: "A IA está ocupada agora. Tente de novo em alguns minutos.",
   askRetry: 'Tentar de novo',
   askFollowUp: 'Faça outra pergunta',
   askThinking: 'Pensando',

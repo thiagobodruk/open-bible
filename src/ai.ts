@@ -13,7 +13,8 @@ export interface AiMessage {
   content: string;
 }
 
-export type AiErrorKind = 'offline' | 'limit' | 'failed';
+/** limit: muitas perguntas em um minuto. daily: o limite do dia deste aparelho. busy: a cota do serviço acabou. */
+export type AiErrorKind = 'offline' | 'limit' | 'daily' | 'busy' | 'failed';
 
 export class AiError extends Error {
   constructor(public kind: AiErrorKind) {
@@ -63,7 +64,11 @@ export async function askAI({ question, passage, lang, history, signal, onText }
     if (signal.aborted) throw new DOMException('aborted', 'AbortError');
     throw new AiError(navigator.onLine === false ? 'offline' : 'failed');
   }
-  if (!res.ok || !res.body) throw new AiError(res.status === 429 ? 'limit' : 'failed');
+  if (!res.ok || !res.body) {
+    if (res.status !== 429) throw new AiError('failed');
+    const code = await res.json().then((j) => j?.error, () => undefined);
+    throw new AiError(code === 'daily_limit' ? 'daily' : code === 'quota' ? 'busy' : 'limit');
+  }
 
   const reader = res.body.getReader();
   const decoder = new TextDecoder();

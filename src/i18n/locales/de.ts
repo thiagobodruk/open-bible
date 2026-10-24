@@ -41,6 +41,8 @@ const de: Messages = {
   askError: 'Keine Antwort erhalten. Versuche es erneut.',
   askOffline: 'Du bist offline. Verbinde dich, um die KI zu fragen.',
   askRateLimited: 'Zu viele Fragen in kurzer Zeit. Versuche es in einer Minute erneut.',
+  askDaily: "Du hast das heutige Fragenlimit erreicht. Versuche es morgen erneut.",
+  askBusy: "Die KI ist gerade ausgelastet. Versuche es in ein paar Minuten erneut.",
   askRetry: 'Erneut versuchen',
   askFollowUp: 'Weitere Frage stellen',
   askThinking: 'Denkt nach',

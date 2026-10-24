@@ -10,7 +10,7 @@ import { useBookName, useChapter } from '../hooks';
 import { refLabel } from '../ref';
 import { useT } from '../i18n';
 
-const MAX_TEXT = 6000;
+const MAX_TEXT = 3000;
 
 /** Barra de pergunta no rodapé do leitor. O contexto é a seleção ou, sem seleção, o capítulo inteiro. */
 export function AskBar() {
