@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.7.2
+
+### Fixed
+
+- Na dica de introdução, toques rápidos em sequência não pulam mais o passo do botão de IA. Cada passo ignora toques por 1 segundo, e o passo da IA entra um pouco depois do anterior.
+
 ## 1.7.1
 
 ### Changed
