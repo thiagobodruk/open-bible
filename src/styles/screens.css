@@ -49,6 +49,8 @@
 .entry .date { font-size: 12px; color: var(--muted); margin-top: 6px; }
 .empty { text-align: center; color: var(--muted); padding: 64px 16px; }
 .empty svg { margin-bottom: 12px; }
+.welcome .btn { position: relative; }
+.welcome .btn svg { position: absolute; left: 18px; top: 50%; margin: 0; transform: translateY(-50%); }
 
 /* Navegador */
 .book-list { margin: 0 -8px; }
@@ -93,7 +95,7 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .welcome .btn { width: min(100%, 280px); justify-content: center; }
 .welcome .progress { width: 100%; max-width: 240px; }
 .error { color: var(--danger, #c0392b); }
-.brand-name { font-family: var(--font-ui); font-size: 16px; font-weight: 600; }
+.brand-name { display: flex; align-items: center; height: 44px; padding: 0 12px; font-family: var(--font-ui); font-size: 16px; font-weight: 600; }
 
 .entry-row { position: relative; }
 .entry-row .entry { padding-right: 48px; }
