@@ -53,10 +53,10 @@
 .sheet.modeless .sheet-body { padding-top: 0; }
 
 /* Ações do sheet: ícone sobre o texto, no mesmo formato em seleção e menu */
-/* Cinco ações: três na primeira linha e duas na segunda, cada linha ocupando toda a largura. */
+/* Seis ações em duas linhas de três. Sem a IA são cinco: três na primeira linha e duas na segunda, cada linha ocupando toda a largura. */
 .sheet-actions { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
 .sheet-actions > * { grid-column: span 2; }
-.sheet-actions > :nth-child(n + 4) { grid-column: span 3; }
+.sheet-actions.five > :nth-child(n + 4) { grid-column: span 3; }
 .sheet-action { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 68px; padding: 8px 6px; border-radius: var(--radius); background: var(--surface); font-size: 13px; font-weight: 500; }
 .sheet-action:hover, .sheet-action:active { background: var(--surface-2); }
 .sheet-colors { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 14px; margin-bottom: 10px; border-radius: var(--radius); background: var(--surface); }
@@ -197,7 +197,7 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .ask-msg.assistant { font-family: var(--font-serif); font-size: 17px; }
 .ask-error { display: grid; gap: 10px; justify-items: start; color: var(--danger); font-size: 15px; }
 .ask-foot { display: grid; gap: 8px; }
-.ask-note { padding: 0 4px; text-align: center; }
+.ask-note { padding: 0; text-align: center; font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ask-dots { display: inline-block; width: 36px; height: 8px; background: radial-gradient(circle, var(--muted) 3px, transparent 3.5px) 0 50% / 12px 8px repeat-x; animation: ask-pulse 1s ease-in-out infinite; }
 @keyframes ask-pulse { 50% { opacity: 0.3; } }
 @media (prefers-reduced-motion: reduce) { .ask-dots { animation: none; } }

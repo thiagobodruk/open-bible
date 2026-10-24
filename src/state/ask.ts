@@ -5,6 +5,7 @@ interface AskStore {
   /** A barra de pergunta no rodapé do leitor. */
   bar: boolean;
   toggleBar: () => void;
+  openBar: () => void;
   closeBar: () => void;
   passage: AiPassage | null;
   messages: AiMessage[];
@@ -52,6 +53,7 @@ export const useAsk = create<AskStore>((set, get) => {
   return {
     bar: false,
     toggleBar: () => set((s) => ({ bar: !s.bar })),
+    openBar: () => set({ bar: true }),
     closeBar: () => set({ bar: false }),
     passage: null,
     messages: [],

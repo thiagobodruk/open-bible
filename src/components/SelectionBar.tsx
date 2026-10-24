@@ -1,4 +1,4 @@
-import { Copy, LinkSimple, Note, ShareNetwork, TextColumns } from '@phosphor-icons/react';
+import { Copy, LinkSimple, Note, ShareNetwork, Sparkle, TextColumns } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { HL_COLORS, vkey, useStudy, type HlColor } from '../state/study';
 import { useUI } from '../state/ui';
@@ -6,6 +6,8 @@ import { abbrOf } from '../data/catalog';
 import { useBookName, useChapter } from '../hooks';
 import { useSettings } from '../state/settings';
 import { refLabel } from '../ref';
+import { aiEnabled } from '../ai';
+import { useAsk } from '../state/ask';
 import { useT } from '../i18n';
 
 /** Ações para os versículos selecionados. É um bottom sheet sem fundo escurecido, para seguir tocando nos versículos. */
@@ -66,8 +68,9 @@ export function SelectionBar() {
           />
         ))}
       </div>
-      <div className="sheet-actions">
+      <div className={`sheet-actions${aiEnabled ? '' : ' five'}`}>
         <button className="sheet-action" onClick={() => open('note')}><Note size={24} weight="light" />{t('note')}</button>
+        {aiEnabled && <button className="sheet-action" onClick={() => useAsk.getState().openBar()}><Sparkle size={24} weight="light" />{t('askAction')}</button>}
         <button className="sheet-action" onClick={() => open('compare')}><TextColumns size={24} weight="light" />{t('compare')}</button>
         <button className="sheet-action" onClick={() => open('xrefs')}><LinkSimple size={24} weight="light" />{t('xrefs')}</button>
         <button className="sheet-action" onClick={copy}><Copy size={24} weight="light" />{t('copy')}</button>
