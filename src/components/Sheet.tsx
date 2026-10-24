@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import type { Icon } from '@phosphor-icons/react';
+import { X, type Icon } from '@phosphor-icons/react';
+import { useT } from '../i18n';
 
 interface Props {
   title: string;
@@ -29,6 +30,7 @@ const ANIM = 180;
 
 /** Bottom sheet padrão. Fecha ao arrastar para baixo, tocar fora (se houver fundo) ou com Esc. Não tem botão ×. */
 export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, leading, trailing, tall, pinned, footer, compact, modeless }: Props) {
+  const t = useT();
   const ref = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
   const close = useRef(onClose);
@@ -156,6 +158,9 @@ export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, lea
             </h2>
           )}
           {trailing && <div className="sheet-trailing">{trailing}</div>}
+          <button className="icon-btn sheet-close" onClick={onClose} aria-label={t('close')}>
+            <X size={22} weight="light" />
+          </button>
         </div>
         {pinned && <div className="sheet-pinned">{pinned}</div>}
         <div className="sheet-body" ref={body}>{children}</div>
