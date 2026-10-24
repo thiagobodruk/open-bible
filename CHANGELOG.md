@@ -2,6 +2,16 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.6.6
+
+### Added
+
+- Na resposta da IA, a pill da referência tem um × que remove os versos selecionados e volta ao escopo do capítulo inteiro nas próximas perguntas.
+
+### Fixed
+
+- O espaçamento interno da pill de referência ficou equilibrado entre o ícone e o texto.
+
 ## 1.6.5
 
 ### Changed
