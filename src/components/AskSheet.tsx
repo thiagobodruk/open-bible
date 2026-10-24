@@ -53,25 +53,27 @@ export function AskSheet() {
       icon={Sparkle}
       onClose={close}
       tall
+      compact
       footer={
         <div className="ask-foot">
           {status !== 'error' && (
-            <form className="ask-form" onSubmit={submit}>
-              <input
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                placeholder={t('askFollowUp')}
-                aria-label={t('askFollowUp')}
-                maxLength={600}
-                enterKeyHint="send"
-                disabled={busy}
-              />
-              <button type="submit" className="ask-send" disabled={!question.trim() || busy} aria-label={t('askSend')}>
-                <PaperPlaneTilt size={20} weight="fill" />
-              </button>
+            <form className="ask-field plain" onSubmit={submit}>
+              <div className="ask-row">
+                <input
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  placeholder={t('askFollowUp')}
+                  aria-label={t('askFollowUp')}
+                  maxLength={600}
+                  enterKeyHint="send"
+                  disabled={busy}
+                />
+                <button type="submit" className="ask-send" disabled={!question.trim() || busy} aria-label={t('askSend')}>
+                  <PaperPlaneTilt size={20} weight="fill" />
+                </button>
+              </div>
             </form>
           )}
-          <p className="hint ask-note">{t('askDisclaimer')}</p>
         </div>
       }
       trailing={
@@ -87,6 +89,9 @@ export function AskSheet() {
             {m.content ? <Inline text={m.content} /> : busy && i === messages.length - 1 ? <span className="ask-dots" aria-label={t('askThinking')} /> : null}
           </div>
         ))}
+        {answer?.role === 'assistant' && answer.content && !busy && status !== 'error' && (
+          <p className="ask-note">{t('askDisclaimer')}</p>
+        )}
         {status === 'error' && (
           <div className="ask-error" role="alert">
             <p>{t(errorKey)}</p>
