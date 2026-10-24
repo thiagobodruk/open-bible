@@ -28,7 +28,9 @@ export function AskSheet() {
   const answer = messages[messages.length - 1];
 
   useEffect(() => () => stop(), [stop]);
-  useEffect(() => end.current?.scrollIntoView({ block: 'end' }), [messages.length, status]);
+  useEffect(() => {
+    end.current?.scrollIntoView({ block: 'end' });
+  }, [messages.length, status]);
 
   const copy = async () => {
     try {
