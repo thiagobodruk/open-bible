@@ -23,6 +23,8 @@ interface UIStore {
 let n = 0;
 /** Verdadeiro enquanto há uma entrada de histórico empurrada pelo sheet aberto: o Voltar do sistema fecha o sheet em vez de sair da tela. */
 let pushed = false;
+/** close() agendou o back(); um open() logo em seguida reaproveita a entrada em vez de empurrar outra. */
+let backPending = false;
 let timer: ReturnType<typeof setTimeout> | undefined;
 
 export const useUI = create<UIStore>((set) => ({
@@ -31,7 +33,10 @@ export const useUI = create<UIStore>((set) => ({
   homeUrl: false,
   setHomeUrl: (homeUrl) => set({ homeUrl }),
   open: (sheet) => {
-    if (!pushed) {
+    if (backPending) {
+      backPending = false;
+      pushed = true;
+    } else if (!pushed) {
       history.pushState({ ob: 'sheet' }, '');
       pushed = true;
     }
@@ -43,7 +48,14 @@ export const useUI = create<UIStore>((set) => ({
     set({ sheet: null });
     // Quem fecha o sheet costuma navegar logo depois (close(); go(rota)). Por isso o back() espera esse trecho síncrono
     // e só desfaz a entrada se ela ainda é a atual; se a rota mudou, a navegação vale e não há o que voltar.
-    if (wasPushed) queueMicrotask(() => history.state?.ob === 'sheet' && history.back());
+    if (wasPushed) {
+      backPending = true;
+      queueMicrotask(() => {
+        if (!backPending) return;
+        backPending = false;
+        if (history.state?.ob === 'sheet') history.back();
+      });
+    }
   },
   notify: (message, action) => {
     clearTimeout(timer);
