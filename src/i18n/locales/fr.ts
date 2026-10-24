@@ -157,6 +157,7 @@ const fr: Messages = {
   lastChapter: 'C’est le dernier chapitre',
   firstChapter: 'C’est le premier chapitre',
   hintSwipe: 'Balayez pour tourner les pages',
+  hintAsk: "Touchez le bouton pour interroger l'IA",
   chapterMissing: 'Ce chapitre n’existe pas dans cette version.',
   chapterEmpty: 'Ce chapitre est vide dans cette version.',
   hasNote: 'Avec une note',

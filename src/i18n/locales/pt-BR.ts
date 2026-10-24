@@ -157,6 +157,7 @@ const ptBR: Messages = {
   lastChapter: 'Este é o último capítulo',
   firstChapter: 'Este é o primeiro capítulo',
   hintSwipe: 'Deslize para paginar',
+  hintAsk: 'Toque no botão para perguntar à IA',
   chapterMissing: 'Este capítulo não existe nesta versão.',
   chapterEmpty: 'Este capítulo está vazio nesta versão.',
   hasNote: 'Tem nota',

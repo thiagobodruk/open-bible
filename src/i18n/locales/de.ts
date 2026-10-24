@@ -157,6 +157,7 @@ const de: Messages = {
   lastChapter: 'Das ist das letzte Kapitel',
   firstChapter: 'Das ist das erste Kapitel',
   hintSwipe: 'Zum Blättern wischen',
+  hintAsk: 'Tippe auf den Button, um die KI zu fragen',
   chapterMissing: 'Dieses Kapitel gibt es in dieser Version nicht.',
   chapterEmpty: 'Dieses Kapitel ist in dieser Version leer.',
   hasNote: 'Mit Notiz',

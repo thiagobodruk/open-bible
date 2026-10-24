@@ -157,6 +157,7 @@ const ja: Messages = {
   lastChapter: '最後の章です',
   firstChapter: '最初の章です',
   hintSwipe: 'スワイプでページをめくる',
+  hintAsk: 'ボタンをタップしてAIに質問',
   chapterMissing: 'この訳にはこの章がありません。',
   chapterEmpty: 'この訳ではこの章は空です。',
   hasNote: 'メモあり',
