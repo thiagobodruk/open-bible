@@ -130,7 +130,7 @@ export function Study() {
       </div>
 
       {pending && (
-        <Sheet title={t('deleteQ')} onClose={() => setPending(null)}>
+        <Sheet title={t('deleteQ')} icon={Trash} onClose={() => setPending(null)}>
           <p className="confirm-text">
             {t(pending.note && pending.color ? 'confirmBoth' : pending.note ? 'confirmNote' : 'confirmHl', {
               ref: refLabel(bookName(pending.book), pending.chapter, pending.v1, pending.v2),

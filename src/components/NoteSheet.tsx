@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Trash } from '@phosphor-icons/react';
+import { Note, Trash } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
@@ -35,7 +35,7 @@ export function NoteSheet() {
   };
 
   return (
-    <Sheet title={existing ? t('noteEdit') : t('noteNew')} onClose={close}>
+    <Sheet title={existing ? t('noteEdit') : t('noteNew')} icon={Note} onClose={close}>
       <div className="note-ref">{refLabel(bookName(book), chapter, existing?.verseStart ?? first, existing?.verseEnd ?? last)}</div>
       <blockquote className="note-quote" style={{ marginInline: 0 }}>{existing?.excerpt ?? excerpt}</blockquote>
       <textarea

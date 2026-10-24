@@ -1,4 +1,4 @@
-import { ArrowCounterClockwise, TextAlignJustify, TextAlignLeft } from '@phosphor-icons/react';
+import { ArrowCounterClockwise, TextAa, TextAlignJustify, TextAlignLeft } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { Segmented } from './Segmented';
 import { useSettings } from '../state/settings';
@@ -48,6 +48,7 @@ export function TextSettingsSheet() {
   return (
     <Sheet
       title={t('textSettings')}
+      icon={TextAa}
       onClose={close}
       pinned={
         <div className="preview" style={readingVars(s)} aria-hidden="true">

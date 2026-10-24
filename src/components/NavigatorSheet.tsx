@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { CaretDown, CaretRight, MagnifyingGlass } from '@phosphor-icons/react';
+import { Books, CaretDown, CaretRight, MagnifyingGlass } from '@phosphor-icons/react';
 import { SearchField } from './SearchField';
 import { normalize } from '../search';
 import { Sheet } from './Sheet';
@@ -35,6 +35,7 @@ export function NavigatorSheet() {
   return (
     <Sheet
       title={t('books')}
+      icon={Books}
       onClose={close}
       tall
       trailing={

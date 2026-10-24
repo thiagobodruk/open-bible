@@ -1,4 +1,4 @@
-import { Copy, LinkSimple, Note, ShareNetwork, Sparkle, TextColumns } from '@phosphor-icons/react';
+import { BookOpenText, Copy, LinkSimple, Note, ShareNetwork, Sparkle, TextColumns } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { HL_COLORS, vkey, useStudy, type HlColor } from '../state/study';
 import { useUI } from '../state/ui';
@@ -54,6 +54,7 @@ export function SelectionBar() {
   return (
     <Sheet
       modeless
+      icon={BookOpenText}
       title={refLabel(bookName(book), chapter, selection[0], selection[selection.length - 1])}
       onClose={clearSelection}
     >
