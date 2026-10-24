@@ -2,6 +2,16 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.4.0
+
+### Added
+
+- Cross-references: select verses and tap References to see related passages.
+
+### Changed
+
+- The selection actions are arranged in two rows.
+
 ## 1.3.5
 
 ### Changed
