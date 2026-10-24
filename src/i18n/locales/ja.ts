@@ -25,7 +25,6 @@ const ja: Messages = {
 
 
   installedAlready: 'このデバイスにはすでにインストールされています。',
-  installIosIntro: 'お使いの {device} では、共有メニューからインストールします。',
   installShareSafariPhone: '画面下部の Safari ツールバーで{icon}共有をタップします。',
   installShareSafariPad: '画面上部の Safari ツールバーで{icon}共有をタップします。',
   installShareChrome: 'Chrome のアドレスバー右端の{icon}共有をタップします。',

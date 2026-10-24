@@ -28,7 +28,6 @@ export function InstallSheet() {
         <p>{t('installedAlready')}</p>
       ) : ios ? (
         <>
-          <p>{t('installIosIntro', { device: ios.device })}</p>
           <ol className="steps">
             <li><WithIcon text={t(shareKey!)} icon={<Export size={18} weight="light" style={{ verticalAlign: '-3px' }} />} /></li>
             <li><WithIcon text={t('installIosStep2')} icon={<PlusSquare size={18} weight="light" style={{ verticalAlign: '-3px' }} />} /></li>

@@ -23,7 +23,6 @@ const en = {
 
 
   installedAlready: 'The app is already installed on this device.',
-  installIosIntro: 'On your {device}, you install the app from the Share menu.',
   installShareSafariPhone: 'Tap {icon} Share in the Safari toolbar at the bottom.',
   installShareSafariPad: 'Tap {icon} Share in the Safari toolbar at the top.',
   installShareChrome: 'Tap {icon} Share at the right end of the Chrome address bar.',

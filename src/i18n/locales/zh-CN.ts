@@ -25,7 +25,6 @@ const zhCN: Messages = {
 
 
   installedAlready: '此设备上已安装该应用。',
-  installIosIntro: '在你的 {device} 上，通过“分享”菜单安装。',
   installShareSafariPhone: '点按屏幕底部 Safari 工具栏中的{icon}分享。',
   installShareSafariPad: '点按屏幕顶部 Safari 工具栏中的{icon}分享。',
   installShareChrome: '点按 Chrome 地址栏右端的{icon}分享。',
