@@ -61,8 +61,6 @@ const zhCN: Messages = {
   result_one: '{n} 条结果',
   result_other: '{n} 条结果',
 
-  verse_one: '{n} 节',
-  verse_other: '{n} 节',
   highlightColor: '标记颜色',
   highlightWith: '标记为{color}',
   yellow: '黄色',

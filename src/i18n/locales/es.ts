@@ -61,8 +61,6 @@ const es: Messages = {
   result_one: '{n} resultado',
   result_other: '{n} resultados',
 
-  verse_one: '{n} versículo',
-  verse_other: '{n} versículos',
   highlightColor: 'Color del resaltado',
   highlightWith: 'Resaltar en {color}',
   yellow: 'Amarillo',

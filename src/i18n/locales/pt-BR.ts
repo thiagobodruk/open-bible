@@ -61,8 +61,6 @@ const ptBR: Messages = {
   result_one: '{n} resultado',
   result_other: '{n} resultados',
 
-  verse_one: '{n} versículo',
-  verse_other: '{n} versículos',
   highlightColor: 'Cor da marcação',
   highlightWith: 'Marcar de {color}',
   yellow: 'Amarelo',

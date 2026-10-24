@@ -52,7 +52,7 @@ export function SelectionBar() {
   return (
     <Sheet
       modeless
-      title={`${refLabel(bookName(book), chapter, selection[0], selection[selection.length - 1])} · ${t.n('verse', selection.length)}`}
+      title={refLabel(bookName(book), chapter, selection[0], selection[selection.length - 1])}
       onClose={clearSelection}
     >
       <div className="sheet-colors" role="group" aria-label={t('highlightColor')}>

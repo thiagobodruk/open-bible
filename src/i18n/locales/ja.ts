@@ -61,8 +61,6 @@ const ja: Messages = {
   result_one: '{n} 件',
   result_other: '{n} 件',
 
-  verse_one: '{n} 節',
-  verse_other: '{n} 節',
   highlightColor: 'ハイライトの色',
   highlightWith: '{color}でハイライト',
   yellow: '黄',

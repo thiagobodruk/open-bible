@@ -61,8 +61,6 @@ const fr: Messages = {
   result_one: '{n} résultat',
   result_other: '{n} résultats',
 
-  verse_one: '{n} verset',
-  verse_other: '{n} versets',
   highlightColor: 'Couleur du surlignage',
   highlightWith: 'Surligner en {color}',
   yellow: 'Jaune',

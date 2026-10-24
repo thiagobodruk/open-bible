@@ -59,8 +59,6 @@ const en = {
   result_one: '{n} result',
   result_other: '{n} results',
 
-  verse_one: '{n} verse',
-  verse_other: '{n} verses',
   highlightColor: 'Highlight color',
   highlightWith: 'Highlight in {color}',
   yellow: 'Yellow',
