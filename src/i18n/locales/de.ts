@@ -45,7 +45,7 @@ const de: Messages = {
   askApplyQ: 'Wie kann ich diese Stelle auf mein Leben anwenden?',
   askNotice: 'Deine Frage und der ausgewählte Text werden an einen KI-Dienst (Groq) gesendet, der die Antwort verfasst. Sonst verlässt nichts dein Gerät.',
   askAccept: 'Verstanden',
-  askDisclaimer: "KI kann sich irren. Prüfe im Text.",
+  askDisclaimer: "KI kann Fehler machen. Prüfe die Antworten immer.",
   askError: 'Keine Antwort erhalten. Versuche es erneut.',
   askOffline: 'Du bist offline. Verbinde dich, um die KI zu fragen.',
   askRateLimited: 'Zu viele Fragen in kurzer Zeit. Versuche es in einer Minute erneut.',

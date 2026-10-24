@@ -45,7 +45,7 @@ const ptBR: Messages = {
   askApplyQ: 'Como posso aplicar esta passagem à minha vida?',
   askNotice: 'Sua pergunta e o texto selecionado são enviados a um serviço de IA (Groq) para gerar a resposta. Nada mais sai do seu aparelho.',
   askAccept: 'Entendi',
-  askDisclaimer: "A IA pode errar. Confira no texto.",
+  askDisclaimer: "A IA pode cometer erros. Sempre confira as respostas.",
   askError: 'Não foi possível obter a resposta. Tente de novo.',
   askOffline: 'Você está offline. Conecte-se para perguntar à IA.',
   askRateLimited: 'Perguntas demais em pouco tempo. Tente de novo em um minuto.',

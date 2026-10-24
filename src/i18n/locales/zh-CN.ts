@@ -45,7 +45,7 @@ const zhCN: Messages = {
   askApplyQ: '我该如何把这段经文应用到生活中？',
   askNotice: '您的问题和所选经文会发送给 AI 服务（Groq）以生成回答。除此之外，没有任何内容会离开您的设备。',
   askAccept: '知道了',
-  askDisclaimer: "AI 可能出错，请对照经文核实。",
+  askDisclaimer: "AI 可能出错，请务必核实回答。",
   askError: '无法获得回答，请重试。',
   askOffline: '您已离线。请联网后再询问 AI。',
   askRateLimited: '短时间内提问过多，请一分钟后再试。',

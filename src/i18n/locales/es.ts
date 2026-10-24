@@ -45,7 +45,7 @@ const es: Messages = {
   askApplyQ: '¿Cómo puedo aplicar este pasaje a mi vida?',
   askNotice: 'Tu pregunta y el texto seleccionado se envían a un servicio de IA (Groq) para redactar la respuesta. Nada más sale de tu dispositivo.',
   askAccept: 'Entendido',
-  askDisclaimer: "La IA puede errar. Compruébalo en el texto.",
+  askDisclaimer: "La IA puede cometer errores. Comprueba siempre las respuestas.",
   askError: 'No se pudo obtener la respuesta. Inténtalo de nuevo.',
   askOffline: 'Estás sin conexión. Conéctate para preguntar a la IA.',
   askRateLimited: 'Demasiadas preguntas en poco tiempo. Inténtalo de nuevo en un minuto.',

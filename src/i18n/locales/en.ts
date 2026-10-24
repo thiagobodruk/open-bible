@@ -43,7 +43,7 @@ const en = {
   askApplyQ: 'How can I apply this passage to my life?',
   askNotice: 'Your question and the selected text are sent to an AI service (Groq) to write the answer. Nothing else leaves your device.',
   askAccept: 'Got it',
-  askDisclaimer: "AI can make mistakes. Check the text.",
+  askDisclaimer: "AI can make mistakes. Always check the answers.",
   askError: 'Could not get an answer. Try again.',
   askOffline: 'You are offline. Connect to ask the AI.',
   askRateLimited: 'Too many questions in a short time. Try again in a minute.',
