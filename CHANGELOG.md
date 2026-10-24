@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.6.8
+
+### Changed
+
+- A resposta da IA só aparece depois de pelo menos 1 segundo, com uma animação de três pontinhos enquanto isso.
+
 ## 1.6.7
 
 ### Changed
