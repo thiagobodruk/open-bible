@@ -1,4 +1,4 @@
-import { CloudArrowDown, List, Translate } from '@phosphor-icons/react';
+import { CloudArrowDown, DownloadSimple, List, Translate } from '@phosphor-icons/react';
 import { abbrOf, findVersion, suggestedVersion } from '../data/catalog';
 import { useLibrary } from '../state/library';
 import { useSettings } from '../state/settings';
@@ -44,6 +44,7 @@ export function Welcome() {
           <h1>{t('welcomeTitle')}</h1>
           <p>{t('welcomeBody')}</p>
           <button className="btn primary" onClick={start} disabled={busy}>
+            {!busy && <DownloadSimple size={18} weight="regular" />}
             {busy ? t('downloadingBtn', { pct: Math.round(progress * 100) }) : t('downloadBtn', { abbr: abbrOf(id), size: t.mb(v.sizeMb) })}
           </button>
           {busy && <div className="progress" role="progressbar" aria-label={t('downloading')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></div>}
@@ -55,7 +56,7 @@ export function Welcome() {
           {incoming && hasOther && (
             <button className="btn" onClick={() => useIncoming.getState().clear()}>{t('keepCurrent', { abbr: abbrOf(current) })}</button>
           )}
-          <button className="btn" onClick={() => go('/library')}><Translate size={18} weight="light" /> {t('chooseOther')}</button>
+          <button className="btn" onClick={() => go('/library')}><Translate size={18} weight="regular" />{t('chooseOther')}</button>
         </div>
       </main>
     </div>

@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). Each release is published from the section with its number, so add a section here when you bump `version` in `package.json`.
 
+## 1.2.3
+
+### Changed
+
+- First screen: the download and "Choose another version" buttons both have an icon, with the same spacing, and the "Open Bible" title lines up with the title in the reading header.
+
 ## 1.2.2
 
 ### Changed
