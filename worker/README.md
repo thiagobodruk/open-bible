@@ -25,6 +25,10 @@ Edit `wrangler.toml`:
 
 Set a spending limit in the Groq console as well. The Worker limits the size of each request and the length of each answer, but it cannot see your total usage.
 
+## Troubleshooting
+
+When a request fails with `upstream_error`, the Worker logs the status and the start of Groq's reply (never the key). See it with `npx wrangler tail` while repeating the request, or in the Cloudflare dashboard under Workers & Pages > open-bible-ai > Logs. A `401` means the key is wrong: run `npx wrangler secret put GROQ_API_KEY` again.
+
 ## Local test
 
 ```bash

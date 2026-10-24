@@ -127,6 +127,10 @@ export default {
     } catch {
       return json(502, 'upstream_unreachable', headers);
     }
+    if (!upstream.ok || !upstream.body) {
+      // Only the owner sees this, in `wrangler tail` and the Cloudflare dashboard. The app gets a generic error.
+      console.error('groq', upstream.status, (await upstream.text().catch(() => '')).slice(0, 300));
+    }
     if (!upstream.ok || !upstream.body) return upstream.status === 429 ? json(429, 'quota', headers) : json(502, 'upstream_error', headers);
 
     return new Response(upstream.body, {

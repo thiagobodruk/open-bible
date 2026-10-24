@@ -2,6 +2,9 @@ name = "open-bible-ai"
 main = "src/index.js"
 compatibility_date = "2025-01-01"
 
+[observability]
+enabled = true
+
 [vars]
 # Comma-separated list of sites allowed to call the Worker from a browser.
 ALLOWED_ORIGINS = "https://thiagobodruk.github.io"
