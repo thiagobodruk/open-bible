@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.7.3
+
+### Changed
+
+- O prompt da IA abre direto no primeiro acesso, sem o aviso que interrompia o onboarding.
+
 ## 1.7.2
 
 ### Fixed
