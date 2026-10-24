@@ -62,8 +62,9 @@ export function MenuSheet() {
       icon: DeviceMobile,
       label: t('install'),
       run: async () => {
-        close();
-        if (!(await requestInstall())) open('install');
+        // O prompt nativo vem antes de fechar o menu: fechar mexe no histórico e atrapalharia o prompt.
+        if (await requestInstall()) close();
+        else open('install');
       },
     },
   ];
