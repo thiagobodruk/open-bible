@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.2.7
+
+### Changed
+
+- Install app (iPhone and iPad): the intro sentence is gone, only the steps remain.
+
 ## 1.2.6
 
 ### Changed
