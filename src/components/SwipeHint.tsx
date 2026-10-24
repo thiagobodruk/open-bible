@@ -46,8 +46,8 @@ export function SwipeHint({ onDone, withAi }: { onDone: () => void; withAi: bool
         </div>
       ) : (
         <div className="hint-step hint-ai" key="ai">
-          <p>{t('hintAsk')}</p>
           <HandTap className="tap-icon" size={48} weight="light" aria-hidden="true" />
+          <p>{t('hintAsk')}</p>
         </div>
       )}
     </div>

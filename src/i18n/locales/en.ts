@@ -155,7 +155,7 @@ const en = {
   lastChapter: 'This is the last chapter',
   firstChapter: 'This is the first chapter',
   hintSwipe: 'Swipe to turn pages',
-  hintAsk: 'Tap the button to ask the AI',
+  hintAsk: 'Tap to ask the AI',
   chapterMissing: 'This chapter does not exist in this version.',
   chapterEmpty: 'This chapter is empty in this version.',
   hasNote: 'Has a note',
