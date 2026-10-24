@@ -47,7 +47,7 @@ export function AskBar() {
 
   if (!accepted) {
     return (
-      <Sheet modeless title={t('askTitle')} icon={Sparkle} onClose={closeBar}>
+      <Sheet modeless compact title={t('askTitle')} icon={Sparkle} onClose={closeBar}>
         <div className="ask-body">
           <p className="ask-notice">{t('askNotice')}</p>
           <button className="btn primary block" onClick={() => { setConsented(); setAccepted(true); }}>{t('askAccept')}</button>
@@ -57,7 +57,7 @@ export function AskBar() {
   }
 
   return (
-    <Sheet modeless title={ref} icon={Sparkle} onClose={closeBar}>
+    <Sheet modeless compact title={ref} icon={Sparkle} onClose={closeBar}>
       <div className="ask-body">
         <div className="ask-chips">
           <button className="chip-btn" onClick={() => ask(t('askExplainQ'))}>{t('askExplain')}</button>

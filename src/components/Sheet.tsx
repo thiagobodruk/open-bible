@@ -17,6 +17,8 @@ interface Props {
   pinned?: ReactNode;
   /** Conteúdo fixo no rodapé, abaixo da área rolável. */
   footer?: ReactNode;
+  /** Mais baixo, com o conteúdo rente à borda inferior (prompt de IA). */
+  compact?: boolean;
   /** Sem fundo escurecido e sem tomar o foco: a página atrás continua tocável. */
   modeless?: boolean;
 }
@@ -26,7 +28,7 @@ const CLOSE_VELOCITY = 0.6; // px/ms
 const ANIM = 180;
 
 /** Bottom sheet padrão. Fecha ao arrastar para baixo, tocar fora (se houver fundo) ou com Esc. Não tem botão ×. */
-export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, leading, trailing, tall, pinned, footer, modeless }: Props) {
+export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, leading, trailing, tall, pinned, footer, compact, modeless }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
   const close = useRef(onClose);
@@ -137,7 +139,7 @@ export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, lea
     <>
       {!modeless && <div className="scrim" onClick={onClose} />}
       <div
-        className={`sheet${tall ? ' tall' : ''}${modeless ? ' modeless' : ''}`}
+        className={`sheet${tall ? ' tall' : ''}${modeless ? ' modeless' : ''}${compact ? ' compact' : ''}`}
         role="dialog"
         aria-modal={!modeless}
         aria-label={title}

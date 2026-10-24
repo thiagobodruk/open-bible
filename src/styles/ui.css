@@ -52,6 +52,12 @@
 /* Sheet sem fundo escurecido (seleção de versículo) */
 .sheet.modeless { z-index: 35; box-shadow: 0 -6px 28px rgba(20, 22, 28, 0.18); }
 .sheet.modeless .sheet-body { padding-top: 0; }
+/* Prompt de IA: baixo e rente à borda inferior, como o campo de mensagem de um chat. */
+.sheet.compact { padding-bottom: calc(env(safe-area-inset-bottom, 0px) * 0.4 + 4px); }
+.sheet.compact .sheet-grip { margin-top: 8px; }
+.sheet.compact .sheet-head { min-height: 34px; padding-top: 0; padding-bottom: 0; }
+.sheet.compact .sheet-body { padding-bottom: 8px; }
+.sheet.compact .ask-body { gap: 10px; }
 
 /* Ações do sheet: ícone sobre o texto, no mesmo formato em seleção e menu */
 /* Seis ações em duas linhas de três. Sem a IA são cinco: três na primeira linha e duas na segunda, cada linha ocupando toda a largura. */
