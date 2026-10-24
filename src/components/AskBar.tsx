@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import { Sparkle } from '@phosphor-icons/react';
 import { PromptField } from './PromptField';
 import { Sheet } from './Sheet';
-import { consented, setConsented, type AiPassage } from '../ai';
+import { type AiPassage } from '../ai';
 import { useAsk } from '../state/ask';
 import { useStudy } from '../state/study';
 import { useSettings } from '../state/settings';
@@ -24,7 +23,6 @@ export function AskBar() {
   const closeBar = useAsk((s) => s.closeBar);
   const bookName = useBookName();
   const text = useChapter(book, chapter);
-  const [accepted, setAccepted] = useState(consented);
 
   const verses = text.status === 'ready' ? text.verses : [];
   const numbers = selection.length ? selection : verses.map((_, i) => i + 1);
@@ -46,17 +44,6 @@ export function AskBar() {
     useAsk.getState().start(asked, passage, uiLang);
     open('ask');
   };
-
-  if (!accepted) {
-    return (
-      <Sheet modeless compact title={t('askTitle')} icon={Sparkle} onClose={closeBar}>
-        <div className="ask-body">
-          <p className="ask-notice">{t('askNotice')}</p>
-          <button className="btn primary block" onClick={() => { setConsented(); setAccepted(true); }}>{t('askAccept')}</button>
-        </div>
-      </Sheet>
-    );
-  }
 
   return (
     <Sheet modeless compact title={t('askTitle')} icon={Sparkle} onClose={closeBar}>
