@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.6.7
+
+### Changed
+
+- O aviso de primeiro uso da IA ficou mais curto e lembra que ela pode cometer erros, mantendo a informação de que a pergunta e o trecho são enviados à Groq.
+
 ## 1.6.6
 
 ### Added
