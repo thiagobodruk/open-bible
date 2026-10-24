@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { ArrowsClockwise, DeviceMobile, DownloadSimple, GithubLogo, Trash, Upload } from '@phosphor-icons/react';
+import { ArrowsClockwise, DeviceMobile, Download, Export, GithubLogo, Trash } from '@phosphor-icons/react';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { abbrOf, findVersion } from '../data/catalog';
 import { downloadedMb, useLibrary } from '../state/library';
@@ -103,11 +103,11 @@ export function Settings() {
           <h2>{t('yourData')}</h2>
           <div className="group">
             <button className="row" onClick={() => { downloadBackup(); notify(t('backupExported')); }}>
-              <DownloadSimple size={24} weight="light" />
+              <Export size={24} weight="light" />
               <span className="grow"><span className="title">{t('exportBackup')}</span><span className="sub" style={{ display: 'block' }}>{t('exportSub', { h: highlights, n: notes })}</span></span>
             </button>
             <button className="row" onClick={() => fileInput.current?.click()}>
-              <Upload size={24} weight="light" />
+              <Download size={24} weight="light" />
               <span className="grow"><span className="title">{t('importBackup')}</span></span>
             </button>
           </div>
