@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). Each release is published from the section with its number, so add a section here when you bump `version` in `package.json`.
 
+## 1.2.1
+
+### Changed
+
+- The splash screen now stays visible for at least 1.2 seconds, so the logo can be seen even when the app opens fast.
+
 ## 1.2.0
 
 ### Added
