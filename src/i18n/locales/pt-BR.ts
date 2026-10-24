@@ -50,6 +50,7 @@ const ptBR: Messages = {
   askDaily: "Você atingiu o limite de perguntas de hoje. Tente de novo amanhã.",
   askBusy: "A IA está ocupada agora. Tente de novo em alguns minutos.",
   askRetry: 'Tentar de novo',
+  askCrash: 'Ops! Algo deu errado. Tente novamente.',
   askFollowUp: 'Faça outra pergunta',
   askThinking: 'Pensando',
   cancel: 'Cancelar',

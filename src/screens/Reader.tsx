@@ -80,7 +80,9 @@ export function Reader() {
     else if (text.status !== 'loading') stop();
   }, [advancing, text.status, verses, versionInfo?.lang]);
 
-  useEffect(() => setSilentHandler(() => notify(t('listenSilent'))), [notify, t]);
+  useEffect(() => {
+    setSilentHandler(() => notify(t('listenSilent')));
+  }, [notify, t]);
   useEffect(() => () => stop(), []);
 
   // Acompanha o versículo lido, sem rolar se ele já está à vista.

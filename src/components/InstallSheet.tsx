@@ -13,7 +13,9 @@ function WithIcon({ text, icon }: { text: string; icon: React.ReactNode }) {
 export function InstallSheet() {
   const t = useT();
   // Quem abre o guia já sabe como instalar: o banner não precisa mais aparecer.
-  useEffect(() => dismissInstall(), []);
+  useEffect(() => {
+    dismissInstall();
+  }, []);
   // No guia o usuário instala pelo menu do navegador, que usa o endereço da página: ele fica na raiz do app.
   useEffect(() => {
     useUI.getState().setHomeUrl(true);

@@ -50,6 +50,7 @@ const zhCN: Messages = {
   askDaily: "您已达到今天的提问上限，请明天再试。",
   askBusy: "AI 目前繁忙，请几分钟后再试。",
   askRetry: '重试',
+  askCrash: '哎呀！出了点问题，请重试。',
   askFollowUp: '继续提问',
   askThinking: '思考中',
   cancel: '取消',

@@ -50,6 +50,7 @@ const fr: Messages = {
   askDaily: "Vous avez atteint la limite de questions du jour. Réessayez demain.",
   askBusy: "L'IA est occupée en ce moment. Réessayez dans quelques minutes.",
   askRetry: 'Réessayer',
+  askCrash: 'Oups ! Une erreur est survenue. Réessayez.',
   askFollowUp: 'Poser une autre question',
   askThinking: 'Réflexion',
   cancel: 'Annuler',

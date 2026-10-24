@@ -50,6 +50,7 @@ const de: Messages = {
   askDaily: "Du hast das heutige Fragenlimit erreicht. Versuche es morgen erneut.",
   askBusy: "Die KI ist gerade ausgelastet. Versuche es in ein paar Minuten erneut.",
   askRetry: 'Erneut versuchen',
+  askCrash: 'Hoppla! Etwas ist schiefgelaufen. Bitte versuche es erneut.',
   askFollowUp: 'Weitere Frage stellen',
   askThinking: 'Denkt nach',
   cancel: 'Abbrechen',

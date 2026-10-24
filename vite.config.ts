@@ -72,7 +72,8 @@ export default defineConfig({
         navigateFallback: `${base}index.html`,
         // As referências cruzadas são baixadas por livro, na primeira vez, e depois funcionam offline.
         runtimeCaching: [
-          { urlPattern: ({ url }) => url.pathname.startsWith(`${base}xrefs/`), handler: 'StaleWhileRevalidate', options: { cacheName: 'xrefs' } },
+          // Esta função é copiada para dentro do service worker, onde `base` não existe: o caminho vai por extenso.
+          { urlPattern: ({ url }) => url.pathname.startsWith('/open-bible/xrefs/'), handler: 'StaleWhileRevalidate', options: { cacheName: 'xrefs' } },
         ],
       },
     }),

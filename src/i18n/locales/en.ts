@@ -48,6 +48,7 @@ const en = {
   askDaily: "You reached today's limit of questions. Try again tomorrow.",
   askBusy: "The AI is busy right now. Try again in a few minutes.",
   askRetry: 'Try again',
+  askCrash: 'Oops! Something went wrong. Please try again.',
   askFollowUp: 'Ask a follow-up',
   askThinking: 'Thinking',
   cancel: 'Cancel',
