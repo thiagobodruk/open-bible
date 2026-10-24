@@ -60,7 +60,7 @@
 .sheet.compact { padding-bottom: calc(env(safe-area-inset-bottom, 0px) * 0.4 + 4px); }
 .sheet.compact .sheet-grip { margin-top: 8px; }
 .sheet.compact .sheet-head { min-height: 34px; padding-top: 0; padding-bottom: 0; }
-.sheet.compact .sheet-body { padding-bottom: 8px; }
+.sheet.compact .sheet-body { padding-top: 14px; padding-bottom: 8px; }
 .sheet.compact .ask-body { gap: 10px; }
 
 /* Ações do sheet: ícone sobre o texto, no mesmo formato em seleção e menu */
