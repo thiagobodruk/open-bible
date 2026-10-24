@@ -21,6 +21,8 @@ interface UIStore {
 }
 
 let n = 0;
+/** Verdadeiro enquanto há uma entrada de histórico empurrada pelo sheet aberto: o Voltar do sistema fecha o sheet em vez de sair da tela. */
+let pushed = false;
 let timer: ReturnType<typeof setTimeout> | undefined;
 
 export const useUI = create<UIStore>((set) => ({
@@ -28,8 +30,20 @@ export const useUI = create<UIStore>((set) => ({
   toast: null,
   homeUrl: false,
   setHomeUrl: (homeUrl) => set({ homeUrl }),
-  open: (sheet) => set({ sheet }),
-  close: () => set({ sheet: null }),
+  open: (sheet) => {
+    if (!pushed) {
+      history.pushState({ ob: 'sheet' }, '');
+      pushed = true;
+    }
+    set({ sheet });
+  },
+  close: () => {
+    const wasPushed = pushed;
+    pushed = false;
+    set({ sheet: null });
+    // Só desfaz a entrada se ela ainda é a atual; se a rota mudou antes, não há o que voltar.
+    if (wasPushed && history.state?.ob === 'sheet') history.back();
+  },
   notify: (message, action) => {
     clearTimeout(timer);
     set({ toast: { id: ++n, message, action } });
@@ -37,3 +51,13 @@ export const useUI = create<UIStore>((set) => ({
   },
   dismissToast: () => set({ toast: null }),
 }));
+
+addEventListener('popstate', () => {
+  if (useUI.getState().sheet) {
+    pushed = false;
+    useUI.setState({ sheet: null });
+  } else if (history.state?.ob === 'sheet') {
+    // Entrada de sheet que ficou para trás (a rota mudou com o sheet aberto): pula.
+    history.back();
+  }
+});
