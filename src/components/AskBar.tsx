@@ -39,6 +39,9 @@ export function AskBar() {
       ref,
       version: abbrOf(versionId),
       text: numbers.map((n) => `${n} ${verses[n - 1]}`).join('\n').slice(0, MAX_TEXT),
+      wide: selection.length
+        ? { ref: refLabel(bookName(book), chapter), text: verses.map((v, i) => `${i + 1} ${v}`).join('\n').slice(0, MAX_TEXT) }
+        : undefined,
     };
     useAsk.getState().start(asked, passage, uiLang);
     open('ask');

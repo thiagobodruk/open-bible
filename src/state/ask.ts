@@ -16,6 +16,8 @@ interface AskStore {
   /** Continua a conversa atual. */
   followUp: (question: string, lang: string) => void;
   retry: (lang: string) => void;
+  /** Troca a seleção pelo capítulo inteiro nas próximas perguntas. */
+  widen: () => void;
   /** Interrompe a resposta em andamento. */
   stop: () => void;
 }
@@ -70,6 +72,10 @@ export const useAsk = create<AskStore>((set, get) => {
       const asked = messages[messages.length - 2];
       if (!passage || asked?.role !== 'user') return;
       void run(messages.slice(0, -2), asked.content, passage, lang);
+    },
+    widen: () => {
+      const { passage } = get();
+      if (passage?.wide) set({ passage: { ref: passage.wide.ref, version: passage.version, text: passage.wide.text } });
     },
     stop: () => {
       controller?.abort();
