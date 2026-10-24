@@ -25,7 +25,6 @@ const de: Messages = {
 
 
   installedAlready: 'Die App ist auf diesem Gerät bereits installiert.',
-  installIosIntro: 'Auf deinem {device} installierst du die App über das Teilen-Menü.',
   installShareSafariPhone: 'Tippe in der Safari-Leiste unten auf {icon} Teilen.',
   installShareSafariPad: 'Tippe in der Safari-Leiste oben auf {icon} Teilen.',
   installShareChrome: 'Tippe am rechten Ende der Chrome-Adressleiste auf {icon} Teilen.',
