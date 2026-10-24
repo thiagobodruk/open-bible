@@ -2,6 +2,18 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.7.5
+
+### Added
+
+- Mensagem amigável dentro da tela da IA quando algo dá errado.
+
+### Fixed
+
+- A tela da IA não fica mais em branco ao perguntar em versões recentes do Chrome.
+- O botão de enviar não é mais cortado em telas pequenas do Android.
+- As referências cruzadas voltam a ser guardadas para uso offline.
+
 ## 1.7.4
 
 ### Fixed
