@@ -43,7 +43,7 @@ const es: Messages = {
   askExplainQ: 'Explica este pasaje en lenguaje sencillo.',
   askContextQ: '¿Cuál es el contexto histórico y literario de este pasaje?',
   askSummaryQ: 'Resume este pasaje en pocas frases.',
-  askNotice: 'Tu pregunta y el texto seleccionado se envían a un servicio de IA (Groq) para redactar la respuesta. Nada más sale de tu dispositivo.',
+  askNotice: 'Pregunta a la IA sobre el texto. Tu pregunta y el pasaje se envían a Groq, y la IA puede cometer errores.',
   askAccept: 'Entendido',
   askDisclaimer: "La IA puede cometer errores. Comprueba siempre las respuestas.",
   askError: 'No se pudo obtener la respuesta. Inténtalo de nuevo.',

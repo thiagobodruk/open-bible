@@ -43,7 +43,7 @@ const de: Messages = {
   askExplainQ: 'Erkläre diese Stelle in einfachen Worten.',
   askContextQ: 'Was ist der historische und literarische Kontext dieser Stelle?',
   askSummaryQ: 'Fasse diese Stelle in wenigen Sätzen zusammen.',
-  askNotice: 'Deine Frage und der ausgewählte Text werden an einen KI-Dienst (Groq) gesendet, der die Antwort verfasst. Sonst verlässt nichts dein Gerät.',
+  askNotice: 'Frag die KI zum Text. Deine Frage und die Stelle werden an Groq gesendet, und die KI kann Fehler machen.',
   askAccept: 'Verstanden',
   askDisclaimer: "KI kann Fehler machen. Prüfe die Antworten immer.",
   askError: 'Keine Antwort erhalten. Versuche es erneut.',

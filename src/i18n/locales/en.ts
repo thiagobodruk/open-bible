@@ -41,7 +41,7 @@ const en = {
   askExplainQ: 'Explain this passage in simple terms.',
   askContextQ: 'What is the historical and literary context of this passage?',
   askSummaryQ: 'Summarize this passage in a few sentences.',
-  askNotice: 'Your question and the selected text are sent to an AI service (Groq) to write the answer. Nothing else leaves your device.',
+  askNotice: 'Ask the AI about the text. Your question and the passage are sent to Groq, and the AI can make mistakes.',
   askAccept: 'Got it',
   askDisclaimer: "AI can make mistakes. Always check the answers.",
   askError: 'Could not get an answer. Try again.',

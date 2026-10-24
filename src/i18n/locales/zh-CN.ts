@@ -43,7 +43,7 @@ const zhCN: Messages = {
   askExplainQ: '请用简单的话解释这段经文。',
   askContextQ: '这段经文的历史和文学背景是什么？',
   askSummaryQ: '请用几句话总结这段经文。',
-  askNotice: '您的问题和所选经文会发送给 AI 服务（Groq）以生成回答。除此之外，没有任何内容会离开您的设备。',
+  askNotice: '向 AI 询问这段经文。您的问题和经文会发送给 Groq，AI 可能会出错。',
   askAccept: '知道了',
   askDisclaimer: "AI 可能出错，请务必核实回答。",
   askError: '无法获得回答，请重试。',
