@@ -1,10 +1,9 @@
 name: Release
 
-# Runs when a PR is merged into main. The PR's label sets the bump (patch by default, `minor`, `major`,
-# or `no-release` to skip), and its "Changelog" section becomes the release notes. Then the site is deployed.
+# Run by hand (Actions > Release > Run workflow). Merging a PR does not create a version.
+# It gathers the PRs merged since the last version: the highest label sets the bump (patch by default, `minor`, `major`;
+# `no-release` PRs are ignored), and their "Changelog" sections are joined into one set of release notes. Then the site is deployed.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -25,25 +24,27 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Find the merged PR
-        id: pr
+      - name: Collect the PRs merged since the last version
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          pr=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq '.[0].number // empty' 2>/dev/null || true)
-          echo "number=$pr" >> "$GITHUB_OUTPUT"
-          if [ -z "$pr" ]; then echo "No PR for this commit: no release"; exit 0; fi
-          gh api "repos/$GITHUB_REPOSITORY/pulls/$pr" > pr.json
-          echo "labels=$(jq -r '[.labels[].name] | join(",")' pr.json)" >> "$GITHUB_OUTPUT"
+          last=$(git describe --tags --abbrev=0 --match 'v*' 2>/dev/null || true)
+          range=${last:+$last..}HEAD
+          echo "Since: ${last:-the beginning}"
+          numbers=$(for sha in $(git log --first-parent --format=%H $range); do
+            gh api "repos/$GITHUB_REPOSITORY/commits/$sha/pulls" --jq '.[0].number // empty' 2>/dev/null || true
+          done | sort -un)
+          echo "PRs: $(echo $numbers)"
+          for n in $numbers; do
+            gh api "repos/$GITHUB_REPOSITORY/pulls/$n" --jq '{number, title, body, labels: [.labels[].name]}'
+          done | jq -s '.' > prs.json
       - name: Bump the version and publish the release
-        if: steps.pr.outputs.number != '' && !contains(steps.pr.outputs.labels, 'no-release')
+        id: bump
         env:
           GH_TOKEN: ${{ github.token }}
-          LABELS: ${{ steps.pr.outputs.labels }}
         run: |
-          export TITLE=$(jq -r '.title' pr.json)
-          export BODY=$(jq -r '.body // ""' pr.json)
           version=$(node .github/scripts/bump.mjs)
+          if [ -z "$version" ]; then echo "Nothing to release"; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package.json package-lock.json CHANGELOG.md
@@ -51,7 +52,9 @@ jobs:
           git pull --rebase origin main
           git push origin HEAD:main
           gh release create "v$version" --target "$(git rev-parse HEAD)" --title "v$version" --latest --notes-file release-notes.md
+          echo "released=true" >> "$GITHUB_OUTPUT"
       - name: Deploy the site
+        if: steps.bump.outputs.released == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run deploy.yml --ref main
