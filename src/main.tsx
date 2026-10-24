@@ -23,10 +23,10 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
-const SPLASH_MIN = 1200;
+const SPLASH_MIN = 1500;
 const SPLASH_MAX = 3000;
 
-/** Tira a splash quando o app já desenhou e as fontes carregaram, mas só depois de ficar 1,2 s à vista. */
+/** Tira a splash quando o app já desenhou e as fontes carregaram, mas só depois de ficar 1,5 s à vista. */
 const splash = document.getElementById('splash');
 if (splash) {
   const fonts = document.fonts ? document.fonts.ready.then(() => undefined) : Promise.resolve();
