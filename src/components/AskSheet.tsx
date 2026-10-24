@@ -99,20 +99,34 @@ export function AskCrash({ onRetry }: { onRetry: () => void }) {
   const t = useT();
   const close = useUI((s) => s.close);
   const uiLang = useSettings((s) => s.uiLang);
-  const asked = useAsk.getState().messages.find((m) => m.role === 'user');
+  const { passage, messages } = useAsk.getState();
+  const asked = messages.find((m) => m.role === 'user');
+
+  const ask = (q: string) => {
+    if (!passage) return;
+    useAsk.getState().start(q, passage, uiLang);
+    onRetry();
+  };
+
   return (
-    <Sheet title={t('askTitle')} icon={Sparkle} onClose={close} tall compact>
+    <Sheet
+      title={t('askTitle')}
+      icon={Sparkle}
+      onClose={close}
+      compact
+      footer={
+        passage && (
+          <div className="ask-foot">
+            <PromptField context={passage.ref} placeholder={t('askFollowUp')} onSubmit={ask} />
+          </div>
+        )
+      }
+    >
       <div className="ask-chat">
         {asked && <div className="ask-msg user">{asked.content}</div>}
         <div className="ask-msg assistant" role="alert">{t('askCrash')}</div>
         {asked && (
-          <button
-            className="btn sm"
-            onClick={() => {
-              useAsk.getState().retry(uiLang);
-              onRetry();
-            }}
-          >
+          <button className="btn sm" onClick={() => ask(asked.content)}>
             <ArrowClockwise size={16} weight="regular" />
             {t('askRetry')}
           </button>

@@ -229,6 +229,7 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 .ask-send { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--accent); color: var(--accent-fg); }
 .ask-send:disabled { opacity: 0.35; }
 .ask-chat { display: grid; gap: 14px; }
+.ask-chat > .btn { justify-self: start; }
 .ask-ref { font-size: 13px; font-weight: 600; color: var(--muted); }
 .ask-msg { white-space: pre-wrap; font-size: 16px; line-height: 1.6; }
 .ask-msg.user { justify-self: end; max-width: 88%; padding: 10px 14px; border-radius: 18px 18px 4px 18px; background: var(--surface); }
