@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.7.7
+
+### Fixed
+
+- The "Install app" item in the menu works again, for the native prompt and for the manual guide.
+
 ## 1.7.6
 
 ### Changed
