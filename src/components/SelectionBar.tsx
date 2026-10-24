@@ -24,7 +24,7 @@ export function SelectionBar() {
   const citation = () => {
     const first = selection[0];
     const last = selection[selection.length - 1];
-    const body = selection.map((v) => `${v} ${verses[v - 1]}`).join('\n');
+    const body = selection.map((v) => verses[v - 1]).join('\n');
     return `${body}\n${refLabel(bookName(book), chapter, first, last)} (${abbrOf(versionId)})`;
   };
 
