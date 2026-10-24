@@ -9,15 +9,6 @@ let deferred: InstallPromptEvent | null = null;
 const listeners = new Set<() => void>();
 const emit = () => listeners.forEach((l) => l());
 
-addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferred = e as InstallPromptEvent;
-  emit();
-});
-
-const INSTALLED = 'ob:installed';
-const DISMISSED = 'ob:install-dismissed';
-
 const flag = (key: string) => {
   try {
     return !!localStorage.getItem(key);
@@ -32,6 +23,25 @@ const setFlag = (key: string) => {
     /* sem armazenamento, vale só nesta sessão */
   }
 };
+
+const clearFlag = (key: string) => {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    /* sem armazenamento, nada a limpar */
+  }
+};
+
+const INSTALLED = 'ob:installed';
+const DISMISSED = 'ob:install-dismissed';
+
+addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferred = e as InstallPromptEvent;
+  // O navegador só oferece a instalação quando o app não está instalado: se a marca sobrou, ele foi desinstalado.
+  clearFlag(INSTALLED);
+  emit();
+});
 
 addEventListener('appinstalled', () => {
   deferred = null;
