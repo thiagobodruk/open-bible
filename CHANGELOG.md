@@ -2,6 +2,13 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.7.1
+
+### Changed
+
+- A dica de introdução da IA tem um texto mais curto, ao lado do botão, com o ícone acima.
+- No botão Atualizar dos Ajustes, as versões aparecem como "Atual" e "Nova".
+
 ## 1.7.0
 
 ### Added
