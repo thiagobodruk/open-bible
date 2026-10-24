@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). Each release is published from the section with its number, so add a section here when you bump `version` in `package.json`.
 
+## 1.1.6
+
+### Fixed
+
+- The Update button on iOS could show "Updating to the new version..." and stay on the old version until the app was closed and reopened. The app now reloads as soon as the new worker is active, and after 4 seconds at most.
+
 ## 1.1.5
 
 ### Changed

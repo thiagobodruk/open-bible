@@ -12,10 +12,24 @@ const apply = registerSW({
   },
 });
 
-/** Ativa o worker que está esperando e recarrega quando ele assume a página. */
+/**
+ * Ativa o worker que está esperando e recarrega quando ele assume a página.
+ * No iOS o evento controllerchange pode não chegar, então também escuta o próprio worker
+ * e recarrega por tempo se nada acontecer.
+ */
 function activate() {
-  navigator.serviceWorker.addEventListener('controllerchange', () => location.reload(), { once: true });
+  const w = registration?.waiting;
+  let reloaded = false;
+  const reload = () => {
+    if (reloaded) return;
+    reloaded = true;
+    location.reload();
+  };
+  navigator.serviceWorker.addEventListener('controllerchange', reload, { once: true });
+  w?.addEventListener('statechange', () => w.state === 'activated' && reload());
   void apply(false);
+  w?.postMessage({ type: 'SKIP_WAITING' });
+  setTimeout(reload, 4000);
 }
 
 const RECHECK = 10 * 60 * 1000;
