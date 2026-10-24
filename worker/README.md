@@ -18,7 +18,7 @@ npx wrangler deploy
 Edit `wrangler.toml`:
 
 - `ALLOWED_ORIGINS`: sites allowed to call the Worker from a browser. Add `http://localhost:5173` for local development.
-- `MODEL`: any Groq chat model. The default, `llama-3.1-8b-instant`, fits the Groq free tier. The free limits apply to your whole Groq organization, not per user, so a lighter model and per-IP limits keep one person from using everyone's share.
+- `MODEL`: any Groq chat model. The default, `openai/gpt-oss-20b`, is light enough for the Groq free tier. Model names change over time, so list the ones your account has with `curl https://api.groq.com/openai/v1/models -H "Authorization: Bearer $GROQ_API_KEY"`. The free limits apply to your whole Groq organization, not per user, so a lighter model and per-IP limits keep one person from using everyone's share.
 - `MAX_TOKENS`: the longest answer, in tokens.
 - `[[ratelimits]]`: requests per IP per minute (6 by default).
 - Daily limit per IP (optional): run `npx wrangler kv namespace create DAILY`, uncomment the `[[kv_namespaces]]` block in `wrangler.toml` with the id it prints, and set `DAILY_LIMIT`. Redeploy.

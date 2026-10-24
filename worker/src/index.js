@@ -16,7 +16,7 @@ const LANGS = {
 };
 
 const LIMITS = { question: 600, ref: 120, version: 80, text: 3000, history: 6, turn: 3000 };
-const DEFAULT_MODEL = 'llama-3.1-8b-instant';
+const DEFAULT_MODEL = 'openai/gpt-oss-20b';
 const DEFAULT_DAILY_LIMIT = 30;
 
 const SYSTEM = (language) =>
@@ -83,6 +83,19 @@ export function buildMessages(body) {
   return messages;
 }
 
+/** The chat request. The gpt-oss models think before they answer, and that thinking counts against max_tokens, so keep it short and hidden. */
+export function payload(env, messages) {
+  const model = env.MODEL || DEFAULT_MODEL;
+  return {
+    model,
+    messages,
+    stream: true,
+    temperature: 0.3,
+    max_tokens: Number(env.MAX_TOKENS) || 1200,
+    ...(model.includes('gpt-oss') ? { reasoning_effort: 'low', include_reasoning: false } : {}),
+  };
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -116,13 +129,7 @@ export default {
       upstream = await fetch(GROQ_URL, {
         method: 'POST',
         headers: { authorization: `Bearer ${env.GROQ_API_KEY}`, 'content-type': 'application/json' },
-        body: JSON.stringify({
-          model: env.MODEL || DEFAULT_MODEL,
-          messages,
-          stream: true,
-          temperature: 0.3,
-          max_tokens: Number(env.MAX_TOKENS) || 700,
-        }),
+        body: JSON.stringify(payload(env, messages)),
       });
     } catch {
       return json(502, 'upstream_unreachable', headers);
