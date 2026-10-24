@@ -110,7 +110,84 @@ node scripts/build-catalog.mjs [commit-sha]
 
 ## Ask AI Worker
 
-The Worker in `worker/` is deployed separately from the site, with [Wrangler](https://developers.cloudflare.com/workers/wrangler/). It keeps the AI service key as a secret, accepts calls only from the allowed origins, limits requests per minute and per day for each IP, and caps the size of the question, the passage and the answer. Its system prompt keeps answers short and on topic. The settings (allowed origins, model, limits) are in `worker/wrangler.toml`, and the API key is stored with `npx wrangler secret put GROQ_API_KEY`. The site is built with the Worker address from the `AI_URL` repository variable (**Settings > Secrets and variables > Actions > Variables**).
+The Ask AI feature needs a small server, because the AI service key must never reach the browser. The Worker in `worker/` is that server: a [Cloudflare Worker](https://developers.cloudflare.com/workers/) that keeps your key as a secret, accepts calls only from your site, limits requests per IP, caps the size of each question and answer, and streams the reply back. Its system prompt keeps answers short, on the text and the Bible, and refuses harmful content. It is deployed separately from the site and is optional: without it the AI button is hidden and everything else works.
+
+### Set it up with your own API key
+
+You need a free [Cloudflare account](https://dash.cloudflare.com/sign-up), Node 20 or later, and an API key from any AI service that offers an OpenAI-compatible chat completions endpoint (`POST .../v1/chat/completions` with streaming).
+
+1. **Get the code.** Fork or clone this repository and open the Worker folder:
+
+   ```bash
+   git clone https://github.com/<you>/open-bible.git
+   cd open-bible/worker
+   ```
+
+2. **Log in to Cloudflare.**
+
+   ```bash
+   npx wrangler login
+   ```
+
+3. **Edit `wrangler.toml`.**
+   - `ALLOWED_ORIGINS`: the sites allowed to call the Worker, separated by commas. Use your site address (for example `https://<you>.github.io`). Add `http://localhost:5173` to test locally.
+   - `MODEL`: the model name your service offers. A lighter model is cheaper and faster, a larger one answers better.
+   - `API_URL`: the chat completions endpoint of your service. Uncomment it if you are not using the default one.
+   - `MAX_TOKENS`: the longest answer, including any thinking the model does first. 700 is enough for 1 to 3 short paragraphs.
+   - `[[ratelimits]]`: requests per IP per minute (6 by default). Remove the block to run without it.
+
+4. **Store your API key as a secret.** Paste it when asked. It is encrypted by Cloudflare and never written to a file or to this repository.
+
+   ```bash
+   npx wrangler secret put GROQ_API_KEY
+   ```
+
+   The secret name is historical; it works for any service.
+
+5. **Deploy.**
+
+   ```bash
+   npx wrangler deploy
+   ```
+
+   Wrangler prints the Worker address, such as `https://open-bible-ai.<your-subdomain>.workers.dev`. The first time, it asks you to choose a `workers.dev` subdomain. A new address can take a minute or two before HTTPS works.
+
+6. **Test it.** The origin header must match one in `ALLOWED_ORIGINS`:
+
+   ```bash
+   curl -N https://open-bible-ai.<your-subdomain>.workers.dev/ask \
+     -H 'content-type: application/json' \
+     -H 'origin: https://<you>.github.io' \
+     -d '{"question":"What is this passage about?","passage":{"ref":"John 3:16","version":"KJV","text":"For God so loved the world..."},"lang":"en","history":[]}'
+   ```
+
+   You should see a stream of `data:` lines with the answer.
+
+7. **Connect the site.** In your GitHub repository, go to **Settings > Secrets and variables > Actions > Variables**, create a variable named `AI_URL` with the Worker address, then run the Deploy workflow (Actions > Deploy > Run workflow). The button appears once the site is rebuilt.
+
+8. **Optional: a daily limit per IP.** Run `npx wrangler kv namespace create DAILY`, uncomment the `[[kv_namespaces]]` block in `wrangler.toml`, paste the id it prints, adjust `DAILY_LIMIT`, and deploy again.
+
+To run everything locally, put the key in `worker/.dev.vars` (ignored by git) as `GROQ_API_KEY=your-key`, start the Worker with `npx wrangler dev`, and start the app with `VITE_AI_URL=http://localhost:8787 npm run dev`.
+
+### Keeping it safe and cheap
+
+- Set a spending limit in your AI service console. The Worker caps each request and answer, but it cannot see your total usage.
+- Free tiers are usually shared by your whole account, so the per-minute and per-day limits per IP keep one person from using everyone's share.
+- If a key leaks, revoke it in the service console and run `npx wrangler secret put GROQ_API_KEY` with the new one. Never paste it in an issue, a chat or a commit.
+
+### Troubleshooting
+
+The app shows a generic message; the Worker answers with a JSON code such as `{ "error": "rate_limited" }`.
+
+| Code | Meaning and fix |
+|---|---|
+| `forbidden_origin` | The site is not in `ALLOWED_ORIGINS`. Add it and deploy again. |
+| `not_configured` | The secret is missing. Run `npx wrangler secret put GROQ_API_KEY`. |
+| `rate_limited` | Too many requests in a minute from one IP. |
+| `daily_limit` | The IP used its daily questions (only with the `DAILY` namespace). |
+| `quota` | The AI service's own limit was reached. Wait, or use another key or model. |
+| `upstream_error` | The service refused the call. A wrong model name or key is the usual cause. Run `npx wrangler tail`, repeat the request, and read the status the Worker logs (401 is a wrong key, 404 a wrong model or endpoint). |
+| `bad_request` | The request body is not valid. |
 
 ## Stack
 

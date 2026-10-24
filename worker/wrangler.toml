@@ -8,8 +8,10 @@ enabled = true
 [vars]
 # Comma-separated list of sites allowed to call the Worker from a browser.
 ALLOWED_ORIGINS = "https://thiagobodruk.github.io"
-# Any chat model your Groq account lists (curl https://api.groq.com/openai/v1/models). "openai/gpt-oss-120b" answers better and costs more.
+# Any chat model your AI service lists. A larger model answers better and costs more.
 MODEL = "openai/gpt-oss-20b"
+# Chat completions endpoint of an OpenAI-compatible service. Leave unset to use the default one.
+# API_URL = "https://your-provider.example/v1/chat/completions"
 # Questions per IP per day. Only applies when the DAILY namespace below is set up.
 DAILY_LIMIT = "30"
 # A hard cap on the answer, including the short thinking the model does first. The prompt asks for 1 to 3 short paragraphs.
