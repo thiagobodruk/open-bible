@@ -16,11 +16,11 @@
 .topbar.mini .topbar-in { height: 32px; }
 .topbar.mini .topbar-in > :not(.mini-title) { display: none; }
 .topbar.mini .mini-title { display: flex; }
-.crumb { display: flex; align-items: center; gap: 6px; height: 44px; padding: 0 12px; border-radius: 999px; font-size: 16px; font-weight: 600; min-width: 0; }
-.crumb:hover { background: var(--surface); }
+.crumb { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; margin-right: 6px; border-radius: 999px; background: var(--surface); font-size: 14px; font-weight: 600; min-width: 0; }
+.crumb:hover { background: var(--surface-2); }
 .crumb span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .topbar .spacer { flex: 1; }
-.ver-chip { height: 32px; padding: 0 12px; border-radius: 999px; background: var(--surface); font-size: 13px; font-weight: 600; letter-spacing: 0.02em; margin-right: 2px; }
+.ver-chip { height: 32px; padding: 0 12px; border-radius: 999px; background: var(--surface); font-size: 13px; font-weight: 600; letter-spacing: 0.02em; flex: none; }
 .ver-chip:hover { background: var(--surface-2); }
 
 /* Zonas de toque nas extremidades */
