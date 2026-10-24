@@ -4,6 +4,7 @@ import { PromptField } from './PromptField';
 import { Sheet } from './Sheet';
 import { useAsk } from '../state/ask';
 import { useSettings } from '../state/settings';
+import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { useT } from '../i18n';
 
@@ -21,7 +22,7 @@ export function AskSheet() {
   const close = useUI((s) => s.close);
   const notify = useUI((s) => s.notify);
   const uiLang = useSettings((s) => s.uiLang);
-  const { passage, messages, status, error, followUp, retry, stop } = useAsk();
+  const { passage, messages, status, error, followUp, retry, stop, widen } = useAsk();
   const end = useRef<HTMLDivElement>(null);
   const busy = status === 'loading' || status === 'streaming';
   const answer = messages[messages.length - 1];
@@ -52,6 +53,7 @@ export function AskSheet() {
           {status !== 'error' && (
             <PromptField
               context={passage?.ref ?? ''}
+              onClearContext={passage?.wide ? () => { widen(); useStudy.getState().clearSelection(); } : undefined}
               placeholder={t('askFollowUp')}
               disabled={busy}
               onSubmit={(q) => followUp(q, uiLang)}

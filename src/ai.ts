@@ -6,6 +6,8 @@ export interface AiPassage {
   ref: string;
   version: string;
   text: string;
+  /** O capítulo inteiro, quando o trecho é uma seleção: para onde a pill volta ao remover o verso. */
+  wide?: { ref: string; text: string };
 }
 
 export interface AiMessage {
@@ -57,7 +59,7 @@ export async function askAI({ question, passage, lang, history, signal, onText }
     res = await fetch(`${AI_URL.replace(/\/$/, '')}/ask`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ question, passage, lang, history }),
+      body: JSON.stringify({ question, passage: { ref: passage.ref, version: passage.version, text: passage.text }, lang, history }),
       signal,
     });
   } catch {
