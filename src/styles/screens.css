@@ -49,8 +49,6 @@
 .entry .date { font-size: 12px; color: var(--muted); margin-top: 6px; }
 .empty { text-align: center; color: var(--muted); padding: 64px 16px; }
 .empty svg { margin-bottom: 12px; }
-.welcome .btn { position: relative; }
-.welcome .btn svg { position: absolute; left: 18px; top: 50%; margin: 0; transform: translateY(-50%); }
 
 /* Navegador */
 .book-list { margin: 0 -8px; }

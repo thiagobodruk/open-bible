@@ -113,6 +113,9 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .sheet-pinned:has(> .search) { padding: 4px 22px 12px; }
 .sheet-pinned:has(> .search) + .sheet-body { padding-top: 8px; }
 .btn.block { display: flex; width: 100%; }
+/* Ícone na extremidade esquerda, com o texto centralizado no botão. */
+.btn.lead { position: relative; }
+.btn.lead > svg { position: absolute; left: 18px; top: 50%; margin: 0; transform: translateY(-50%); }
 
 /* Convite de instalação: cartão flutuante discreto no pé da tela */
 .install-banner {
