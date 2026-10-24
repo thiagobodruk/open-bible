@@ -190,7 +190,7 @@ export function Reader() {
       <button className="edge right" hidden={blocked} onClick={() => move(1)} aria-label={t('nextChapter')}><CaretRight size={28} weight="light" /></button>
 
       <main
-        className={`page${(hasSelection || askBar) && !sheet ? ' has-sel' : ''}`}
+        className={`page${(hasSelection || askBar) && (!sheet || sheet === 'ask') ? ' has-sel' : ''}`}
         style={readingVars(settings)}
         onClick={onPageClick}
         onTouchStart={onTouchStart}
@@ -238,7 +238,7 @@ export function Reader() {
       {listenStatus !== 'idle' && !hasSelection && !askBar && sheet !== 'menu' && <ListenBar />}
       <InstallBanner hidden={blocked || listenStatus !== 'idle'} hold={hint} />
       {hasSelection && !sheet && !askBar && <SelectionBar />}
-      {askBar && !sheet && <AskBar />}
+      {askBar && (!sheet || sheet === 'ask') && <AskBar />}
       {aiEnabled && !askBar && !hasSelection && !sheet && <AskFab />}
     </div>
   );
