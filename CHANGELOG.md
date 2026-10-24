@@ -2,6 +2,13 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.3.1
+
+### Changed
+
+- Library: after a download, the toast says the version was downloaded and activated.
+- Compare versions: "Download more versions" is always available below the verses, and the repeated reference under the title is gone.
+
 ## 1.3.0
 
 ### Added
