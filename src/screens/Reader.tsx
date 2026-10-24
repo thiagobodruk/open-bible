@@ -182,7 +182,7 @@ export function Reader() {
           <button className="icon-btn" onClick={() => open('search')} aria-label={t('search')}><MagnifyingGlass size={24} weight="light" /></button>
           {aiEnabled && (
             <button className={`icon-btn${askBar ? ' on' : ''}`} onClick={() => useAsk.getState().toggleBar()} aria-pressed={askBar} aria-label={t('ask')}>
-              <Sparkle size={24} weight={askBar ? 'fill' : 'light'} />
+              <Sparkle size={24} weight="light" />
             </button>
           )}
           <button className="icon-btn" onClick={() => open('text')} aria-label={t('textSettings')}><TextAa size={24} weight="light" /></button>
