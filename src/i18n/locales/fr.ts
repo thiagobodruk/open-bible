@@ -18,6 +18,9 @@ const fr: Messages = {
   copy: 'Copier',
   share: 'Partager',
   note: 'Note',
+  compare: 'Comparer',
+  compareTitle: 'Comparer les versions',
+  compareMore: 'Télécharger d’autres versions',
   cancel: 'Annuler',
   save: 'Enregistrer',
   delete: 'Supprimer',
@@ -58,8 +61,6 @@ const fr: Messages = {
   result_one: '{n} résultat',
   result_other: '{n} résultats',
 
-  verse_one: '{n} verset',
-  verse_other: '{n} versets',
   highlightColor: 'Couleur du surlignage',
   highlightWith: 'Surligner en {color}',
   yellow: 'Jaune',

@@ -18,6 +18,9 @@ const de: Messages = {
   copy: 'Kopieren',
   share: 'Teilen',
   note: 'Notiz',
+  compare: 'Vergleichen',
+  compareTitle: 'Versionen vergleichen',
+  compareMore: 'Weitere Versionen laden',
   cancel: 'Abbrechen',
   save: 'Speichern',
   delete: 'Löschen',
@@ -58,8 +61,6 @@ const de: Messages = {
   result_one: '{n} Ergebnis',
   result_other: '{n} Ergebnisse',
 
-  verse_one: '{n} Vers',
-  verse_other: '{n} Verse',
   highlightColor: 'Markierungsfarbe',
   highlightWith: 'In {color} markieren',
   yellow: 'Gelb',

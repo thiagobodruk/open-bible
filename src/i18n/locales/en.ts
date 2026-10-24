@@ -16,6 +16,9 @@ const en = {
   copy: 'Copy',
   share: 'Share',
   note: 'Note',
+  compare: 'Compare',
+  compareTitle: 'Compare versions',
+  compareMore: 'Download more versions',
   cancel: 'Cancel',
   save: 'Save',
   delete: 'Delete',
@@ -56,8 +59,6 @@ const en = {
   result_one: '{n} result',
   result_other: '{n} results',
 
-  verse_one: '{n} verse',
-  verse_other: '{n} verses',
   highlightColor: 'Highlight color',
   highlightWith: 'Highlight in {color}',
   yellow: 'Yellow',

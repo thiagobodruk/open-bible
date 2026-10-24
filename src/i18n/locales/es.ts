@@ -18,6 +18,9 @@ const es: Messages = {
   copy: 'Copiar',
   share: 'Compartir',
   note: 'Nota',
+  compare: 'Comparar',
+  compareTitle: 'Comparar versiones',
+  compareMore: 'Descargar más versiones',
   cancel: 'Cancelar',
   save: 'Guardar',
   delete: 'Eliminar',
@@ -58,8 +61,6 @@ const es: Messages = {
   result_one: '{n} resultado',
   result_other: '{n} resultados',
 
-  verse_one: '{n} versículo',
-  verse_other: '{n} versículos',
   highlightColor: 'Color del resaltado',
   highlightWith: 'Resaltar en {color}',
   yellow: 'Amarillo',

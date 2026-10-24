@@ -162,3 +162,13 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .listen-bar .btn.sm { flex: none; min-width: 52px; padding: 0 10px; }
 .listen-bar .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .icon-btn.on { color: var(--accent); }
+
+/* Comparar versões */
+.compare-ref { font-size: 13px; color: var(--muted); margin: -2px 0 6px; }
+.compare-item { display: block; width: 100%; text-align: left; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.compare-item:last-child { border-bottom: 0; }
+.compare-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 6px; font-size: 14px; }
+.compare-head b { flex: none; font-weight: 600; }
+.compare-head span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 12.5px; }
+.compare-text { display: block; font-family: var(--font-serif); font-size: 17px; line-height: 1.6; }
+.compare + .btn { margin-top: 12px; }

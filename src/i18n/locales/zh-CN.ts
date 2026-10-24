@@ -18,6 +18,9 @@ const zhCN: Messages = {
   copy: '复制',
   share: '分享',
   note: '笔记',
+  compare: '对比',
+  compareTitle: '对比译本',
+  compareMore: '下载更多译本',
   cancel: '取消',
   save: '保存',
   delete: '删除',
@@ -58,8 +61,6 @@ const zhCN: Messages = {
   result_one: '{n} 条结果',
   result_other: '{n} 条结果',
 
-  verse_one: '{n} 节',
-  verse_other: '{n} 节',
   highlightColor: '标记颜色',
   highlightWith: '标记为{color}',
   yellow: '黄色',

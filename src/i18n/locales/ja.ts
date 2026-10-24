@@ -18,6 +18,9 @@ const ja: Messages = {
   copy: 'コピー',
   share: '共有',
   note: 'メモ',
+  compare: '比較',
+  compareTitle: '訳を比較',
+  compareMore: 'ほかの訳をダウンロード',
   cancel: 'キャンセル',
   save: '保存',
   delete: '削除',
@@ -58,8 +61,6 @@ const ja: Messages = {
   result_one: '{n} 件',
   result_other: '{n} 件',
 
-  verse_one: '{n} 節',
-  verse_other: '{n} 節',
   highlightColor: 'ハイライトの色',
   highlightWith: '{color}でハイライト',
   yellow: '黄',
