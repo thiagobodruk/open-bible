@@ -18,10 +18,21 @@ function activate() {
   void apply(false);
 }
 
-/** A versão nova espera em segundo plano e entra quando o app sai de cena, sem interromper a leitura. */
+const RECHECK = 10 * 60 * 1000;
+let lastCheck = Date.now();
+
+/**
+ * A versão nova espera em segundo plano e entra quando o app sai de cena, sem interromper a leitura.
+ * Ao voltar para o app, busca uma versão nova (no máximo a cada 10 minutos), que entrará na próxima saída.
+ */
 export function initUpdates() {
   document.addEventListener('visibilitychange', () => {
-    if (waiting && document.visibilityState === 'hidden') activate();
+    if (document.visibilityState === 'hidden') {
+      if (waiting) activate();
+    } else if (!waiting && registration && Date.now() - lastCheck > RECHECK) {
+      lastCheck = Date.now();
+      registration.update().catch(() => {});
+    }
   });
 }
 
