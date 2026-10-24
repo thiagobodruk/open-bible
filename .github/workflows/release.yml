@@ -1,9 +1,12 @@
 name: Release
 
-# Run by hand (Actions > Release > Run workflow). Merging a PR does not create a version.
+# Merging a PR does not create a version by itself. A version is published when the merged PR has the `release` label
+# (or when the workflow is run by hand: Actions > Release > Run workflow).
 # It gathers the PRs merged since the last version: the highest label sets the bump (patch by default, `minor`, `major`;
 # `no-release` PRs are ignored), and their "Changelog" sections are joined into one set of release notes. Then the site is deployed.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -24,7 +27,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Check for the release label
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then echo "go=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          labels=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq '[.[0].labels[]?.name] | join(",")' 2>/dev/null || true)
+          echo "Labels of the merged PR: $labels"
+          case ",$labels," in *,release,*) echo "go=true" >> "$GITHUB_OUTPUT" ;; *) echo "No release label: no version" ;; esac
       - name: Collect the PRs merged since the last version
+        if: steps.gate.outputs.go == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -40,6 +53,7 @@ jobs:
           done | jq -s '.' > prs.json
       - name: Bump the version and publish the release
         id: bump
+        if: steps.gate.outputs.go == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

@@ -85,7 +85,7 @@ npm run preview   # serve the build at http://localhost:4173/open-bible/
 
 ### Releases
 
-Versions follow [SemVer](https://semver.org/). Merging a PR deploys the site but does not create a version. Label each PR `patch` (the default), `minor` (new feature), `major` (breaking change) or `no-release` (docs, workflows), and write what users will notice under `## Changelog` in the PR description. To publish a version, run the Release workflow (Actions > Release > Run workflow). It takes the PRs merged since the last version, uses the highest label for the bump, joins their changelogs into one set of notes, tags and publishes the release, and deploys the site.
+Versions follow [SemVer](https://semver.org/). Merging a PR deploys the site but does not create a version. Label each PR `patch` (the default), `minor` (new feature), `major` (breaking change) or `no-release` (docs, workflows), and write what users will notice under `## Changelog` in the PR description. To publish a version, put the `release` label on the PR you are merging (or run the Release workflow by hand: Actions > Release > Run workflow). It takes the PRs merged since the last version, uses the highest label for the bump, joins their changelogs into one set of notes, tags and publishes the release, and deploys the site.
 
 ### Translations
 
