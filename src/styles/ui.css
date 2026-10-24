@@ -201,3 +201,13 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .ask-dots { display: inline-block; width: 36px; height: 8px; background: radial-gradient(circle, var(--muted) 3px, transparent 3.5px) 0 50% / 12px 8px repeat-x; animation: ask-pulse 1s ease-in-out infinite; }
 @keyframes ask-pulse { 50% { opacity: 0.3; } }
 @media (prefers-reduced-motion: reduce) { .ask-dots { animation: none; } }
+
+/* Botão flutuante da IA. Sobe quando há convite de instalação ou barra de leitura em voz alta, que o antecedem no DOM. */
+.ask-fab {
+  position: fixed; z-index: 25; right: max(18px, env(safe-area-inset-right, 0px)); bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+  display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%;
+  background: var(--accent); color: var(--accent-fg); box-shadow: var(--shadow);
+  animation: rise 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ask-fab:hover { filter: brightness(1.08); }
+.install-banner ~ .ask-fab, .listen-bar ~ .ask-fab { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
