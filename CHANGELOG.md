@@ -6,7 +6,7 @@ Versions follow [SemVer](https://semver.org/). Each release is published from th
 
 ### Changed
 
-- Splash screen: the version moves to the bottom of the screen, in a lighter gray.
+- Splash screen: the version moves to the bottom of the screen, in a lighter gray, and the minimum time goes back to 1.2 seconds.
 
 ## 1.2.3
 
