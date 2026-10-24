@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { CaretLeft, CaretRight, List, MagnifyingGlass, NotePencil, SpeakerHigh, TextAa } from '@phosphor-icons/react';
+import { CaretLeft, CaretRight, List, MagnifyingGlass, NotePencil, Sparkle, TextAa } from '@phosphor-icons/react';
 import { abbrOf, findVersion } from '../data/catalog';
 import { useBookName, useBooks, useChapter } from '../hooks';
 import { useLibrary } from '../state/library';
@@ -8,6 +8,9 @@ import { vkey, useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { readingVars } from '../components/readingVars';
 import { SelectionBar } from '../components/SelectionBar';
+import { AskBar } from '../components/AskBar';
+import { aiEnabled } from '../ai';
+import { useAsk } from '../state/ask';
 import { InstallBanner } from '../components/InstallBanner';
 import { SwipeHint } from '../components/SwipeHint';
 import { Welcome } from '../components/Welcome';
@@ -16,7 +19,7 @@ import { go } from '../router';
 import { hintPending, markHintSeen } from '../hint';
 import { isMobile } from '../install';
 import { ListenBar } from '../components/ListenBar';
-import { listenSupported, resume, setSilentHandler, silentHintDue, start, stop, useListen } from '../listen';
+import { resume, setSilentHandler, stop, useListen } from '../listen';
 import { useT } from '../i18n';
 
 export function Reader() {
@@ -24,6 +27,7 @@ export function Reader() {
   const { book, chapter, selection, highlights, notes, focusVerse, step, toggleVerse, clearFocus } = useStudy();
   const settings = useSettings();
   const { sheet, open, notify } = useUI();
+  const askBar = useAsk((s) => s.bar) && aiEnabled;
   const [barMini, setBarMini] = useState(false);
   const [hint, setHint] = useState(false);
   const [dir, setDir] = useState<'next' | 'prev' | null>(null);
@@ -44,12 +48,6 @@ export function Reader() {
   const versionInfo = findVersion(settings.versionId);
   const hasSelection = selection.length > 0;
   const blocked = hasSelection || sheet !== null;
-
-  const toggleListen = () => {
-    if (useListen.getState().status !== 'idle') return stop();
-    if (!start(verses, versionInfo?.lang ?? 'en')) notify(t('listenNoVoice'));
-    else if (silentHintDue()) notify(t('listenIosHint'));
-  };
 
   const move = (delta: 1 | -1) => {
     if (blocked) return;
@@ -182,9 +180,9 @@ export function Reader() {
           </button>
           <span className="spacer" />
           <button className="icon-btn" onClick={() => open('search')} aria-label={t('search')}><MagnifyingGlass size={24} weight="light" /></button>
-          {listenSupported() && (
-            <button className={`icon-btn${listenStatus !== 'idle' ? ' on' : ''}`} onClick={toggleListen} aria-pressed={listenStatus !== 'idle'} aria-label={listenStatus !== 'idle' ? t('listenStop') : t('listen')}>
-              <SpeakerHigh size={24} weight={listenStatus !== 'idle' ? 'fill' : 'light'} />
+          {aiEnabled && (
+            <button className={`icon-btn${askBar ? ' on' : ''}`} onClick={() => useAsk.getState().toggleBar()} aria-pressed={askBar} aria-label={t('ask')}>
+              <Sparkle size={24} weight={askBar ? 'fill' : 'light'} />
             </button>
           )}
           <button className="icon-btn" onClick={() => open('text')} aria-label={t('textSettings')}><TextAa size={24} weight="light" /></button>
@@ -196,7 +194,7 @@ export function Reader() {
       <button className="edge right" hidden={blocked} onClick={() => move(1)} aria-label={t('nextChapter')}><CaretRight size={28} weight="light" /></button>
 
       <main
-        className={`page${hasSelection && !sheet ? ' has-sel' : ''}`}
+        className={`page${(hasSelection || askBar) && !sheet ? ' has-sel' : ''}`}
         style={readingVars(settings)}
         onClick={onPageClick}
         onTouchStart={onTouchStart}
@@ -241,9 +239,10 @@ export function Reader() {
       </main>
 
       {hint && <SwipeHint onDone={() => setHint(false)} />}
-      {listenStatus !== 'idle' && !hasSelection && sheet !== 'menu' && <ListenBar />}
+      {listenStatus !== 'idle' && !hasSelection && !askBar && sheet !== 'menu' && <ListenBar />}
       <InstallBanner hidden={blocked || listenStatus !== 'idle'} hold={hint} />
-      {hasSelection && !sheet && <SelectionBar />}
+      {hasSelection && !sheet && !askBar && <SelectionBar />}
+      {askBar && !sheet && <AskBar />}
     </div>
   );
 }

@@ -175,3 +175,36 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .compare-text { display: block; font-family: var(--font-serif); font-size: 17px; line-height: 1.6; }
 .compare + .btn { margin-top: 12px; }
 .compare-wait { min-height: 160px; }
+
+/* Perguntar à IA */
+.ask-bar {
+  position: fixed; z-index: 36; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: min(100%, 560px); display: grid; gap: 10px;
+  padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+  background: var(--bg); border-radius: 22px 22px 0 0; box-shadow: 0 -6px 28px rgba(20, 22, 28, 0.18);
+  animation: rise 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@media (min-width: 720px) { .ask-bar { bottom: 24px; border-radius: 22px; } }
+.ask-ctx { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted); min-width: 0; }
+.ask-ctx span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ask-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.ask-chips::-webkit-scrollbar { display: none; }
+.chip-btn { flex: none; height: 34px; padding: 0 14px; border-radius: 999px; background: var(--surface); font-size: 14px; font-weight: 500; }
+.chip-btn:hover { background: var(--surface-2); }
+.ask-form { display: flex; align-items: center; gap: 8px; }
+.ask-form input { flex: 1; min-width: 0; height: 46px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--surface); font-size: 16px; color: var(--fg); outline: 0; }
+.ask-form input:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; }
+.ask-send { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--accent); color: var(--accent-fg); }
+.ask-send:disabled { opacity: 0.35; }
+.ask-notice { font-size: 14px; line-height: 1.5; color: var(--muted); }
+.ask-chat { display: grid; gap: 14px; }
+.ask-ref { font-size: 13px; font-weight: 600; color: var(--muted); }
+.ask-msg { white-space: pre-wrap; font-size: 16px; line-height: 1.6; }
+.ask-msg.user { justify-self: end; max-width: 88%; padding: 10px 14px; border-radius: 18px 18px 4px 18px; background: var(--surface); }
+.ask-msg.assistant { font-family: var(--font-serif); font-size: 17px; }
+.ask-error { display: grid; gap: 10px; justify-items: start; color: var(--danger); font-size: 15px; }
+.ask-form.in-sheet { margin-top: 6px; }
+.ask-note { padding: 0 4px; }
+.ask-dots { display: inline-block; width: 36px; height: 8px; background: radial-gradient(circle, var(--muted) 3px, transparent 3.5px) 0 50% / 12px 8px repeat-x; animation: ask-pulse 1s ease-in-out infinite; }
+@keyframes ask-pulse { 50% { opacity: 0.3; } }
+@media (prefers-reduced-motion: reduce) { .ask-dots { animation: none; } }

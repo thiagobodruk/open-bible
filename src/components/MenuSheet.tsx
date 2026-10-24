@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import { BookOpenText, DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, Translate, CaretRight } from '@phosphor-icons/react';
+import { BookOpenText, DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, SpeakerHigh, Translate, CaretRight } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
@@ -7,12 +7,28 @@ import { go, type Route } from '../router';
 import { useT } from '../i18n';
 import { appUrl } from '../link';
 import { installAvailable, requestInstall, subscribeInstall } from '../install';
+import { useChapter } from '../hooks';
+import { findVersion } from '../data/catalog';
+import { useSettings } from '../state/settings';
+import { listenSupported, silentHintDue, start, stop, useListen } from '../listen';
 
 export function MenuSheet() {
   const t = useT();
   const { close, open, notify } = useUI();
   const canInstall = useSyncExternalStore(subscribeInstall, installAvailable);
   const count = useStudy((s) => Object.keys(s.highlights).length + s.notes.length);
+  const { book, chapter } = useStudy();
+  const versionId = useSettings((s) => s.versionId);
+  const text = useChapter(book, chapter);
+  const listening = useListen((s) => s.status !== 'idle');
+
+  const toggleListen = () => {
+    close();
+    if (listening) return stop();
+    const verses = text.status === 'ready' ? text.verses : [];
+    if (!start(verses, findVersion(versionId)?.lang ?? 'en')) notify(t('listenNoVoice'));
+    else if (silentHintDue()) notify(t('listenIosHint'));
+  };
 
   const nav = (r: Route) => {
     close();
@@ -37,6 +53,7 @@ export function MenuSheet() {
   const all = [
     { icon: BookOpenText, label: t('read'), run: () => nav('/') },
     { icon: Notepad, label: t('study'), badge: count, run: () => nav('/study') },
+    ...(listenSupported() ? [{ icon: SpeakerHigh, label: listening ? t('listenStop') : t('listen'), run: toggleListen }] : []),
     { icon: Translate, label: t('library'), run: () => nav('/library') },
     { icon: GearSix, label: t('settings'), run: () => nav('/settings') },
     { icon: ShareNetwork, label: t('shareApp'), run: share },
