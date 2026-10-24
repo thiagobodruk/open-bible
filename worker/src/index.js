@@ -15,7 +15,9 @@ const LANGS = {
   ja: 'Japanese',
 };
 
-const LIMITS = { question: 600, ref: 120, version: 80, text: 6000, history: 6, turn: 3000 };
+const LIMITS = { question: 600, ref: 120, version: 80, text: 3000, history: 6, turn: 3000 };
+const DEFAULT_MODEL = 'llama-3.1-8b-instant';
+const DEFAULT_DAILY_LIMIT = 30;
 
 const SYSTEM = (language) =>
   [
@@ -41,6 +43,16 @@ function cors(origin, env) {
     'access-control-max-age': '86400',
     vary: 'origin',
   };
+}
+
+/** Counts today's questions for this IP in the optional DAILY KV namespace. Returns false once the limit is reached. */
+async function underDailyLimit(env, ip) {
+  if (!env.DAILY) return true;
+  const key = `d:${ip}:${new Date().toISOString().slice(0, 10)}`;
+  const used = Number(await env.DAILY.get(key)) || 0;
+  if (used >= (Number(env.DAILY_LIMIT) || DEFAULT_DAILY_LIMIT)) return false;
+  await env.DAILY.put(key, String(used + 1), { expirationTtl: 172800 });
+  return true;
 }
 
 const json = (status, error, headers = {}) =>
@@ -82,8 +94,8 @@ export default {
     if (!headers) return json(403, 'forbidden_origin');
     if (!env.GROQ_API_KEY) return json(500, 'not_configured', headers);
 
+    const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
     if (env.LIMITER) {
-      const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
       const { success } = await env.LIMITER.limit({ key: ip });
       if (!success) return json(429, 'rate_limited', headers);
     }
@@ -96,6 +108,8 @@ export default {
     }
     const messages = buildMessages(body);
     if (!messages) return json(400, 'bad_request', headers);
+    // Only valid requests count against the daily limit.
+    if (!(await underDailyLimit(env, ip))) return json(429, 'daily_limit', headers);
 
     let upstream;
     try {
@@ -103,7 +117,7 @@ export default {
         method: 'POST',
         headers: { authorization: `Bearer ${env.GROQ_API_KEY}`, 'content-type': 'application/json' },
         body: JSON.stringify({
-          model: env.MODEL || 'llama-3.3-70b-versatile',
+          model: env.MODEL || DEFAULT_MODEL,
           messages,
           stream: true,
           temperature: 0.3,
@@ -113,7 +127,7 @@ export default {
     } catch {
       return json(502, 'upstream_unreachable', headers);
     }
-    if (!upstream.ok || !upstream.body) return json(upstream.status === 429 ? 429 : 502, upstream.status === 429 ? 'rate_limited' : 'upstream_error', headers);
+    if (!upstream.ok || !upstream.body) return upstream.status === 429 ? json(429, 'quota', headers) : json(502, 'upstream_error', headers);
 
     return new Response(upstream.body, {
       headers: { 'content-type': 'text/event-stream', 'cache-control': 'no-store', ...headers },
