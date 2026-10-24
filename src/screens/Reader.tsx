@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { CaretDown, CaretLeft, CaretRight, List, MagnifyingGlass, NotePencil, SpeakerHigh, TextAa } from '@phosphor-icons/react';
+import { CaretLeft, CaretRight, List, MagnifyingGlass, NotePencil, SpeakerHigh, TextAa } from '@phosphor-icons/react';
 import { abbrOf, findVersion } from '../data/catalog';
 import { useBookName, useBooks, useChapter } from '../hooks';
 import { useLibrary } from '../state/library';
@@ -176,7 +176,6 @@ export function Reader() {
           </button>
           <button className="crumb" onClick={() => open('navigator')} aria-label={t('pickBook', { ref: `${bName} ${chapter}` })}>
             <span>{bName} {chapter}</span>
-            <CaretDown size={14} weight="bold" />
           </button>
           <button className="ver-chip" onClick={() => go('/library')} aria-label={t('chooseVersion')}>
             {abbrOf(settings.versionId)}
