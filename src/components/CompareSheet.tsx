@@ -5,7 +5,6 @@ import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
 import { useLibrary } from '../state/library';
 import { useSettings } from '../state/settings';
-import { useBookName } from '../hooks';
 import { loadBook } from '../data/bible';
 import { abbrOf, findVersion } from '../data/catalog';
 import { refLabel } from '../ref';
@@ -26,7 +25,6 @@ export function CompareSheet() {
   const installed = useLibrary((s) => s.installed);
   const versionId = useSettings((s) => s.versionId);
   const setSetting = useSettings((s) => s.set);
-  const bookName = useBookName();
   const [rows, setRows] = useState<Row[] | null>(null);
 
   const ids = Object.keys(installed).sort((a, b) => Number(b === versionId) - Number(a === versionId) || a.localeCompare(b));
@@ -67,7 +65,6 @@ export function CompareSheet() {
 
   return (
     <Sheet title={t('compareTitle')} onClose={close}>
-      <p className="compare-ref">{refLabel(bookName(book), chapter, first, last)}</p>
       <div className="compare">
         {rows?.map((r) => (
           <button key={r.id} className="compare-item" onClick={() => read(r.id)}>
@@ -86,12 +83,10 @@ export function CompareSheet() {
           </button>
         ))}
       </div>
-      {ids.length < 2 && (
-        <button className="btn block lead" onClick={more}>
-          <CloudArrowDown size={18} weight="regular" />
-          {t('compareMore')}
-        </button>
-      )}
+      <button className="btn block lead" onClick={more}>
+        <CloudArrowDown size={18} weight="regular" />
+        {t('compareMore')}
+      </button>
     </Sheet>
   );
 }

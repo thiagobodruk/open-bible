@@ -164,7 +164,6 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .icon-btn.on { color: var(--accent); }
 
 /* Comparar versões */
-.compare-ref { font-size: 13px; color: var(--muted); margin: -2px 0 6px; }
 .compare-item { display: block; width: 100%; text-align: left; padding: 14px 0; border-bottom: 1px solid var(--line); }
 .compare-item:last-child { border-bottom: 0; }
 .compare-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 6px; font-size: 14px; }
