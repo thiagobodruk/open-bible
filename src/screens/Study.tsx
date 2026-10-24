@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Notebook, NotePencil, Trash } from '@phosphor-icons/react';
+import { Notebook, NotePencil, Trash, X } from '@phosphor-icons/react';
 import { Sheet } from '../components/Sheet';
 import { useUI } from '../state/ui';
 import { ScreenHeader } from '../components/ScreenHeader';
@@ -138,9 +138,9 @@ export function Study() {
           </p>
           <div className="actions">
             <span className="grow" />
-            <button className="btn" onClick={() => setPending(null)}>{t('cancel')}</button>
+            <button className="btn" onClick={() => setPending(null)}><X size={18} weight="regular" />{t('cancel')}</button>
             <button
-              className="btn danger"
+              className="btn primary"
               onClick={() => {
                 if (pending.note) deleteNote(pending.key);
                 if (pending.color) removeHighlight(`${pending.book}.${pending.chapter}.${pending.v1}`);
@@ -148,6 +148,7 @@ export function Study() {
                 notify(t('deleted'));
               }}
             >
+              <Trash size={18} weight="regular" />
               {t('delete')}
             </button>
           </div>
