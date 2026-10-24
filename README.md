@@ -1,3 +1,7 @@
+<div align="center">
+
+<img src="design/app-icon-1024.png" alt="Open Bible logo" width="112">
+
 # Open Bible
 
 **A free, minimalist Bible reader for everyone, everywhere 🇧🇷 🇬🇧 🇪🇸 🇨🇳 🇫🇷 🇩🇪 🇯🇵**
@@ -17,6 +21,8 @@ Offline-first and installable on Android and iOS. No account, no backend, no tra
 [![Vite](https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white)](https://vite.dev)
 
 [Live demo](https://thiagobodruk.github.io/open-bible/) · [Bible versions](#bible-versions) · [Features](#features) · [Development](#development) · [Donate](#support-the-project) · [Bible data repo](https://github.com/thiagobodruk/bible)
+
+</div>
 
 ---
 
