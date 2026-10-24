@@ -2,6 +2,18 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.5.0
+
+### Added
+
+- Ask AI: select verses and ask for an explanation, the context or an application.
+- The verse selection actions include AI.
+
+### Changed
+
+- Listen to chapter moved from the header to the menu.
+- The AI prompt opens from a floating button in a bottom sheet that you can close.
+
 ## 1.4.1
 
 ### Changed
