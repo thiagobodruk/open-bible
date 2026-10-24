@@ -1,0 +1,97 @@
+import { useEffect, useState } from 'react';
+import { CloudArrowDown } from '@phosphor-icons/react';
+import { Sheet } from './Sheet';
+import { useUI } from '../state/ui';
+import { useStudy } from '../state/study';
+import { useLibrary } from '../state/library';
+import { useSettings } from '../state/settings';
+import { useBookName } from '../hooks';
+import { loadBook } from '../data/bible';
+import { abbrOf, findVersion } from '../data/catalog';
+import { refLabel } from '../ref';
+import { go } from '../router';
+import { useT } from '../i18n';
+
+interface Row {
+  id: string;
+  bookName: string;
+  verses: { n: number; text: string }[];
+}
+
+/** Os versículos selecionados lado a lado em todas as versões baixadas. Tocar em uma versão abre a leitura nela. */
+export function CompareSheet() {
+  const t = useT();
+  const close = useUI((s) => s.close);
+  const { book, chapter, selection, goTo } = useStudy();
+  const installed = useLibrary((s) => s.installed);
+  const versionId = useSettings((s) => s.versionId);
+  const setSetting = useSettings((s) => s.set);
+  const bookName = useBookName();
+  const [rows, setRows] = useState<Row[] | null>(null);
+
+  const ids = Object.keys(installed).sort((a, b) => Number(b === versionId) - Number(a === versionId) || a.localeCompare(b));
+  const idsKey = ids.join(',');
+  const selKey = selection.join(',');
+
+  useEffect(() => {
+    let live = true;
+    Promise.all(
+      idsKey.split(',').filter(Boolean).map(async (id): Promise<Row | null> => {
+        const b = await loadBook(id, book).catch(() => undefined);
+        const chap = b?.chapters[chapter - 1];
+        if (!b || !chap) return null;
+        const verses = selKey.split(',').map(Number).filter((n) => chap[n - 1] !== undefined).map((n) => ({ n, text: chap[n - 1] }));
+        return verses.length ? { id, bookName: b.name, verses } : null;
+      }),
+    ).then((r) => live && setRows(r.filter((x): x is Row => x !== null)));
+    return () => {
+      live = false;
+    };
+  }, [idsKey, selKey, book, chapter]);
+
+  const first = selection[0];
+  const last = selection[selection.length - 1];
+
+  const read = (id: string) => {
+    setSetting('versionId', id);
+    goTo(book, chapter, first);
+    close();
+    go('/');
+    scrollTo(0, 0);
+  };
+
+  const more = () => {
+    close();
+    go('/library');
+  };
+
+  return (
+    <Sheet title={t('compareTitle')} onClose={close}>
+      <p className="compare-ref">{refLabel(bookName(book), chapter, first, last)}</p>
+      <div className="compare">
+        {rows?.map((r) => (
+          <button key={r.id} className="compare-item" onClick={() => read(r.id)}>
+            <span className="compare-head">
+              <b>{refLabel(r.bookName, chapter, first, last)} {abbrOf(r.id)}</b>
+              <span>{findVersion(r.id)?.name ?? r.id}</span>
+            </span>
+            <span className="compare-text">
+              {r.verses.map((v) => (
+                <span key={v.n}>
+                  <sup className="vn">{v.n}</sup>
+                  {v.text}{' '}
+                </span>
+              ))}
+            </span>
+          </button>
+        ))}
+      </div>
+      {ids.length < 2 && (
+        <button className="btn block lead" onClick={more}>
+          <CloudArrowDown size={18} weight="regular" />
+          {t('compareMore')}
+        </button>
+      )}
+    </Sheet>
+  );
+}

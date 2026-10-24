@@ -1,4 +1,4 @@
-import { Copy, NotePencil, ShareNetwork } from '@phosphor-icons/react';
+import { Columns, Copy, NotePencil, ShareNetwork } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { HL_COLORS, vkey, useStudy, type HlColor } from '../state/study';
 import { useUI } from '../state/ui';
@@ -67,9 +67,10 @@ export function SelectionBar() {
         ))}
       </div>
       <div className="sheet-actions">
-        <button className="sheet-action" onClick={() => open('note')}><NotePencil size={24} weight="light" />{t('note')}</button>
-        <button className="sheet-action" onClick={copy}><Copy size={24} weight="light" />{t('copy')}</button>
-        <button className="sheet-action" onClick={share}><ShareNetwork size={24} weight="light" />{t('share')}</button>
+        <button className="sheet-action" onClick={() => open('note')} aria-label={t('note')} title={t('note')}><NotePencil size={24} weight="light" /></button>
+        <button className="sheet-action" onClick={() => open('compare')} aria-label={t('compare')} title={t('compare')}><Columns size={24} weight="light" /></button>
+        <button className="sheet-action" onClick={copy} aria-label={t('copy')} title={t('copy')}><Copy size={24} weight="light" /></button>
+        <button className="sheet-action" onClick={share} aria-label={t('share')} title={t('share')}><ShareNetwork size={24} weight="light" /></button>
       </div>
     </Sheet>
   );
