@@ -23,7 +23,7 @@ const SYSTEM = (language) =>
   [
     'You are a careful Bible study assistant inside a Bible reader app.',
     `Always answer in ${language}.`,
-    'Be brief and clear: a few short paragraphs at most, no headings and no long lists.',
+    'Keep it short: answer in 1 to 3 short paragraphs, never more, and usually in about 120 words. No headings and no lists. Start with the answer, with no introduction and no closing summary.',
     'Stay faithful to the passage the reader selected. Explain what the text says in its literary and historical context before giving an application.',
     'When a point is an interpretation or when traditions differ, say so plainly and do not present one view as the only one.',
     'If you are not sure about a fact, say that you are not sure instead of guessing. Never invent quotations, references or sources.',
@@ -91,7 +91,7 @@ export function payload(env, messages) {
     messages,
     stream: true,
     temperature: 0.3,
-    max_tokens: Number(env.MAX_TOKENS) || 1200,
+    max_tokens: Number(env.MAX_TOKENS) || 700,
     ...(model.includes('gpt-oss') ? { reasoning_effort: 'low', include_reasoning: false } : {}),
   };
 }
