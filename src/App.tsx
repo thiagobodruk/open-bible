@@ -38,8 +38,16 @@ export default function App() {
   const homeUrl = useUI((s) => s.homeUrl);
   useEffect(() => {
     if (route !== '/' || !ready || !installed || pending) return;
-    const path = homeUrl ? new URL(appUrl()).pathname : readPath(versionId, book, chapter);
-    if (location.pathname !== path || location.hash) history.replaceState(history.state, '', path + location.search);
+    const sync = () => {
+      const path = homeUrl ? new URL(appUrl()).pathname : readPath(versionId, book, chapter);
+      if (location.pathname !== path || location.hash) history.replaceState(history.state, '', path + location.search);
+    };
+    sync();
+    // Fechar um sheet volta uma entrada do histórico, que pode guardar um endereço de antes da leitura mudar.
+    // Com rota no endereço (#/study), quem navega é o roteador, então não mexe.
+    const onPop = () => !location.hash && sync();
+    addEventListener('popstate', onPop);
+    return () => removeEventListener('popstate', onPop);
   }, [route, ready, installed, pending, homeUrl, versionId, book, chapter]);
 
   // Troca de tela fecha sheets e volta ao topo
