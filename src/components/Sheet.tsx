@@ -12,6 +12,8 @@ interface Props {
   tall?: boolean;
   /** Conteúdo fixo entre o título e a área rolável. */
   pinned?: ReactNode;
+  /** Conteúdo fixo no rodapé, abaixo da área rolável. */
+  footer?: ReactNode;
   /** Sem fundo escurecido e sem tomar o foco: a página atrás continua tocável. */
   modeless?: boolean;
 }
@@ -21,7 +23,7 @@ const CLOSE_VELOCITY = 0.6; // px/ms
 const ANIM = 180;
 
 /** Bottom sheet padrão. Fecha ao arrastar para baixo, tocar fora (se houver fundo) ou com Esc. Não tem botão ×. */
-export function Sheet({ title, hideTitle, onClose, children, leading, trailing, tall, pinned, modeless }: Props) {
+export function Sheet({ title, hideTitle, onClose, children, leading, trailing, tall, pinned, footer, modeless }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
   const close = useRef(onClose);
@@ -147,6 +149,7 @@ export function Sheet({ title, hideTitle, onClose, children, leading, trailing, 
         </div>
         {pinned && <div className="sheet-pinned">{pinned}</div>}
         <div className="sheet-body" ref={body}>{children}</div>
+        {footer && <div className="sheet-foot">{footer}</div>}
       </div>
     </>
   );

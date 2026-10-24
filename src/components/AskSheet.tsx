@@ -52,6 +52,27 @@ export function AskSheet() {
       title={t('askTitle')}
       onClose={close}
       tall
+      footer={
+        <div className="ask-foot">
+          {status !== 'error' && (
+            <form className="ask-form" onSubmit={submit}>
+              <input
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                placeholder={t('askFollowUp')}
+                aria-label={t('askFollowUp')}
+                maxLength={600}
+                enterKeyHint="send"
+                disabled={busy}
+              />
+              <button type="submit" className="ask-send" disabled={!question.trim() || busy} aria-label={t('askSend')}>
+                <PaperPlaneTilt size={20} weight="fill" />
+              </button>
+            </form>
+          )}
+          <p className="hint ask-note">{t('askDisclaimer')}</p>
+        </div>
+      }
       trailing={
         answer?.role === 'assistant' && answer.content && !busy ? (
           <button className="icon-btn" onClick={copy} aria-label={t('copy')}><Copy size={22} weight="light" /></button>
@@ -71,23 +92,6 @@ export function AskSheet() {
             {error !== 'daily' && <button className="btn sm" onClick={() => retry(uiLang)}><ArrowClockwise size={16} weight="regular" />{t('askRetry')}</button>}
           </div>
         )}
-        {status !== 'error' && (
-          <form className="ask-form in-sheet" onSubmit={submit}>
-            <input
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              placeholder={t('askFollowUp')}
-              aria-label={t('askFollowUp')}
-              maxLength={600}
-              enterKeyHint="send"
-              disabled={busy}
-            />
-            <button type="submit" className="ask-send" disabled={!question.trim() || busy} aria-label={t('askSend')}>
-              <PaperPlaneTilt size={20} weight="fill" />
-            </button>
-          </form>
-        )}
-        <p className="hint ask-note">{t('askDisclaimer')}</p>
         <div ref={end} />
       </div>
     </Sheet>

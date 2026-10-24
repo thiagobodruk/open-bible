@@ -103,6 +103,8 @@
 
 /* Sheet alta (busca) */
 .sheet.tall { height: min(92dvh, 760px); }
+.sheet.tall .sheet-body { flex: 1; min-height: 0; }
+.sheet-foot { flex: none; padding: 10px 22px 12px; border-top: 1px solid var(--line); }
 @media (min-width: 720px) { .sheet.tall { height: min(80dvh, 720px); } }
 
 .chip.accent { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
@@ -194,8 +196,8 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .ask-msg.user { justify-self: end; max-width: 88%; padding: 10px 14px; border-radius: 18px 18px 4px 18px; background: var(--surface); }
 .ask-msg.assistant { font-family: var(--font-serif); font-size: 17px; }
 .ask-error { display: grid; gap: 10px; justify-items: start; color: var(--danger); font-size: 15px; }
-.ask-form.in-sheet { margin-top: 6px; }
-.ask-note { padding: 0 4px; }
+.ask-foot { display: grid; gap: 8px; }
+.ask-note { padding: 0 4px; text-align: center; }
 .ask-dots { display: inline-block; width: 36px; height: 8px; background: radial-gradient(circle, var(--muted) 3px, transparent 3.5px) 0 50% / 12px 8px repeat-x; animation: ask-pulse 1s ease-in-out infinite; }
 @keyframes ask-pulse { 50% { opacity: 0.3; } }
 @media (prefers-reduced-motion: reduce) { .ask-dots { animation: none; } }
