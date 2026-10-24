@@ -2,6 +2,17 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.6.2
+
+### Changed
+
+- The answer screen has the same question field as the prompt, with the passage pill and the microphone.
+- The AI disclaimer is shown at the end of the answer with a warning icon.
+
+### Fixed
+
+- The AI question field no longer overflows the sheet on narrow screens.
+
 ## 1.6.1
 
 ### Changed
