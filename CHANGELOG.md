@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.10.4
+
+### Changed
+
+- The intro slider buttons now sit in the footer with their icons on the right, and Skip only appears on the sign-in step.
+
 ## 1.10.3
 
 ### Fixed
