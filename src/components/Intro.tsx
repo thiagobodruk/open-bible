@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { BookOpenText, GoogleLogo, Sparkle, UserCircle } from '@phosphor-icons/react';
+import { ArrowRight, BookOpenText, GoogleLogo, Sparkle, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { useIntro } from '../state/intro';
 import { useUI } from '../state/ui';
@@ -89,14 +89,17 @@ export function Intro() {
           ))}
         </div>
         {step === 'download' ? (
-          <DownloadActions onChooseOther={chooseOther} />
+          <DownloadActions trailing onChooseOther={chooseOther} />
         ) : step === 'signin' ? (
-          <button className="btn primary lead" onClick={signIn} disabled={busy}>
-            <GoogleLogo size={18} weight="bold" />
+          <button className="btn primary trail" onClick={signIn} disabled={busy}>
             {t('signIn')}
+            <GoogleLogo size={18} weight="bold" />
           </button>
         ) : (
-          <button className="btn primary" onClick={next}>{t('next')}</button>
+          <button className="btn primary trail" onClick={next}>
+            {t('next')}
+            <ArrowRight size={18} weight="bold" />
+          </button>
         )}
         {/* Só o passo de entrar pode ser pulado. Nos slides o botão fica invisível, para o Próximo não mudar de lugar. */}
         {step !== 'download' && <button className="btn" onClick={next} style={step === 'signin' ? undefined : { visibility: 'hidden' }}>{t('skip')}</button>}

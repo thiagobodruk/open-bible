@@ -40,14 +40,15 @@ export function DownloadInfo({ iconSize }: { iconSize: number }) {
 }
 
 /** Ações de baixar a primeira Bíblia: baixar a sugerida, manter a atual ou escolher outra. */
-export function DownloadActions({ onChooseOther }: { onChooseOther: () => void }) {
+export function DownloadActions({ onChooseOther, trailing }: { onChooseOther: () => void; trailing?: boolean }) {
   const t = useT();
   const { id, v, progress, busy, failure, start, incoming, hasOther, current } = useFirstDownload();
   return (
     <>
-      <button className="btn primary lead" onClick={start} disabled={busy}>
-        {!busy && <DownloadSimple size={18} weight="regular" />}
+      <button className={`btn primary ${trailing ? 'trail' : 'lead'}`} onClick={start} disabled={busy}>
+        {!trailing && !busy && <DownloadSimple size={18} weight="regular" />}
         {busy ? t('downloadingBtn', { pct: Math.round(progress * 100) }) : t('downloadBtn', { abbr: abbrOf(id), size: t.mb(v.sizeMb) })}
+        {trailing && !busy && <DownloadSimple size={18} weight="regular" />}
       </button>
       {busy && <div className="progress" role="progressbar" aria-label={t('downloading')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></div>}
       {failure && (
@@ -58,7 +59,11 @@ export function DownloadActions({ onChooseOther }: { onChooseOther: () => void }
       {incoming && hasOther && (
         <button className="btn" onClick={() => useIncoming.getState().clear()}>{t('keepCurrent', { abbr: abbrOf(current) })}</button>
       )}
-      <button className="btn lead" onClick={onChooseOther}><Translate size={18} weight="regular" />{t('chooseOther')}</button>
+      <button className={`btn ${trailing ? 'trail' : 'lead'}`} onClick={onChooseOther}>
+        {!trailing && <Translate size={18} weight="regular" />}
+        {t('chooseOther')}
+        {trailing && <Translate size={18} weight="regular" />}
+      </button>
     </>
   );
 }

@@ -136,6 +136,8 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 /* Ícone na extremidade esquerda, com o texto centralizado no botão. */
 .btn.lead { position: relative; }
 .btn.lead > svg { position: absolute; left: 18px; top: 50%; margin: 0; transform: translateY(-50%); }
+.btn.trail { position: relative; }
+.btn.trail > svg { position: absolute; right: 18px; top: 50%; margin: 0; transform: translateY(-50%); }
 
 /* Convite de instalação: cartão flutuante discreto no pé da tela */
 .install-banner {
