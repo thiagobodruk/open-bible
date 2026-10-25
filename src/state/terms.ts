@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { TERMS_VERSION } from '../terms';
+import { useAnalytics } from '../analytics';
 
 /** Aceite dos termos e da política: guardado no aparelho e, quando há conta, também em `users/{uid}.terms`. */
 const KEY = 'ob:terms';
@@ -30,6 +31,8 @@ export const useTerms = create<TermsStore>((set) => ({
   checked: true,
   setChecked: (checked) => set({ checked }),
   accept: () => {
+    // Aceitar os termos inclui as estatísticas de uso. Quem já escolheu desligar continua desligado.
+    if (useAnalytics.getState().consent === null) useAnalytics.getState().setConsent(true);
     try {
       localStorage.setItem(KEY, JSON.stringify({ version: TERMS_VERSION, at: Date.now() } satisfies Acceptance));
     } catch {
