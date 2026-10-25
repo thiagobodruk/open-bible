@@ -2,6 +2,16 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.12.0
+
+### Added
+
+- Notes, highlights, reading position and reading settings sync across devices when signed in.
+
+### Changed
+
+- Settings and the welcome screen no longer say that nothing leaves the device.
+
 ## 1.11.5
 
 ### Changed
