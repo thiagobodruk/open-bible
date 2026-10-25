@@ -2,6 +2,16 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.8.1
+
+### Added
+
+- Pré-visualização com logo e descrição quando o link do app é compartilhado.
+
+### Changed
+
+- O link de um trecho compartilhado agora usa `?ref=`.
+
 ## 1.8.0
 
 ### Added
