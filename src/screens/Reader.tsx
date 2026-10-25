@@ -25,7 +25,7 @@ import { useT } from '../i18n';
 
 export function Reader() {
   const t = useT();
-  const { book, chapter, selection, highlights, notes, focusVerse, step, toggleVerse, clearFocus } = useStudy();
+  const { book, chapter, selection, highlights, notes, focusVerse, focusTo, step, toggleVerse, clearFocus } = useStudy();
   const settings = useSettings();
   const { sheet, open, notify } = useUI();
   const askBar = useAsk((s) => s.bar) && aiEnabled;
@@ -131,10 +131,10 @@ export function Reader() {
     const el = document.getElementById(`v-${focusVerse}`);
     if (el) {
       el.scrollIntoView({ block: 'center' });
-      el.classList.add('flash');
+      for (let v = focusVerse; v <= (focusTo ?? focusVerse); v++) document.getElementById(`v-${v}`)?.classList.add('flash');
     }
     clearFocus();
-  }, [focusVerse, clearFocus, book, chapter, text.status]);
+  }, [focusVerse, focusTo, clearFocus, book, chapter, text.status]);
 
   // Dica de gesto só na primeira abertura. Vale como vista quando aparece ou quando o usuário já troca de capítulo.
   useEffect(() => {
