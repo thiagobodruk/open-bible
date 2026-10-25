@@ -132,3 +132,4 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .privacy a { color: var(--accent); }
 .intro-body .btn { width: 100%; justify-content: center; }
 .intro-body .progress { width: 100%; max-width: 240px; }
+.intro-body .btn svg { color: inherit; }
