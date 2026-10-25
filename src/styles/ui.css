@@ -43,9 +43,10 @@
 .sheet-head h2 { display: flex; align-items: center; gap: 10px; min-width: 0; font-size: 17px; font-weight: 600; }
 .sheet-head h2 svg { flex: none; }
 .sheet-trailing { margin-left: auto; margin-right: -10px; display: flex; }
-/* Botão × visível no desktop, onde arrastar o sheet para baixo é menos natural. No celular fica oculto, mas continua no DOM para teclado e leitor de tela. */
+/* Fechar sem arrastar: seta para baixo no celular, onde o sheet sobe da borda, e × no desktop, onde ele abre como janela. */
 .sheet-close { display: grid; margin-left: auto; margin-right: -10px; }
-@media (max-width: 719.98px) { .sheet-close:not(:focus-visible) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); margin: 0; } }
+.sheet-close .close-x { display: none; }
+@media (min-width: 720px) { .sheet-close .close-caret { display: none; } .sheet-close .close-x { display: block; } }
 .sheet-trailing + .sheet-close { margin-left: 0; }
 @media (min-width: 720px) { .sheet-trailing { margin-right: 0; } }
 .sheet-pinned { flex: none; padding: 8px 22px 24px; border-bottom: 1px solid var(--line); }
