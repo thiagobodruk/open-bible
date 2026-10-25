@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { Auth, User } from 'firebase/auth';
 import { firebaseConfig } from '../firebase-config';
+import { onSyncStatus, startSync, stopSync, type SyncStatus } from '../sync';
 
 export interface Profile {
   name: string;
@@ -53,6 +54,8 @@ export function warmAccount(): Promise<Loaded> {
         const profile = profileOf(u);
         saveProfile(profile);
         useAccount.setState({ user: profile });
+        if (u) void startSync(u.uid).catch(() => undefined);
+        else stopSync();
       });
       return { auth, mod };
     })();
@@ -80,6 +83,7 @@ const codeOf = (e: unknown) => (e as { code?: string })?.code ?? '';
 
 interface AccountStore {
   user: Profile | null;
+  sync: SyncStatus;
   busy: boolean;
   signIn: () => Promise<SignInResult>;
   signOut: () => Promise<void>;
@@ -89,6 +93,7 @@ interface AccountStore {
 
 export const useAccount = create<AccountStore>((set) => ({
   user: accountAvailable() ? savedProfile() : null,
+  sync: 'idle',
   busy: false,
   signIn: async () => {
     set({ busy: true });
@@ -131,6 +136,8 @@ export const useAccount = create<AccountStore>((set) => ({
     await mod.signOut(auth);
   },
 }));
+
+onSyncStatus((sync) => useAccount.setState({ sync }));
 
 /** Na abertura, só carrega o Firebase de quem já tem conta ou acabou de voltar do login por redirecionamento. */
 export function initAccount() {

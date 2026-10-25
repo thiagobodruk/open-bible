@@ -149,7 +149,7 @@ const de: Messages = {
   noBooks: 'Kein Buch gefunden.',
 
   welcomeTitle: 'Lade eine Bibel herunter, um zu beginnen',
-  welcomeBody: 'Der Text wird auf diesem Gerät gespeichert und funktioniert danach ohne Internet. Es wird nichts an einen Server gesendet.',
+  welcomeBody: 'Der Text wird auf diesem Gerät gespeichert und funktioniert danach ohne Internet.',
   downloadBtn: '{abbr} herunterladen · {size}',
   downloadingBtn: 'Wird heruntergeladen… {pct} %',
   downloading: 'Wird heruntergeladen',
@@ -241,6 +241,7 @@ const de: Messages = {
   importedSkipped: 'Importiert. Markierungen: {h} · Notizen: {n} · Übersprungen: {s}',
   backupInvalid: 'Ungültige Backup-Datei',
   dataHint: 'Deine Notizen und Markierungen sind auf diesem Gerät gespeichert. Exportiere ab und zu ein Backup, damit sie nicht verloren gehen.',
+  dataHintSynced: 'Deine Notizen, Markierungen und Einstellungen werden mit deinem Konto synchronisiert. Ein Backup bleibt trotzdem sinnvoll.',
   app: 'App',
   github: 'Code auf GitHub',
   githubSub: 'MIT-Lizenz',

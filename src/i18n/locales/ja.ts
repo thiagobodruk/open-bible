@@ -149,7 +149,7 @@ const ja: Messages = {
   noBooks: '該当する書がありません。',
 
   welcomeTitle: '聖書をダウンロードして始めましょう',
-  welcomeBody: '本文はこのデバイスに保存され、その後はインターネットなしで使えます。サーバーには何も送信されません。',
+  welcomeBody: '本文はこのデバイスに保存され、その後はインターネットなしで使えます。',
   downloadBtn: '{abbr} をダウンロード · {size}',
   downloadingBtn: 'ダウンロード中… {pct}%',
   downloading: 'ダウンロード中',
@@ -241,6 +241,7 @@ const ja: Messages = {
   importedSkipped: '読み込みました。ハイライト: {h} · メモ: {n} · スキップ: {s}',
   backupInvalid: 'バックアップファイルが正しくありません',
   dataHint: 'メモとハイライトはこの端末に保存されます。失わないよう、ときどきバックアップを書き出してください。',
+  dataHintSynced: 'メモ、ハイライト、設定はアカウントと同期されます。バックアップもおすすめします。',
   app: 'アプリ',
   github: 'GitHub のコード',
   githubSub: 'MIT ライセンス',

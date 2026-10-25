@@ -115,7 +115,7 @@ export function Settings() {
             </button>
           </div>
           <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={onImport} />
-          <p className="hint">{t('dataHint')}</p>
+          <p className="hint">{t(account ? 'dataHintSynced' : 'dataHint')}</p>
         </section>
 
         <section className="section">

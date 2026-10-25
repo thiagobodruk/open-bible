@@ -149,7 +149,7 @@ const ptBR: Messages = {
   noBooks: 'Nenhum livro encontrado.',
 
   welcomeTitle: 'Baixe uma Bíblia para começar',
-  welcomeBody: 'O texto fica salvo neste aparelho e depois funciona sem internet. Nada é enviado para servidor algum.',
+  welcomeBody: 'O texto fica salvo neste aparelho e depois funciona sem internet.',
   downloadBtn: 'Baixar {abbr} · {size}',
   downloadingBtn: 'Baixando… {pct}%',
   downloading: 'Baixando',
@@ -241,6 +241,7 @@ const ptBR: Messages = {
   importedSkipped: 'Importado. Marcações: {h} · Notas: {n} · Ignoradas: {s}',
   backupInvalid: 'Arquivo de backup inválido',
   dataHint: 'Suas notas e destaques ficam salvos neste aparelho. Exporte um backup de vez em quando para não perdê-los.',
+  dataHintSynced: 'Suas notas, destaques e ajustes são sincronizados com sua conta. Um backup ainda é uma boa ideia.',
   app: 'Aplicativo',
   github: 'Código no GitHub',
   githubSub: 'Licença MIT',
