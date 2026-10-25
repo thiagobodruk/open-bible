@@ -130,3 +130,6 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .menu-version { margin-top: 18px; text-align: center; font-size: 12px; color: var(--muted); user-select: text; }
 .privacy p { margin: 8px 0 0; font-size: 15px; line-height: 1.6; }
 .privacy a { color: var(--accent); }
+.intro-body .btn { width: 100%; justify-content: center; }
+.intro-body .progress { width: 100%; max-width: 240px; }
+.intro-body .btn svg { color: inherit; }
