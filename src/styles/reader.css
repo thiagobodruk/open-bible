@@ -20,11 +20,12 @@
 /* O visual fica em 32px; a área de toque chega a 44px. */
 .crumb::before, .ver-chip::before { content: ''; position: absolute; inset: -6px -2px; }
 .crumb { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; margin-right: 6px; border-radius: 999px; background: var(--surface); font-size: 14px; font-weight: 600; min-width: 0; }
-.crumb:hover { background: var(--surface-2); }
+@media (hover: hover) { .crumb:hover { background: var(--surface-2); } }
+.crumb:active, .ver-chip:active { background: var(--surface-2); }
 .crumb span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .topbar .spacer { flex: 1; }
 .ver-chip { height: 32px; padding: 0 12px; border-radius: 999px; background: var(--surface); font-size: 13px; font-weight: 600; letter-spacing: 0.02em; flex: none; }
-.ver-chip:hover { background: var(--surface-2); }
+@media (hover: hover) { .ver-chip:hover { background: var(--surface-2); } }
 
 /* Zonas de toque nas extremidades */
 .edge {
@@ -105,7 +106,7 @@
 .choice-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .choice-row.two { grid-template-columns: repeat(2, 1fr); }
 .choice { display: grid; place-items: center; min-height: 52px; border-radius: var(--radius-sm); background: var(--surface); color: var(--fg); border: 2px solid transparent; font-family: var(--font-serif); }
-.choice:hover:not(:disabled) { background: var(--surface-2); }
+@media (hover: hover) { .choice:hover:not(:disabled) { background: var(--surface-2); } }
 .choice[aria-pressed='true'] { border-color: var(--accent); background: var(--bg); }
 .choice:disabled { opacity: 0.35; }
 .verse.speaking { background: color-mix(in srgb, var(--accent) 20%, transparent); }
