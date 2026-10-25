@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, BookOpenText, GoogleLogo, Sparkle, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { useIntro } from '../state/intro';
+import { useTerms } from '../state/terms';
 import { useUI } from '../state/ui';
 import { go } from '../router';
 import { Button } from './Button';
@@ -11,6 +12,23 @@ import { useT } from '../i18n';
 type Step = 'signin' | 'offline' | 'study' | 'download';
 
 const ICONS = { signin: UserCircle, offline: BookOpenText, study: Sparkle } as const;
+
+/** Caixa de aceite dos termos de uso e da política de privacidade, com links para os dois textos. */
+function TermsCheck() {
+  const t = useT();
+  const checked = useTerms((s) => s.checked);
+  const setChecked = useTerms((s) => s.setChecked);
+  const [before, rest] = t('acceptTerms').split('{terms}');
+  const [between, after] = rest.split('{privacy}');
+  return (
+    <label className="terms-check">
+      <input type="checkbox" checked={checked} onChange={(e) => setChecked(e.target.checked)} />
+      <span>
+        {before}<a href="#/terms">{t('termsLink')}</a>{between}<a href="#/privacy">{t('privacyLink')}</a>{after}
+      </span>
+    </label>
+  );
+}
 
 /** Primeira abertura, depois da splash: entrar com o Google (ou pular) e três telas de apresentação. */
 export function Intro() {
@@ -30,7 +48,12 @@ export function Intro() {
     if (accountAvailable()) void warmAccount().catch(() => undefined);
   }, []);
 
-  const next = () => setI((n) => Math.min(n + 1, steps.length - 1));
+  const accepted = useTerms((s) => s.checked);
+  // Sem aceitar os termos não há como entrar nem avançar.
+  const next = () => {
+    if (step === 'signin' && !accepted) return;
+    setI((n) => Math.min(n + 1, steps.length - 1));
+  };
   const prev = () => setI((n) => Math.max(n - 1, 0));
 
   // Deslizar ou usar as setas avança e volta entre os slides.
@@ -52,9 +75,10 @@ export function Intro() {
     };
     addEventListener('keydown', onKey);
     return () => removeEventListener('keydown', onKey);
-  }, [steps.length]);
+  }, [steps.length, step, accepted]);
 
   const signIn = async () => {
+    useTerms.getState().accept();
     const result = await useAccount.getState().signIn();
     if (result === 'restored') notify(t('accountRestored'));
     else if (result === 'offline') notify(t('signInOffline'));
@@ -92,12 +116,15 @@ export function Intro() {
         {step === 'download' ? (
           <DownloadActions trailing onChooseOther={chooseOther} />
         ) : step === 'signin' ? (
-          <Button variant="primary" block icon={GoogleLogo} iconSide="right" iconWeight="bold" onClick={signIn} disabled={busy}>{t('signIn')}</Button>
+          <Button variant="primary" block icon={GoogleLogo} iconSide="right" iconWeight="bold" onClick={signIn} disabled={busy || !accepted}>{t('signIn')}</Button>
         ) : (
           <Button variant="primary" block icon={ArrowRight} iconSide="right" iconWeight="bold" onClick={next}>{t('next')}</Button>
         )}
         {step === 'signin' && (
-          <Button block icon={ArrowRight} iconSide="right" onClick={next}>{t('skip')}</Button>
+          <>
+            <Button block icon={ArrowRight} iconSide="right" disabled={!accepted} onClick={() => { useTerms.getState().accept(); next(); }}>{t('skip')}</Button>
+            <TermsCheck />
+          </>
         )}
       </div>
     </main>

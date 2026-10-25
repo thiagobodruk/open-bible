@@ -14,6 +14,7 @@
   background: var(--surface); font-weight: 500; font-size: 15px; text-decoration: none; cursor: pointer;
 }
 @media (hover: hover) { .btn:hover { background: var(--surface-2); } }
+.btn:disabled { opacity: 0.4; cursor: default; }
 .btn.primary { background: var(--accent); color: var(--accent-fg); }
 @media (hover: hover) { .btn.primary:hover { filter: brightness(1.08); } }
 .btn.danger { color: var(--danger); }

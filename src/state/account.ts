@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { Auth, User } from 'firebase/auth';
 import { firebaseConfig } from '../firebase-config';
 import { track } from '../analytics';
+import { savedAcceptance } from './terms';
 import { onSyncStatus, startSync, stopSync, type SyncStatus } from '../sync';
 
 export interface Profile {
@@ -55,7 +56,10 @@ export function warmAccount(): Promise<Loaded> {
         const profile = profileOf(u);
         saveProfile(profile);
         useAccount.setState({ user: profile });
-        if (u) void startSync(u.uid).catch(() => undefined);
+        if (u) {
+          void saveAcceptance(u.uid);
+          void startSync(u.uid).catch(() => undefined);
+        }
         else stopSync();
       });
       return { auth, mod };
@@ -65,6 +69,20 @@ export function warmAccount(): Promise<Loaded> {
     });
   }
   return loading;
+}
+
+/** Grava no Firestore o aceite dos termos feito neste aparelho, uma vez por conta. Falhar aqui não impede o login. */
+async function saveAcceptance(uid: string) {
+  const a = savedAcceptance();
+  const mark = `ob:terms-synced:${uid}`;
+  try {
+    if (!a || localStorage.getItem(mark) === a.version) return;
+    const [{ getApps }, fs] = await Promise.all([import('firebase/app'), import('firebase/firestore')]);
+    await fs.setDoc(fs.doc(fs.getFirestore(getApps()[0]), 'users', uid), { terms: { version: a.version, acceptedAt: a.at } }, { merge: true });
+    localStorage.setItem(mark, a.version);
+  } catch {
+    /* tenta de novo no próximo login */
+  }
 }
 
 /** Tira a marca de exclusão de uma conta que volta a entrar. Falhar aqui não impede o login. */

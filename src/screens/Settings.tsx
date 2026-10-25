@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { ArrowsClockwise, ChatCircleText, DeviceMobile, Download, Export, GithubLogo, ShieldCheck, Trash, UserMinus } from '@phosphor-icons/react';
+import { ArrowsClockwise, ChatCircleText, DeviceMobile, Download, Export, FileText, GithubLogo, ShieldCheck, Trash, UserMinus } from '@phosphor-icons/react';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { abbrOf, findVersion } from '../data/catalog';
 import { downloadedMb, useLibrary } from '../state/library';
@@ -152,6 +152,10 @@ export function Settings() {
             <button className="row" onClick={() => open('feedback')}>
               <ChatCircleText size={24} weight="light" />
               <span className="grow"><span className="title">{t('feedback')}</span></span>
+            </button>
+            <button className="row" onClick={() => go('/terms')}>
+              <FileText size={24} weight="light" />
+              <span className="grow"><span className="title">{t('terms')}</span></span>
             </button>
             <button className="row" onClick={() => go('/privacy')}>
               <ShieldCheck size={24} weight="light" />

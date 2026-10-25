@@ -13,6 +13,7 @@ import { Study } from './screens/Study';
 import { Library } from './screens/Library';
 import { Settings } from './screens/Settings';
 import { Privacy } from './screens/Privacy';
+import { Terms } from './screens/Terms';
 import { MenuSheet } from './components/MenuSheet';
 import { NavigatorSheet } from './components/NavigatorSheet';
 import { TextSettingsSheet } from './components/TextSettingsSheet';
@@ -75,6 +76,7 @@ export default function App() {
       {route === '/library' && <Library />}
       {route === '/settings' && <Settings />}
       {route === '/privacy' && <Privacy />}
+      {route === '/terms' && <Terms />}
 
       {sheet === 'menu' && <MenuSheet />}
       {sheet === 'navigator' && <NavigatorSheet />}
@@ -92,7 +94,7 @@ export default function App() {
       {sheet === 'feedback' && <FeedbackSheet />}
       {sheet === 'listen' && <ListenSheet />}
       {sheet === 'deleteAccount' && <DeleteAccountSheet />}
-      {ready && !hasVersions && !introDone && <Intro />}
+      {ready && !hasVersions && !introDone && route === '/' && <Intro />}
       <Toast />
     </>
   );
