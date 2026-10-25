@@ -77,7 +77,26 @@
 .menu-brand img { width: 40px; height: 40px; border-radius: 10px; }
 .menu-brand b { display: block; font-size: 17px; }
 .menu-brand span { font-size: 13px; color: var(--muted); }
-.badge { min-width: 22px; height: 22px; padding: 0 7px; display: inline-grid; place-items: center; border-radius: 999px; background: var(--surface-2); font-size: 12px; font-weight: 600; }
+.menu-account { display: flex; align-items: center; gap: 12px; padding: 10px 14px; margin-bottom: 10px; background: var(--surface); border-radius: var(--radius-sm); }
+.menu-account img { width: 36px; height: 36px; border-radius: 50%; flex: none; }
+.menu-account svg { flex: none; }
+.menu-account b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 600; }
+
+/* Abertura inicial */
+.intro {
+  position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column; overflow-y: auto;
+  padding: env(safe-area-inset-top, 0px) max(24px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(24px, env(safe-area-inset-left, 0px));
+  background: var(--bg); animation: fade 0.18s ease-out;
+}
+.intro-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; width: 100%; max-width: 360px; margin: 0 auto; padding: 24px 0; text-align: center; animation: fade 0.18s ease-out; }
+.intro-body svg { color: var(--accent); }
+.intro-body h1 { margin: 8px 0 0; font-family: var(--font-ui); font-size: 24px; font-weight: 600; }
+.intro-body p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--muted); }
+.intro-foot { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; max-width: 360px; margin: 0 auto; padding-bottom: 28px; }
+.intro-foot .btn { width: 100%; }
+.intro-dots { display: flex; gap: 8px; margin-bottom: 10px; }
+.intro-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); opacity: 0.35; }
+.intro-dots i.on { background: var(--accent); opacity: 1; }
 .select { width: 100%; height: 44px; padding: 0 12px; border-radius: var(--radius-sm); border: 1px solid var(--line); background: var(--bg); font-size: 16px; }
 .steps { margin: 6px 0 0; padding-left: 20px; display: grid; gap: 8px; font-size: 15px; line-height: 1.5; }
 .steps li { list-style: decimal; }
@@ -109,3 +128,5 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 }
 
 .menu-version { margin-top: 18px; text-align: center; font-size: 12px; color: var(--muted); user-select: text; }
+.privacy p { margin: 8px 0 0; font-size: 15px; line-height: 1.6; }
+.privacy a { color: var(--accent); }

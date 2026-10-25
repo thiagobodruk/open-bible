@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { ArrowsClockwise, DeviceMobile, Download, Export, GithubLogo, Trash } from '@phosphor-icons/react';
+import { ArrowsClockwise, DeviceMobile, Download, Export, GithubLogo, Trash, UserMinus } from '@phosphor-icons/react';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { abbrOf, findVersion } from '../data/catalog';
 import { downloadedMb, useLibrary } from '../state/library';
@@ -9,6 +9,7 @@ import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { installAvailable, requestInstall, subscribeInstall } from '../install';
 import { buildLabel, checkForUpdate, currentBuild, fetchLatestBuild, type BuildInfo } from '../update';
+import { useAccount } from '../state/account';
 import { useT } from '../i18n';
 
 const LANGS: { code: UiLang; label: string }[] = [
@@ -29,6 +30,7 @@ export function Settings() {
   const downloaded = Object.keys(installed);
   const fileInput = useRef<HTMLInputElement>(null);
   const { open, notify } = useUI();
+  const account = useAccount((s) => s.user);
   const [checking, setChecking] = useState(false);
   const [latest, setLatest] = useState<BuildInfo | null>(null);
   const newer = latest && latest.build !== currentBuild.build ? latest : null;
@@ -114,6 +116,18 @@ export function Settings() {
           <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={onImport} />
           <p className="hint">{t('dataHint')}</p>
         </section>
+
+        {account && (
+          <section className="section">
+            <h2>{t('account')}</h2>
+            <div className="group">
+              <button className="row" onClick={() => open('deleteAccount')}>
+                <UserMinus size={24} weight="light" color="var(--danger)" />
+                <span className="grow"><span className="title" style={{ color: 'var(--danger)' }}>{t('deleteAccount')}</span><span className="sub" style={{ display: 'block' }}>{t('deleteAccountSub')}</span></span>
+              </button>
+            </div>
+          </section>
+        )}
 
         <section className="section">
           <h2>{t('app')}</h2>

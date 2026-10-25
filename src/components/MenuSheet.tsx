@@ -1,5 +1,6 @@
-import { useSyncExternalStore } from 'react';
-import { BookOpenText, DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, SpeakerHigh, Translate, CaretRight } from '@phosphor-icons/react';
+import { useEffect, useSyncExternalStore } from 'react';
+import { BookOpenText, DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, SpeakerHigh, Translate, CaretRight, ShieldCheck, SignOut, UserCircle } from '@phosphor-icons/react';
+import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
@@ -16,7 +17,6 @@ export function MenuSheet() {
   const t = useT();
   const { close, open, notify } = useUI();
   const canInstall = useSyncExternalStore(subscribeInstall, installAvailable);
-  const count = useStudy((s) => Object.keys(s.highlights).length + s.notes.length);
   const { book, chapter } = useStudy();
   const versionId = useSettings((s) => s.versionId);
   const text = useChapter(book, chapter);
@@ -50,14 +50,32 @@ export function MenuSheet() {
     }
   };
 
+  const user = useAccount((s) => s.user);
+  const canSignIn = accountAvailable() && !user;
+  useEffect(() => {
+    if (accountAvailable()) void warmAccount().catch(() => undefined);
+  }, []);
+
+  const signIn = async () => {
+    const result = await useAccount.getState().signIn();
+    if (result === 'restored') notify(t('accountRestored'));
+    else if (result === 'offline') notify(t('signInOffline'));
+    else if (result === 'failed') notify(t('signInFailed'));
+  };
+
+  const signOut = () => void useAccount.getState().signOut().catch(() => notify(t('signInFailed')));
+
   const all = [
+    ...(canSignIn ? [{ icon: UserCircle, label: t('signIn'), run: signIn }] : []),
     { icon: BookOpenText, label: t('read'), run: () => nav('/') },
-    { icon: Notepad, label: t('study'), badge: count, run: () => nav('/study') },
+    { icon: Notepad, label: t('study'), run: () => nav('/study') },
     ...(listenSupported() ? [{ icon: SpeakerHigh, label: listening ? t('listenStop') : t('listen'), run: toggleListen }] : []),
     { icon: Translate, label: t('library'), run: () => nav('/library') },
     { icon: GearSix, label: t('settings'), run: () => nav('/settings') },
     { icon: ShareNetwork, label: t('shareApp'), run: share },
     { icon: ChatCircleText, label: t('feedback'), run: () => open('feedback') },
+    { icon: ShieldCheck, label: t('privacy'), run: () => nav('/privacy') },
+    ...(user ? [{ icon: SignOut, label: t('signOut'), run: signOut }] : []),
     {
       icon: DeviceMobile,
       label: t('install'),
@@ -79,13 +97,18 @@ export function MenuSheet() {
           <span>{t('tagline')}</span>
         </div>
       </div>
+      {user && (
+        <div className="menu-account">
+          {user.photo ? <img src={user.photo} alt="" referrerPolicy="no-referrer" /> : <UserCircle size={36} weight="light" aria-hidden="true" />}
+          <b>{user.name}</b>
+        </div>
+      )}
       <ul>
-        {items.map(({ icon: Icon, label, badge, run }) => (
+        {items.map(({ icon: Icon, label, run }) => (
           <li key={label}>
             <button className="row" onClick={run}>
               <Icon size={26} weight="light" />
               <span className="grow title">{label}</span>
-              {badge !== undefined && <span className="badge">{badge}</span>}
               <CaretRight size={18} weight="light" color="var(--muted)" />
             </button>
           </li>

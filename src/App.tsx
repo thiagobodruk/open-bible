@@ -5,11 +5,14 @@ import { useStudy } from './state/study';
 import { useSettings } from './state/settings';
 import { useLibrary } from './state/library';
 import { useIncoming } from './state/incoming';
+import { useIntro } from './state/intro';
+import { Intro } from './components/Intro';
 import { appUrl, readPath, searchWithoutRef } from './link';
 import { Reader } from './screens/Reader';
 import { Study } from './screens/Study';
 import { Library } from './screens/Library';
 import { Settings } from './screens/Settings';
+import { Privacy } from './screens/Privacy';
 import { MenuSheet } from './components/MenuSheet';
 import { NavigatorSheet } from './components/NavigatorSheet';
 import { TextSettingsSheet } from './components/TextSettingsSheet';
@@ -22,6 +25,7 @@ import { AskCrash, AskSheet } from './components/AskSheet';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ListenSheet } from './components/ListenSheet';
 import { SearchSheet } from './components/SearchSheet';
+import { DeleteAccountSheet } from './components/DeleteAccountSheet';
 import { Toast } from './components/Toast';
 
 export default function App() {
@@ -36,6 +40,14 @@ export default function App() {
   const ready = useLibrary((s) => s.ready);
   const pending = useIncoming((s) => s.incoming !== null);
   const homeUrl = useUI((s) => s.homeUrl);
+
+  // A abertura inicial é só para quem chega sem nenhuma Bíblia. Quem já usa o app não a vê.
+  const introDone = useIntro((s) => s.done);
+  const hasVersions = useLibrary((s) => Object.keys(s.installed).length > 0);
+  useEffect(() => {
+    if (ready && hasVersions && !introDone) useIntro.getState().finish();
+  }, [ready, hasVersions, introDone]);
+
   useEffect(() => {
     if (route !== '/' || !ready || !installed || pending) return;
     const sync = () => {
@@ -62,6 +74,7 @@ export default function App() {
       {route === '/study' && <Study />}
       {route === '/library' && <Library />}
       {route === '/settings' && <Settings />}
+      {route === '/privacy' && <Privacy />}
 
       {sheet === 'menu' && <MenuSheet />}
       {sheet === 'navigator' && <NavigatorSheet />}
@@ -78,6 +91,8 @@ export default function App() {
       {sheet === 'install' && <InstallSheet />}
       {sheet === 'feedback' && <FeedbackSheet />}
       {sheet === 'listen' && <ListenSheet />}
+      {sheet === 'deleteAccount' && <DeleteAccountSheet />}
+      {ready && !hasVersions && !introDone && <Intro />}
       <Toast />
     </>
   );
