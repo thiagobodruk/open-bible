@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import { X, type Icon } from '@phosphor-icons/react';
+import { CaretDown, X, type Icon } from '@phosphor-icons/react';
 import { useT } from '../i18n';
 
 interface Props {
@@ -28,7 +28,7 @@ const CLOSE_DISTANCE = 110; // px arrastados para fechar
 const CLOSE_VELOCITY = 0.6; // px/ms
 const ANIM = 180;
 
-/** Bottom sheet padrão. Fecha ao arrastar para baixo, tocar fora (se houver fundo) ou com Esc. O botão × fica visível no desktop e só para teclado e leitor de tela no celular. */
+/** Bottom sheet padrão. Fecha ao arrastar para baixo, tocar fora (se houver fundo) ou com Esc. No celular o botão de fechar é uma seta para baixo, no desktop é um ×. */
 export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, leading, trailing, tall, pinned, footer, compact, modeless }: Props) {
   const t = useT();
   const ref = useRef<HTMLDivElement>(null);
@@ -178,7 +178,8 @@ export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, lea
           )}
           {trailing && <div className="sheet-trailing">{trailing}</div>}
           <button className="icon-btn sheet-close" onClick={onClose} aria-label={t('close')}>
-            <X size={22} weight="light" />
+            <CaretDown className="close-caret" size={22} weight="light" />
+            <X className="close-x" size={22} weight="light" />
           </button>
         </div>
         {pinned && <div className="sheet-pinned">{pinned}</div>}
