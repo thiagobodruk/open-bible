@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { BookOpenText, GoogleLogo, Sparkle, UserCircle } from '@phosphor-icons/react';
+import { ArrowRight, BookOpenText, GoogleLogo, SkipForward, Sparkle, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { useIntro } from '../state/intro';
 import { useUI } from '../state/ui';
 import { go } from '../router';
-import { DownloadPanel } from './Welcome';
+import { DownloadActions, DownloadInfo } from './Welcome';
 import { useT } from '../i18n';
 
 type Step = 'signin' | 'offline' | 'study' | 'download';
@@ -73,7 +73,7 @@ export function Intro() {
     <main className="intro" aria-label="Open Bible" onTouchStart={(e) => (touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY })} onTouchEnd={onTouchEnd}>
       <div className="intro-body" key={step}>
         {step === 'download' || !Icon ? (
-          <DownloadPanel iconSize={56} onChooseOther={chooseOther} />
+          <DownloadInfo iconSize={56} />
         ) : (
           <>
             <Icon size={56} weight="light" aria-hidden="true" />
@@ -88,15 +88,25 @@ export function Intro() {
             <i key={s} className={k === i ? 'on' : undefined} />
           ))}
         </div>
-        {step === 'download' ? null : step === 'signin' ? (
-          <button className="btn primary lead" onClick={signIn} disabled={busy}>
-            <GoogleLogo size={18} weight="bold" />
+        {step === 'download' ? (
+          <DownloadActions trailing onChooseOther={chooseOther} />
+        ) : step === 'signin' ? (
+          <button className="btn primary trail" onClick={signIn} disabled={busy}>
             {t('signIn')}
+            <GoogleLogo size={18} weight="bold" />
           </button>
         ) : (
-          <button className="btn primary" onClick={next}>{t('next')}</button>
+          <button className="btn primary trail" onClick={next}>
+            {t('next')}
+            <ArrowRight size={18} weight="bold" />
+          </button>
         )}
-        {step !== 'download' && <button className="btn" onClick={step === 'signin' ? next : finish}>{t('skip')}</button>}
+        {step === 'signin' && (
+          <button className="btn trail" onClick={next}>
+            {t('skip')}
+            <SkipForward size={18} weight="regular" />
+          </button>
+        )}
       </div>
     </main>
   );
