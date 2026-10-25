@@ -80,10 +80,12 @@ export function Welcome() {
           <button className="icon-btn" onClick={() => open('menu')} aria-label={t('menu')}><List size={24} weight="light" /></button>
         </div>
       </header>
-      <main className="page">
-        <div className="empty welcome">
-          <DownloadInfo iconSize={44} />
-          <DownloadActions onChooseOther={() => go('/library')} />
+      <main className="welcome">
+        <div className="intro-body">
+          <DownloadInfo iconSize={56} />
+        </div>
+        <div className="intro-foot">
+          <DownloadActions trailing onChooseOther={() => go('/library')} />
         </div>
       </main>
     </div>
