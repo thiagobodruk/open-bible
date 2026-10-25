@@ -45,4 +45,4 @@ await Promise.all(Array.from({ length: 6 }, worker));
 
 out.sort((a, b) => a.id.localeCompare(b.id));
 await writeFile(new URL('../src/data/catalog.json', import.meta.url), JSON.stringify({ sha: SHA, versions: out }, null, 1) + '\n');
-console.log(`\n${out.length} versões, sha ${SHA}`);
+console.log(`\n${out.length} versions, sha ${SHA}`);
