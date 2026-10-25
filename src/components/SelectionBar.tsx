@@ -7,6 +7,7 @@ import { useBookName, useChapter } from '../hooks';
 import { useSettings } from '../state/settings';
 import { refLabel } from '../ref';
 import { aiEnabled } from '../ai';
+import { shareUrl } from '../link';
 import { useAsk } from '../state/ask';
 import { useT } from '../i18n';
 
@@ -27,7 +28,8 @@ export function SelectionBar() {
     const first = selection[0];
     const last = selection[selection.length - 1];
     const body = selection.map((v) => verses[v - 1]).join('\n');
-    return `${body}\n${refLabel(bookName(book), chapter, first, last)} (${abbrOf(versionId)})`;
+    const link = shareUrl(versionId, book, chapter, { from: first, to: last });
+    return `${body}\n${refLabel(bookName(book), chapter, first, last)} (${abbrOf(versionId)})\n${link}`;
   };
 
   const copy = async () => {

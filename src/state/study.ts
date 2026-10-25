@@ -48,13 +48,15 @@ interface StudyStore {
   book: string;
   chapter: number;
   focusVerse: number | null;
+  /** Último versículo do trecho em foco. */
+  focusTo: number | null;
   selection: number[];
   highlights: Record<string, Highlight>;
   notes: Note[];
   hydrate: () => Promise<void>;
   /** Substitui marcações e notas (importação de backup). */
   merge: (highlights: Highlight[], notes: Note[]) => Promise<void>;
-  goTo: (book: string, chapter: number, verse?: number) => void;
+  goTo: (book: string, chapter: number, verse?: number, to?: number) => void;
   step: (delta: 1 | -1) => boolean;
   toggleVerse: (v: number) => void;
   clearSelection: () => void;
@@ -76,6 +78,7 @@ export const useStudy = create<StudyStore>((set, get) => ({
   book: start?.book ?? 'gn',
   chapter: start?.chapter ?? 1,
   focusVerse: null,
+  focusTo: null,
   selection: [],
   highlights: {},
   notes: [],
@@ -106,9 +109,9 @@ export const useStudy = create<StudyStore>((set, get) => ({
     set({ highlights: hl, notes: [...byId.values()] });
   },
 
-  goTo: (book, chapter, verse) => {
+  goTo: (book, chapter, verse, to) => {
     savePosition(book, chapter);
-    set({ book, chapter, focusVerse: verse ?? null, selection: [] });
+    set({ book, chapter, focusVerse: verse ?? null, focusTo: verse === undefined ? null : (to ?? verse), selection: [] });
   },
 
   step: (delta) => {
@@ -135,7 +138,7 @@ export const useStudy = create<StudyStore>((set, get) => ({
       selection: s.selection.includes(v) ? s.selection.filter((x) => x !== v) : [...s.selection, v].sort((a, b) => a - b),
     })),
   clearSelection: () => set({ selection: [] }),
-  clearFocus: () => set({ focusVerse: null }),
+  clearFocus: () => set({ focusVerse: null, focusTo: null }),
 
   paint: (color, texts) => {
     const { book, chapter, selection, highlights } = get();

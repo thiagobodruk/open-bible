@@ -19,6 +19,6 @@ export function applyIncoming() {
   const { incoming, clear } = useIncoming.getState();
   if (!incoming) return;
   useSettings.getState().set('versionId', incoming.versionId);
-  useStudy.getState().goTo(incoming.book, incoming.chapter);
+  useStudy.getState().goTo(incoming.book, incoming.chapter, incoming.verses?.from, incoming.verses?.to);
   clear();
 }
