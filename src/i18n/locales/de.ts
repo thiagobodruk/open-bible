@@ -270,8 +270,6 @@ const de: Messages = {
   libraryFooter: '{n} Versionen aus dem Repository thiagobodruk/bible. Jede wird einmal geladen und funktioniert danach ohne Internet.',
   offlineShort: 'Keine Verbindung. Verbinde dich, um herunterzuladen.',
 
-  filterType: 'Art',
-  all: 'Alle',
   highlights: 'Markierungen',
   notes: 'Notizen',
   filterColor: 'Nach Farbe filtern',

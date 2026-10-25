@@ -270,8 +270,6 @@ const ja: Messages = {
   libraryFooter: 'thiagobodruk/bible リポジトリの {n} 訳。それぞれ一度ダウンロードすれば、インターネットなしで使えます。',
   offlineShort: '接続がありません。接続してからダウンロードしてください。',
 
-  filterType: '種類',
-  all: 'すべて',
   highlights: 'ハイライト',
   notes: 'メモ',
   filterColor: '色で絞り込む',

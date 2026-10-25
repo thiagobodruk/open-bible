@@ -270,8 +270,6 @@ const zhCN: Messages = {
   libraryFooter: '来自 thiagobodruk/bible 仓库的 {n} 个译本。每个译本只需下载一次，之后无需联网即可使用。',
   offlineShort: '没有网络连接，请联网后下载。',
 
-  filterType: '类型',
-  all: '全部',
   highlights: '标记',
   notes: '笔记',
   filterColor: '按颜色筛选',

@@ -270,8 +270,6 @@ const ptBR: Messages = {
   libraryFooter: '{n} versões do repositório thiagobodruk/bible. Cada uma é baixada uma vez e depois funciona sem internet.',
   offlineShort: 'Sem conexão. Conecte-se para baixar.',
 
-  filterType: 'Tipo',
-  all: 'Tudo',
   highlights: 'Marcações',
   notes: 'Notas',
   filterColor: 'Filtrar por cor',
