@@ -74,10 +74,10 @@ export function Study() {
               { value: 'notes', label: t('notes') },
             ]}
           />
-          <div className="colors" role="group" aria-label={t('filterColor')}>
-            <button className="all" aria-pressed={color === null} aria-label={t('allColors')} onClick={() => setColor(null)} />
+          <div className="sheet-colors" role="group" aria-label={t('filterColor')}>
+            <button className="swatch all" aria-pressed={color === null} aria-label={t('allColors')} onClick={() => setColor(null)} />
             {HL_COLORS.map((c) => (
-              <button key={c} className={`c-${c}`} aria-pressed={color === c} aria-label={t(c)} onClick={() => setColor(color === c ? null : c)} />
+              <button key={c} className={`swatch c-${c}`} aria-pressed={color === c} aria-label={t(c)} onClick={() => setColor(color === c ? null : c)} />
             ))}
           </div>
         </div>

@@ -34,12 +34,8 @@
 .progress i { display: block; height: 100%; background: var(--accent); transition: width 0.14s linear; }
 
 /* Meu estudo */
-.filters { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 8px; }
-.filters .seg { flex: 1; min-width: 230px; }
-.colors { display: flex; gap: 8px; align-items: center; }
-.colors button { width: 26px; height: 26px; border-radius: 50%; background: var(--c); border: 2px solid transparent; }
-.colors button.all { background: conic-gradient(var(--hl-yellow), var(--hl-green), var(--hl-blue), var(--hl-pink), var(--hl-orange), var(--hl-yellow)); }
-.colors button[aria-pressed='true'] { border-color: var(--fg); }
+.filters { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+.filters .sheet-colors { margin-bottom: 0; }
 .book-title { position: sticky; top: calc(56px + env(safe-area-inset-top, 0px)); z-index: 5; background: var(--bg); padding: 18px 0 6px; font-family: var(--font-serif); font-size: 20px; font-weight: 600; }
 .entry { display: block; width: 100%; text-align: left; padding: 14px 4px 14px 14px; border-left: 3px solid var(--c, var(--line)); margin: 8px 0; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
 .entry:hover { background: var(--surface); }
