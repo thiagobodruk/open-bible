@@ -81,16 +81,6 @@ export function MenuSheet() {
 
   return (
     <Sheet title={t('menu')} hideTitle onClose={close}>
-      {user && (
-        <div className="menu-account">
-          {user.photo ? <img src={user.photo} alt="" referrerPolicy="no-referrer" /> : <UserCircle size={36} weight="light" aria-hidden="true" />}
-          <b>{user.name}</b>
-          <button className="menu-signout" onClick={signOut}>
-            <SignOut size={18} weight="regular" aria-hidden="true" />
-            {t('signOut')}
-          </button>
-        </div>
-      )}
       <ul>
         {items.map(({ icon: Icon, label, run }) => (
           <li key={label}>
@@ -102,6 +92,16 @@ export function MenuSheet() {
           </li>
         ))}
       </ul>
+      {user && (
+        <div className="menu-account">
+          {user.photo ? <img src={user.photo} alt="" referrerPolicy="no-referrer" /> : <UserCircle size={36} weight="light" aria-hidden="true" />}
+          <b>{user.name}</b>
+          <button className="menu-signout" onClick={signOut}>
+            <SignOut size={18} weight="regular" aria-hidden="true" />
+            {t('signOut')}
+          </button>
+        </div>
+      )}
       <button className="menu-version" onClick={update} disabled={checking}>{checking ? t('updateChecking') : `Open Bible v${__APP_VERSION__}`}</button>
     </Sheet>
   );
