@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { ArrowsClockwise, DeviceMobile, Download, Export, GithubLogo, Trash, UserMinus } from '@phosphor-icons/react';
+import { ArrowsClockwise, ChatCircleText, DeviceMobile, Download, Export, GithubLogo, ShieldCheck, Trash, UserMinus } from '@phosphor-icons/react';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { abbrOf, findVersion } from '../data/catalog';
 import { downloadedMb, useLibrary } from '../state/library';
@@ -9,6 +9,7 @@ import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { installAvailable, requestInstall, subscribeInstall } from '../install';
 import { buildLabel, checkForUpdate, currentBuild, fetchLatestBuild, type BuildInfo } from '../update';
+import { go } from '../router';
 import { useAccount } from '../state/account';
 import { useT } from '../i18n';
 
@@ -130,6 +131,14 @@ export function Settings() {
               <ArrowsClockwise size={24} weight="light" />
               <span className="grow"><span className="title">{checking ? t('updateChecking') : t('updateApp')}</span><span className="sub" style={{ display: 'block' }}>{t('updateCurrent', { v: buildLabel(currentBuild) })}</span>
                 {newer && <span className="sub" style={{ display: 'block' }}>{t('updateNew', { v: buildLabel(newer) })}</span>}</span>
+            </button>
+            <button className="row" onClick={() => open('feedback')}>
+              <ChatCircleText size={24} weight="light" />
+              <span className="grow"><span className="title">{t('feedback')}</span></span>
+            </button>
+            <button className="row" onClick={() => go('/privacy')}>
+              <ShieldCheck size={24} weight="light" />
+              <span className="grow"><span className="title">{t('privacy')}</span></span>
             </button>
             <a className="row" href="https://github.com/thiagobodruk/open-bible" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
               <GithubLogo size={24} weight="light" />

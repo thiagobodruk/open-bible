@@ -1,5 +1,5 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, Translate, CaretRight, ShieldCheck, SignOut, UserCircle } from '@phosphor-icons/react';
+import { DeviceMobile, GearSix, Notepad, ShareNetwork, Translate, CaretRight, SignOut, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
@@ -65,8 +65,6 @@ export function MenuSheet() {
     { icon: Translate, label: t('library'), run: () => nav('/library') },
     { icon: GearSix, label: t('settings'), run: () => nav('/settings') },
     { icon: ShareNetwork, label: t('shareApp'), run: share },
-    { icon: ChatCircleText, label: t('feedback'), run: () => open('feedback') },
-    { icon: ShieldCheck, label: t('privacy'), run: () => nav('/privacy') },
     {
       icon: DeviceMobile,
       label: t('install'),
