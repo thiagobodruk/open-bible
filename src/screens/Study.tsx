@@ -3,7 +3,6 @@ import { Notebook, PencilSimple } from '@phosphor-icons/react';
 import { IconButton } from '../components/Button';
 import { NoteSheet } from '../components/NoteSheet';
 import { ScreenHeader } from '../components/ScreenHeader';
-import { Segmented } from '../components/Segmented';
 import { BOOKS, bookIndex } from '../data/books';
 import { abbrOf } from '../data/catalog';
 import { useBookName } from '../hooks';
@@ -12,8 +11,6 @@ import { HL_COLORS, useStudy, type HlColor } from '../state/study';
 import { go } from '../router';
 import { refLabel } from '../ref';
 import { useT } from '../i18n';
-
-type Kind = 'all' | 'highlights' | 'notes';
 
 interface Entry {
   key: string;
@@ -36,7 +33,6 @@ export function Study() {
   const [editing, setEditing] = useState<Entry | null>(null);
   const bookName = useBookName();
   const versionId = useSettings((s) => s.versionId);
-  const [kind, setKind] = useState<Kind>('all');
   const [color, setColor] = useState<HlColor | null>(null);
 
   const entries = useMemo(() => {
@@ -52,10 +48,9 @@ export function Study() {
       list.push({ key: k, book: h.book, chapter: h.chapter, v1: h.verse, v2: h.verse, color: h.color, text: h.text, versionId: h.versionId, createdAt: h.createdAt });
     }
     return list
-      .filter((e) => (kind === 'notes' ? e.note : kind === 'highlights' ? e.color : true))
       .filter((e) => (color ? e.color === color : true))
       .sort((a, b) => bookIndex(a.book) - bookIndex(b.book) || a.chapter - b.chapter || a.v1 - b.v1);
-  }, [highlights, notes, kind, color]);
+  }, [highlights, notes, color]);
 
   const groups = BOOKS.map((b) => ({ book: b, items: entries.filter((e) => e.book === b.id) })).filter((g) => g.items.length);
 
@@ -64,16 +59,6 @@ export function Study() {
       <ScreenHeader title={t('study')} />
       <div className="screen-body">
         <div className="filters">
-          <Segmented
-            label={t('filterType')}
-            value={kind}
-            onChange={setKind}
-            options={[
-              { value: 'all', label: t('all') },
-              { value: 'highlights', label: t('highlights') },
-              { value: 'notes', label: t('notes') },
-            ]}
-          />
           <div className="sheet-colors" role="group" aria-label={t('filterColor')}>
             <button className="swatch all" aria-pressed={color === null} aria-label={t('allColors')} onClick={() => setColor(null)} />
             {HL_COLORS.map((c) => (

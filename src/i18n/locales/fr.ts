@@ -270,8 +270,6 @@ const fr: Messages = {
   libraryFooter: '{n} versions du dépôt thiagobodruk/bible. Chacune est téléchargée une fois, puis fonctionne sans internet.',
   offlineShort: 'Pas de connexion. Connectez-vous pour télécharger.',
 
-  filterType: 'Type',
-  all: 'Tout',
   highlights: 'Surlignages',
   notes: 'Notes',
   filterColor: 'Filtrer par couleur',

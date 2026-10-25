@@ -268,8 +268,6 @@ const en = {
   libraryFooter: '{n} versions from the thiagobodruk/bible repository. Each one is downloaded once and then works without internet.',
   offlineShort: 'No connection. Connect to download.',
 
-  filterType: 'Type',
-  all: 'All',
   highlights: 'Highlights',
   notes: 'Notes',
   filterColor: 'Filter by color',
