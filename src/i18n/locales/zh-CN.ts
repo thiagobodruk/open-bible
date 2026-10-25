@@ -240,7 +240,7 @@ const zhCN: Messages = {
   imported: '已导入。标记：{h} · 笔记：{n}',
   importedSkipped: '已导入。标记：{h} · 笔记：{n} · 忽略：{s}',
   backupInvalid: '备份文件无效',
-  dataHint: '所有数据只保存在此浏览器中，无需账号，不上云。请定期导出，以免丢失笔记。',
+  dataHint: '你的笔记和高亮保存在此设备上。请定期导出备份，以免丢失。',
   app: '应用',
   github: 'GitHub 上的代码',
   githubSub: 'MIT 许可证',

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Note, Trash } from '@phosphor-icons/react';
+import { Check, Note, Trash, X } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
@@ -66,8 +66,8 @@ export function NoteSheet() {
           </button>
         )}
         <span className="grow" />
-        <Button onClick={close}>{t('cancel')}</Button>
-        <Button variant="primary" onClick={onSave}>{t('save')}</Button>
+        <Button icon={X} onClick={close}>{t('cancel')}</Button>
+        <Button variant="primary" icon={Check} onClick={onSave}>{t('save')}</Button>
       </div>
     </Sheet>
   );

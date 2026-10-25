@@ -240,7 +240,7 @@ const de: Messages = {
   imported: 'Importiert. Markierungen: {h} · Notizen: {n}',
   importedSkipped: 'Importiert. Markierungen: {h} · Notizen: {n} · Übersprungen: {s}',
   backupInvalid: 'Ungültige Backup-Datei',
-  dataHint: 'Alles bleibt nur in diesem Browser. Kein Konto, keine Cloud. Exportiere ab und zu, damit deine Notizen nicht verloren gehen.',
+  dataHint: 'Deine Notizen und Markierungen sind auf diesem Gerät gespeichert. Exportiere ab und zu ein Backup, damit sie nicht verloren gehen.',
   app: 'App',
   github: 'Code auf GitHub',
   githubSub: 'MIT-Lizenz',
