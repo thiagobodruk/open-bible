@@ -91,7 +91,7 @@ export function NoteSheet({ target, onClose }: { target?: NoteTarget; onClose?: 
       />
       <div className="counter">{text.length} / {MAX}</div>
       <div className="actions">
-        {(existing || initialColor) && <IconButton icon={Trash} tone="danger" label={t('delete')} onClick={onDelete} />}
+        {(existing || initialColor) && <IconButton icon={Trash} tone="muted" label={t('delete')} onClick={onDelete} />}
         <span className="grow" />
         <Button icon={X} onClick={cancel}>{t('cancel')}</Button>
         <Button variant="primary" icon={Check} onClick={onSave}>{t('save')}</Button>

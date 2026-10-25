@@ -127,6 +127,7 @@
 
 .btn-round { display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line); color: var(--fg); cursor: pointer; }
 .btn-round.danger { color: var(--danger); }
+.btn-round.muted { color: var(--muted); }
 @media (hover: hover) { .btn-round:hover { background: var(--surface-2); } }
 .btn-round:active { background: var(--surface-2); }
 
