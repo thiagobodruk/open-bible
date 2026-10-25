@@ -62,6 +62,7 @@ export function parseBackup(text: string): { highlights: Highlight[]; notes: Not
       text: str(h.text) ? h.text : '',
       versionId: str(h.versionId) ? h.versionId : '',
       createdAt: Number.isFinite(h.createdAt) ? h.createdAt : Date.now(),
+      ...(Number.isFinite(h.updatedAt) ? { updatedAt: h.updatedAt } : {}),
     });
   }
 

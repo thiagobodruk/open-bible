@@ -149,7 +149,7 @@ const zhCN: Messages = {
   noBooks: '未找到书卷。',
 
   welcomeTitle: '下载一本圣经开始阅读',
-  welcomeBody: '经文会保存在此设备上，之后无需联网即可阅读。不会向任何服务器发送数据。',
+  welcomeBody: '经文会保存在此设备上，之后无需联网即可阅读。',
   downloadBtn: '下载 {abbr} · {size}',
   downloadingBtn: '正在下载… {pct}%',
   downloading: '正在下载',
@@ -241,6 +241,7 @@ const zhCN: Messages = {
   importedSkipped: '已导入。标记：{h} · 笔记：{n} · 忽略：{s}',
   backupInvalid: '备份文件无效',
   dataHint: '你的笔记和高亮保存在此设备上。请定期导出备份，以免丢失。',
+  dataHintSynced: '你的笔记、高亮和设置会与账号同步。仍建议保留一份备份。',
   app: '应用',
   github: 'GitHub 上的代码',
   githubSub: 'MIT 许可证',

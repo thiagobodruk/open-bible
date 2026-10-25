@@ -149,7 +149,7 @@ const fr: Messages = {
   noBooks: 'Aucun livre trouvé.',
 
   welcomeTitle: 'Téléchargez une Bible pour commencer',
-  welcomeBody: 'Le texte est enregistré sur cet appareil et fonctionne ensuite sans internet. Rien n’est envoyé à un serveur.',
+  welcomeBody: 'Le texte est enregistré sur cet appareil et fonctionne ensuite sans internet.',
   downloadBtn: 'Télécharger {abbr} · {size}',
   downloadingBtn: 'Téléchargement… {pct} %',
   downloading: 'Téléchargement',
@@ -241,6 +241,7 @@ const fr: Messages = {
   importedSkipped: 'Importé. Surlignages : {h} · Notes : {n} · Ignorés : {s}',
   backupInvalid: 'Fichier de sauvegarde invalide',
   dataHint: 'Vos notes et surlignages sont enregistrés sur cet appareil. Exportez une sauvegarde de temps en temps pour ne pas les perdre.',
+  dataHintSynced: 'Vos notes, surlignages et réglages sont synchronisés avec votre compte. Une sauvegarde reste une bonne idée.',
   app: 'Application',
   github: 'Code sur GitHub',
   githubSub: 'Licence MIT',

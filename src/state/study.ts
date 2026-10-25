@@ -20,6 +20,8 @@ export interface Highlight {
   text: string;
   versionId: string;
   createdAt: number;
+  /** Última mudança de cor. Sem ele, vale createdAt. */
+  updatedAt?: number;
 }
 
 export interface Note {
@@ -102,7 +104,8 @@ export const useStudy = create<StudyStore>((set, get) => ({
   merge: async (highlights, notes) => {
     const s = get();
     const hl = { ...s.highlights };
-    for (const h of highlights) if (!hl[h.key] || hl[h.key].createdAt < h.createdAt) hl[h.key] = h;
+    const hstamp = (h: Highlight) => h.updatedAt ?? h.createdAt;
+    for (const h of highlights) if (!hl[h.key] || hstamp(hl[h.key]) < hstamp(h)) hl[h.key] = h;
     const byId = new Map(s.notes.map((n) => [n.id, n]));
     const stamp = (n: Note) => n.updatedAt ?? n.createdAt;
     for (const n of notes) if (!byId.has(n.id) || stamp(byId.get(n.id)!) < stamp(n)) byId.set(n.id, n);
@@ -203,7 +206,7 @@ export const useStudy = create<StudyStore>((set, get) => ({
         }
         continue;
       }
-      const h: Highlight = next[key] ? { ...next[key], color } : { key, book, chapter, verse: v, color, text: texts[v] ?? '', versionId, createdAt: Date.now() };
+      const h: Highlight = next[key] ? { ...next[key], color, updatedAt: Date.now() } : { key, book, chapter, verse: v, color, text: texts[v] ?? '', versionId, createdAt: Date.now() };
       next[key] = h;
       puts.push(h);
     }

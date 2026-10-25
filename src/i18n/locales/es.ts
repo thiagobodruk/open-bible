@@ -149,7 +149,7 @@ const es: Messages = {
   noBooks: 'No se encontró ningún libro.',
 
   welcomeTitle: 'Descarga una Biblia para empezar',
-  welcomeBody: 'El texto se guarda en este dispositivo y luego funciona sin internet. No se envía nada a ningún servidor.',
+  welcomeBody: 'El texto se guarda en este dispositivo y luego funciona sin internet.',
   downloadBtn: 'Descargar {abbr} · {size}',
   downloadingBtn: 'Descargando… {pct}%',
   downloading: 'Descargando',
@@ -241,6 +241,7 @@ const es: Messages = {
   importedSkipped: 'Importado. Resaltados: {h} · Notas: {n} · Omitidos: {s}',
   backupInvalid: 'Archivo de copia no válido',
   dataHint: 'Tus notas y resaltados se guardan en este dispositivo. Exporta una copia de seguridad de vez en cuando para no perderlos.',
+  dataHintSynced: 'Tus notas, resaltados y ajustes se sincronizan con tu cuenta. Una copia de seguridad sigue siendo buena idea.',
   app: 'Aplicación',
   github: 'Código en GitHub',
   githubSub: 'Licencia MIT',

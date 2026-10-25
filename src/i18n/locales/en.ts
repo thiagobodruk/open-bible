@@ -147,7 +147,7 @@ const en = {
   noBooks: 'No book found.',
 
   welcomeTitle: 'Download a Bible to get started',
-  welcomeBody: 'The text is saved on this device and then works without internet. Nothing is sent to any server.',
+  welcomeBody: 'The text is saved on this device and then works without internet.',
   downloadBtn: 'Download {abbr} · {size}',
   downloadingBtn: 'Downloading… {pct}%',
   downloading: 'Downloading',
@@ -239,6 +239,7 @@ const en = {
   importedSkipped: 'Imported. Highlights: {h} · Notes: {n} · Skipped: {s}',
   backupInvalid: 'Invalid backup file',
   dataHint: 'Your notes and highlights are saved on this device. Export a backup from time to time so you do not lose them.',
+  dataHintSynced: 'Your notes, highlights and settings sync with your account. A backup is still a good idea.',
   app: 'App',
   github: 'Code on GitHub',
   githubSub: 'MIT License',
