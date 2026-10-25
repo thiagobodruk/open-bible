@@ -2,6 +2,17 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.11.4
+
+### Added
+
+- Notes are limited to 500 characters.
+
+### Changed
+
+- Tapping a note icon on a verse opens the Edit note sheet.
+- The delete action in the note sheet is now a round icon button.
+
 ## 1.11.3
 
 ### Fixed
