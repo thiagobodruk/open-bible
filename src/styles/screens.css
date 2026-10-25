@@ -34,7 +34,10 @@
 .progress i { display: block; height: 100%; background: var(--accent); transition: width 0.14s linear; }
 
 /* Meu estudo */
-.filters { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+.filters {
+  position: sticky; top: calc(56px + env(safe-area-inset-top, 0px)); z-index: 5;
+  display: flex; flex-direction: column; gap: 10px; margin: -16px -20px 8px; padding: 12px 20px 10px; background: var(--bg);
+}
 .filters .sheet-colors { margin-bottom: 0; }
 .book-title { position: sticky; top: calc(56px + env(safe-area-inset-top, 0px)); z-index: 5; background: var(--bg); padding: 18px 0 6px; font-family: var(--font-serif); font-size: 20px; font-weight: 600; }
 .entry { display: block; width: 100%; text-align: left; padding: 14px 4px 14px 14px; border-left: 3px solid var(--c, var(--line)); margin: 8px 0; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
