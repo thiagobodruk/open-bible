@@ -187,7 +187,7 @@ const fr: Messages = {
   deleteAccount: 'Supprimer le compte',
   deleteAccountSub: 'Vous déconnecte et marque le compte comme supprimé',
   deleteAccountBody: 'Votre compte sera marqué comme supprimé et vous serez déconnecté. Vos données dans le cloud sont effacées plus tard. Les notes et surlignages de cet appareil restent. Si vous vous reconnectez avant l’effacement, le compte est restauré.',
-  deleteAccountConfirm: 'Supprimer mon compte',
+  deleteAccountConfirm: 'Supprimer',
   accountDeleted: 'Compte supprimé',
   accountDeleteFailed: 'Impossible de supprimer le compte. Réessayez.',
   accountRestored: 'Content de vous revoir. Votre compte a été restauré.',

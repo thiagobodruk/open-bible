@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UserMinus } from '@phosphor-icons/react';
+import { Trash, UserMinus, X } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useAccount } from '../state/account';
 import { useUI } from '../state/ui';
@@ -27,8 +27,8 @@ export function DeleteAccountSheet() {
     <Sheet title={t('deleteAccount')} icon={UserMinus} onClose={close} compact>
       <p className="hint">{t('deleteAccountBody')}</p>
       <div className="actions">
-        <button className="btn grow" onClick={close} disabled={busy}>{t('cancel')}</button>
-        <button className="btn danger grow" onClick={confirm} disabled={busy}>{t('deleteAccountConfirm')}</button>
+        <button className="btn grow" onClick={close} disabled={busy}><X size={18} weight="regular" />{t('cancel')}</button>
+        <button className="btn primary grow" onClick={confirm} disabled={busy}><Trash size={18} weight="regular" />{t('deleteAccountConfirm')}</button>
       </div>
     </Sheet>
   );

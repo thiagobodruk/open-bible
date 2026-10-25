@@ -187,7 +187,7 @@ const ja: Messages = {
   deleteAccount: 'アカウントを削除',
   deleteAccountSub: 'ログアウトし、アカウントを削除済みにします',
   deleteAccountBody: 'アカウントは削除済みとなり、ログアウトされます。クラウド上のデータは後で削除されます。このデバイスのメモとハイライトは残ります。削除前に再ログインすると、アカウントが復元されます。',
-  deleteAccountConfirm: 'アカウントを削除する',
+  deleteAccountConfirm: '削除',
   accountDeleted: 'アカウントを削除しました',
   accountDeleteFailed: 'アカウントを削除できませんでした。もう一度お試しください。',
   accountRestored: 'おかえりなさい。アカウントを復元しました。',

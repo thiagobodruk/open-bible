@@ -187,7 +187,7 @@ const ptBR: Messages = {
   deleteAccount: 'Excluir conta',
   deleteAccountSub: 'Sai da conta e a marca como excluída',
   deleteAccountBody: 'Sua conta será marcada como excluída e você será desconectado. Os dados na nuvem são removidos depois. As notas e destaques deste aparelho continuam. Se você entrar de novo antes da remoção, a conta é restaurada.',
-  deleteAccountConfirm: 'Excluir minha conta',
+  deleteAccountConfirm: 'Excluir',
   accountDeleted: 'Conta excluída',
   accountDeleteFailed: 'Não foi possível excluir a conta. Tente de novo.',
   accountRestored: 'Que bom ver você de volta. Sua conta foi restaurada.',

@@ -187,7 +187,7 @@ const es: Messages = {
   deleteAccount: 'Eliminar cuenta',
   deleteAccountSub: 'Cierra sesión y marca la cuenta como eliminada',
   deleteAccountBody: 'Tu cuenta se marcará como eliminada y se cerrará la sesión. Los datos en la nube se borran después. Las notas y subrayados de este dispositivo se conservan. Si inicias sesión de nuevo antes del borrado, la cuenta se restaura.',
-  deleteAccountConfirm: 'Eliminar mi cuenta',
+  deleteAccountConfirm: 'Eliminar',
   accountDeleted: 'Cuenta eliminada',
   accountDeleteFailed: 'No se pudo eliminar la cuenta. Inténtalo de nuevo.',
   accountRestored: 'Qué bueno verte de nuevo. Tu cuenta fue restaurada.',

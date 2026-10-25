@@ -185,7 +185,7 @@ const en = {
   deleteAccount: 'Delete account',
   deleteAccountSub: 'Signs you out and marks your account as deleted',
   deleteAccountBody: 'Your account will be marked as deleted and you will be signed out. Your cloud data is removed later. Notes and highlights on this device stay. If you sign in again before the removal, the account is restored.',
-  deleteAccountConfirm: 'Delete my account',
+  deleteAccountConfirm: 'Delete',
   accountDeleted: 'Account deleted',
   accountDeleteFailed: 'Could not delete the account. Try again.',
   accountRestored: 'Welcome back. Your account was restored.',

@@ -187,7 +187,7 @@ const zhCN: Messages = {
   deleteAccount: '删除账号',
   deleteAccountSub: '退出登录并将账号标记为已删除',
   deleteAccountBody: '你的账号将被标记为已删除，并退出登录。云端数据稍后会被清除。此设备上的笔记和标注会保留。如果在清除前再次登录，账号将被恢复。',
-  deleteAccountConfirm: '删除我的账号',
+  deleteAccountConfirm: '删除',
   accountDeleted: '账号已删除',
   accountDeleteFailed: '无法删除账号，请重试。',
   accountRestored: '欢迎回来，你的账号已恢复。',
