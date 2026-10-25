@@ -267,12 +267,8 @@ const en = {
   allColors: 'All colors',
   nothingYet: 'Nothing here yet.',
   nothingHint: 'Tap a verse to highlight or annotate it.',
-  deleteQ: 'Delete?',
-  confirmHl: 'The highlight at {ref} will be deleted. This cannot be undone.',
-  confirmNote: 'The note at {ref} will be deleted. This cannot be undone.',
-  confirmBoth: 'The highlight and the note at {ref} will be deleted. This cannot be undone.',
   deleted: 'Deleted',
-  deleteRef: 'Delete {ref}',
+  editRef: 'Edit {ref}',
 };
 
 export default en;

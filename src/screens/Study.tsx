@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
-import { Notebook, NotePencil, Trash } from '@phosphor-icons/react';
-import { ConfirmSheet } from '../components/ConfirmSheet';
-import { useUI } from '../state/ui';
+import { Notebook, NotePencil, PencilSimple } from '@phosphor-icons/react';
+import { IconButton } from '../components/Button';
+import { NoteSheet } from '../components/NoteSheet';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { Segmented } from '../components/Segmented';
 import { BOOKS, bookIndex } from '../data/books';
@@ -31,9 +31,8 @@ interface Entry {
 export function Study() {
   const t = useT();
   const fmt = useMemo(() => new Intl.DateTimeFormat(t.lang, { day: 'numeric', month: 'short' }), [t.lang]);
-  const { highlights, notes, goTo, deleteNote, removeHighlight } = useStudy();
-  const notify = useUI((s) => s.notify);
-  const [pending, setPending] = useState<Entry | null>(null);
+  const { highlights, notes, goTo } = useStudy();
+  const [editing, setEditing] = useState<Entry | null>(null);
   const bookName = useBookName();
   const versionId = useSettings((s) => s.versionId);
   const [kind, setKind] = useState<Kind>('all');
@@ -116,35 +115,19 @@ export function Study() {
                 )}
                 <div className="date">{fmt.format(e.createdAt)}</div>
               </button>
-              <button
-                className="icon-btn danger-icon entry-del"
-                aria-label={t('deleteRef', { ref: refLabel(bookName(e.book), e.chapter, e.v1, e.v2) })}
-                onClick={() => setPending(e)}
-              >
-                <Trash size={20} weight="light" />
-              </button>
+              <IconButton
+                className="entry-edit"
+                icon={PencilSimple}
+                label={t('editRef', { ref: refLabel(bookName(e.book), e.chapter, e.v1, e.v2) })}
+                onClick={() => setEditing(e)}
+              />
               </div>
             ))}
           </section>
         ))}
       </div>
 
-      {pending && (
-        <ConfirmSheet
-          title={t('deleteQ')}
-          text={t(pending.note && pending.color ? 'confirmBoth' : pending.note ? 'confirmNote' : 'confirmHl', {
-            ref: refLabel(bookName(pending.book), pending.chapter, pending.v1, pending.v2),
-          })}
-          confirmLabel={t('delete')}
-          onCancel={() => setPending(null)}
-          onConfirm={() => {
-            if (pending.note) deleteNote(pending.key);
-            if (pending.color) removeHighlight(`${pending.book}.${pending.chapter}.${pending.v1}`);
-            setPending(null);
-            notify(t('deleted'));
-          }}
-        />
-      )}
+      {editing && <NoteSheet target={{ book: editing.book, chapter: editing.chapter, v1: editing.v1, v2: editing.v2, excerpt: editing.text }} onClose={() => setEditing(null)} />}
     </div>
   );
 }

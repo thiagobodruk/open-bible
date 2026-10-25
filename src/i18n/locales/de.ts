@@ -269,12 +269,8 @@ const de: Messages = {
   allColors: 'Alle Farben',
   nothingYet: 'Hier ist noch nichts.',
   nothingHint: 'Tippe auf einen Vers, um ihn zu markieren oder zu kommentieren.',
-  deleteQ: 'Löschen?',
-  confirmHl: 'Die Markierung bei {ref} wird gelöscht. Das lässt sich nicht rückgängig machen.',
-  confirmNote: 'Die Notiz bei {ref} wird gelöscht. Das lässt sich nicht rückgängig machen.',
-  confirmBoth: 'Markierung und Notiz bei {ref} werden gelöscht. Das lässt sich nicht rückgängig machen.',
   deleted: 'Gelöscht',
-  deleteRef: '{ref} löschen',
+  editRef: '{ref} bearbeiten',
 };
 
 export default de;
