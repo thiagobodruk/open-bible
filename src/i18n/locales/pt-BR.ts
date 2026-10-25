@@ -269,12 +269,8 @@ const ptBR: Messages = {
   allColors: 'Todas as cores',
   nothingYet: 'Nada por aqui ainda.',
   nothingHint: 'Toque em um versículo para marcar ou anotar.',
-  deleteQ: 'Excluir?',
-  confirmHl: 'A marcação de {ref} será excluída. Isso não pode ser desfeito.',
-  confirmNote: 'A nota de {ref} será excluída. Isso não pode ser desfeito.',
-  confirmBoth: 'A marcação e a nota de {ref} serão excluídas. Isso não pode ser desfeito.',
   deleted: 'Excluído',
-  deleteRef: 'Excluir {ref}',
+  editRef: 'Editar {ref}',
 };
 
 export default ptBR;

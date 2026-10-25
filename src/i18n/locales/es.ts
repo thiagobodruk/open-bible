@@ -269,12 +269,8 @@ const es: Messages = {
   allColors: 'Todos los colores',
   nothingYet: 'Aún no hay nada aquí.',
   nothingHint: 'Toca un versículo para resaltarlo o anotarlo.',
-  deleteQ: '¿Eliminar?',
-  confirmHl: 'Se eliminará el resaltado de {ref}. Esta acción no se puede deshacer.',
-  confirmNote: 'Se eliminará la nota de {ref}. Esta acción no se puede deshacer.',
-  confirmBoth: 'Se eliminarán el resaltado y la nota de {ref}. Esta acción no se puede deshacer.',
   deleted: 'Eliminado',
-  deleteRef: 'Eliminar {ref}',
+  editRef: 'Editar {ref}',
 };
 
 export default es;

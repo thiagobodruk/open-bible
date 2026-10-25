@@ -62,7 +62,9 @@ interface StudyStore {
   clearSelection: () => void;
   clearFocus: () => void;
   paint: (color: HlColor, texts: Record<number, string>) => void;
-  saveNote: (text: string, excerpt: string, existingId?: string) => void;
+  saveNote: (text: string, excerpt: string, existingId?: string, at?: { book: string; chapter: number; verseStart: number; verseEnd: number }) => void;
+  /** Pinta ou, com color nulo, limpa a marcação dos versículos de v1 a v2. */
+  setColor: (book: string, chapter: number, v1: number, v2: number, color: HlColor | null, texts: Record<number, string>) => void;
   deleteNote: (id: string) => void;
   removeHighlight: (key: string) => void;
 }
@@ -163,8 +165,9 @@ export const useStudy = create<StudyStore>((set, get) => ({
     if (dels.length) dbDelete('highlights', dels).catch(persistFail);
   },
 
-  saveNote: (text, excerpt, existingId) => {
-    const { book, chapter, selection, notes } = get();
+  saveNote: (text, excerpt, existingId, at) => {
+    const { notes } = get();
+    const { book, chapter, selection } = get();
     let saved: Note;
     if (existingId) {
       saved = { ...notes.find((n) => n.id === existingId)!, text, updatedAt: Date.now() };
@@ -172,10 +175,10 @@ export const useStudy = create<StudyStore>((set, get) => ({
     } else {
       saved = {
         id: crypto.randomUUID(),
-        book,
-        chapter,
-        verseStart: selection[0],
-        verseEnd: selection[selection.length - 1],
+        book: at?.book ?? book,
+        chapter: at?.chapter ?? chapter,
+        verseStart: at?.verseStart ?? selection[0],
+        verseEnd: at?.verseEnd ?? selection[selection.length - 1],
         text,
         excerpt,
         versionId: useSettings.getState().versionId,
@@ -184,6 +187,29 @@ export const useStudy = create<StudyStore>((set, get) => ({
       set({ notes: [...notes, saved] });
     }
     dbPut('notes', [saved]).catch(persistFail);
+  },
+
+  setColor: (book, chapter, v1, v2, color, texts) => {
+    const versionId = useSettings.getState().versionId;
+    const next = { ...get().highlights };
+    const puts: Highlight[] = [];
+    const dels: string[] = [];
+    for (let v = v1; v <= v2; v++) {
+      const key = vkey(book, chapter, v);
+      if (!color) {
+        if (next[key]) {
+          delete next[key];
+          dels.push(key);
+        }
+        continue;
+      }
+      const h: Highlight = next[key] ? { ...next[key], color } : { key, book, chapter, verse: v, color, text: texts[v] ?? '', versionId, createdAt: Date.now() };
+      next[key] = h;
+      puts.push(h);
+    }
+    set({ highlights: next });
+    if (puts.length) dbPut('highlights', puts).catch(persistFail);
+    if (dels.length) dbDelete('highlights', dels).catch(persistFail);
   },
 
   removeHighlight: (key) => {

@@ -269,12 +269,8 @@ const fr: Messages = {
   allColors: 'Toutes les couleurs',
   nothingYet: 'Rien ici pour l’instant.',
   nothingHint: 'Touchez un verset pour le surligner ou l’annoter.',
-  deleteQ: 'Supprimer ?',
-  confirmHl: 'Le surlignage de {ref} sera supprimé. Cette action est irréversible.',
-  confirmNote: 'La note de {ref} sera supprimée. Cette action est irréversible.',
-  confirmBoth: 'Le surlignage et la note de {ref} seront supprimés. Cette action est irréversible.',
   deleted: 'Supprimé',
-  deleteRef: 'Supprimer {ref}',
+  editRef: 'Modifier {ref}',
 };
 
 export default fr;

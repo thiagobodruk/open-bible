@@ -47,7 +47,7 @@ export function ButtonLink({ variant, size, block, icon, iconSide, iconWeight, c
 export function IconButton({ icon: Glyph, label, tone, iconWeight = 'light', className, type = 'button', ...rest }: {
   icon: Icon;
   label: string;
-  tone?: 'danger';
+  tone?: 'danger' | 'muted';
   iconWeight?: IconWeight;
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'aria-label' | 'title'>) {
   return (

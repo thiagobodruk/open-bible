@@ -269,12 +269,8 @@ const zhCN: Messages = {
   allColors: '所有颜色',
   nothingYet: '这里还没有内容。',
   nothingHint: '点按经文即可标记或添加笔记。',
-  deleteQ: '要删除吗？',
-  confirmHl: '{ref} 的标记将被删除，此操作无法撤销。',
-  confirmNote: '{ref} 的笔记将被删除，此操作无法撤销。',
-  confirmBoth: '{ref} 的标记和笔记将被删除，此操作无法撤销。',
   deleted: '已删除',
-  deleteRef: '删除 {ref}',
+  editRef: '编辑 {ref}',
 };
 
 export default zhCN;

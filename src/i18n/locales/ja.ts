@@ -269,12 +269,8 @@ const ja: Messages = {
   allColors: 'すべての色',
   nothingYet: 'まだ何もありません。',
   nothingHint: '節をタップしてハイライトやメモを追加できます。',
-  deleteQ: '削除しますか？',
-  confirmHl: '{ref} のハイライトを削除します。この操作は元に戻せません。',
-  confirmNote: '{ref} のメモを削除します。この操作は元に戻せません。',
-  confirmBoth: '{ref} のハイライトとメモを削除します。この操作は元に戻せません。',
   deleted: '削除しました',
-  deleteRef: '{ref} を削除',
+  editRef: '{ref} を編集',
 };
 
 export default ja;
