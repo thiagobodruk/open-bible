@@ -5,6 +5,8 @@ import { useStudy } from './state/study';
 import { useSettings } from './state/settings';
 import { useLibrary } from './state/library';
 import { useIncoming } from './state/incoming';
+import { useIntro } from './state/intro';
+import { Intro } from './components/Intro';
 import { appUrl, readPath, searchWithoutRef } from './link';
 import { Reader } from './screens/Reader';
 import { Study } from './screens/Study';
@@ -36,6 +38,14 @@ export default function App() {
   const ready = useLibrary((s) => s.ready);
   const pending = useIncoming((s) => s.incoming !== null);
   const homeUrl = useUI((s) => s.homeUrl);
+
+  // A abertura inicial é só para quem chega sem nenhuma Bíblia. Quem já usa o app não a vê.
+  const introDone = useIntro((s) => s.done);
+  const hasVersions = useLibrary((s) => Object.keys(s.installed).length > 0);
+  useEffect(() => {
+    if (ready && hasVersions && !introDone) useIntro.getState().finish();
+  }, [ready, hasVersions, introDone]);
+
   useEffect(() => {
     if (route !== '/' || !ready || !installed || pending) return;
     const sync = () => {
@@ -78,6 +88,7 @@ export default function App() {
       {sheet === 'install' && <InstallSheet />}
       {sheet === 'feedback' && <FeedbackSheet />}
       {sheet === 'listen' && <ListenSheet />}
+      {ready && !hasVersions && !introDone && <Intro />}
       <Toast />
     </>
   );

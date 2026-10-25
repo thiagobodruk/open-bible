@@ -1,5 +1,6 @@
-import { useSyncExternalStore } from 'react';
-import { BookOpenText, DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, SpeakerHigh, Translate, CaretRight } from '@phosphor-icons/react';
+import { useEffect, useSyncExternalStore } from 'react';
+import { BookOpenText, DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, SpeakerHigh, Translate, CaretRight, UserCircle } from '@phosphor-icons/react';
+import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
@@ -50,7 +51,20 @@ export function MenuSheet() {
     }
   };
 
+  const user = useAccount((s) => s.user);
+  const canSignIn = accountAvailable() && !user;
+  useEffect(() => {
+    if (accountAvailable()) void warmAccount().catch(() => undefined);
+  }, []);
+
+  const signIn = async () => {
+    const result = await useAccount.getState().signIn();
+    if (result === 'offline') notify(t('signInOffline'));
+    else if (result === 'failed') notify(t('signInFailed'));
+  };
+
   const all = [
+    ...(canSignIn ? [{ icon: UserCircle, label: t('signIn'), run: signIn }] : []),
     { icon: BookOpenText, label: t('read'), run: () => nav('/') },
     { icon: Notepad, label: t('study'), badge: count, run: () => nav('/study') },
     ...(listenSupported() ? [{ icon: SpeakerHigh, label: listening ? t('listenStop') : t('listen'), run: toggleListen }] : []),
@@ -79,6 +93,13 @@ export function MenuSheet() {
           <span>{t('tagline')}</span>
         </div>
       </div>
+      {user && (
+        <div className="menu-account">
+          {user.photo ? <img src={user.photo} alt="" referrerPolicy="no-referrer" /> : <UserCircle size={36} weight="light" aria-hidden="true" />}
+          <b>{user.name}</b>
+          <button className="btn sm" onClick={() => void useAccount.getState().signOut().catch(() => notify(t('signInFailed')))}>{t('signOut')}</button>
+        </div>
+      )}
       <ul>
         {items.map(({ icon: Icon, label, badge, run }) => (
           <li key={label}>
