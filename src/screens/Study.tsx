@@ -85,7 +85,7 @@ export function Study() {
                 autoFocus
                 value={q}
                 onChange={setQ}
-                placeholder={t('studySearch')}
+                placeholder={t('search')}
                 aria-label={t('studySearch')}
                 enterKeyHint="search"
                 autoCapitalize="none"
