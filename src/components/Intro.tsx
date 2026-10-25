@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, BookOpenText, GoogleLogo, Sparkle, UserCircle } from '@phosphor-icons/react';
+import { ArrowRight, BookOpenText, GoogleLogo, SkipForward, Sparkle, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { useIntro } from '../state/intro';
 import { useUI } from '../state/ui';
@@ -101,8 +101,12 @@ export function Intro() {
             <ArrowRight size={18} weight="bold" />
           </button>
         )}
-        {/* Só o passo de entrar pode ser pulado. Nos slides o botão fica invisível, para o Próximo não mudar de lugar. */}
-        {step !== 'download' && <button className="btn" onClick={next} style={step === 'signin' ? undefined : { visibility: 'hidden' }}>{t('skip')}</button>}
+        {step === 'signin' && (
+          <button className="btn trail" onClick={next}>
+            {t('skip')}
+            <SkipForward size={18} weight="regular" />
+          </button>
+        )}
       </div>
     </main>
   );

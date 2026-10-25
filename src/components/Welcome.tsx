@@ -1,4 +1,4 @@
-import { CloudArrowDown, DownloadSimple, List, Translate } from '@phosphor-icons/react';
+import { Check, CloudArrowDown, DownloadSimple, List, Translate } from '@phosphor-icons/react';
 import { abbrOf, findVersion, suggestedVersion } from '../data/catalog';
 import { useLibrary } from '../state/library';
 import { useSettings } from '../state/settings';
@@ -57,7 +57,10 @@ export function DownloadActions({ onChooseOther, trailing }: { onChooseOther: ()
         </p>
       )}
       {incoming && hasOther && (
-        <button className="btn" onClick={() => useIncoming.getState().clear()}>{t('keepCurrent', { abbr: abbrOf(current) })}</button>
+        <button className={`btn ${trailing ? 'trail' : 'lead'}`} onClick={() => useIncoming.getState().clear()}>
+          <Check size={18} weight="regular" />
+          {t('keepCurrent', { abbr: abbrOf(current) })}
+        </button>
       )}
       <button className={`btn ${trailing ? 'trail' : 'lead'}`} onClick={onChooseOther}>
         {!trailing && <Translate size={18} weight="regular" />}
