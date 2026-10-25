@@ -186,7 +186,7 @@ const de: Messages = {
   account: 'Konto',
   deleteAccount: 'Konto löschen',
   deleteAccountSub: 'Meldet dich ab und markiert das Konto als gelöscht',
-  deleteAccountBody: 'Dein Konto wird als gelöscht markiert und du wirst abgemeldet. Deine Cloud-Daten werden später entfernt. Notizen und Markierungen auf diesem Gerät bleiben. Meldest du dich vor der Entfernung wieder an, wird das Konto wiederhergestellt.',
+  deleteAccountBody: 'Deine Cloud-Daten werden entfernt. Meldest du dich vorher an, wird das Konto wiederhergestellt.',
   deleteAccountConfirm: 'Löschen',
   accountDeleted: 'Konto gelöscht',
   accountDeleteFailed: 'Das Konto konnte nicht gelöscht werden. Versuche es erneut.',
