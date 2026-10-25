@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { BookOpenText, GoogleLogo, Sparkle, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { useIntro } from '../state/intro';
@@ -18,7 +18,8 @@ export function Intro() {
   const finish = useIntro((s) => s.finish);
   const user = useAccount((s) => s.user);
   const busy = useAccount((s) => s.busy);
-  const steps = useMemo<Step[]>(() => [...(accountAvailable() ? (['signin'] as const) : []), 'offline', 'study', 'download'], []);
+  // Quem já entrou não vê o passo de entrar: ao concluir o login, o mesmo índice passa a apontar para o slide seguinte.
+  const steps = useMemo<Step[]>(() => [...(accountAvailable() && !user ? (['signin'] as const) : []), 'offline', 'study', 'download'], [user]);
   const [i, setI] = useState(0);
   const step = steps[i];
   const Icon = step === 'download' ? null : ICONS[step];
@@ -28,12 +29,29 @@ export function Intro() {
     if (accountAvailable()) void warmAccount().catch(() => undefined);
   }, []);
 
-  // Quem já entrou (ou voltou do login por redirecionamento) segue direto para a apresentação.
-  useEffect(() => {
-    if (step === 'signin' && user) setI((n) => n + 1);
-  }, [step, user]);
+  const next = () => setI((n) => Math.min(n + 1, steps.length - 1));
+  const prev = () => setI((n) => Math.max(n - 1, 0));
 
-  const next = () => setI((n) => n + 1);
+  // Deslizar ou usar as setas avança e volta entre os slides.
+  const touch = useRef<{ x: number; y: number } | null>(null);
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const from = touch.current;
+    touch.current = null;
+    if (!from) return;
+    const dx = e.changedTouches[0].clientX - from.x;
+    const dy = e.changedTouches[0].clientY - from.y;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if (dx < 0) next();
+    else prev();
+  };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') next();
+      else if (e.key === 'ArrowLeft') prev();
+    };
+    addEventListener('keydown', onKey);
+    return () => removeEventListener('keydown', onKey);
+  }, [steps.length]);
 
   const signIn = async () => {
     const result = await useAccount.getState().signIn();
@@ -52,7 +70,7 @@ export function Intro() {
   };
 
   return (
-    <main className="intro" aria-label="Open Bible">
+    <main className="intro" aria-label="Open Bible" onTouchStart={(e) => (touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY })} onTouchEnd={onTouchEnd}>
       <div className="intro-body" key={step}>
         {step === 'download' || !Icon ? (
           <DownloadPanel iconSize={56} onChooseOther={chooseOther} />
