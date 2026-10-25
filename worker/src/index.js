@@ -15,7 +15,7 @@ const LANGS = {
   ja: 'Japanese',
 };
 
-const LIMITS = { question: 600, ref: 120, version: 80, text: 3000, history: 6, turn: 3000 };
+const LIMITS = { question: 600, ref: 120, version: 80, text: 3000, history: 10, turn: 3000 };
 const DEFAULT_MODEL = 'openai/gpt-oss-20b';
 const DEFAULT_DAILY_LIMIT = 30;
 
