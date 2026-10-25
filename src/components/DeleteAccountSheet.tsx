@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Trash, UserMinus, X } from '@phosphor-icons/react';
-import { Sheet } from './Sheet';
+import { UserMinus } from '@phosphor-icons/react';
+import { ConfirmSheet } from './ConfirmSheet';
 import { useAccount } from '../state/account';
 import { useUI } from '../state/ui';
 import { useT } from '../i18n';
@@ -23,14 +23,5 @@ export function DeleteAccountSheet() {
     }
   };
 
-  return (
-    <Sheet title={t('deleteAccount')} icon={UserMinus} onClose={close}>
-      <p className="confirm-text">{t('deleteAccountBody')}</p>
-      <div className="actions">
-        <span className="grow" />
-        <button className="btn" onClick={close} disabled={busy}><X size={18} weight="regular" />{t('cancel')}</button>
-        <button className="btn primary" onClick={confirm} disabled={busy}><Trash size={18} weight="regular" />{t('deleteAccountConfirm')}</button>
-      </div>
-    </Sheet>
-  );
+  return <ConfirmSheet title={t('deleteAccount')} text={t('deleteAccountBody')} confirmLabel={t('deleteAccountConfirm')} icon={UserMinus} busy={busy} onConfirm={confirm} onCancel={close} />;
 }

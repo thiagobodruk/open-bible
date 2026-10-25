@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Notebook, NotePencil, Trash, X } from '@phosphor-icons/react';
-import { Sheet } from '../components/Sheet';
+import { Notebook, NotePencil, Trash } from '@phosphor-icons/react';
+import { ConfirmSheet } from '../components/ConfirmSheet';
 import { useUI } from '../state/ui';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { Segmented } from '../components/Segmented';
@@ -130,29 +130,20 @@ export function Study() {
       </div>
 
       {pending && (
-        <Sheet title={t('deleteQ')} icon={Trash} onClose={() => setPending(null)}>
-          <p className="confirm-text">
-            {t(pending.note && pending.color ? 'confirmBoth' : pending.note ? 'confirmNote' : 'confirmHl', {
-              ref: refLabel(bookName(pending.book), pending.chapter, pending.v1, pending.v2),
-            })}
-          </p>
-          <div className="actions">
-            <span className="grow" />
-            <button className="btn" onClick={() => setPending(null)}><X size={18} weight="regular" />{t('cancel')}</button>
-            <button
-              className="btn primary"
-              onClick={() => {
-                if (pending.note) deleteNote(pending.key);
-                if (pending.color) removeHighlight(`${pending.book}.${pending.chapter}.${pending.v1}`);
-                setPending(null);
-                notify(t('deleted'));
-              }}
-            >
-              <Trash size={18} weight="regular" />
-              {t('delete')}
-            </button>
-          </div>
-        </Sheet>
+        <ConfirmSheet
+          title={t('deleteQ')}
+          text={t(pending.note && pending.color ? 'confirmBoth' : pending.note ? 'confirmNote' : 'confirmHl', {
+            ref: refLabel(bookName(pending.book), pending.chapter, pending.v1, pending.v2),
+          })}
+          confirmLabel={t('delete')}
+          onCancel={() => setPending(null)}
+          onConfirm={() => {
+            if (pending.note) deleteNote(pending.key);
+            if (pending.color) removeHighlight(`${pending.book}.${pending.chapter}.${pending.v1}`);
+            setPending(null);
+            notify(t('deleted'));
+          }}
+        />
       )}
     </div>
   );
