@@ -126,8 +126,7 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .menu-version { display: block; width: 100%; margin-top: 18px; text-align: center; font-size: 12px; color: var(--muted); }
 .privacy p { margin: 8px 0 0; font-size: 15px; line-height: 1.6; }
 .privacy a { color: var(--accent); }
-.intro-body .btn { width: 100%; justify-content: center; }
-.intro-body .progress { width: 100%; max-width: 240px; }
-.intro-body .btn svg { color: inherit; }
 .menu-signout { flex: none; display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 14px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); font-size: 14px; font-weight: 500; color: var(--fg); }
 .menu-signout:hover { background: var(--surface-2); }
+.intro-foot .progress { max-width: 240px; }
+.intro-foot .error { font-size: 14px; text-align: center; }

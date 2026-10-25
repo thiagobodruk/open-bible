@@ -8,9 +8,7 @@ import { go } from '../router';
 import { useT } from '../i18n';
 
 /** Primeira abertura: ainda não há nenhuma versão no aparelho. Oferece a sugerida para o idioma e leva à Biblioteca. */
-/** Conteúdo de baixar a primeira Bíblia, usado na última tela da apresentação e na tela inicial sem versões. */
-export function DownloadPanel({ iconSize, onChooseOther }: { iconSize: number; onChooseOther: () => void }) {
-  const t = useT();
+function useFirstDownload() {
   const uiLang = useSettings((s) => s.uiLang);
   const set = useSettings((s) => s.set);
   const { downloading, failed, download } = useLibrary();
@@ -19,21 +17,34 @@ export function DownloadPanel({ iconSize, onChooseOther }: { iconSize: number; o
   const current = useSettings((s) => s.versionId);
 
   const id = incoming?.versionId ?? suggestedVersion(uiLang);
-  const v = findVersion(id)!;
   const progress = downloading[id];
-  const busy = progress !== undefined;
-  const failure = failed[id];
 
   const start = async () => {
     set('versionId', id);
     if ((await download(id)) && incoming) applyIncoming();
   };
 
+  return { id, v: findVersion(id)!, progress, busy: progress !== undefined, failure: failed[id], start, incoming, hasOther, current };
+}
+
+/** Texto de baixar a primeira Bíblia, usado na última tela da apresentação e na tela inicial sem versões. */
+export function DownloadInfo({ iconSize }: { iconSize: number }) {
+  const t = useT();
   return (
     <>
       <CloudArrowDown size={iconSize} weight="light" />
       <h1>{t('welcomeTitle')}</h1>
       <p>{t('welcomeBody')}</p>
+    </>
+  );
+}
+
+/** Ações de baixar a primeira Bíblia: baixar a sugerida, manter a atual ou escolher outra. */
+export function DownloadActions({ onChooseOther }: { onChooseOther: () => void }) {
+  const t = useT();
+  const { id, v, progress, busy, failure, start, incoming, hasOther, current } = useFirstDownload();
+  return (
+    <>
       <button className="btn primary lead" onClick={start} disabled={busy}>
         {!busy && <DownloadSimple size={18} weight="regular" />}
         {busy ? t('downloadingBtn', { pct: Math.round(progress * 100) }) : t('downloadBtn', { abbr: abbrOf(id), size: t.mb(v.sizeMb) })}
@@ -68,7 +79,8 @@ export function Welcome() {
       </header>
       <main className="page">
         <div className="empty welcome">
-          <DownloadPanel iconSize={44} onChooseOther={() => go('/library')} />
+          <DownloadInfo iconSize={44} />
+          <DownloadActions onChooseOther={() => go('/library')} />
         </div>
       </main>
     </div>
