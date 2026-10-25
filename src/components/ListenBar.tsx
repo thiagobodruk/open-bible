@@ -5,6 +5,7 @@ import { useStudy } from '../state/study';
 import { useBookName } from '../hooks';
 import { refLabel } from '../ref';
 import { useT } from '../i18n';
+import { Button } from './Button';
 
 /** Controles flutuantes da leitura em voz alta. */
 export function ListenBar() {
@@ -22,7 +23,7 @@ export function ListenBar() {
         {playing ? <Pause size={26} weight="fill" /> : <Play size={26} weight="fill" />}
       </button>
       <span className="grow">{refLabel(bookName(book), chapter, verse ?? undefined)}</span>
-      <button className="btn sm" onClick={nextRate} aria-label={t('listenSpeed')}>{rate}×</button>
+      <Button size="sm" onClick={nextRate} aria-label={t('listenSpeed')}>{rate}×</Button>
       <button className="icon-btn" onClick={() => open('listen')} aria-label={t('listenSettings')}><Gear size={22} weight="light" /></button>
       <button className="icon-btn" onClick={stop} aria-label={t('listenStop')}><X size={22} weight="light" /></button>
     </div>

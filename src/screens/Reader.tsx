@@ -13,6 +13,7 @@ import { AskFab } from '../components/AskFab';
 import { aiEnabled } from '../ai';
 import { useAsk } from '../state/ask';
 import { InstallBanner } from '../components/InstallBanner';
+import { Button } from '../components/Button';
 import { SwipeHint } from '../components/SwipeHint';
 import { Welcome } from '../components/Welcome';
 import { useIncoming } from '../state/incoming';
@@ -258,8 +259,8 @@ export function Reader() {
             );
           })}
           <div className="chapter-foot">
-            <button className="btn" onClick={() => move(-1)}><CaretLeft size={18} weight="light" /> {t('prev')}</button>
-            <button className="btn" onClick={() => move(1)}>{t('next')} <CaretRight size={18} weight="light" /></button>
+            <Button block icon={CaretLeft} iconWeight="light" onClick={() => move(-1)}>{t('prev')}</Button>
+            <Button block icon={CaretRight} iconSide="right" iconWeight="light" onClick={() => move(1)}>{t('next')}</Button>
           </div>
         </article>
         {versionInfo && (

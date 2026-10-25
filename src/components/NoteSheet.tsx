@@ -6,6 +6,7 @@ import { useStudy } from '../state/study';
 import { useBookName, useChapter } from '../hooks';
 import { refLabel } from '../ref';
 import { useT } from '../i18n';
+import { Button } from './Button';
 
 const MAX = 5000;
 
@@ -65,8 +66,8 @@ export function NoteSheet() {
           </button>
         )}
         <span className="grow" />
-        <button className="btn" onClick={close}>{t('cancel')}</button>
-        <button className="btn primary" onClick={onSave}>{t('save')}</button>
+        <Button onClick={close}>{t('cancel')}</Button>
+        <Button variant="primary" onClick={onSave}>{t('save')}</Button>
       </div>
     </Sheet>
   );

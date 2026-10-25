@@ -10,6 +10,7 @@ import { abbrOf, findVersion } from '../data/catalog';
 import { refLabel } from '../ref';
 import { go } from '../router';
 import { useT } from '../i18n';
+import { Button } from './Button';
 
 interface Row {
   id: string;
@@ -83,10 +84,7 @@ export function CompareSheet() {
           </button>
         ))}
       </div>
-      <button className="btn block lead" onClick={more}>
-        <CloudArrowDown size={18} weight="regular" />
-        {t('compareMore')}
-      </button>
+      <Button block icon={CloudArrowDown} onClick={more}>{t('compareMore')}</Button>
     </Sheet>
   );
 }

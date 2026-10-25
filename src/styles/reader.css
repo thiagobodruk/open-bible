@@ -73,7 +73,7 @@
 .note-mark { display: inline-block; vertical-align: -0.1em; margin-left: 4px; color: var(--accent); }
 
 .chapter-foot { display: flex; justify-content: space-between; gap: 12px; margin-top: 48px; font-family: var(--font-ui); user-select: none; }
-.chapter-foot .btn { flex: 1; }
+.chapter-foot .btn { flex: 1; width: auto; }
 
 
 /* Painel de texto */

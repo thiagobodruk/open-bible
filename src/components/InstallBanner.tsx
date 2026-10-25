@@ -3,6 +3,7 @@ import { DeviceMobile, X } from '@phosphor-icons/react';
 import { useT } from '../i18n';
 import { useUI } from '../state/ui';
 import { canPromptInstall, dismissInstall, installOffered, isIOS, requestInstall, subscribeInstall } from '../install';
+import { Button } from './Button';
 
 /** Convite discreto para instalar o app. Aparece depois do primeiro download, sem cobrir a leitura. */
 export function InstallBanner({ hidden, hold = false }: { hidden: boolean; hold?: boolean }) {
@@ -25,14 +26,15 @@ export function InstallBanner({ hidden, hold = false }: { hidden: boolean; hold?
     <div className="install-banner" role="region" aria-label={t('install')}>
       <DeviceMobile size={26} weight="light" />
       <span className="grow">{t('installBanner')}</span>
-      <button
-        className="btn primary sm"
+      <Button
+        variant="primary"
+        size="sm"
         onClick={async () => {
           if (!(await requestInstall())) open('install');
         }}
       >
         {t('installBannerAction')}
-      </button>
+      </Button>
       <button className="icon-btn" aria-label={t('dismiss')} onClick={dismissInstall}>
         <X size={20} weight="light" />
       </button>
