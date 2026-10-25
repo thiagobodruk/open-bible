@@ -2,6 +2,17 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.14.0
+
+### Added
+
+- Search in My study, collapsed to an icon until tapped.
+- Sort My study by date or Bible order, ascending or descending.
+
+### Changed
+
+- My study no longer groups entries under book headings.
+
 ## 1.13.3
 
 ### Fixed
