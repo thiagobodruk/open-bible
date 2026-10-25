@@ -121,7 +121,7 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .privacy a { color: var(--accent); }
 .menu-signout { flex: none; display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 14px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); font-size: 14px; font-weight: 500; color: var(--fg); }
 @media (hover: hover) { .menu-signout:hover { background: var(--surface-2); } }
-.terms-check { display: flex; align-items: flex-start; gap: 10px; margin-top: 6px; font-size: 13px; line-height: 1.5; color: var(--muted); cursor: pointer; }
+.terms-check { display: flex; align-items: flex-start; gap: 10px; margin-top: 18px; font-size: 13px; line-height: 1.5; color: var(--muted); cursor: pointer; }
 .terms-check input { flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--accent); }
 .terms-check a { color: var(--accent); text-decoration: underline; }
 .intro-foot .progress { max-width: 240px; }
