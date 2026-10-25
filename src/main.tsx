@@ -12,10 +12,12 @@ import { initSettingsEffects } from './state/settings';
 import { boot } from './boot';
 import { initAccount } from './state/account';
 import { initUpdates } from './update';
+import { initAnalytics } from './analytics';
 
 initSettingsEffects();
 boot();
 initAccount();
+initAnalytics();
 
 initUpdates();
 

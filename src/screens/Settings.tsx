@@ -11,6 +11,8 @@ import { installAvailable, requestInstall, subscribeInstall } from '../install';
 import { buildLabel, checkForUpdate, currentBuild, fetchLatestBuild, type BuildInfo } from '../update';
 import { go } from '../router';
 import { useAccount } from '../state/account';
+import { analyticsAvailable, useAnalytics } from '../analytics';
+import { Segmented } from '../components/Segmented';
 import { useT } from '../i18n';
 
 const LANGS: { code: UiLang; label: string }[] = [
@@ -32,6 +34,8 @@ export function Settings() {
   const fileInput = useRef<HTMLInputElement>(null);
   const { open, notify } = useUI();
   const account = useAccount((s) => s.user);
+  const consent = useAnalytics((s) => s.consent);
+  const setConsent = useAnalytics((s) => s.setConsent);
   const [checking, setChecking] = useState(false);
   const [latest, setLatest] = useState<BuildInfo | null>(null);
   const newer = latest && latest.build !== currentBuild.build ? latest : null;
@@ -117,6 +121,19 @@ export function Settings() {
           <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={onImport} />
           <p className="hint">{t(account ? 'dataHintSynced' : 'dataHint')}</p>
         </section>
+
+        {analyticsAvailable() && (
+          <section className="section">
+            <h2>{t('statsTitle')}</h2>
+            <Segmented
+              label={t('statsTitle')}
+              value={consent === 'granted' ? 'on' : 'off'}
+              options={[{ value: 'on', label: t('on') }, { value: 'off', label: t('off') }]}
+              onChange={(v) => setConsent(v === 'on')}
+            />
+            <p className="hint">{t('statsHint')}</p>
+          </section>
+        )}
 
         <section className="section">
           <h2>{t('app')}</h2>

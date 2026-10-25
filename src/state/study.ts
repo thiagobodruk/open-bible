@@ -4,6 +4,7 @@ import { dbAll, dbDelete, dbPut } from '../db';
 import { useLibrary } from './library';
 import { useSettings } from './settings';
 import { loadPosition, savePosition } from './position';
+import { trackFeature } from '../analytics';
 
 export type HlColor = 'yellow' | 'green' | 'blue' | 'pink' | 'orange';
 export const HL_COLORS: HlColor[] = ['yellow', 'green', 'blue', 'pink', 'orange'];
@@ -164,7 +165,10 @@ export const useStudy = create<StudyStore>((set, get) => ({
       }
     });
     set({ highlights: next });
-    if (puts.length) dbPut('highlights', puts).catch(persistFail);
+    if (puts.length) {
+      trackFeature('highlight');
+      dbPut('highlights', puts).catch(persistFail);
+    }
     if (dels.length) dbDelete('highlights', dels).catch(persistFail);
   },
 
@@ -188,6 +192,7 @@ export const useStudy = create<StudyStore>((set, get) => ({
         createdAt: Date.now(),
       };
       set({ notes: [...notes, saved] });
+      trackFeature('note');
     }
     dbPut('notes', [saved]).catch(persistFail);
   },

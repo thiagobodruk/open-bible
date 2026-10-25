@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { Auth, User } from 'firebase/auth';
 import { firebaseConfig } from '../firebase-config';
+import { track } from '../analytics';
 import { onSyncStatus, startSync, stopSync, type SyncStatus } from '../sync';
 
 export interface Profile {
@@ -102,6 +103,7 @@ export const useAccount = create<AccountStore>((set) => ({
       const provider = new mod.GoogleAuthProvider();
       try {
         const { user } = await mod.signInWithPopup(auth, provider);
+        track('sign_in');
         if (await restoreIfDeleted(user.uid)) return 'restored';
       } catch (e) {
         // Alguns navegadores e PWAs instalados não abrem popup. Nesses casos o login segue por redirecionamento.

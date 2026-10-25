@@ -23,6 +23,7 @@ import { hintPending, markHintSeen } from '../hint';
 import { isMobile } from '../install';
 import { ListenBar } from '../components/ListenBar';
 import { listenSupported, resume, setSilentHandler, markSilentHintSeen, silentHintDue, start, stop, useListen } from '../listen';
+import { trackFeature } from '../analytics';
 import { useT } from '../i18n';
 
 export function Reader() {
@@ -59,12 +60,14 @@ export function Reader() {
     if (listenStatus !== 'idle') return stop();
     if (silentHintDue()) return setSilentHint(true);
     if (!start(verses, versionInfo?.lang ?? 'en')) notify(t('listenNoVoice'));
+    else trackFeature('listen');
   };
 
   // O toque no aviso do modo silencioso inicia a leitura, já dentro do gesto do usuário.
   const confirmSilentHint = () => {
     markSilentHintSeen();
     if (!start(verses, versionInfo?.lang ?? 'en')) notify(t('listenNoVoice'));
+    else trackFeature('listen');
   };
 
   const move = (delta: 1 | -1) => {
