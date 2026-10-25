@@ -2,6 +2,13 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.10.0
+
+### Changed
+
+- O download da primeira Bíblia agora é a última tela da apresentação inicial.
+- A opção Ler foi removida do menu.
+
 ## 1.9.1
 
 ### Changed
