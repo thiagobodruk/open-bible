@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, BookOpenText, GoogleLogo, SkipForward, Sparkle, UserCircle } from '@phosphor-icons/react';
+import { ArrowRight, BookOpenText, GoogleLogo, Sparkle, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { useIntro } from '../state/intro';
 import { useUI } from '../state/ui';
@@ -104,7 +104,7 @@ export function Intro() {
         {step === 'signin' && (
           <button className="btn trail" onClick={next}>
             {t('skip')}
-            <SkipForward size={18} weight="regular" />
+            <ArrowRight size={18} weight="regular" />
           </button>
         )}
       </div>
