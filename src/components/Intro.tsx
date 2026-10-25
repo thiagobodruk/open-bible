@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
-import { BookOpenText, GoogleLogo, Sparkle, Translate, UserCircle } from '@phosphor-icons/react';
+import { BookOpenText, GoogleLogo, Sparkle, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { useIntro } from '../state/intro';
 import { useUI } from '../state/ui';
+import { go } from '../router';
+import { DownloadPanel } from './Welcome';
 import { useT } from '../i18n';
 
-type Step = 'signin' | 'offline' | 'study' | 'version';
+type Step = 'signin' | 'offline' | 'study' | 'download';
 
-const ICONS = { signin: UserCircle, offline: BookOpenText, study: Sparkle, version: Translate } as const;
+const ICONS = { signin: UserCircle, offline: BookOpenText, study: Sparkle } as const;
 
 /** Primeira abertura, depois da splash: entrar com o Google (ou pular) e três telas de apresentação. */
 export function Intro() {
@@ -16,11 +18,11 @@ export function Intro() {
   const finish = useIntro((s) => s.finish);
   const user = useAccount((s) => s.user);
   const busy = useAccount((s) => s.busy);
-  const steps = useMemo<Step[]>(() => [...(accountAvailable() ? (['signin'] as const) : []), 'offline', 'study', 'version'], []);
+  const steps = useMemo<Step[]>(() => [...(accountAvailable() ? (['signin'] as const) : []), 'offline', 'study', 'download'], []);
   const [i, setI] = useState(0);
   const step = steps[i];
-  const last = i === steps.length - 1;
-  const Icon = ICONS[step];
+  const Icon = step === 'download' ? null : ICONS[step];
+  
 
   useEffect(() => {
     if (accountAvailable()) void warmAccount().catch(() => undefined);
@@ -40,15 +42,27 @@ export function Intro() {
     else if (result === 'failed') notify(t('signInFailed'));
   };
 
-  const title = { signin: 'signInTitle', offline: 'introOfflineTitle', study: 'introStudyTitle', version: 'introVersionTitle' } as const;
-  const body = { signin: 'signInBody', offline: 'introOfflineBody', study: 'introStudyBody', version: 'introVersionBody' } as const;
+  const title = { signin: 'signInTitle', offline: 'introOfflineTitle', study: 'introStudyTitle' } as const;
+  const body = { signin: 'signInBody', offline: 'introOfflineBody', study: 'introStudyBody' } as const;
+
+  // Escolher outra versão leva à Biblioteca, que fica atrás da apresentação enquanto ela estiver aberta.
+  const chooseOther = () => {
+    finish();
+    go('/library');
+  };
 
   return (
     <main className="intro" aria-label="Open Bible">
       <div className="intro-body" key={step}>
-        <Icon size={56} weight="light" aria-hidden="true" />
-        <h1>{t(title[step])}</h1>
-        <p>{t(body[step])}</p>
+        {step === 'download' || !Icon ? (
+          <DownloadPanel iconSize={56} onChooseOther={chooseOther} />
+        ) : (
+          <>
+            <Icon size={56} weight="light" aria-hidden="true" />
+            <h1>{t(title[step])}</h1>
+            <p>{t(body[step])}</p>
+          </>
+        )}
       </div>
       <div className="intro-foot">
         <div className="intro-dots" role="img" aria-label={t('introStep', { n: i + 1, total: steps.length })}>
@@ -56,15 +70,15 @@ export function Intro() {
             <i key={s} className={k === i ? 'on' : undefined} />
           ))}
         </div>
-        {step === 'signin' ? (
+        {step === 'download' ? null : step === 'signin' ? (
           <button className="btn primary lead" onClick={signIn} disabled={busy}>
             <GoogleLogo size={18} weight="bold" />
             {t('signIn')}
           </button>
         ) : (
-          <button className="btn primary" onClick={last ? finish : next}>{last ? t('introStart') : t('next')}</button>
+          <button className="btn primary" onClick={next}>{t('next')}</button>
         )}
-        {!last && <button className="btn" onClick={step === 'signin' ? next : finish}>{t('skip')}</button>}
+        {step !== 'download' && <button className="btn" onClick={step === 'signin' ? next : finish}>{t('skip')}</button>}
       </div>
     </main>
   );

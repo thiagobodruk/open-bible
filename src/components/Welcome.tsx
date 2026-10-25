@@ -8,9 +8,9 @@ import { go } from '../router';
 import { useT } from '../i18n';
 
 /** Primeira abertura: ainda não há nenhuma versão no aparelho. Oferece a sugerida para o idioma e leva à Biblioteca. */
-export function Welcome() {
+/** Conteúdo de baixar a primeira Bíblia, usado na última tela da apresentação e na tela inicial sem versões. */
+export function DownloadPanel({ iconSize, onChooseOther }: { iconSize: number; onChooseOther: () => void }) {
   const t = useT();
-  const open = useUI((s) => s.open);
   const uiLang = useSettings((s) => s.uiLang);
   const set = useSettings((s) => s.set);
   const { downloading, failed, download } = useLibrary();
@@ -30,6 +30,34 @@ export function Welcome() {
   };
 
   return (
+    <>
+      <CloudArrowDown size={iconSize} weight="light" />
+      <h1>{t('welcomeTitle')}</h1>
+      <p>{t('welcomeBody')}</p>
+      <button className="btn primary lead" onClick={start} disabled={busy}>
+        {!busy && <DownloadSimple size={18} weight="regular" />}
+        {busy ? t('downloadingBtn', { pct: Math.round(progress * 100) }) : t('downloadBtn', { abbr: abbrOf(id), size: t.mb(v.sizeMb) })}
+      </button>
+      {busy && <div className="progress" role="progressbar" aria-label={t('downloading')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></div>}
+      {failure && (
+        <p className="error" role="alert">
+          {failure === 'offline' ? t('offlineError') : t('downloadError')}
+        </p>
+      )}
+      {incoming && hasOther && (
+        <button className="btn" onClick={() => useIncoming.getState().clear()}>{t('keepCurrent', { abbr: abbrOf(current) })}</button>
+      )}
+      <button className="btn lead" onClick={onChooseOther}><Translate size={18} weight="regular" />{t('chooseOther')}</button>
+    </>
+  );
+}
+
+/** Primeira abertura sem versão no aparelho, depois da apresentação. */
+export function Welcome() {
+  const t = useT();
+  const open = useUI((s) => s.open);
+
+  return (
     <div className="reader">
       <header className="topbar">
         <div className="topbar-in">
@@ -40,23 +68,7 @@ export function Welcome() {
       </header>
       <main className="page">
         <div className="empty welcome">
-          <CloudArrowDown size={44} weight="light" />
-          <h1>{t('welcomeTitle')}</h1>
-          <p>{t('welcomeBody')}</p>
-          <button className="btn primary lead" onClick={start} disabled={busy}>
-            {!busy && <DownloadSimple size={18} weight="regular" />}
-            {busy ? t('downloadingBtn', { pct: Math.round(progress * 100) }) : t('downloadBtn', { abbr: abbrOf(id), size: t.mb(v.sizeMb) })}
-          </button>
-          {busy && <div className="progress" role="progressbar" aria-label={t('downloading')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></div>}
-          {failure && (
-            <p className="error" role="alert">
-              {failure === 'offline' ? t('offlineError') : t('downloadError')}
-            </p>
-          )}
-          {incoming && hasOther && (
-            <button className="btn" onClick={() => useIncoming.getState().clear()}>{t('keepCurrent', { abbr: abbrOf(current) })}</button>
-          )}
-          <button className="btn lead" onClick={() => go('/library')}><Translate size={18} weight="regular" />{t('chooseOther')}</button>
+          <DownloadPanel iconSize={44} onChooseOther={() => go('/library')} />
         </div>
       </main>
     </div>
