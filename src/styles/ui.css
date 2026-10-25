@@ -127,6 +127,10 @@
 .chip.accent { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
 
 .icon-btn.danger-icon { color: var(--danger); margin-left: -8px; }
+.btn-round { display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line); color: var(--fg); cursor: pointer; }
+.btn-round.danger { color: var(--danger); }
+@media (hover: hover) { .btn-round:hover { background: var(--surface-2); } }
+.btn-round:active { background: var(--surface-2); }
 
 /* Com um sheet aberto, o toast sobe para o topo e não cobre as ações */
 body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top, 0px)); }
