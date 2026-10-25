@@ -27,8 +27,8 @@ export function DeleteAccountSheet() {
     <Sheet title={t('deleteAccount')} icon={UserMinus} onClose={close} compact>
       <p className="hint">{t('deleteAccountBody')}</p>
       <div className="actions">
-        <button className="btn grow" onClick={close} disabled={busy}><X size={18} weight="regular" />{t('cancel')}</button>
-        <button className="btn primary grow" onClick={confirm} disabled={busy}><Trash size={18} weight="regular" />{t('deleteAccountConfirm')}</button>
+        <button className="btn lead grow" onClick={close} disabled={busy}><X size={18} weight="regular" />{t('cancel')}</button>
+        <button className="btn primary lead grow" onClick={confirm} disabled={busy}><Trash size={18} weight="regular" />{t('deleteAccountConfirm')}</button>
       </div>
     </Sheet>
   );
