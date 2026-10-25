@@ -5,7 +5,7 @@ import { HL_COLORS, useStudy, vkey, type Highlight, type HlColor, type Note } fr
 
 const APP = 'open-bible';
 const SCHEMA = 1;
-const MAX_NOTE = 5000;
+const MAX_NOTE = 500;
 
 export interface Backup {
   app: typeof APP;
