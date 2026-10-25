@@ -2,6 +2,16 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.8.2
+
+### Changed
+
+- O cartão de compartilhamento mostra a logo do app em imagem quadrada.
+
+### Fixed
+
+- A resposta da IA aparece no início, sem rolar até o fim.
+
 ## 1.8.1
 
 ### Added
