@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.11.1
+
+### Changed
+
+- On iOS, the first time you listen to a chapter, an overlay reminds you to turn off silent mode. Tap anywhere to start listening.
+
 ## 1.11.0
 
 ### Changed
