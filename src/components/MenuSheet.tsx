@@ -1,5 +1,5 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { BookOpenText, DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, Translate, CaretRight, ShieldCheck, SignOut, UserCircle } from '@phosphor-icons/react';
+import { DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, Translate, CaretRight, ShieldCheck, SignOut, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
@@ -80,18 +80,7 @@ export function MenuSheet() {
   const items = canInstall ? all : all.filter((i) => i.icon !== DeviceMobile);
 
   return (
-    <Sheet title="Open Bible" icon={BookOpenText} onClose={close}>
-      <ul className="menu-list">
-        {items.map(({ icon: Icon, label, run }) => (
-          <li key={label}>
-            <button className="row" onClick={run}>
-              <Icon size={26} weight="light" />
-              <span className="grow title">{label}</span>
-              <CaretRight size={18} weight="light" color="var(--muted)" />
-            </button>
-          </li>
-        ))}
-      </ul>
+    <Sheet title={t('menu')} hideTitle onClose={close}>
       {user && (
         <div className="menu-account">
           {user.photo ? <img src={user.photo} alt="" referrerPolicy="no-referrer" /> : <UserCircle size={36} weight="light" aria-hidden="true" />}
@@ -102,6 +91,17 @@ export function MenuSheet() {
           </button>
         </div>
       )}
+      <ul>
+        {items.map(({ icon: Icon, label, run }) => (
+          <li key={label}>
+            <button className="row" onClick={run}>
+              <Icon size={26} weight="light" />
+              <span className="grow title">{label}</span>
+              <CaretRight size={18} weight="light" color="var(--muted)" />
+            </button>
+          </li>
+        ))}
+      </ul>
       <button className="menu-version" onClick={update} disabled={checking}>{checking ? t('updateChecking') : `Open Bible v${__APP_VERSION__}`}</button>
     </Sheet>
   );
