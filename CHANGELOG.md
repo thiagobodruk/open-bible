@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.11.3
+
+### Fixed
+
+- Tapping buttons and chips on touch screens no longer leaves them stuck in the hover color.
+
 ## 1.11.2
 
 ### Changed
