@@ -2,6 +2,16 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.8.0
+
+### Added
+
+- Compartilhar e copiar versículos incluem o link do trecho.
+
+### Changed
+
+- O link de um trecho abre o capítulo com os versículos destacados.
+
 ## 1.7.7
 
 ### Fixed
