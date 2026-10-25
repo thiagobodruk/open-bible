@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { trackFeature } from '../analytics';
 import { askAI, AiError, type AiErrorKind, type AiMessage, type AiPassage } from '../ai';
 
 interface AskStore {
@@ -72,7 +73,10 @@ export const useAsk = create<AskStore>((set, get) => {
     messages: [],
     status: 'idle',
     error: null,
-    start: (question, passage, lang) => void run([], question, passage, lang),
+    start: (question, passage, lang) => {
+      trackFeature('ask');
+      void run([], question, passage, lang);
+    },
     followUp: (question, lang) => {
       const { passage, messages, status } = get();
       if (!passage || status === 'loading' || status === 'streaming') return;
