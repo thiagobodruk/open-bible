@@ -2,6 +2,14 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.11.5
+
+### Changed
+
+- Selecting verses and tapping Note opens one sheet to change the highlight color, edit the note and delete.
+- My study entries show the date and time next to the reference and have an edit button instead of delete.
+- The delete icon in the edit sheet is gray.
+
 ## 1.11.4
 
 ### Added
