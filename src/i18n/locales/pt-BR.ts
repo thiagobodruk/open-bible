@@ -58,7 +58,6 @@ const ptBR: Messages = {
   cancel: 'Cancelar',
   save: 'Salvar',
   delete: 'Excluir',
-  tagline: 'Leitor de Bíblia, offline e sem conta',
 
 
   installedAlready: 'O app já está instalado neste dispositivo.',

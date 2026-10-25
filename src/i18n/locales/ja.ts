@@ -58,7 +58,6 @@ const ja: Messages = {
   cancel: 'キャンセル',
   save: '保存',
   delete: '削除',
-  tagline: 'オフラインで使える、アカウント不要の聖書リーダー',
 
 
   installedAlready: 'このデバイスにはすでにインストールされています。',

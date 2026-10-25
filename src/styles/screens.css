@@ -73,11 +73,7 @@
 .counter { font-size: 12px; color: var(--muted); text-align: right; margin-top: 6px; }
 
 /* Menu */
-.menu-brand { display: flex; align-items: center; gap: 12px; padding: 4px 0 14px; }
-.menu-brand img { width: 40px; height: 40px; border-radius: 10px; }
-.menu-brand b { display: block; font-size: 17px; }
-.menu-brand span { font-size: 13px; color: var(--muted); }
-.menu-account { display: flex; align-items: center; gap: 12px; padding: 10px 14px; margin-bottom: 10px; background: var(--surface); border-radius: var(--radius-sm); }
+.menu-account { display: flex; align-items: center; gap: 12px; padding: 10px 10px 10px 14px; margin-top: 8px; background: var(--surface); border-radius: var(--radius-sm); }
 .menu-account img { width: 36px; height: 36px; border-radius: 50%; flex: none; }
 .menu-account svg { flex: none; }
 .menu-account b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 600; }
@@ -127,9 +123,11 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
   margin: -16px -20px 0; padding: 12px 20px 8px; background: var(--bg);
 }
 
-.menu-version { margin-top: 18px; text-align: center; font-size: 12px; color: var(--muted); user-select: text; }
+.menu-version { display: block; width: 100%; margin-top: 18px; text-align: center; font-size: 12px; color: var(--muted); }
 .privacy p { margin: 8px 0 0; font-size: 15px; line-height: 1.6; }
 .privacy a { color: var(--accent); }
 .intro-body .btn { width: 100%; justify-content: center; }
 .intro-body .progress { width: 100%; max-width: 240px; }
 .intro-body .btn svg { color: inherit; }
+.menu-signout { flex: none; display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 14px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); font-size: 14px; font-weight: 500; color: var(--fg); }
+.menu-signout:hover { background: var(--surface-2); }

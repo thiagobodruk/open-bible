@@ -1,4 +1,4 @@
-import { useEffect, useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, Translate, CaretRight, ShieldCheck, SignOut, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { Sheet } from './Sheet';
@@ -6,6 +6,7 @@ import { useUI } from '../state/ui';
 import { go, type Route } from '../router';
 import { useT } from '../i18n';
 import { appUrl } from '../link';
+import { checkForUpdate } from '../update';
 import { installAvailable, requestInstall, subscribeInstall } from '../install';
 
 export function MenuSheet() {
@@ -46,6 +47,16 @@ export function MenuSheet() {
     else if (result === 'failed') notify(t('signInFailed'));
   };
 
+  const [checking, setChecking] = useState(false);
+  // Atalho de redundância para a atualização de Ajustes: tocar na versão confere e aplica a mais recente.
+  const update = async () => {
+    if (checking) return;
+    setChecking(true);
+    const r = await checkForUpdate();
+    setChecking(false);
+    notify(t(r === 'updating' ? 'updateFound' : r === 'offline' ? 'updateOffline' : 'updateLatest'));
+  };
+
   const signOut = () => void useAccount.getState().signOut().catch(() => notify(t('signInFailed')));
 
   const all = [
@@ -56,7 +67,6 @@ export function MenuSheet() {
     { icon: ShareNetwork, label: t('shareApp'), run: share },
     { icon: ChatCircleText, label: t('feedback'), run: () => open('feedback') },
     { icon: ShieldCheck, label: t('privacy'), run: () => nav('/privacy') },
-    ...(user ? [{ icon: SignOut, label: t('signOut'), run: signOut }] : []),
     {
       icon: DeviceMobile,
       label: t('install'),
@@ -71,19 +81,6 @@ export function MenuSheet() {
 
   return (
     <Sheet title={t('menu')} hideTitle onClose={close}>
-      <div className="menu-brand">
-        <img src={`${import.meta.env.BASE_URL}icons/icon-192.png`} alt="" />
-        <div>
-          <b>Open Bible</b>
-          <span>{t('tagline')}</span>
-        </div>
-      </div>
-      {user && (
-        <div className="menu-account">
-          {user.photo ? <img src={user.photo} alt="" referrerPolicy="no-referrer" /> : <UserCircle size={36} weight="light" aria-hidden="true" />}
-          <b>{user.name}</b>
-        </div>
-      )}
       <ul>
         {items.map(({ icon: Icon, label, run }) => (
           <li key={label}>
@@ -95,7 +92,17 @@ export function MenuSheet() {
           </li>
         ))}
       </ul>
-      <p className="menu-version">Open Bible v{__APP_VERSION__}</p>
+      {user && (
+        <div className="menu-account">
+          {user.photo ? <img src={user.photo} alt="" referrerPolicy="no-referrer" /> : <UserCircle size={36} weight="light" aria-hidden="true" />}
+          <b>{user.name}</b>
+          <button className="menu-signout" onClick={signOut}>
+            <SignOut size={18} weight="regular" aria-hidden="true" />
+            {t('signOut')}
+          </button>
+        </div>
+      )}
+      <button className="menu-version" onClick={update} disabled={checking}>{checking ? t('updateChecking') : `Open Bible v${__APP_VERSION__}`}</button>
     </Sheet>
   );
 }

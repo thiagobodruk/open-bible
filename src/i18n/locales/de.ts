@@ -58,7 +58,6 @@ const de: Messages = {
   cancel: 'Abbrechen',
   save: 'Speichern',
   delete: 'Löschen',
-  tagline: 'Bibelleser, offline und ohne Konto',
 
 
   installedAlready: 'Die App ist auf diesem Gerät bereits installiert.',

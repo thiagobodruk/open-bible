@@ -117,18 +117,6 @@ export function Settings() {
           <p className="hint">{t('dataHint')}</p>
         </section>
 
-        {account && (
-          <section className="section">
-            <h2>{t('account')}</h2>
-            <div className="group">
-              <button className="row" onClick={() => open('deleteAccount')}>
-                <UserMinus size={24} weight="light" color="var(--danger)" />
-                <span className="grow"><span className="title" style={{ color: 'var(--danger)' }}>{t('deleteAccount')}</span><span className="sub" style={{ display: 'block' }}>{t('deleteAccountSub')}</span></span>
-              </button>
-            </div>
-          </section>
-        )}
-
         <section className="section">
           <h2>{t('app')}</h2>
           <div className="group">
@@ -149,6 +137,18 @@ export function Settings() {
             </a>
           </div>
         </section>
+
+        {account && (
+          <section className="section">
+            <h2>{t('account')}</h2>
+            <div className="group">
+              <button className="row" onClick={() => open('deleteAccount')}>
+                <UserMinus size={24} weight="light" color="var(--danger)" />
+                <span className="grow"><span className="title" style={{ color: 'var(--danger)' }}>{t('deleteAccount')}</span><span className="sub" style={{ display: 'block' }}>{t('deleteAccountSub')}</span></span>
+              </button>
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
