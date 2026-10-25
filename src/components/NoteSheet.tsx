@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Note, Trash } from '@phosphor-icons/react';
+import { Check, Note, Trash, X } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
 import { useStudy } from '../state/study';
 import { useBookName, useChapter } from '../hooks';
 import { refLabel } from '../ref';
 import { useT } from '../i18n';
+import { Button } from './Button';
 
 const MAX = 5000;
 
@@ -65,8 +66,8 @@ export function NoteSheet() {
           </button>
         )}
         <span className="grow" />
-        <button className="btn" onClick={close}>{t('cancel')}</button>
-        <button className="btn primary" onClick={onSave}>{t('save')}</button>
+        <Button icon={X} onClick={close}>{t('cancel')}</Button>
+        <Button variant="primary" icon={Check} onClick={onSave}>{t('save')}</Button>
       </div>
     </Sheet>
   );

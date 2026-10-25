@@ -240,7 +240,7 @@ const es: Messages = {
   imported: 'Importado. Resaltados: {h} · Notas: {n}',
   importedSkipped: 'Importado. Resaltados: {h} · Notas: {n} · Omitidos: {s}',
   backupInvalid: 'Archivo de copia no válido',
-  dataHint: 'Todo se queda solo en este navegador. Sin cuenta, sin nube. Exporta de vez en cuando para no perder tus notas.',
+  dataHint: 'Tus notas y resaltados se guardan en este dispositivo. Exporta una copia de seguridad de vez en cuando para no perderlos.',
   app: 'Aplicación',
   github: 'Código en GitHub',
   githubSub: 'Licencia MIT',

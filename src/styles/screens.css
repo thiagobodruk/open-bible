@@ -103,11 +103,8 @@
 .entry.hit .txt { font-size: 15.5px; }
 mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding: 0 1px; }
 
-.welcome { display: flex; flex-direction: column; align-items: center; gap: 14px; max-width: 360px; margin: 0 auto; padding-top: 18vh; }
-.welcome h1 { font-family: var(--font-ui); font-size: 20px; font-weight: 600; color: var(--fg); margin: 0; }
-.welcome p { margin: 0; font-size: 14px; line-height: 1.5; }
-.welcome .btn { width: min(100%, 280px); justify-content: center; }
-.welcome .progress { width: 100%; max-width: 240px; }
+/* Tela inicial sem versões: mesmo corpo e rodapé do último passo da apresentação, abaixo da barra do topo. */
+.welcome { display: flex; flex-direction: column; min-height: 100dvh; padding: calc(52px + env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(24px, env(safe-area-inset-left, 0px)); }
 .error { color: var(--danger, #c0392b); }
 .brand-name { display: flex; align-items: center; height: 44px; padding: 0 12px; font-family: var(--font-ui); font-size: 16px; font-weight: 600; }
 

@@ -240,7 +240,7 @@ const fr: Messages = {
   imported: 'Importé. Surlignages : {h} · Notes : {n}',
   importedSkipped: 'Importé. Surlignages : {h} · Notes : {n} · Ignorés : {s}',
   backupInvalid: 'Fichier de sauvegarde invalide',
-  dataHint: 'Tout reste uniquement dans ce navigateur. Sans compte, sans cloud. Exportez de temps en temps pour ne pas perdre vos notes.',
+  dataHint: 'Vos notes et surlignages sont enregistrés sur cet appareil. Exportez une sauvegarde de temps en temps pour ne pas les perdre.',
   app: 'Application',
   github: 'Code sur GitHub',
   githubSub: 'Licence MIT',

@@ -7,6 +7,7 @@ import { useBookName } from '../hooks';
 import { refLabel } from '../ref';
 import { FEEDBACK_KINDS, feedbackUrl, type FeedbackKind } from '../feedback';
 import { useT } from '../i18n';
+import { Button, ButtonLink } from './Button';
 
 const MAX = 2000;
 
@@ -37,9 +38,10 @@ export function FeedbackSheet() {
       />
       <div className="actions">
         <span className="grow" />
-        <button className="btn" onClick={close}><X size={18} weight="regular" />{t('cancel')}</button>
-        <a
-          className="btn primary"
+        <Button icon={X} onClick={close}>{t('cancel')}</Button>
+        <ButtonLink
+          variant="primary"
+          icon={GithubLogo}
           href={empty ? undefined : feedbackUrl(kind, text, refLabel(bookName(book), chapter))}
           target="_blank"
           rel="noopener noreferrer"
@@ -47,9 +49,8 @@ export function FeedbackSheet() {
           style={empty ? { opacity: 0.45, pointerEvents: 'none' } : undefined}
           onClick={() => setTimeout(close, 0)}
         >
-          <GithubLogo size={18} weight="regular" />
           {t('feedbackSend')}
-        </a>
+        </ButtonLink>
       </div>
       <p className="hint">{t('feedbackNote')}</p>
     </Sheet>

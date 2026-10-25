@@ -5,6 +5,7 @@ import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
 import { readingVars } from './readingVars';
 import { useT, type Key } from '../i18n';
+import { Button } from './Button';
 
 const THEMES = [
   { v: 'auto', label: 'themeAuto' },
@@ -165,9 +166,7 @@ export function TextSettingsSheet() {
         />
       </div>
 
-      <button className="btn block lead" style={{ marginTop: 28 }} onClick={s.resetText}>
-        <ArrowCounterClockwise size={18} weight="regular" />{t('resetText')}
-      </button>
+      <Button block icon={ArrowCounterClockwise} style={{ marginTop: 28 }} onClick={s.resetText}>{t('resetText')}</Button>
     </Sheet>
   );
 }

@@ -1,6 +1,7 @@
 import { Trash, X, type Icon } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useT } from '../i18n';
+import { Button } from './Button';
 
 interface Props {
   title: string;
@@ -23,8 +24,8 @@ export function ConfirmSheet({ title, text, confirmLabel, icon: Icon = Trash, bu
       <p className="confirm-text">{text}</p>
       <div className="actions">
         <span className="grow" />
-        <button className="btn" onClick={onCancel} disabled={busy}><X size={18} weight="regular" />{t('cancel')}</button>
-        <button className="btn primary" onClick={onConfirm} disabled={busy}><Icon size={18} weight="regular" />{confirmLabel}</button>
+        <Button icon={X} onClick={onCancel} disabled={busy}>{t('cancel')}</Button>
+        <Button variant="primary" icon={Icon} onClick={onConfirm} disabled={busy}>{confirmLabel}</Button>
       </div>
     </Sheet>
   );

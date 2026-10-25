@@ -5,6 +5,7 @@ import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
 import { useIncoming, applyIncoming } from '../state/incoming';
 import { go } from '../router';
+import { Button } from './Button';
 import { useT } from '../i18n';
 
 /** Primeira abertura: ainda não há nenhuma versão no aparelho. Oferece a sugerida para o idioma e leva à Biblioteca. */
@@ -43,13 +44,12 @@ export function DownloadInfo({ iconSize }: { iconSize: number }) {
 export function DownloadActions({ onChooseOther, trailing }: { onChooseOther: () => void; trailing?: boolean }) {
   const t = useT();
   const { id, v, progress, busy, failure, start, incoming, hasOther, current } = useFirstDownload();
+  const side = trailing ? 'right' : 'left';
   return (
     <>
-      <button className={`btn primary ${trailing ? 'trail' : 'lead'}`} onClick={start} disabled={busy}>
-        {!trailing && !busy && <DownloadSimple size={18} weight="regular" />}
+      <Button variant="primary" block icon={busy ? undefined : DownloadSimple} iconSide={side} onClick={start} disabled={busy}>
         {busy ? t('downloadingBtn', { pct: Math.round(progress * 100) }) : t('downloadBtn', { abbr: abbrOf(id), size: t.mb(v.sizeMb) })}
-        {trailing && !busy && <DownloadSimple size={18} weight="regular" />}
-      </button>
+      </Button>
       {busy && <div className="progress" role="progressbar" aria-label={t('downloading')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></div>}
       {failure && (
         <p className="error" role="alert">
@@ -57,16 +57,11 @@ export function DownloadActions({ onChooseOther, trailing }: { onChooseOther: ()
         </p>
       )}
       {incoming && hasOther && (
-        <button className={`btn ${trailing ? 'trail' : 'lead'}`} onClick={() => useIncoming.getState().clear()}>
-          <Check size={18} weight="regular" />
+        <Button block icon={Check} iconSide={side} onClick={() => useIncoming.getState().clear()}>
           {t('keepCurrent', { abbr: abbrOf(current) })}
-        </button>
+        </Button>
       )}
-      <button className={`btn ${trailing ? 'trail' : 'lead'}`} onClick={onChooseOther}>
-        {!trailing && <Translate size={18} weight="regular" />}
-        {t('chooseOther')}
-        {trailing && <Translate size={18} weight="regular" />}
-      </button>
+      <Button block icon={Translate} iconSide={side} onClick={onChooseOther}>{t('chooseOther')}</Button>
     </>
   );
 }
@@ -85,10 +80,12 @@ export function Welcome() {
           <button className="icon-btn" onClick={() => open('menu')} aria-label={t('menu')}><List size={24} weight="light" /></button>
         </div>
       </header>
-      <main className="page">
-        <div className="empty welcome">
-          <DownloadInfo iconSize={44} />
-          <DownloadActions onChooseOther={() => go('/library')} />
+      <main className="welcome">
+        <div className="intro-body">
+          <DownloadInfo iconSize={56} />
+        </div>
+        <div className="intro-foot">
+          <DownloadActions trailing onChooseOther={() => go('/library')} />
         </div>
       </main>
     </div>

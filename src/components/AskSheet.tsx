@@ -7,6 +7,7 @@ import { useSettings } from '../state/settings';
 import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { useT } from '../i18n';
+import { Button } from './Button';
 
 /** Só o **negrito** que os modelos costumam usar; o resto fica como texto. */
 function Inline({ text }: { text: string }) {
@@ -94,7 +95,7 @@ export function AskSheet() {
         {status === 'error' && (
           <div className="ask-error" role="alert">
             <p>{t(errorKey)}</p>
-            {error !== 'daily' && <button className="btn sm" onClick={() => retry(uiLang)}><ArrowClockwise size={16} weight="regular" />{t('askRetry')}</button>}
+            {error !== 'daily' && <Button size="sm" icon={ArrowClockwise} onClick={() => retry(uiLang)}>{t('askRetry')}</Button>}
           </div>
         )}
         <div ref={end} />
@@ -135,10 +136,7 @@ export function AskCrash({ onRetry }: { onRetry: () => void }) {
         {asked && <div className="ask-msg user">{asked.content}</div>}
         <div className="ask-msg assistant" role="alert">{t('askCrash')}</div>
         {asked && (
-          <button className="btn sm" onClick={() => ask(asked.content)}>
-            <ArrowClockwise size={16} weight="regular" />
-            {t('askRetry')}
-          </button>
+          <Button size="sm" icon={ArrowClockwise} onClick={() => ask(asked.content)}>{t('askRetry')}</Button>
         )}
       </div>
     </Sheet>
