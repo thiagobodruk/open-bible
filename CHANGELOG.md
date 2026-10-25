@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.13.2
+
+### Changed
+
+- My study no longer has the All, Highlights and Notes filter. Every highlight and note is listed, and the color filter remains.
+
 ## 1.13.1
 
 ### Changed
