@@ -1,5 +1,5 @@
 import { useEffect, useSyncExternalStore } from 'react';
-import { BookOpenText, DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, SpeakerHigh, Translate, CaretRight, UserCircle } from '@phosphor-icons/react';
+import { BookOpenText, DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, SpeakerHigh, Translate, CaretRight, ShieldCheck, SignOut, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
@@ -59,9 +59,12 @@ export function MenuSheet() {
 
   const signIn = async () => {
     const result = await useAccount.getState().signIn();
-    if (result === 'offline') notify(t('signInOffline'));
+    if (result === 'restored') notify(t('accountRestored'));
+    else if (result === 'offline') notify(t('signInOffline'));
     else if (result === 'failed') notify(t('signInFailed'));
   };
+
+  const signOut = () => void useAccount.getState().signOut().catch(() => notify(t('signInFailed')));
 
   const all = [
     ...(canSignIn ? [{ icon: UserCircle, label: t('signIn'), run: signIn }] : []),
@@ -72,6 +75,8 @@ export function MenuSheet() {
     { icon: GearSix, label: t('settings'), run: () => nav('/settings') },
     { icon: ShareNetwork, label: t('shareApp'), run: share },
     { icon: ChatCircleText, label: t('feedback'), run: () => open('feedback') },
+    { icon: ShieldCheck, label: t('privacy'), run: () => nav('/privacy') },
+    ...(user ? [{ icon: SignOut, label: t('signOut'), run: signOut }] : []),
     {
       icon: DeviceMobile,
       label: t('install'),
@@ -97,7 +102,6 @@ export function MenuSheet() {
         <div className="menu-account">
           {user.photo ? <img src={user.photo} alt="" referrerPolicy="no-referrer" /> : <UserCircle size={36} weight="light" aria-hidden="true" />}
           <b>{user.name}</b>
-          <button className="btn sm" onClick={() => void useAccount.getState().signOut().catch(() => notify(t('signInFailed')))}>{t('signOut')}</button>
         </div>
       )}
       <ul>

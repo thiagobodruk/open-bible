@@ -7,7 +7,7 @@ export interface Profile {
   photo: string | null;
 }
 
-export type SignInResult = 'ok' | 'cancelled' | 'offline' | 'failed';
+export type SignInResult = 'ok' | 'restored' | 'cancelled' | 'offline' | 'failed';
 
 /** Último perfil conhecido, para o menu já abrir com a conta certa, mesmo offline. */
 const KEY = 'ob:account';
@@ -63,6 +63,19 @@ export function warmAccount(): Promise<Loaded> {
   return loading;
 }
 
+/** Tira a marca de exclusão de uma conta que volta a entrar. Falhar aqui não impede o login. */
+async function restoreIfDeleted(uid: string): Promise<boolean> {
+  try {
+    const [{ getApps }, fs] = await Promise.all([import('firebase/app'), import('firebase/firestore')]);
+    const ref = fs.doc(fs.getFirestore(getApps()[0]), 'users', uid);
+    if (!(await fs.getDoc(ref)).data()?.deletedAt) return false;
+    await fs.updateDoc(ref, { deletedAt: fs.deleteField() });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 const codeOf = (e: unknown) => (e as { code?: string })?.code ?? '';
 
 interface AccountStore {
@@ -70,6 +83,8 @@ interface AccountStore {
   busy: boolean;
   signIn: () => Promise<SignInResult>;
   signOut: () => Promise<void>;
+  /** Exclusão suave: marca `users/{uid}.deletedAt` no Firestore e sai. A remoção definitiva dos dados é feita depois. */
+  deleteAccount: () => Promise<void>;
 }
 
 export const useAccount = create<AccountStore>((set) => ({
@@ -81,7 +96,8 @@ export const useAccount = create<AccountStore>((set) => ({
       const { auth, mod } = await warmAccount();
       const provider = new mod.GoogleAuthProvider();
       try {
-        await mod.signInWithPopup(auth, provider);
+        const { user } = await mod.signInWithPopup(auth, provider);
+        if (await restoreIfDeleted(user.uid)) return 'restored';
       } catch (e) {
         // Alguns navegadores e PWAs instalados não abrem popup. Nesses casos o login segue por redirecionamento.
         if (codeOf(e) !== 'auth/popup-blocked' && codeOf(e) !== 'auth/operation-not-supported-in-this-environment') throw e;
@@ -104,6 +120,14 @@ export const useAccount = create<AccountStore>((set) => ({
   },
   signOut: async () => {
     const { auth, mod } = await warmAccount();
+    await mod.signOut(auth);
+  },
+  deleteAccount: async () => {
+    const { auth, mod } = await warmAccount();
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error('not_signed_in');
+    const [{ getApps }, fs] = await Promise.all([import('firebase/app'), import('firebase/firestore')]);
+    await fs.setDoc(fs.doc(fs.getFirestore(getApps()[0]), 'users', uid), { deletedAt: fs.serverTimestamp() }, { merge: true });
     await mod.signOut(auth);
   },
 }));

@@ -1,10 +1,10 @@
 import { useSyncExternalStore } from 'react';
 
-export type Route = '/' | '/study' | '/library' | '/settings';
+export type Route = '/' | '/study' | '/library' | '/settings' | '/privacy';
 
 const read = (): Route => {
   const p = location.hash.replace(/^#/, '') || '/';
-  return (['/', '/study', '/library', '/settings'].includes(p) ? p : '/') as Route;
+  return (['/', '/study', '/library', '/settings', '/privacy'].includes(p) ? p : '/') as Route;
 };
 
 const subscribe = (cb: () => void) => {

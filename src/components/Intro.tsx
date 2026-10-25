@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { GoogleLogo, Sparkle, Translate, UserCircle, WifiSlash } from '@phosphor-icons/react';
+import { BookOpenText, GoogleLogo, Sparkle, Translate, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { useIntro } from '../state/intro';
 import { useUI } from '../state/ui';
@@ -7,7 +7,7 @@ import { useT } from '../i18n';
 
 type Step = 'signin' | 'offline' | 'study' | 'version';
 
-const ICONS = { signin: UserCircle, offline: WifiSlash, study: Sparkle, version: Translate } as const;
+const ICONS = { signin: UserCircle, offline: BookOpenText, study: Sparkle, version: Translate } as const;
 
 /** Primeira abertura, depois da splash: entrar com o Google (ou pular) e três telas de apresentação. */
 export function Intro() {
@@ -35,7 +35,8 @@ export function Intro() {
 
   const signIn = async () => {
     const result = await useAccount.getState().signIn();
-    if (result === 'offline') notify(t('signInOffline'));
+    if (result === 'restored') notify(t('accountRestored'));
+    else if (result === 'offline') notify(t('signInOffline'));
     else if (result === 'failed') notify(t('signInFailed'));
   };
 

@@ -129,3 +129,5 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 }
 
 .menu-version { margin-top: 18px; text-align: center; font-size: 12px; color: var(--muted); user-select: text; }
+.privacy p { margin: 8px 0 0; font-size: 15px; line-height: 1.6; }
+.privacy a { color: var(--accent); }

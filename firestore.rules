@@ -1,0 +1,15 @@
+rules_version = '2';
+
+// Cada pessoa lê e grava apenas os próprios dados, em users/{uid} e abaixo dele.
+// Publique em Firestore Database > Rules, no console do Firebase.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+
+      match /{document=**} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+  }
+}

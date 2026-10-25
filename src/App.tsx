@@ -12,6 +12,7 @@ import { Reader } from './screens/Reader';
 import { Study } from './screens/Study';
 import { Library } from './screens/Library';
 import { Settings } from './screens/Settings';
+import { Privacy } from './screens/Privacy';
 import { MenuSheet } from './components/MenuSheet';
 import { NavigatorSheet } from './components/NavigatorSheet';
 import { TextSettingsSheet } from './components/TextSettingsSheet';
@@ -24,6 +25,7 @@ import { AskCrash, AskSheet } from './components/AskSheet';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ListenSheet } from './components/ListenSheet';
 import { SearchSheet } from './components/SearchSheet';
+import { DeleteAccountSheet } from './components/DeleteAccountSheet';
 import { Toast } from './components/Toast';
 
 export default function App() {
@@ -72,6 +74,7 @@ export default function App() {
       {route === '/study' && <Study />}
       {route === '/library' && <Library />}
       {route === '/settings' && <Settings />}
+      {route === '/privacy' && <Privacy />}
 
       {sheet === 'menu' && <MenuSheet />}
       {sheet === 'navigator' && <NavigatorSheet />}
@@ -88,6 +91,7 @@ export default function App() {
       {sheet === 'install' && <InstallSheet />}
       {sheet === 'feedback' && <FeedbackSheet />}
       {sheet === 'listen' && <ListenSheet />}
+      {sheet === 'deleteAccount' && <DeleteAccountSheet />}
       {ready && !hasVersions && !introDone && <Intro />}
       <Toast />
     </>
