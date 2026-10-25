@@ -42,6 +42,8 @@
 .sheet-head { display: flex; align-items: center; gap: 4px; min-height: 44px; padding: 4px 22px; flex: none; touch-action: none; }
 .sheet-head h2 { display: flex; align-items: center; gap: 10px; min-width: 0; font-size: 17px; font-weight: 600; }
 .sheet-head h2 svg { flex: none; }
+/* Sem título visível, o cabeçalho só tem o × (oculto no celular): não ocupa espaço. */
+@media (max-width: 719.98px) { .sheet-head.bare { min-height: 0; padding: 0; } }
 .sheet-trailing { margin-left: auto; margin-right: -10px; display: flex; }
 /* Botão × visível no desktop, onde arrastar o sheet para baixo é menos natural. No celular fica oculto, mas continua no DOM para teclado e leitor de tela. */
 .sheet-close { display: grid; margin-left: auto; margin-right: -10px; }

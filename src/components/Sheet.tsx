@@ -168,7 +168,7 @@ export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, lea
         tabIndex={-1}
       >
         <div className="sheet-grip" />
-        <div className="sheet-head">
+        <div className={`sheet-head${hideTitle && !leading && !trailing ? ' bare' : ''}`}>
           {leading}
           {!hideTitle && (
             <h2>
