@@ -132,12 +132,15 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 /* Campo de busca fixo no topo de um sheet */
 .sheet-pinned:has(> .search) { padding: 4px 22px 12px; }
 .sheet-pinned:has(> .search) + .sheet-body { padding-top: 8px; }
-.btn.block { display: flex; width: 100%; }
-/* Ícone na extremidade esquerda, com o texto centralizado no botão. */
-.btn.lead { position: relative; }
-.btn.lead > svg { position: absolute; left: 18px; top: 50%; margin: 0; transform: translateY(-50%); }
-.btn.trail { position: relative; }
-.btn.trail > svg { position: absolute; right: 18px; top: 50%; margin: 0; transform: translateY(-50%); }
+.btn.block { display: flex; position: relative; width: 100%; }
+/* Em botões de largura total o ícone vai para a extremidade e o texto fica centralizado. */
+.btn.block.lead, .btn.block.trail { padding: 0 46px; }
+.btn.block.lead > svg, .btn.block.trail > svg { position: absolute; top: 50%; margin: 0; transform: translateY(-50%); }
+.btn.block.lead > svg { left: 18px; }
+.btn.block.trail > svg { right: 18px; }
+.btn.block.sm.lead, .btn.block.sm.trail { padding: 0 38px; }
+.btn.block.sm.lead > svg { left: 14px; }
+.btn.block.sm.trail > svg { right: 14px; }
 
 /* Convite de instalação: cartão flutuante discreto no pé da tela */
 .install-banner {

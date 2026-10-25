@@ -238,7 +238,7 @@ const en = {
   imported: 'Imported. Highlights: {h} · Notes: {n}',
   importedSkipped: 'Imported. Highlights: {h} · Notes: {n} · Skipped: {s}',
   backupInvalid: 'Invalid backup file',
-  dataHint: 'Everything stays in this browser only. No account, no cloud. Export from time to time so you do not lose your notes.',
+  dataHint: 'Your notes and highlights are saved on this device. Export a backup from time to time so you do not lose them.',
   app: 'App',
   github: 'Code on GitHub',
   githubSub: 'MIT License',

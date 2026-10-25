@@ -4,6 +4,7 @@ import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { useIntro } from '../state/intro';
 import { useUI } from '../state/ui';
 import { go } from '../router';
+import { Button } from './Button';
 import { DownloadActions, DownloadInfo } from './Welcome';
 import { useT } from '../i18n';
 
@@ -91,21 +92,12 @@ export function Intro() {
         {step === 'download' ? (
           <DownloadActions trailing onChooseOther={chooseOther} />
         ) : step === 'signin' ? (
-          <button className="btn primary trail" onClick={signIn} disabled={busy}>
-            {t('signIn')}
-            <GoogleLogo size={18} weight="bold" />
-          </button>
+          <Button variant="primary" block icon={GoogleLogo} iconSide="right" iconWeight="bold" onClick={signIn} disabled={busy}>{t('signIn')}</Button>
         ) : (
-          <button className="btn primary trail" onClick={next}>
-            {t('next')}
-            <ArrowRight size={18} weight="bold" />
-          </button>
+          <Button variant="primary" block icon={ArrowRight} iconSide="right" iconWeight="bold" onClick={next}>{t('next')}</Button>
         )}
         {step === 'signin' && (
-          <button className="btn trail" onClick={next}>
-            {t('skip')}
-            <ArrowRight size={18} weight="regular" />
-          </button>
+          <Button block icon={ArrowRight} iconSide="right" onClick={next}>{t('skip')}</Button>
         )}
       </div>
     </main>

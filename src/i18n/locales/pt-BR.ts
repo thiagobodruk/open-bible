@@ -240,7 +240,7 @@ const ptBR: Messages = {
   imported: 'Importado. Marcações: {h} · Notas: {n}',
   importedSkipped: 'Importado. Marcações: {h} · Notas: {n} · Ignoradas: {s}',
   backupInvalid: 'Arquivo de backup inválido',
-  dataHint: 'Tudo fica só neste navegador. Sem conta, sem nuvem. Exporte de vez em quando para não perder suas notas.',
+  dataHint: 'Suas notas e destaques ficam salvos neste aparelho. Exporte um backup de vez em quando para não perdê-los.',
   app: 'Aplicativo',
   github: 'Código no GitHub',
   githubSub: 'Licença MIT',

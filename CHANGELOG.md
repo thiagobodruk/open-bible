@@ -2,6 +2,16 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.11.0
+
+### Changed
+
+- Buttons now share one component, with icons at the edge of full-width buttons.
+- The Previous and Next buttons at the end of a chapter have their icons at the edges.
+- The note sheet buttons now have icons, like the confirmation sheets.
+- The start screen without a Bible now matches the last intro step.
+- The data hint in Settings no longer says there is no account.
+
 ## 1.10.5
 
 ### Changed
