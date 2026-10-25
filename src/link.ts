@@ -15,9 +15,32 @@ const base = import.meta.env.BASE_URL;
 export const readPath = (versionId: string, book: string, chapter: number, verses?: { from: number; to: number }) =>
   `${base}${versionId}/${book}/${chapter}${verses ? `/${verses.from === verses.to ? verses.from : `${verses.from}-${verses.to}`}` : ''}`;
 
-/** Endereço completo de um trecho, o que vai na mensagem de compartilhar. */
-export const shareUrl = (versionId: string, book: string, chapter: number, verses: { from: number; to: number }) =>
-  new URL(readPath(versionId, book, chapter, verses), location.origin).href;
+const REF = 'ref';
+
+/**
+ * Endereço de um trecho para a mensagem de compartilhar: /open-bible/?ref=pt_nvi/jo/3/16-17.
+ * O GitHub Pages responde 404 a caminhos que não existem, e os apps de mensagem não montam a pré-visualização assim.
+ * A raiz com parâmetro responde 200, e o app abre o trecho a partir dele.
+ */
+export const shareUrl = (versionId: string, book: string, chapter: number, verses: { from: number; to: number }) => {
+  const url = new URL(base, location.origin);
+  url.search = `?${REF}=${readPath(versionId, book, chapter, verses).slice(base.length)}`;
+  return url.href;
+};
+
+/** A leitura pedida pelo endereço: o parâmetro `ref` dos links compartilhados ou o próprio caminho. */
+export function readLinkFromLocation(): ReadLink | null {
+  const ref = new URLSearchParams(location.search).get(REF);
+  return parseReadPath(ref ? base + ref : location.pathname);
+}
+
+/** A busca do endereço sem o parâmetro do link compartilhado. */
+export function searchWithoutRef(): string {
+  const params = new URLSearchParams(location.search);
+  params.delete(REF);
+  const s = params.toString();
+  return s ? `?${s}` : '';
+}
 
 /** "16" ou "16-17". Qualquer outra forma é ignorada, e o link abre só o capítulo. */
 function parseVerses(s?: string): ReadLink['verses'] {

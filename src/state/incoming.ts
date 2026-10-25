@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { parseReadPath, type ReadLink } from '../link';
+import { readLinkFromLocation, type ReadLink } from '../link';
 import { useSettings } from './settings';
 import { useStudy } from './study';
 
@@ -10,7 +10,7 @@ interface IncomingStore {
 }
 
 export const useIncoming = create<IncomingStore>((set) => ({
-  incoming: parseReadPath(location.pathname),
+  incoming: readLinkFromLocation(),
   clear: () => set({ incoming: null }),
 }));
 
