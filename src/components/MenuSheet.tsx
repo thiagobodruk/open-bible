@@ -17,7 +17,6 @@ export function MenuSheet() {
   const t = useT();
   const { close, open, notify } = useUI();
   const canInstall = useSyncExternalStore(subscribeInstall, installAvailable);
-  const count = useStudy((s) => Object.keys(s.highlights).length + s.notes.length);
   const { book, chapter } = useStudy();
   const versionId = useSettings((s) => s.versionId);
   const text = useChapter(book, chapter);
@@ -69,7 +68,7 @@ export function MenuSheet() {
   const all = [
     ...(canSignIn ? [{ icon: UserCircle, label: t('signIn'), run: signIn }] : []),
     { icon: BookOpenText, label: t('read'), run: () => nav('/') },
-    { icon: Notepad, label: t('study'), badge: count, run: () => nav('/study') },
+    { icon: Notepad, label: t('study'), run: () => nav('/study') },
     ...(listenSupported() ? [{ icon: SpeakerHigh, label: listening ? t('listenStop') : t('listen'), run: toggleListen }] : []),
     { icon: Translate, label: t('library'), run: () => nav('/library') },
     { icon: GearSix, label: t('settings'), run: () => nav('/settings') },
@@ -105,12 +104,11 @@ export function MenuSheet() {
         </div>
       )}
       <ul>
-        {items.map(({ icon: Icon, label, badge, run }) => (
+        {items.map(({ icon: Icon, label, run }) => (
           <li key={label}>
             <button className="row" onClick={run}>
               <Icon size={26} weight="light" />
               <span className="grow title">{label}</span>
-              {badge !== undefined && <span className="badge">{badge}</span>}
               <CaretRight size={18} weight="light" color="var(--muted)" />
             </button>
           </li>
