@@ -6,9 +6,9 @@ import { useStudy } from '../state/study';
 import { useBookName, useChapter } from '../hooks';
 import { refLabel } from '../ref';
 import { useT } from '../i18n';
-import { Button } from './Button';
+import { Button, IconButton } from './Button';
 
-const MAX = 5000;
+const MAX = 500;
 
 export function NoteSheet() {
   const t = useT();
@@ -51,19 +51,17 @@ export function NoteSheet() {
       <div className="counter">{text.length} / {MAX}</div>
       <div className="actions">
         {existing && (
-          <button
-            className="icon-btn danger-icon"
-            aria-label={t('delete')}
-            title={t('delete')}
+          <IconButton
+            icon={Trash}
+            tone="danger"
+            label={t('delete')}
             onClick={() => {
               deleteNote(existing.id);
               clearSelection();
               close();
               notify(t('noteDeleted'));
             }}
-          >
-            <Trash size={24} weight="light" />
-          </button>
+          />
         )}
         <span className="grow" />
         <Button icon={X} onClick={close}>{t('cancel')}</Button>

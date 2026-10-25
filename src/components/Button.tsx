@@ -42,3 +42,17 @@ export function ButtonLink({ variant, size, block, icon, iconSide, iconWeight, c
     </a>
   );
 }
+
+/** Botão redondo secundário, só com ícone e borda. O rótulo vira aria-label e dica. */
+export function IconButton({ icon: Glyph, label, tone, iconWeight = 'light', className, type = 'button', ...rest }: {
+  icon: Icon;
+  label: string;
+  tone?: 'danger';
+  iconWeight?: IconWeight;
+} & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'aria-label' | 'title'>) {
+  return (
+    <button type={type} className={['btn-round', tone, className].filter(Boolean).join(' ')} aria-label={label} title={label} {...rest}>
+      <Glyph size={22} weight={iconWeight} aria-hidden="true" />
+    </button>
+  );
+}

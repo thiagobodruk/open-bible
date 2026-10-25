@@ -178,8 +178,15 @@ export function Reader() {
 
   const onPageClick = (e: React.MouseEvent) => {
     if (e.clientY < 90) setBarMini(false);
-    const el = (e.target as HTMLElement).closest<HTMLElement>('[data-v]');
-    if (el) toggleVerse(Number(el.dataset.v));
+    const target = e.target as HTMLElement;
+    const el = target.closest<HTMLElement>('[data-v]');
+    if (el && target.closest('.note-mark')) {
+      // O ícone de nota abre a edição direto, com só aquele versículo selecionado.
+      const study = useStudy.getState();
+      study.clearSelection();
+      study.toggleVerse(Number(el.dataset.v));
+      open('note');
+    } else if (el) toggleVerse(Number(el.dataset.v));
     else if (hasSelection) useStudy.getState().clearSelection();
   };
 
