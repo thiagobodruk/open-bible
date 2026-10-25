@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Apaga no GitHub todas as branches remotas, menos a main. Mostra a lista e pede confirmação.
-# Uso: npm run clean:branches   (ou: bash scripts/clean-branches.sh)
+# Deletes every remote branch on GitHub except main. Shows the list and asks for confirmation.
+# Usage: npm run clean:branches   (or: bash scripts/clean-branches.sh)
 set -euo pipefail
 
 REMOTE="${1:-origin}"
@@ -9,26 +9,26 @@ KEEP="main"
 if [ -t 1 ]; then B=$'\e[1m'; G=$'\e[32m'; R=$'\e[31m'; D=$'\e[2m'; X=$'\e[0m'; else B=; G=; R=; D=; X=; fi
 
 git fetch --prune "$REMOTE" >/dev/null 2>&1
-# Compatível com o bash 3.2 do macOS (sem mapfile).
+# Compatible with macOS bash 3.2 (no mapfile).
 branches=()
 while IFS= read -r line; do
   [ -n "$line" ] && branches+=("$line")
 done < <(git branch -r | sed "s|^ *$REMOTE/||" | grep -v -E "^(HEAD.*|$KEEP)$" || true)
 
 if [ "${#branches[@]}" -eq 0 ]; then
-  echo "${G}Nada para apagar.${X} Só existe a $KEEP em $REMOTE."
+  echo "${G}Nothing to delete.${X} Only $KEEP exists on $REMOTE."
   exit 0
 fi
 
-echo "${B}Branches que serão apagadas em $REMOTE (${#branches[@]}):${X}"
+echo "${B}Branches that will be deleted on $REMOTE (${#branches[@]}):${X}"
 printf '  %s\n' "${branches[@]}"
 echo
-echo "${D}A $KEEP não é tocada. Esta ação não pode ser desfeita pelo script.${X}"
+echo "${D}$KEEP is left alone. This action cannot be undone by the script.${X}"
 echo
 
-read -r -p "${G}▶${X}  Enter para apagar, ou Ctrl+C para cancelar " _
+read -r -p "${G}▶${X}  Press Enter to delete, or Ctrl+C to cancel " _
 
 git push "$REMOTE" --delete "${branches[@]}"
 git remote prune "$REMOTE" >/dev/null 2>&1 || true
 echo
-echo "${G}✔ Pronto.${X} ${#branches[@]} branches apagadas."
+echo "${G}✔ Done.${X} ${#branches[@]} branches deleted."

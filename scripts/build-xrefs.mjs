@@ -1,6 +1,6 @@
-// Gera public/xrefs/<livro>.json a partir do módulo TSK (Treasury of Scripture Knowledge) do projeto SWORD,
-// que é de domínio público. Uso: node scripts/build-xrefs.mjs [sha]
-// Requer o comando `unzip`. A versificação vem da KJV do repo de dados, fixado em um commit.
+// Generates public/xrefs/<book>.json from the TSK (Treasury of Scripture Knowledge) module of the SWORD project,
+// which is in the public domain. Usage: node scripts/build-xrefs.mjs [sha]
+// Requires the `unzip` command. Versification comes from the KJV in the data repo, pinned to a commit.
 import { execFileSync } from 'node:child_process';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -11,10 +11,10 @@ const SHA = process.argv[2] ?? '92e121c2c829eae351b76db1d32858ced77b16a6';
 const TSK_URL = 'https://crosswire.org/ftpmirror/pub/sword/packages/rawzip/TSK.zip';
 const KJV_URL = `https://cdn.jsdelivr.net/gh/thiagobodruk/bible@${SHA}/json/en_kjv.json`;
 const LIMIT = 10;
-// Nome de arquivo só com ASCII (o id de Jó tem acento). Mantenha igual a fileOf em src/data/xrefs.ts.
+// ASCII-only file name (the id for Job has an accent). Keep it identical to fileOf in src/data/xrefs.ts.
 const fileOf = (id) => id.replace(/[^\x00-\x7f]/g, (c) => `u${c.charCodeAt(0).toString(16)}`);
 
-// Abreviações do TSK na ordem canônica; os ids vêm do repo de dados, na mesma ordem.
+// TSK abbreviations in canonical order; the ids come from the data repo, in the same order.
 const TSK_BOOKS = 'Ge Ex Le Nu De Jos Jud Ru 1Sa 2Sa 1Ki 2Ki 1Ch 2Ch Ezr Ne Es Job Ps Pr Ec So Isa Jer La Eze Da Ho Joe Am Ob Jon Mic Na Hab Zep Hag Zec Mal Mt Mr Lu Joh Ac Ro 1Co 2Co Ga Eph Php Col 1Th 2Th 1Ti 2Ti Tit Phm Heb Jas 1Pe 2Pe 1Jo 2Jo 3Jo Jude Re'.split(' ');
 
 const get = async (url, tries = 4) => {
@@ -33,7 +33,7 @@ const ids = kjv.map((b) => b.abbrev);
 const byTsk = Object.fromEntries(TSK_BOOKS.map((a, i) => [a, i]));
 const shape = kjv.map((b) => b.chapters.map((c) => c.length));
 
-// Lê os blocos zlib do módulo zCom: o índice .bzv tem 10 bytes por verso, o .bzs 12 bytes por bloco.
+// Reads the zlib blocks of the zCom module: the .bzv index has 10 bytes per verse, the .bzs 12 bytes per block.
 function reader(dir, testament) {
   const base = join(dir, 'modules/comments/zcom/tsk', testament);
   return Promise.all(['bzv', 'bzs', 'bzz'].map((e) => readFile(`${base}.${e}`))).then(([bzv, bzs, bzz]) => {
@@ -54,7 +54,7 @@ function reader(dir, testament) {
   });
 }
 
-// Converte "Ro 5:8; 2Co 5:19-21; 1Jo 4:9,10; 15" em referências, herdando livro e capítulo do contexto.
+// Converts "Ro 5:8; 2Co 5:19-21; 1Jo 4:9,10; 15" into references, inheriting book and chapter from context.
 function parse(text, book, chapter) {
   const out = [];
   let bk = book;
@@ -88,8 +88,8 @@ function parse(text, book, chapter) {
   return out;
 }
 
-// Cada trecho do versículo ("my. ... I shall. ...") vira um grupo; pegamos uma referência por grupo
-// por rodada, na ordem do TSK, até o limite.
+// Each segment of the verse ("my. ... I shall. ...") becomes a group; we take one reference per group
+// per round, in TSK order, up to the limit.
 function pick(raw, book, chapter) {
   const groups = [];
   for (const part of raw.split(/<br\s*\/?>/).map((p) => p.trim())) {
@@ -145,7 +145,7 @@ try {
       await writeFile(new URL(`${fileOf(ids[b])}.json`, outDir), json + '\n');
     }
   }
-  console.log(`${verses} versículos, ${refs} referências, ${(bytes / 1048576).toFixed(2)} MB em ${ids.length} arquivos`);
+  console.log(`${verses} verses, ${refs} references, ${(bytes / 1048576).toFixed(2)} MB in ${ids.length} files`);
 } finally {
   await rm(dir, { recursive: true, force: true });
 }

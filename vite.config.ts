@@ -3,12 +3,12 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import pkg from './package.json' with { type: 'json' };
 
-// O app é servido em https://<usuario>.github.io/open-bible/
+// The app is served at https://<user>.github.io/open-bible/
 const base = '/open-bible/';
 
 const build = (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env.GITHUB_SHA?.slice(0, 7) ?? 'dev';
 
-// Publica a versão e o commit do build, para o app saber o que há de novo sem baixar o service worker.
+// Publishes the build version and commit, so the app can tell what is new without downloading the service worker.
 const versionFile: Plugin = {
   name: 'version-file',
   generateBundle() {
@@ -16,13 +16,13 @@ const versionFile: Plugin = {
   },
 };
 
-// Preenche a versão na splash, que vive no index.html e aparece antes do JavaScript.
+// Fills in the version on the splash, which lives in index.html and shows before any JavaScript runs.
 const htmlVersion: Plugin = {
   name: 'html-version',
   transformIndexHtml: (html) => html.replace('%APP_VERSION%', pkg.version),
 };
 
-// GitHub Pages devolve 404.html para caminhos desconhecidos. Com o mesmo conteúdo do index, links como /open-bible/pt_nvi/jn/3 abrem o app.
+// GitHub Pages serves 404.html for unknown paths. With the same content as index, links like /open-bible/pt_nvi/jn/3 open the app.
 const spaFallback: Plugin = {
   name: 'spa-fallback',
   generateBundle: {
@@ -68,11 +68,11 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         globIgnores: ['404.html'],
         cleanupOutdatedCaches: true,
-        // Os textos das versões vêm de CDN e ficam no IndexedDB. O service worker guarda só o app.
+        // Version texts come from a CDN and live in IndexedDB. The service worker only caches the app.
         navigateFallback: `${base}index.html`,
-        // As referências cruzadas são baixadas por livro, na primeira vez, e depois funcionam offline.
+        // Cross-references are downloaded per book on first use, and then work offline.
         runtimeCaching: [
-          // Esta função é copiada para dentro do service worker, onde `base` não existe: o caminho vai por extenso.
+          // This function is copied into the service worker, where `base` does not exist, so the path is spelled out.
           { urlPattern: ({ url }) => url.pathname.startsWith('/open-bible/xrefs/'), handler: 'StaleWhileRevalidate', options: { cacheName: 'xrefs' } },
         ],
       },

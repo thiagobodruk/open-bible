@@ -1,7 +1,7 @@
 rules_version = '2';
 
-// Cada pessoa lê e grava apenas os próprios dados, em users/{uid} e abaixo dele.
-// Publique em Firestore Database > Rules, no console do Firebase.
+// Each person reads and writes only their own data, at users/{uid} and below.
+// Publish it in Firestore Database > Rules, in the Firebase console.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{uid} {

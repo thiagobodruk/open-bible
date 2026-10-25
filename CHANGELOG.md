@@ -18,86 +18,86 @@ Versions follow [SemVer](https://semver.org/). This file is updated by the Relea
 
 ### Added
 
-- Tocar na versão no rodapé do menu verifica e aplica a atualização do app.
+- Tapping the version at the bottom of the menu checks for and applies an app update.
 
 ### Changed
 
-- A conta ficou no rodapé do menu, com um botão Sair.
-- A seção Conta de Ajustes ficou no fim da tela.
-- O menu ficou mais enxuto, sem logo e sem título.
+- The account now sits at the bottom of the menu, with a Sign out button.
+- The Account section in Settings moved to the end of the screen.
+- The menu is leaner, with no logo and no title.
 
 ## 1.10.0
 
 ### Changed
 
-- O download da primeira Bíblia agora é a última tela da apresentação inicial.
-- A opção Ler foi removida do menu.
+- Downloading the first Bible is now the last screen of the initial intro.
+- The Read option was removed from the menu.
 
 ## 1.9.1
 
 ### Changed
 
-- O botão de ouvir o capítulo agora fica no cabeçalho da leitura, e não mais no menu.
+- The listen-to-chapter button now lives in the reading header instead of the menu.
 
 ## 1.9.0
 
 ### Added
 
-- Entrar com a conta Google pelo menu, com apresentação inicial no primeiro acesso.
-- Política de privacidade no menu.
-- Excluir a conta em Ajustes.
+- Sign in with a Google account from the menu, with an intro on first launch.
+- Privacy policy in the menu.
+- Delete the account in Settings.
 
 ### Changed
 
-- O item Meu estudo do menu não mostra mais o contador.
+- The My study item in the menu no longer shows a counter.
 
 ## 1.8.5
 
 ### Changed
 
-- Os bottom sheets voltam a fechar só ao arrastar para baixo, sem a seta no canto superior direito.
+- Bottom sheets close only by dragging down again, without the arrow in the top-right corner.
 
 ## 1.8.4
 
 ### Added
 
-- Botão de seta para baixo para fechar os bottom sheets.
+- Down-arrow button to close bottom sheets.
 
 ## 1.8.3
 
 ### Changed
 
-- O cartão de compartilhamento mostra a logo pequena ao lado do texto.
+- The share card shows the small logo next to the text.
 
 ## 1.8.2
 
 ### Changed
 
-- O cartão de compartilhamento mostra a logo do app em imagem quadrada.
+- The share card shows the app logo as a square image.
 
 ### Fixed
 
-- A resposta da IA aparece no início, sem rolar até o fim.
+- The AI answer appears at the top, without scrolling to the end.
 
 ## 1.8.1
 
 ### Added
 
-- Pré-visualização com logo e descrição quando o link do app é compartilhado.
+- Link preview with logo and description when the app link is shared.
 
 ### Changed
 
-- O link de um trecho compartilhado agora usa `?ref=`.
+- A shared passage link now uses `?ref=`.
 
 ## 1.8.0
 
 ### Added
 
-- Compartilhar e copiar versículos incluem o link do trecho.
+- Sharing and copying verses include the passage link.
 
 ### Changed
 
-- O link de um trecho abre o capítulo com os versículos destacados.
+- A passage link opens the chapter with the verses highlighted.
 
 ## 1.7.7
 
@@ -133,84 +133,84 @@ Versions follow [SemVer](https://semver.org/). This file is updated by the Relea
 
 ### Added
 
-- Mensagem amigável dentro da tela da IA quando algo dá errado.
+- Friendly message inside the AI screen when something goes wrong.
 
 ### Fixed
 
-- A tela da IA não fica mais em branco ao perguntar em versões recentes do Chrome.
-- O botão de enviar não é mais cortado em telas pequenas do Android.
-- As referências cruzadas voltam a ser guardadas para uso offline.
+- The AI screen no longer goes blank when asking a question in recent Chrome versions.
+- The send button is no longer cut off on small Android screens.
+- Cross-references are stored for offline use again.
 
 ## 1.7.4
 
 ### Fixed
 
-- A opção de instalar o app volta a aparecer no Android depois de desinstalar o app.
+- The install option shows up again on Android after uninstalling the app.
 
 ## 1.7.3
 
 ### Changed
 
-- O prompt da IA abre direto no primeiro acesso, sem o aviso que interrompia o onboarding.
+- The AI prompt opens directly on first launch, without the notice that interrupted the onboarding.
 
 ## 1.7.2
 
 ### Fixed
 
-- Na dica de introdução, toques rápidos em sequência não pulam mais o passo do botão de IA. Cada passo ignora toques por 1 segundo, e o passo da IA entra um pouco depois do anterior.
+- In the intro hint, quick successive taps no longer skip the AI button step. Each step ignores taps for 1 second, and the AI step appears slightly after the previous one.
 
 ## 1.7.1
 
 ### Changed
 
-- A dica de introdução da IA tem um texto mais curto, ao lado do botão, com o ícone acima.
-- No botão Atualizar dos Ajustes, as versões aparecem como "Atual" e "Nova".
+- The AI intro hint has shorter text, next to the button, with the icon above.
+- In the Update button in Settings, versions show as "Current" and "New".
 
 ## 1.7.0
 
 ### Added
 
-- Na primeira abertura, depois da dica de deslizar para paginar, uma segunda dica aponta para o botão de IA e pede um toque nele, que abre o prompt.
+- On first launch, after the swipe-to-turn-pages hint, a second hint points to the AI button and asks for a tap on it, which opens the prompt.
 
 ## 1.6.8
 
 ### Changed
 
-- A resposta da IA só aparece depois de pelo menos 1 segundo, com uma animação de três pontinhos enquanto isso.
+- The AI answer only appears after at least 1 second, with a three-dot animation in the meantime.
 
 ## 1.6.7
 
 ### Changed
 
-- O aviso de primeiro uso da IA ficou mais curto e lembra que ela pode cometer erros, mantendo a informação de que a pergunta e o trecho são enviados à Groq.
+- The AI first-use notice is shorter and reminds that it can make mistakes, while keeping the note that the question and passage are sent to Groq.
 
 ## 1.6.6
 
 ### Added
 
-- Na resposta da IA, a pill da referência tem um × que remove os versos selecionados e volta ao escopo do capítulo inteiro nas próximas perguntas.
+- In the AI answer, the reference pill has an × that removes the selected verses and goes back to the whole-chapter scope for the next questions.
 
 ### Fixed
 
-- O espaçamento interno da pill de referência ficou equilibrado entre o ícone e o texto.
+- The reference pill's inner spacing is now balanced between the icon and the text.
 
 ## 1.6.5
 
 ### Changed
 
-- A pill da referência bíblica no prompt e na resposta da IA agora usa o ícone de marcador.
+- The Bible reference pill in the AI prompt and answer now uses the bookmark icon.
 
 ## 1.6.4
 
 ### Changed
 
-- No prompt da IA, o atalho Prática foi substituído por Resumir. Os atalhos agora são Resumir, Explicar e Contexto.
+- In the AI prompt, the Practice shortcut was replaced by Summarize. The shortcuts are now Summarize, Explain and Context.
 
 ## 1.6.3
 
 ### Changed
 
-- Ao arrastar a resposta da IA para baixo, ela desliza até o prompt compacto em vez de fechar e só depois mostrar o prompt.
+- Dragging the AI answer down now slides it to the compact prompt instead of closing and only then showing the prompt.
 
 ## 1.6.2
 
