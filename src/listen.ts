@@ -188,17 +188,21 @@ export function stop() {
 
 
 const HINT_KEY = 'ob:listen-hint';
-const HINT_TIMES = 3;
 
-/** No iOS o botão de silêncio cala a fala e o app não tem como saber. Lembra nas primeiras vezes. */
+/** No iOS o botão de silêncio cala a fala e o app não tem como saber. Avisa uma única vez, antes da primeira leitura. */
 export function silentHintDue(): boolean {
   if (!detectIOS()) return false;
   try {
-    const n = Number(localStorage.getItem(HINT_KEY) || 0);
-    if (n >= HINT_TIMES) return false;
-    localStorage.setItem(HINT_KEY, String(n + 1));
-    return true;
+    return !localStorage.getItem(HINT_KEY);
   } catch {
     return false;
+  }
+}
+
+export function markSilentHintSeen() {
+  try {
+    localStorage.setItem(HINT_KEY, '1');
+  } catch {
+    // Sem armazenamento o aviso volta a aparecer, o que é aceitável.
   }
 }
