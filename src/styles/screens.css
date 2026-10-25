@@ -73,7 +73,8 @@
 .counter { font-size: 12px; color: var(--muted); text-align: right; margin-top: 6px; }
 
 /* Menu */
-.menu-account { display: flex; align-items: center; gap: 12px; padding: 10px 10px 10px 14px; margin-top: 14px; background: var(--surface); border-radius: var(--radius-sm); }
+.menu-list { margin-top: 8px; padding: 4px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.menu-account { display: flex; align-items: center; gap: 12px; padding: 10px 10px 10px 14px; margin-top: 12px; background: var(--surface); border-radius: var(--radius-sm); }
 .menu-account img { width: 36px; height: 36px; border-radius: 50%; flex: none; }
 .menu-account svg { flex: none; }
 .menu-account b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 600; }

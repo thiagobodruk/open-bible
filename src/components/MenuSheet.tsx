@@ -81,7 +81,7 @@ export function MenuSheet() {
 
   return (
     <Sheet title="Open Bible" icon={BookOpenText} onClose={close}>
-      <ul>
+      <ul className="menu-list">
         {items.map(({ icon: Icon, label, run }) => (
           <li key={label}>
             <button className="row" onClick={run}>
