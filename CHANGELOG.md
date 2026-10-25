@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.9.1
+
+### Changed
+
+- O botão de ouvir o capítulo agora fica no cabeçalho da leitura, e não mais no menu.
+
 ## 1.9.0
 
 ### Added
