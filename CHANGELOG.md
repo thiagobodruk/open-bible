@@ -2,6 +2,18 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.10.1
+
+### Added
+
+- Tocar na versão no rodapé do menu verifica e aplica a atualização do app.
+
+### Changed
+
+- A conta ficou no rodapé do menu, com um botão Sair.
+- A seção Conta de Ajustes ficou no fim da tela.
+- O menu ficou mais enxuto, sem logo e sem título.
+
 ## 1.10.0
 
 ### Changed
