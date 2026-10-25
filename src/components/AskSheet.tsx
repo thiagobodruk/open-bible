@@ -24,13 +24,22 @@ export function AskSheet() {
   const uiLang = useSettings((s) => s.uiLang);
   const { passage, messages, status, error, followUp, retry, stop, widen } = useAsk();
   const end = useRef<HTMLDivElement>(null);
+  const asked = useRef<HTMLDivElement>(null);
   const busy = status === 'loading' || status === 'streaming';
   const answer = messages[messages.length - 1];
 
   useEffect(() => () => stop(), [stop]);
+  // Ao perguntar, a pergunta sobe para o topo e a resposta cresce abaixo dela: quem lê começa pelo início, sem rolar para cima.
+  // O texto chega aos poucos, então a rolagem repete até a pergunta alcançar o topo, e depois não mexe mais.
+  const length = answer?.content.length;
   useEffect(() => {
-    end.current?.scrollIntoView({ block: 'end' });
-  }, [messages.length, status]);
+    const q = asked.current;
+    if (status === 'error') end.current?.scrollIntoView({ block: 'end' });
+    else if (q && busy) {
+      const top = q.getBoundingClientRect().top - (q.closest('.sheet-body')?.getBoundingClientRect().top ?? 0);
+      if (top > 60) q.scrollIntoView({ block: 'start' });
+    }
+  }, [status, busy, messages.length, length]);
 
   const copy = async () => {
     try {
@@ -72,7 +81,7 @@ export function AskSheet() {
       <div className="ask-chat">
         {passage && <div className="ask-ref">{passage.ref} · {passage.version}</div>}
         {messages.map((m, i) => (
-          <div key={i} className={`ask-msg ${m.role}`}>
+          <div key={i} ref={i === messages.length - 2 ? asked : undefined} className={`ask-msg ${m.role}`}>
             {m.content ? <Inline text={m.content} /> : busy && i === messages.length - 1 ? <span className="ask-dots" role="status" aria-label={t('askThinking')}><i /><i /><i /></span> : null}
           </div>
         ))}
