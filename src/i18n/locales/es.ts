@@ -58,7 +58,6 @@ const es: Messages = {
   cancel: 'Cancelar',
   save: 'Guardar',
   delete: 'Eliminar',
-  tagline: 'Lector de la Biblia, sin conexión y sin cuenta',
 
 
   installedAlready: 'La app ya está instalada en este dispositivo.',

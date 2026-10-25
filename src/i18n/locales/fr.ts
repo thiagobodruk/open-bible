@@ -58,7 +58,6 @@ const fr: Messages = {
   cancel: 'Annuler',
   save: 'Enregistrer',
   delete: 'Supprimer',
-  tagline: 'Lecteur de la Bible, hors ligne et sans compte',
 
 
   installedAlready: 'L’app est déjà installée sur cet appareil.',

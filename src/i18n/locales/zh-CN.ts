@@ -58,7 +58,6 @@ const zhCN: Messages = {
   cancel: '取消',
   save: '保存',
   delete: '删除',
-  tagline: '圣经阅读器，离线可用，无需账号',
 
 
   installedAlready: '此设备上已安装该应用。',

@@ -1,5 +1,5 @@
 import { useEffect, useSyncExternalStore } from 'react';
-import { DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, Translate, CaretRight, ShieldCheck, SignOut, UserCircle } from '@phosphor-icons/react';
+import { BookOpenText, DeviceMobile, GearSix, ChatCircleText, Notepad, ShareNetwork, Translate, CaretRight, ShieldCheck, SignOut, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
@@ -69,14 +69,7 @@ export function MenuSheet() {
   const items = canInstall ? all : all.filter((i) => i.icon !== DeviceMobile);
 
   return (
-    <Sheet title={t('menu')} hideTitle onClose={close}>
-      <div className="menu-brand">
-        <img src={`${import.meta.env.BASE_URL}icons/icon-192.png`} alt="" />
-        <div>
-          <b>Open Bible</b>
-          <span>{t('tagline')}</span>
-        </div>
-      </div>
+    <Sheet title="Open Bible" icon={BookOpenText} onClose={close}>
       <ul>
         {items.map(({ icon: Icon, label, run }) => (
           <li key={label}>

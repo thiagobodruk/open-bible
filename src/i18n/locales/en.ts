@@ -56,7 +56,6 @@ const en = {
   cancel: 'Cancel',
   save: 'Save',
   delete: 'Delete',
-  tagline: 'Bible reader, offline and account-free',
 
 
   installedAlready: 'The app is already installed on this device.',
