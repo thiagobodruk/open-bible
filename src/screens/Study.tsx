@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ArrowDown, ArrowUp, BookOpen, CalendarBlank, MagnifyingGlass, Notebook, PencilSimple } from '@phosphor-icons/react';
+import { ArrowDown, ArrowUp, BookOpen, CalendarBlank, Notebook, PencilSimple } from '@phosphor-icons/react';
 import { IconButton } from '../components/Button';
 import { NoteSheet } from '../components/NoteSheet';
 import { ScreenHeader } from '../components/ScreenHeader';
@@ -38,7 +38,6 @@ export function Study() {
   const bookName = useBookName();
   const versionId = useSettings((s) => s.versionId);
   const [color, setColor] = useState<HlColor | null>(null);
-  const [searching, setSearching] = useState(false);
   const [q, setQ] = useState('');
   const [sort, setSort] = useState<{ key: SortKey; dir: SortDir }>({ key: 'bible', dir: 'asc' });
 
@@ -80,27 +79,16 @@ export function Study() {
             ))}
           </div>
           <div className="study-tools">
-            {searching ? (
-              <SearchField
-                autoFocus
-                value={q}
-                onChange={setQ}
-                placeholder={t('search')}
-                aria-label={t('studySearch')}
-                enterKeyHint="search"
-                autoCapitalize="none"
-                autoCorrect="off"
-                onBlur={() => !q && setSearching(false)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Escape') {
-                    setQ('');
-                    setSearching(false);
-                  }
-                }}
-              />
-            ) : (
-              <IconButton icon={MagnifyingGlass} label={t('studySearch')} onClick={() => setSearching(true)} />
-            )}
+            <SearchField
+              value={q}
+              onChange={setQ}
+              placeholder={t('search')}
+              aria-label={t('studySearch')}
+              enterKeyHint="search"
+              autoCapitalize="none"
+              autoCorrect="off"
+              onKeyDown={(e) => e.key === 'Escape' && setQ('')}
+            />
             <div className="sort" role="group" aria-label={t('sortBy')}>
               {(['date', 'bible'] as const).map((k) => {
                 const active = sort.key === k;
@@ -110,8 +98,7 @@ export function Study() {
                 return (
                   <button key={k} className="chip-btn sort-btn" aria-pressed={active} aria-label={label} title={label} onClick={() => pickSort(k)}>
                     <Glyph size={16} weight="regular" aria-hidden="true" />
-                    {!searching && label}
-                    {active && <Arrow size={14} weight="bold" aria-label={t(sort.dir === 'asc' ? 'sortAsc' : 'sortDesc')} />}
+                                        {active && <Arrow size={14} weight="bold" aria-label={t(sort.dir === 'asc' ? 'sortAsc' : 'sortDesc')} />}
                   </button>
                 );
               })}
