@@ -77,7 +77,7 @@
 .menu-brand img { width: 40px; height: 40px; border-radius: 10px; }
 .menu-brand b { display: block; font-size: 17px; }
 .menu-brand span { font-size: 13px; color: var(--muted); }
-.menu-account { display: flex; align-items: center; gap: 12px; padding: 10px 14px; margin-bottom: 10px; background: var(--surface); border-radius: var(--radius-sm); }
+.menu-account { display: flex; align-items: center; gap: 12px; padding: 10px 14px; margin-top: 14px; background: var(--surface); border-radius: var(--radius-sm); }
 .menu-account img { width: 36px; height: 36px; border-radius: 50%; flex: none; }
 .menu-account svg { flex: none; }
 .menu-account b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 600; }
@@ -133,3 +133,5 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .intro-body .btn { width: 100%; justify-content: center; }
 .intro-body .progress { width: 100%; max-width: 240px; }
 .intro-body .btn svg { color: inherit; }
+.menu-signout { flex: none; display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px; margin-right: -6px; border-radius: 999px; font-size: 14px; font-weight: 500; color: var(--muted); }
+.menu-signout:hover { background: var(--surface-2); color: var(--fg); }

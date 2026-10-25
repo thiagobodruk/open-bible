@@ -56,7 +56,6 @@ export function MenuSheet() {
     { icon: ShareNetwork, label: t('shareApp'), run: share },
     { icon: ChatCircleText, label: t('feedback'), run: () => open('feedback') },
     { icon: ShieldCheck, label: t('privacy'), run: () => nav('/privacy') },
-    ...(user ? [{ icon: SignOut, label: t('signOut'), run: signOut }] : []),
     {
       icon: DeviceMobile,
       label: t('install'),
@@ -78,12 +77,6 @@ export function MenuSheet() {
           <span>{t('tagline')}</span>
         </div>
       </div>
-      {user && (
-        <div className="menu-account">
-          {user.photo ? <img src={user.photo} alt="" referrerPolicy="no-referrer" /> : <UserCircle size={36} weight="light" aria-hidden="true" />}
-          <b>{user.name}</b>
-        </div>
-      )}
       <ul>
         {items.map(({ icon: Icon, label, run }) => (
           <li key={label}>
@@ -95,6 +88,16 @@ export function MenuSheet() {
           </li>
         ))}
       </ul>
+      {user && (
+        <div className="menu-account">
+          {user.photo ? <img src={user.photo} alt="" referrerPolicy="no-referrer" /> : <UserCircle size={36} weight="light" aria-hidden="true" />}
+          <b>{user.name}</b>
+          <button className="menu-signout" onClick={signOut}>
+            <SignOut size={18} weight="regular" aria-hidden="true" />
+            {t('signOut')}
+          </button>
+        </div>
+      )}
       <p className="menu-version">Open Bible v{__APP_VERSION__}</p>
     </Sheet>
   );
