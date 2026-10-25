@@ -15,13 +15,14 @@ import { useAsk } from '../state/ask';
 import { InstallBanner } from '../components/InstallBanner';
 import { Button } from '../components/Button';
 import { SwipeHint } from '../components/SwipeHint';
+import { SilentHint } from '../components/SilentHint';
 import { Welcome } from '../components/Welcome';
 import { useIncoming } from '../state/incoming';
 import { go } from '../router';
 import { hintPending, markHintSeen } from '../hint';
 import { isMobile } from '../install';
 import { ListenBar } from '../components/ListenBar';
-import { listenSupported, resume, setSilentHandler, silentHintDue, start, stop, useListen } from '../listen';
+import { listenSupported, resume, setSilentHandler, markSilentHintSeen, silentHintDue, start, stop, useListen } from '../listen';
 import { useT } from '../i18n';
 
 export function Reader() {
@@ -32,6 +33,7 @@ export function Reader() {
   const askBar = useAsk((s) => s.bar) && aiEnabled;
   const [barMini, setBarMini] = useState(false);
   const [hint, setHint] = useState(false);
+  const [silentHint, setSilentHint] = useState(false);
   /** Versículo que recebe o Tab: só um por capítulo, as setas movem entre eles. */
   const [tabV, setTabV] = useState(1);
   const [dir, setDir] = useState<'next' | 'prev' | null>(null);
@@ -55,8 +57,14 @@ export function Reader() {
 
   const toggleListen = () => {
     if (listenStatus !== 'idle') return stop();
+    if (silentHintDue()) return setSilentHint(true);
     if (!start(verses, versionInfo?.lang ?? 'en')) notify(t('listenNoVoice'));
-    else if (silentHintDue()) notify(t('listenIosHint'));
+  };
+
+  // O toque no aviso do modo silencioso inicia a leitura, já dentro do gesto do usuário.
+  const confirmSilentHint = () => {
+    markSilentHintSeen();
+    if (!start(verses, versionInfo?.lang ?? 'en')) notify(t('listenNoVoice'));
   };
 
   const move = (delta: 1 | -1) => {
@@ -270,6 +278,7 @@ export function Reader() {
         )}
       </main>
 
+      {silentHint && <SilentHint onConfirm={confirmSilentHint} onDone={() => setSilentHint(false)} />}
       {hint && <SwipeHint withAi={aiEnabled} onDone={() => setHint(false)} />}
       {listenStatus !== 'idle' && !hasSelection && !askBar && sheet !== 'menu' && <ListenBar />}
       <InstallBanner hidden={blocked || listenStatus !== 'idle'} hold={hint} />
