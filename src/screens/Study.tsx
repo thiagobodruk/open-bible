@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ArrowDown, ArrowUp, MagnifyingGlass, Notebook, PencilSimple } from '@phosphor-icons/react';
+import { ArrowDown, ArrowUp, BookOpen, CalendarBlank, MagnifyingGlass, Notebook, PencilSimple } from '@phosphor-icons/react';
 import { IconButton } from '../components/Button';
 import { NoteSheet } from '../components/NoteSheet';
 import { ScreenHeader } from '../components/ScreenHeader';
@@ -105,9 +105,12 @@ export function Study() {
               {(['date', 'bible'] as const).map((k) => {
                 const active = sort.key === k;
                 const Arrow = sort.dir === 'asc' ? ArrowUp : ArrowDown;
+                const Glyph = k === 'date' ? CalendarBlank : BookOpen;
+                const label = t(k === 'date' ? 'sortDate' : 'sortBible');
                 return (
-                  <button key={k} className="chip-btn sort-btn" aria-pressed={active} onClick={() => pickSort(k)}>
-                    {t(k === 'date' ? 'sortDate' : 'sortBible')}
+                  <button key={k} className="chip-btn sort-btn" aria-pressed={active} aria-label={label} title={label} onClick={() => pickSort(k)}>
+                    <Glyph size={16} weight="regular" aria-hidden="true" />
+                    {!searching && label}
                     {active && <Arrow size={14} weight="bold" aria-label={t(sort.dir === 'asc' ? 'sortAsc' : 'sortDesc')} />}
                   </button>
                 );
