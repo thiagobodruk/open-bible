@@ -5,7 +5,7 @@ import { useStudy } from './state/study';
 import { useSettings } from './state/settings';
 import { useLibrary } from './state/library';
 import { useIncoming } from './state/incoming';
-import { appUrl, readPath } from './link';
+import { appUrl, readPath, searchWithoutRef } from './link';
 import { Reader } from './screens/Reader';
 import { Study } from './screens/Study';
 import { Library } from './screens/Library';
@@ -40,7 +40,8 @@ export default function App() {
     if (route !== '/' || !ready || !installed || pending) return;
     const sync = () => {
       const path = homeUrl ? new URL(appUrl()).pathname : readPath(versionId, book, chapter);
-      if (location.pathname !== path || location.hash) history.replaceState(history.state, '', path + location.search);
+      const search = searchWithoutRef();
+      if (location.pathname !== path || location.hash || location.search !== search) history.replaceState(history.state, '', path + search);
     };
     sync();
     // Fechar um sheet volta uma entrada do histórico, que pode guardar um endereço de antes da leitura mudar.
