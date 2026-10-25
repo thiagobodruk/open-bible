@@ -2,6 +2,13 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.14.2
+
+### Fixed
+
+- The installed Android app no longer shows two splash screens in a row.
+- The Android splash screen now shows the rounded logo instead of the square one.
+
 ## 1.14.1
 
 ### Changed
