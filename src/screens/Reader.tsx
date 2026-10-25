@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { CaretLeft, CaretRight, List, MagnifyingGlass, NotePencil, TextAa } from '@phosphor-icons/react';
+import { CaretLeft, CaretRight, List, MagnifyingGlass, NotePencil, SpeakerHigh, SpeakerSlash, TextAa } from '@phosphor-icons/react';
 import { abbrOf, findVersion } from '../data/catalog';
 import { useBookName, useBooks, useChapter } from '../hooks';
 import { useLibrary } from '../state/library';
@@ -20,7 +20,7 @@ import { go } from '../router';
 import { hintPending, markHintSeen } from '../hint';
 import { isMobile } from '../install';
 import { ListenBar } from '../components/ListenBar';
-import { resume, setSilentHandler, stop, useListen } from '../listen';
+import { listenSupported, resume, setSilentHandler, silentHintDue, start, stop, useListen } from '../listen';
 import { useT } from '../i18n';
 
 export function Reader() {
@@ -51,6 +51,12 @@ export function Reader() {
   const versionInfo = findVersion(settings.versionId);
   const hasSelection = selection.length > 0;
   const blocked = hasSelection || sheet !== null;
+
+  const toggleListen = () => {
+    if (listenStatus !== 'idle') return stop();
+    if (!start(verses, versionInfo?.lang ?? 'en')) notify(t('listenNoVoice'));
+    else if (silentHintDue()) notify(t('listenIosHint'));
+  };
 
   const move = (delta: 1 | -1) => {
     if (blocked) return;
@@ -187,6 +193,11 @@ export function Reader() {
           </button>
           <span className="spacer" />
           <button className="icon-btn" onClick={() => open('search')} aria-label={t('search')}><MagnifyingGlass size={24} weight="light" /></button>
+          {listenSupported() && (
+            <button className="icon-btn" onClick={toggleListen} aria-label={listenStatus !== 'idle' ? t('listenStop') : t('listen')}>
+              {listenStatus !== 'idle' ? <SpeakerSlash size={24} weight="light" /> : <SpeakerHigh size={24} weight="light" />}
+            </button>
+          )}
           <button className="icon-btn" onClick={() => open('text')} aria-label={t('textSettings')}><TextAa size={24} weight="light" /></button>
           <button className="icon-btn" onClick={() => open('menu')} aria-label={t('menu')}><List size={24} weight="light" /></button>
         </div>
