@@ -4,7 +4,6 @@ import { useLibrary } from '../state/library';
 import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
 import { useIncoming, applyIncoming } from '../state/incoming';
-import { go } from '../router';
 import { Button } from './Button';
 import { useT } from '../i18n';
 import { ProgressBar } from './ProgressBar';
@@ -86,7 +85,7 @@ export function Welcome() {
           <DownloadInfo iconSize={56} />
         </div>
         <div className="intro-foot">
-          <DownloadActions trailing onChooseOther={() => go('/library')} />
+          <DownloadActions trailing onChooseOther={() => open('library')} />
         </div>
       </main>
     </div>

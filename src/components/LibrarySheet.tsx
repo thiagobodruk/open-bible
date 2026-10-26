@@ -1,24 +1,24 @@
 import { useMemo, useState } from 'react';
-import { CheckCircle, CloudArrowDown, CloudCheck } from '@phosphor-icons/react';
-import { SearchField } from '../components/SearchField';
-import { ScreenHeader } from '../components/ScreenHeader';
+import { CheckCircle, CloudArrowDown, CloudCheck, Translate } from '@phosphor-icons/react';
+import { SearchField } from './SearchField';
+import { Sheet } from './Sheet';
 import { VERSIONS, abbrOf, type VersionInfo } from '../data/catalog';
 import { useLibrary } from '../state/library';
 import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
-import { back } from '../router';
 import { useT } from '../i18n';
-import { Chip } from '../components/Chip';
-import { ProgressBar } from '../components/ProgressBar';
+import { Chip } from './Chip';
+import { Empty } from './Empty';
+import { ProgressBar } from './ProgressBar';
 
 const COVERAGE = { nt: 'covNt', ot: 'covOt', partial: 'covPartial' } as const;
 
-export function Library() {
+export function LibrarySheet() {
   const t = useT();
   const [q, setQ] = useState('');
   const { versionId, uiLang, set } = useSettings();
   const { installed, downloading, failed, download } = useLibrary();
-  const notify = useUI((s) => s.notify);
+  const { notify, close } = useUI();
 
   const names = useMemo(() => new Intl.DisplayNames([uiLang], { type: 'language' }), [uiLang]);
   const native = (code: string) => {
@@ -65,8 +65,6 @@ export function Library() {
   const choose = (id: string, key: 'versionToast' | 'versionDownloaded' = 'versionToast') => {
     set('versionId', id);
     notify(t(key, { abbr: abbrOf(id) }));
-    // Goes back to the text, unless the person has already left this screen (slow download).
-    if (location.hash === '#/library') back();
   };
 
   const get = async (id: string) => {
@@ -114,37 +112,36 @@ export function Library() {
   };
 
   return (
-    <div className="screen">
-      <ScreenHeader title={t('library')} />
-      <div className="screen-body">
-        <div className="search-sticky">
-          <SearchField value={q} onChange={setQ} placeholder={t('searchLibrary')} aria-label={t('searchLibrary')} />
-        </div>
+    <Sheet
+      title={t('library')}
+      icon={Translate}
+      onClose={close}
+      tall
+      pinned={<SearchField value={q} onChange={setQ} placeholder={t('searchLibrary')} aria-label={t('searchLibrary')} />}
+    >
+      {mine.length === 0 && groups.length === 0 && <Empty compact>{t('noVersions')}</Empty>}
 
-        {mine.length === 0 && groups.length === 0 && <p className="empty">{t('noVersions')}</p>}
+      {mine.length > 0 && (
+        <section>
+          <h2 className="lang-title">{t('myVersions')}</h2>
+          {mine.map(renderRow)}
+        </section>
+      )}
 
-        {mine.length > 0 && (
-          <section>
-            <h2 className="lang-title">{t('myVersions')}</h2>
-            {mine.map(renderRow)}
+      {groups.map(([lang, versions]) => {
+        const nat = native(lang);
+        const loc = names.of(lang) ?? lang;
+        return (
+          <section key={lang}>
+            <h2 className="lang-title">
+              {loc}
+              {nat && nat !== loc && <small>{nat}</small>}
+            </h2>
+            {versions.map(renderRow)}
           </section>
-        )}
-
-        {groups.map(([lang, versions]) => {
-          const nat = native(lang);
-          const loc = names.of(lang) ?? lang;
-          return (
-            <section key={lang}>
-              <h2 className="lang-title">
-                {loc}
-                {nat && nat !== loc && <small>{nat}</small>}
-              </h2>
-              {versions.map(renderRow)}
-            </section>
-          );
-        })}
-        <p className="hint mt-24">{t('libraryFooter', { n: VERSIONS.length })}</p>
-      </div>
-    </div>
+        );
+      })}
+      <p className="hint mt-24">{t('libraryFooter', { n: VERSIONS.length })}</p>
+    </Sheet>
   );
 }

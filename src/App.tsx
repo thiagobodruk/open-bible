@@ -10,7 +10,6 @@ import { Intro } from './components/Intro';
 import { appUrl, readPath, searchWithoutRef } from './link';
 import { Reader } from './screens/Reader';
 import { Study } from './screens/Study';
-import { Library } from './screens/Library';
 import { Settings } from './screens/Settings';
 import { Privacy } from './screens/Privacy';
 import { Terms } from './screens/Terms';
@@ -26,8 +25,12 @@ import { AskCrash, AskSheet } from './components/AskSheet';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ListenSheet } from './components/ListenSheet';
 import { SearchSheet } from './components/SearchSheet';
+import { LibrarySheet } from './components/LibrarySheet';
 import { DeleteAccountSheet } from './components/DeleteAccountSheet';
 import { Toast } from './components/Toast';
+
+/** The old #/library link now opens the reader with the library sheet on top. */
+let openLibraryFromLink = location.hash === '#/library';
 
 export default function App() {
   const route = useRoute();
@@ -67,13 +70,17 @@ export default function App() {
   // Changing screens closes sheets and scrolls back to the top
   useEffect(() => {
     close();
+    if (openLibraryFromLink && route === '/') {
+      openLibraryFromLink = false;
+      history.replaceState(null, '', location.pathname + location.search);
+      useUI.getState().open('library');
+    }
   }, [route, close]);
 
   return (
     <>
       {route === '/' && <Reader />}
       {route === '/study' && <Study />}
-      {route === '/library' && <Library />}
       {route === '/settings' && <Settings />}
       {route === '/privacy' && <Privacy />}
       {route === '/terms' && <Terms />}
@@ -90,6 +97,7 @@ export default function App() {
         </ErrorBoundary>
       )}
       {sheet === 'search' && <SearchSheet />}
+      {sheet === 'library' && <LibrarySheet />}
       {sheet === 'install' && <InstallSheet />}
       {sheet === 'feedback' && <FeedbackSheet />}
       {sheet === 'listen' && <ListenSheet />}

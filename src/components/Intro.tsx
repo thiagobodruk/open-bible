@@ -4,7 +4,6 @@ import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { useIntro } from '../state/intro';
 import { useTerms } from '../state/terms';
 import { useUI } from '../state/ui';
-import { go } from '../router';
 import { Button } from './Button';
 import { DownloadActions, DownloadInfo } from './Welcome';
 import { useT } from '../i18n';
@@ -88,10 +87,10 @@ export function Intro() {
   const title = { signin: 'signInTitle', offline: 'introOfflineTitle', study: 'introStudyTitle' } as const;
   const body = { signin: 'signInBody', offline: 'introOfflineBody', study: 'introStudyBody' } as const;
 
-  // Choosing another version leads to the Library, which stays behind the intro while it is open.
+  // Choosing another version opens the Library over the reader, once the intro is gone.
   const chooseOther = () => {
     finish();
-    go('/library');
+    useUI.getState().open('library');
   };
 
   return (

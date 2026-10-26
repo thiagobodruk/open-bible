@@ -18,7 +18,6 @@ import { SwipeHint } from '../components/SwipeHint';
 import { SilentHint } from '../components/SilentHint';
 import { Welcome } from '../components/Welcome';
 import { useIncoming } from '../state/incoming';
-import { go } from '../router';
 import { hintPending, markHintSeen } from '../hint';
 import { isMobile } from '../install';
 import { ListenBar } from '../components/ListenBar';
@@ -207,7 +206,7 @@ export function Reader() {
           <button className="crumb" onClick={() => open('navigator')} aria-label={t('pickBook', { ref: `${bName} ${chapter}` })}>
             <span>{bName} {chapter}</span>
           </button>
-          <button className="ver-chip" onClick={() => go('/library')} aria-label={t('chooseVersion')}>
+          <button className="ver-chip" onClick={() => open('library')} aria-label={t('chooseVersion')}>
             {abbrOf(settings.versionId)}
           </button>
           <span className="spacer" />
