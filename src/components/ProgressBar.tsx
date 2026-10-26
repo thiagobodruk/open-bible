@@ -1,6 +1,6 @@
 import { useT } from '../i18n';
 
-/** Barra de progresso de download. `value` vai de 0 a 1. */
+/** Download progress bar. `value` goes from 0 to 1. */
 export function ProgressBar({ value }: { value: number }) {
   const t = useT();
   const pct = Math.round(value * 100);

@@ -7,7 +7,7 @@ import { refLabel } from '../ref';
 import { useT } from '../i18n';
 import { Button } from './Button';
 
-/** Controles flutuantes da leitura em voz alta. */
+/** Floating controls for read-aloud playback. */
 export function ListenBar() {
   const t = useT();
   const open = useUI((s) => s.open);

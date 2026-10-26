@@ -1,4 +1,4 @@
-/** Referências cruzadas do Treasury of Scripture Knowledge (domínio público), em public/xrefs/<livro>.json. */
+/** Cross-references from the Treasury of Scripture Knowledge (public domain), in public/xrefs/<book>.json. */
 export type XrefFile = Record<string, string[]>;
 
 export interface Xref {
@@ -8,12 +8,12 @@ export interface Xref {
   last: number;
 }
 
-// Mantenha igual a fileOf em scripts/build-xrefs.mjs.
+// Keep identical to fileOf in scripts/build-xrefs.mjs.
 const fileOf = (id: string) => id.replace(/[^\x00-\x7f]/g, (c) => `u${c.charCodeAt(0).toString(16)}`);
 
 const files = new Map<string, Promise<XrefFile>>();
 
-/** Baixa o arquivo do livro na primeira vez. O service worker o guarda, então depois funciona offline. */
+/** Downloads the book's file the first time. The service worker keeps it, so it works offline afterwards. */
 export function loadXrefs(bookId: string): Promise<XrefFile> {
   let file = files.get(bookId);
   if (!file) {
@@ -27,7 +27,7 @@ export function loadXrefs(bookId: string): Promise<XrefFile> {
   return file;
 }
 
-/** "rm.5.8" ou "2co.5.19-21". */
+/** "rm.5.8" or "2co.5.19-21". */
 export function parseXref(s: string): Xref {
   const [book, chapter, verses] = s.split('.');
   const [first, last] = verses.split('-').map(Number);
@@ -37,7 +37,7 @@ export function parseXref(s: string): Xref {
 const MAX_PER_VERSE = 10;
 const MAX_TOTAL = 30;
 
-/** Referências dos versículos selecionados, uma de cada versículo por rodada, sem repetir e sem apontar para a própria seleção. */
+/** References for the selected verses, one per verse per round, without repeats and without pointing back to the selection itself. */
 export async function xrefsFor(book: string, chapter: number, verses: number[]): Promise<Xref[]> {
   const file = await loadXrefs(book);
   const lists = verses.map((v) => (file[`${chapter}.${v}`] ?? []).map(parseXref));

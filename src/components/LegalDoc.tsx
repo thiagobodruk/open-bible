@@ -7,7 +7,7 @@ interface Doc {
   sections: { h: string; p: string[] }[];
 }
 
-/** Texto jurídico em tela cheia: termos de uso e política de privacidade. */
+/** Legal text on a full screen: terms of use and privacy policy. */
 export function LegalDoc({ title, doc }: { title: string; doc: Doc }) {
   return (
     <div className="screen">

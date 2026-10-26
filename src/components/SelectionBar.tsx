@@ -15,7 +15,7 @@ import { copyText, shareOrCopy } from '../share';
 import { ColorSwatches } from './ColorSwatches';
 import { SheetAction } from './SheetAction';
 
-/** Ações para os versículos selecionados. É um bottom sheet sem fundo escurecido, para seguir tocando nos versículos. */
+/** Actions for the selected verses. It is a bottom sheet with no dimmed backdrop, so verses stay tappable. */
 export function SelectionBar() {
   const t = useT();
   const { book, chapter, selection, highlights, paint, clearSelection } = useStudy();

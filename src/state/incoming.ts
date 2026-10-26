@@ -4,7 +4,7 @@ import { useSettings } from './settings';
 import { useStudy } from './study';
 
 interface IncomingStore {
-  /** Leitura pedida pelo endereço da página, até ser aplicada ou dispensada. */
+  /** Reading requested by the page address, until applied or dismissed. */
   incoming: ReadLink | null;
   clear: () => void;
 }
@@ -14,7 +14,7 @@ export const useIncoming = create<IncomingStore>((set) => ({
   clear: () => set({ incoming: null }),
 }));
 
-/** Abre o livro e o capítulo do link na versão do link. Só vale com a versão instalada. */
+/** Opens the link's book and chapter in the link's version. Only works with that version installed. */
 export function applyIncoming() {
   const { incoming, clear } = useIncoming.getState();
   if (!incoming) return;

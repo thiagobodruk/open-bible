@@ -3,7 +3,7 @@ import { TERMS_VERSION } from '../terms';
 import { useAnalytics } from '../analytics';
 import { getJson, setJson } from '../storage';
 
-/** Aceite dos termos e da política: guardado no aparelho e, quando há conta, também em `users/{uid}.terms`. */
+/** Acceptance of the terms and policy: stored on the device and, when there is an account, also in `users/{uid}.terms`. */
 const KEY = 'ob:terms';
 
 export interface Acceptance {
@@ -17,10 +17,10 @@ export function savedAcceptance(): Acceptance | null {
 }
 
 interface TermsStore {
-  /** Caixa de aceite da abertura inicial. Começa marcada. */
+  /** Acceptance checkbox on the initial intro. Starts checked. */
   checked: boolean;
   setChecked: (v: boolean) => void;
-  /** Registra o aceite de agora. */
+  /** Records the acceptance now. */
   accept: () => void;
 }
 
@@ -28,9 +28,9 @@ export const useTerms = create<TermsStore>((set) => ({
   checked: true,
   setChecked: (checked) => set({ checked }),
   accept: () => {
-    // Aceitar os termos inclui as estatísticas de uso. Quem já escolheu desligar continua desligado.
+    // Accepting the terms includes usage statistics. Anyone who already chose to turn them off stays off.
     if (useAnalytics.getState().consent === null) useAnalytics.getState().setConsent(true);
-    // Sem armazenamento o aceite vale nesta sessão e é pedido de novo na próxima abertura.
+    // Without storage the acceptance holds for this session and is asked again on the next open.
     setJson(KEY, { version: TERMS_VERSION, at: Date.now() } satisfies Acceptance);
   },
 }));

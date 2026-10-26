@@ -1,9 +1,9 @@
-/** Versão do package.json, injetada pelo Vite no build. */
+/** package.json version, injected by Vite at build time. */
 declare const __APP_VERSION__: string;
-/** Commit do build (7 caracteres). Fora do GitHub Actions vale "dev". */
+/** Build commit (7 characters). Outside GitHub Actions it is "dev". */
 declare const __APP_BUILD__: string;
 
 interface ImportMetaEnv {
-  /** Endereço do Worker de IA. Vazio: o recurso fica desligado. Definido no deploy pela variável AI_URL do repositório. */
+  /** AI Worker URL. Empty: the feature is off. Set at deploy time by the repository's AI_URL variable. */
   readonly VITE_AI_URL?: string;
 }

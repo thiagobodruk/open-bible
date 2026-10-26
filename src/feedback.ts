@@ -16,7 +16,7 @@ const LABELS: Record<FeedbackKind, string> = {
 
 const REPO = 'https://github.com/thiagobodruk/open-bible';
 
-/** Endereço de uma nova issue já preenchida, com o contexto que ajuda a reproduzir o problema. */
+/** URL of a new, pre-filled issue, with the context that helps reproduce the problem. */
 export function feedbackUrl(kind: FeedbackKind, message: string, passage: string): string {
   const { versionId, uiLang } = useSettings.getState();
   const context = [

@@ -3,20 +3,20 @@ import { dbDelete, dbDeleteRange, dbGet, dbPut, dbRange } from '../db';
 export interface BookText {
   id: string;
   name: string;
-  /** chapters[0] é o capítulo 1; cada capítulo é uma lista de versículos. */
+  /** chapters[0] is chapter 1; each chapter is a list of verses. */
   chapters: string[][];
 }
 
 export interface VersionMeta {
   id: string;
   installedAt: number;
-  /** Livros presentes na versão, na ordem canônica. */
+  /** Books present in the version, in canonical order. */
   books: { id: string; name: string; chapters: number }[];
 }
 
 const key = (versionId: string, bookId: string) => `${versionId}:${bookId}`;
 
-// Cache pequeno em memória: o livro aberto e os vizinhos.
+// Small in-memory cache: the open book and its neighbors.
 const cache = new Map<string, BookText>();
 const MAX_CACHE = 6;
 
@@ -40,7 +40,7 @@ export async function loadAllBooks(versionId: string): Promise<BookText[]> {
   return dbRange<BookText>('books', `${versionId}:`);
 }
 
-/** Grava a versão inteira. A meta só entra por último, então uma gravação interrompida não deixa versão "instalada" pela metade. */
+/** Writes the whole version. The meta goes in last, so an interrupted write never leaves a half "installed" version. */
 export async function saveVersion(id: string, books: BookText[], order: (bookId: string) => number): Promise<VersionMeta> {
   await dbDeleteRange('books', `${id}:`);
   await dbPut('books', books, books.map((b) => key(id, b.id)));
@@ -70,7 +70,7 @@ export interface IndexedChapter {
 
 let indexed: { versionId: string; chapters: IndexedChapter[] } | null = null;
 
-/** Todos os capítulos da versão, na ordem em que foram lidos do IndexedDB. Fica em memória só para a última versão buscada. */
+/** All chapters of the version, in the order read from IndexedDB. Kept in memory only for the last version fetched. */
 export async function loadSearchIndex(versionId: string): Promise<IndexedChapter[]> {
   if (indexed?.versionId === versionId) return indexed.chapters;
   const books = await loadAllBooks(versionId);

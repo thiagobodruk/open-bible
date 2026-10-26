@@ -10,7 +10,7 @@ import { useT } from '../i18n';
 import { Button } from './Button';
 import { copyText } from '../share';
 
-/** Só o **negrito** que os modelos costumam usar; o resto fica como texto. */
+/** Only the **bold** that models tend to use; the rest stays as plain text. */
 function Inline({ text }: { text: string }) {
   return (
     <>
@@ -31,8 +31,8 @@ export function AskSheet() {
   const answer = messages[messages.length - 1];
 
   useEffect(() => () => stop(), [stop]);
-  // Ao perguntar, a pergunta sobe para o topo e a resposta cresce abaixo dela: quem lê começa pelo início, sem rolar para cima.
-  // O texto chega aos poucos, então a rolagem repete até a pergunta alcançar o topo, e depois não mexe mais.
+  // On asking, the question moves to the top and the answer grows below it: readers start at the beginning, without scrolling up.
+  // The text arrives gradually, so the scroll repeats until the question reaches the top, and then stops moving.
   const length = answer?.content.length;
   useEffect(() => {
     const q = asked.current;
@@ -101,7 +101,7 @@ export function AskSheet() {
   );
 }
 
-/** Se a tela de resposta quebrar, a falha aparece como uma mensagem da própria IA, sem detalhes técnicos. */
+/** If the answer screen breaks, the failure shows up as a message from the AI itself, without technical details. */
 export function AskCrash({ onRetry }: { onRetry: () => void }) {
   const t = useT();
   const close = useUI((s) => s.close);

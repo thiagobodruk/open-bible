@@ -8,7 +8,7 @@ interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onCha
   style?: React.CSSProperties;
 }
 
-/** Campo de busca com botão × que limpa o texto e devolve o foco ao campo. */
+/** Search field with a × button that clears the text and returns focus to the field. */
 export function SearchField({ value, onChange, clearLabel, style, ...input }: Props) {
   const t = useT();
   return (

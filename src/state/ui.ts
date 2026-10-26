@@ -11,7 +11,7 @@ interface Toast {
 interface UIStore {
   sheet: SheetName;
   toast: Toast | null;
-  /** Enquanto verdadeiro, o endereço da página fica na raiz do app em vez de apontar para o capítulo. */
+  /** While true, the page address stays at the app root instead of pointing to the chapter. */
   homeUrl: boolean;
   setHomeUrl: (on: boolean) => void;
   open: (s: Exclude<SheetName, null>) => void;
@@ -21,9 +21,9 @@ interface UIStore {
 }
 
 let n = 0;
-/** Verdadeiro enquanto há uma entrada de histórico empurrada pelo sheet aberto: o Voltar do sistema fecha o sheet em vez de sair da tela. */
+/** True while a history entry pushed by the open sheet exists: the system Back closes the sheet instead of leaving the screen. */
 let pushed = false;
-/** close() agendou o back(); um open() logo em seguida reaproveita a entrada em vez de empurrar outra. */
+/** close() scheduled back(); an open() right after reuses the entry instead of pushing another. */
 let backPending = false;
 let timer: ReturnType<typeof setTimeout> | undefined;
 
@@ -46,8 +46,8 @@ export const useUI = create<UIStore>((set) => ({
     const wasPushed = pushed;
     pushed = false;
     set({ sheet: null });
-    // Quem fecha o sheet costuma navegar logo depois (close(); go(rota)). Por isso o back() espera esse trecho síncrono
-    // e só desfaz a entrada se ela ainda é a atual; se a rota mudou, a navegação vale e não há o que voltar.
+    // Whoever closes the sheet usually navigates right after (close(); go(route)). So back() waits for that synchronous stretch
+    // and only undoes the entry if it is still the current one; if the route changed, the navigation stands and there is nothing to go back to.
     if (wasPushed) {
       backPending = true;
       queueMicrotask(() => {
@@ -70,7 +70,7 @@ addEventListener('popstate', () => {
     pushed = false;
     useUI.setState({ sheet: null });
   } else if (history.state?.ob === 'sheet') {
-    // Entrada de sheet que ficou para trás (a rota mudou com o sheet aberto): pula.
+    // Sheet entry left behind (the route changed while the sheet was open): skip it.
     history.back();
   }
 });

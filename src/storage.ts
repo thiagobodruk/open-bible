@@ -1,6 +1,6 @@
-// Acesso seguro ao localStorage: modo privado, cota cheia ou armazenamento bloqueado nunca derrubam o app.
+// Safe localStorage access: private mode, full quota or blocked storage never bring the app down.
 
-/** Lê um texto. Se o armazenamento falhar, devolve `onError` (por padrão `null`). */
+/** Reads a string. If storage fails, returns `onError` (`null` by default). */
 export function getItem(key: string, onError: string | null = null): string | null {
   try {
     return localStorage.getItem(key);
@@ -13,7 +13,7 @@ export function setItem(key: string, value: string) {
   try {
     localStorage.setItem(key, value);
   } catch {
-    /* sem persistência: o valor vale só nesta sessão */
+    /* no persistence: the value only lasts for this session */
   }
 }
 
@@ -21,11 +21,11 @@ export function removeItem(key: string) {
   try {
     localStorage.removeItem(key);
   } catch {
-    /* sem armazenamento, nada a limpar */
+    /* no storage, nothing to clear */
   }
 }
 
-/** Lê um JSON. Ausente, inválido ou ilegível devolve `fallback`. */
+/** Reads JSON. Missing, invalid or unreadable returns `fallback`. */
 export function getJson<T>(key: string, fallback: T): T {
   try {
     return JSON.parse(localStorage.getItem(key) || 'null') ?? fallback;

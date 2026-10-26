@@ -2,7 +2,7 @@ import catalog from './catalog.json';
 
 export interface VersionInfo {
   id: string;
-  lang: string; // código ISO, usado com Intl.DisplayNames
+  lang: string; // ISO code, used with Intl.DisplayNames
   name: string;
   sizeMb: number;
   books: number;
@@ -10,14 +10,14 @@ export interface VersionInfo {
   rtl?: boolean;
 }
 
-/** Commit do repo thiagobodruk/bible em que o catálogo foi gerado. Os downloads usam o mesmo commit. */
+/** Commit of the thiagobodruk/bible repo the catalog was generated from. Downloads use the same commit. */
 export const CATALOG_SHA: string = catalog.sha;
 export const VERSIONS = catalog.versions as VersionInfo[];
 
 export const abbrOf = (id: string) => id.split('_').slice(1).join('_').toUpperCase();
 export const findVersion = (id: string) => VERSIONS.find((v) => v.id === id);
 
-/** Primeira escolha de versão por idioma da interface. Só vale se o idioma ainda não tiver nada baixado. */
+/** First version choice per UI language. Only applies if that language has nothing downloaded yet. */
 const SUGGESTED: Record<string, string> = {
   en: 'en_web',
   'pt-BR': 'pt_nvi',

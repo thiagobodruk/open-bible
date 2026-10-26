@@ -6,17 +6,17 @@ import { Button } from './Button';
 interface Props {
   title: string;
   text: string;
-  /** Rótulo do botão de confirmar. */
+  /** Label of the confirm button. */
   confirmLabel: string;
-  /** Ícone do título e do botão de confirmar. */
+  /** Icon of the title and the confirm button. */
   icon?: Icon;
-  /** Desabilita os botões enquanto a ação roda. */
+  /** Disables the buttons while the action runs. */
   busy?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 }
 
-/** Confirmação de ação sem volta: texto, Cancelar e a ação principal. É o único padrão para excluir no app. */
+/** Confirmation for an irreversible action: text, Cancel and the main action. It is the only pattern for deleting in the app. */
 export function ConfirmSheet({ title, text, confirmLabel, icon: Icon = Trash, busy, onConfirm, onCancel }: Props) {
   const t = useT();
   return (

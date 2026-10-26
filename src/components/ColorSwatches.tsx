@@ -3,16 +3,16 @@ import { useT } from '../i18n';
 
 interface Props {
   label: string;
-  /** Diz se a cor aparece marcada. `null` é a opção "todas". */
+  /** Tells whether the color appears selected. `null` is the "all" option. */
   pressed: (color: HlColor | null) => boolean;
   onPick: (color: HlColor) => void;
-  /** Quando existe, mostra a opção "todas" antes das cores (usado nos filtros). */
+  /** When present, shows the "all" option before the colors (used in filters). */
   onAll?: () => void;
-  /** Rótulo de cada cor: "Destacar com …" (padrão) ou só o nome da cor (filtros). */
+  /** Label of each color: "Highlight with …" (default) or just the color name (filters). */
   describe?: 'paint' | 'name';
 }
 
-/** Escolha de cor de destaque, usada ao destacar, ao anotar e ao filtrar. */
+/** Highlight color picker, used when highlighting, noting and filtering. */
 export function ColorSwatches({ label, pressed, onPick, onAll, describe = 'paint' }: Props) {
   const t = useT();
   const nameOf = (c: HlColor) => (describe === 'name' ? t(c) : t('highlightWith', { color: t.lang === 'de' ? t(c) : t(c).toLowerCase() }));

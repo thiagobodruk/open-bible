@@ -28,7 +28,7 @@ const MARGINS = [
   { v: 'wide', label: 'marginsWide', inset: 10 },
 ] as const satisfies readonly { v: string; label: Key; inset: number }[];
 
-/** Linhas de texto em miniatura. `gap` muda o espaçamento vertical e `inset` o recuo lateral. */
+/** Miniature text lines. `gap` changes the vertical spacing and `inset` the side indent. */
 function Lines({ gap = 6, inset = 3 }: { gap?: number; inset?: number }) {
   const start = (26 - 3 * gap) / 2;
   const ys = [0, 1, 2, 3].map((i) => start + i * gap);

@@ -11,7 +11,7 @@ import { ColorSwatches } from './ColorSwatches';
 
 const MAX = 500;
 
-/** Trecho a editar fora do leitor, por exemplo em Meu estudo. Sem ele, vale a seleção atual. */
+/** Passage to edit outside the reader, for example in My study. Without it, the current selection applies. */
 export interface NoteTarget {
   book: string;
   chapter: number;
@@ -20,7 +20,7 @@ export interface NoteTarget {
   excerpt: string;
 }
 
-/** Cor da marcação, texto da nota e exclusão do mesmo trecho, num só sheet. */
+/** Highlight color, note text and deletion for the same passage, in a single sheet. */
 export function NoteSheet({ target, onClose }: { target?: NoteTarget; onClose?: () => void }) {
   const t = useT();
   const closeSheet = useUI((s) => s.close);

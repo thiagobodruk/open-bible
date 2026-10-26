@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Icon } from '@phosphor-icons/react';
 
-/** Botão de ação da folha de seleção: ícone grande e rótulo curto embaixo. */
+/** Action button of the selection sheet: large icon with a short label below. */
 export function SheetAction({ icon: Glyph, onClick, children }: { icon: Icon; onClick: () => void; children: ReactNode }) {
   return (
     <button className="sheet-action" onClick={onClick}>

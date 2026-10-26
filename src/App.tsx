@@ -33,7 +33,7 @@ export default function App() {
   const route = useRoute();
   const { sheet, close } = useUI();
 
-  // O endereço acompanha a leitura: /open-bible/<versão>/<livro>/<capítulo>
+  // The URL follows the reading: /open-bible/<version>/<book>/<chapter>
   const book = useStudy((s) => s.book);
   const chapter = useStudy((s) => s.chapter);
   const versionId = useSettings((s) => s.versionId);
@@ -42,7 +42,7 @@ export default function App() {
   const pending = useIncoming((s) => s.incoming !== null);
   const homeUrl = useUI((s) => s.homeUrl);
 
-  // A abertura inicial é só para quem chega sem nenhuma Bíblia. Quem já usa o app não a vê.
+  // The initial intro is only for those who arrive without any Bible. Those already using the app do not see it.
   const introDone = useIntro((s) => s.done);
   const hasVersions = useLibrary((s) => Object.keys(s.installed).length > 0);
   useEffect(() => {
@@ -57,14 +57,14 @@ export default function App() {
       if (location.pathname !== path || location.hash || location.search !== search) history.replaceState(history.state, '', path + search);
     };
     sync();
-    // Fechar um sheet volta uma entrada do histórico, que pode guardar um endereço de antes da leitura mudar.
-    // Com rota no endereço (#/study), quem navega é o roteador, então não mexe.
+    // Closing a sheet goes back one history entry, which may hold a URL from before the reading changed.
+    // With a route in the URL (#/study), the router navigates, so it does nothing.
     const onPop = () => !location.hash && sync();
     addEventListener('popstate', onPop);
     return () => removeEventListener('popstate', onPop);
   }, [route, ready, installed, pending, homeUrl, versionId, book, chapter]);
 
-  // Troca de tela fecha sheets e volta ao topo
+  // Changing screens closes sheets and scrolls back to the top
   useEffect(() => {
     close();
   }, [route, close]);

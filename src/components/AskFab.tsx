@@ -2,7 +2,7 @@ import { Sparkle } from '@phosphor-icons/react';
 import { useAsk } from '../state/ask';
 import { useT } from '../i18n';
 
-/** Botão flutuante que abre o prompt de IA. Volta quando o sheet fecha. */
+/** Floating button that opens the AI prompt. Comes back when the sheet closes. */
 export function AskFab() {
   const t = useT();
   return (

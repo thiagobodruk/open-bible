@@ -34,7 +34,7 @@ export function Library() {
     return !term || `${names.of(v.lang) ?? v.lang} ${native(v.lang)} ${v.name} ${abbrOf(v.id)}`.toLowerCase().includes(term);
   };
 
-  // Versões baixadas ficam num grupo próprio, com a que está em uso primeiro.
+  // Downloaded versions go in their own group, with the one in use first.
   const mineIds = new Set(Object.keys(installed));
   const mine = VERSIONS.filter((v) => mineIds.has(v.id) && matches(v)).sort(
     (a, b) => Number(b.id === versionId) - Number(a.id === versionId) || a.name.localeCompare(b.name),
@@ -49,8 +49,8 @@ export function Library() {
       if (term && !label.includes(term)) continue;
       map.set(v.lang, [...(map.get(v.lang) ?? []), v]);
     }
-    // Primeiro o idioma escolhido pelo usuário (por padrão, o do navegador), depois os demais idiomas do navegador
-    // e, por fim, o resto em ordem alfabética pelo nome localizado.
+    // First the language chosen by the user (by default, the browser's), then the other browser languages
+    // and finally the rest in alphabetical order by localized name.
     const prefs = [uiLang, ...(navigator.languages ?? [])].map((l) => l.toLowerCase().split('-')[0]);
     const rank = (code: string) => {
       const i = prefs.indexOf(code);
@@ -65,7 +65,7 @@ export function Library() {
   const choose = (id: string, key: 'versionToast' | 'versionDownloaded' = 'versionToast') => {
     set('versionId', id);
     notify(t(key, { abbr: abbrOf(id) }));
-    // Volta ao texto, a menos que a pessoa já tenha saído desta tela (download demorado).
+    // Goes back to the text, unless the person has already left this screen (slow download).
     if (location.hash === '#/library') back();
   };
 

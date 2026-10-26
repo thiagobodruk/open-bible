@@ -8,20 +8,20 @@ import { getItem, setItem } from '../storage';
 
 const MIC_NOTICE = 'ob:stt-notice';
 
-// Sem armazenamento o aviso não aparece, para não repetir a cada uso.
+// Without storage the notice doesn't show, to avoid repeating on every use.
 const noticeSeen = () => getItem(MIC_NOTICE, '1') === '1';
 
 interface Props {
-  /** Referência do contexto, mostrada como pill. */
+  /** Context reference, shown as a pill. */
   context: string;
-  /** Com isto, a pill ganha um × que descarta o contexto. */
+  /** With this, the pill gets a × that discards the context. */
   onClearContext?: () => void;
   placeholder: string;
   disabled?: boolean;
   onSubmit: (question: string) => void;
 }
 
-/** Campo de pergunta com a referência como pill e ditado por voz. Igual no prompt e na tela de resposta. */
+/** Question field with the reference as a pill and voice dictation. Same in the prompt and on the answer screen. */
 export function PromptField({ context, onClearContext, placeholder, disabled, onSubmit }: Props) {
   const t = useT();
   const uiLang = useSettings((s) => s.uiLang);

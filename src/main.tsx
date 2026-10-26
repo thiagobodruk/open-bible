@@ -30,7 +30,7 @@ createRoot(document.getElementById('root')!).render(
 const SPLASH_MIN = 1200;
 const SPLASH_MAX = 3000;
 
-/** Tira a splash quando o app já desenhou e as fontes carregaram, mas só depois de ficar 1,2 s à vista. */
+/** Removes the splash once the app has rendered and the fonts have loaded, but only after it has been visible for 1.2 s. */
 const splash = document.getElementById('splash');
 if (splash) {
   const fonts = document.fonts ? document.fonts.ready.then(() => undefined) : Promise.resolve();

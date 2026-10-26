@@ -3,13 +3,13 @@ import { useSettings } from './state/settings';
 import { useStudy } from './state/study';
 import { applyIncoming, useIncoming } from './state/incoming';
 
-/** Carrega o que está no IndexedDB e acerta a versão em uso. */
+/** Loads what is in IndexedDB and fixes the version in use. */
 export async function boot() {
   await Promise.all([useLibrary.getState().hydrate(), useStudy.getState().hydrate()]);
   const link = useIncoming.getState().incoming;
   if (link && useLibrary.getState().installed[link.versionId]) applyIncoming();
   reconcile();
-  // Se a versão em uso some (remoção, limpeza do navegador), passa para outra que ainda esteja instalada.
+  // If the version in use disappears (removal, browser cleanup), switches to another one that is still installed.
   useLibrary.subscribe(reconcile);
 }
 

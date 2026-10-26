@@ -2,11 +2,11 @@ import { Component, type ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
-  /** O que mostrar no lugar do conteúdo que quebrou. `reset` tenta desenhar o conteúdo de novo. */
+  /** What to show in place of the content that broke. `reset` tries to render the content again. */
   fallback: (reset: () => void) => ReactNode;
 }
 
-/** Contém uma falha de desenho: só esta parte da tela é trocada, o resto do app segue funcionando. */
+/** Contains a rendering failure: only this part of the screen is replaced, the rest of the app keeps working. */
 export class ErrorBoundary extends Component<Props, { failed: boolean }> {
   state = { failed: false };
 

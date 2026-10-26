@@ -20,7 +20,7 @@ const DISMISSED = 'ob:install-dismissed';
 addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferred = e as InstallPromptEvent;
-  // O navegador só oferece a instalação quando o app não está instalado: se a marca sobrou, ele foi desinstalado.
+  // The browser only offers installation when the app is not installed: if the mark is left over, it was uninstalled.
   clearFlag(INSTALLED);
   emit();
 });
@@ -31,22 +31,22 @@ addEventListener('appinstalled', () => {
   emit();
 });
 
-/** Para `useSyncExternalStore`: avisa quando o prompt nativo fica disponível ou deixa de estar. */
+/** For `useSyncExternalStore`: notifies when the native prompt becomes available or stops being available. */
 export function subscribeInstall(cb: () => void) {
   listeners.add(cb);
   return () => void listeners.delete(cb);
 }
 
-/** O navegador liberou o prompt nativo de instalação (Android, Chrome e Edge no desktop). */
+/** The browser released the native install prompt (Android, Chrome and Edge on desktop). */
 export const canPromptInstall = () => deferred !== null;
 
-/** Dispara o prompt nativo (Android/Chrome). Retorna false se não houver, e aí mostramos o guia manual. */
+/** Triggers the native prompt (Android/Chrome). Returns false if there is none, and then we show the manual guide. */
 export async function requestInstall(): Promise<boolean> {
   if (!deferred) return false;
   const ev = deferred;
   deferred = null;
   emit();
-  // O navegador pode tomar o endereço atual como página inicial: durante a instalação ele aponta para a raiz.
+  // The browser may take the current URL as the start page: during installation it points to the root.
   useUI.getState().setHomeUrl(true);
   history.replaceState(history.state, '', import.meta.env.BASE_URL);
   try {
@@ -65,7 +65,7 @@ export interface IosInfo {
   browser: 'safari' | 'chrome' | 'other';
 }
 
-/** iPhone ou iPad e o navegador, pelo user-agent. No iPadOS o Safari se apresenta como Mac, então conta também o toque. */
+/** iPhone or iPad and the browser, via user agent. On iPadOS Safari presents itself as a Mac, so touch is also counted. */
 export function detectIOS(ua: string = navigator.userAgent, touchPoints: number = navigator.maxTouchPoints): IosInfo | null {
   const phone = /iPhone|iPod/.test(ua);
   const pad = /iPad/.test(ua) || (/Macintosh/.test(ua) && touchPoints > 1);
@@ -76,21 +76,21 @@ export function detectIOS(ua: string = navigator.userAgent, touchPoints: number 
 
 export const isIOS = () => detectIOS() !== null;
 
-/** Celular ou tablet: o toque é o ponteiro principal. No desktop não há dica de gesto nem convite de instalação. */
+/** Phone or tablet: touch is the primary pointer. On desktop there is no gesture hint or install invitation. */
 export const isMobile = () => matchMedia('(pointer: coarse)').matches || isIOS() || /Android/i.test(navigator.userAgent);
 
 let dismissedNow = false;
 
-/** O app já está instalado: aberto como app (standalone) ou instalado por este navegador. No iOS só o primeiro caso é detectável. */
+/** The app is already installed: opened as an app (standalone) or installed by this browser. On iOS only the first case is detectable. */
 export const isInstalled = () => isStandalone() || flag(INSTALLED);
 
-/** Vale mostrar qualquer entrada de instalação (item de menu, linha em Ajustes): aparelho móvel e ainda não instalado. */
+/** Any install entry point (menu item, row in Settings) is worth showing: mobile device and not yet installed. */
 export const installAvailable = () => isMobile() && !isInstalled();
 
-/** O convite de instalação (banner) deve aparecer: não instalado e ainda não dispensado nem aberto o guia. */
+/** The install invitation (banner) should show: not installed and not yet dismissed nor the guide opened. */
 export const installOffered = () => installAvailable() && !dismissedNow && !flag(DISMISSED);
 
-/** Esconde o banner para sempre, por dispensa ou por já ter aberto o guia de instalação. */
+/** Hides the banner for good, by dismissal or because the install guide was already opened. */
 export function dismissInstall() {
   dismissedNow = true;
   setFlag(DISMISSED);

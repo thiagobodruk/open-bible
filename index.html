@@ -25,18 +25,18 @@
     <link rel="apple-touch-icon" href="/open-bible/icons/apple-touch-icon.png" />
     <title>Open Bible</title>
     <script>
-      // Aplica o tema antes do primeiro paint para evitar flash.
+      // Applies the theme before the first paint to avoid a flash.
       try {
         var s = JSON.parse(localStorage.getItem('ob:settings') || '{}');
         var t = s.theme || 'auto';
         if (t === 'auto') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         document.documentElement.dataset.theme = t;
       } catch (e) {}
-      // No Android o PWA instalado já mostra a splash do sistema, então a nossa fica de fora.
+      // On Android the installed PWA already shows the system splash, so ours is left out.
       if (/Android/i.test(navigator.userAgent) && matchMedia('(display-mode: standalone)').matches) document.documentElement.classList.add('no-splash');
     </script>
     <style>
-      /* Splash: vive no HTML para aparecer antes de o JavaScript carregar. */
+      /* Splash: lives in the HTML to show before the JavaScript loads. */
       #splash { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; color: #1d2027; background: #faf9f7; transition: opacity 0.3s ease; }
       :root[data-theme='sepia'] #splash { background: #f3ead8; color: #3a2f22; }
       :root[data-theme='dark'] #splash { background: #14161b; color: #e4e6eb; }

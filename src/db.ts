@@ -1,4 +1,4 @@
-// Acesso mínimo ao IndexedDB. Tudo que o usuário gera fica aqui, só neste navegador.
+// Minimal IndexedDB access. Everything the user generates lives here, only in this browser.
 const NAME = 'open-bible';
 const VERSION = 1;
 
@@ -11,7 +11,7 @@ function open(): Promise<IDBDatabase> {
     const req = indexedDB.open(NAME, VERSION);
     req.onupgradeneeded = () => {
       const db = req.result;
-      db.createObjectStore('books'); // chave: "<versão>:<livro>"
+      db.createObjectStore('books'); // key: "<version>:<book>"
       db.createObjectStore('versions', { keyPath: 'id' });
       db.createObjectStore('highlights', { keyPath: 'key' });
       db.createObjectStore('notes', { keyPath: 'id' });
@@ -47,7 +47,7 @@ export async function dbAll<T>(store: StoreName): Promise<T[]> {
   return done(db.transaction(store).objectStore(store).getAll());
 }
 
-/** Grava vários registros numa só transação. Em stores sem keyPath, informe as chaves. */
+/** Writes several records in a single transaction. For stores without a keyPath, provide the keys. */
 export async function dbPut(store: StoreName, values: unknown[], keys?: IDBValidKey[]): Promise<void> {
   const db = await open();
   const tx = db.transaction(store, 'readwrite');
@@ -63,7 +63,7 @@ export async function dbDelete(store: StoreName, keys: IDBValidKey[]): Promise<v
   await finished(tx);
 }
 
-/** Apaga todos os livros de uma versão. */
+/** Deletes all books of a version. */
 export async function dbDeleteRange(store: StoreName, prefix: string): Promise<void> {
   const db = await open();
   const tx = db.transaction(store, 'readwrite');

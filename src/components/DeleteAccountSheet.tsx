@@ -5,7 +5,7 @@ import { useAccount } from '../state/account';
 import { useUI } from '../state/ui';
 import { useT } from '../i18n';
 
-/** Confirma a exclusão da conta. Os dados deste aparelho não são apagados. */
+/** Confirms account deletion. Data on this device is not erased. */
 export function DeleteAccountSheet() {
   const t = useT();
   const { close, notify } = useUI();

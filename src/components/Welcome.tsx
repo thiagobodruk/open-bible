@@ -9,7 +9,7 @@ import { Button } from './Button';
 import { useT } from '../i18n';
 import { ProgressBar } from './ProgressBar';
 
-/** Primeira abertura: ainda não há nenhuma versão no aparelho. Oferece a sugerida para o idioma e leva à Biblioteca. */
+/** First launch: no version on the device yet. Offers the one suggested for the language and leads to the Library. */
 function useFirstDownload() {
   const uiLang = useSettings((s) => s.uiLang);
   const set = useSettings((s) => s.set);
@@ -29,7 +29,7 @@ function useFirstDownload() {
   return { id, v: findVersion(id)!, progress, busy: progress !== undefined, failure: failed[id], start, incoming, hasOther, current };
 }
 
-/** Texto de baixar a primeira Bíblia, usado na última tela da apresentação e na tela inicial sem versões. */
+/** Text for downloading the first Bible, used on the last intro screen and on the home screen with no versions. */
 export function DownloadInfo({ iconSize }: { iconSize: number }) {
   const t = useT();
   return (
@@ -41,7 +41,7 @@ export function DownloadInfo({ iconSize }: { iconSize: number }) {
   );
 }
 
-/** Ações de baixar a primeira Bíblia: baixar a sugerida, manter a atual ou escolher outra. */
+/** Actions for downloading the first Bible: download the suggested one, keep the current one or pick another. */
 export function DownloadActions({ onChooseOther, trailing }: { onChooseOther: () => void; trailing?: boolean }) {
   const t = useT();
   const { id, v, progress, busy, failure, start, incoming, hasOther, current } = useFirstDownload();
@@ -67,7 +67,7 @@ export function DownloadActions({ onChooseOther, trailing }: { onChooseOther: ()
   );
 }
 
-/** Primeira abertura sem versão no aparelho, depois da apresentação. */
+/** First launch with no version on the device, after the intro. */
 export function Welcome() {
   const t = useT();
   const open = useUI((s) => s.open);

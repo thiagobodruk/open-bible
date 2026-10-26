@@ -2,16 +2,16 @@ import { createElement, type HTMLAttributes, type ReactNode } from 'react';
 import type { Icon } from '@phosphor-icons/react';
 
 type Props = Omit<HTMLAttributes<HTMLElement>, 'title'> & {
-  /** Elemento HTML da linha. O padrão é `button`. */
+  /** HTML element of the row. Defaults to `button`. */
   as?: 'button' | 'a' | 'div' | 'label';
   icon?: Icon;
   iconSize?: number;
   title: ReactNode;
-  /** Linhas de apoio em cinza abaixo do título. Aceita várias. */
+  /** Gray supporting lines below the title. Accepts several. */
   sub?: ReactNode;
-  /** Texto pequeno acima do título. */
+  /** Small text above the title. */
   eyebrow?: ReactNode;
-  /** Conteúdo à direita: seta, botão, caixa de seleção. */
+  /** Content on the right: arrow, button, checkbox. */
   end?: ReactNode;
   danger?: boolean;
   disabled?: boolean;
@@ -20,7 +20,7 @@ type Props = Omit<HTMLAttributes<HTMLElement>, 'title'> & {
   rel?: string;
 };
 
-/** Linha de lista: ícone opcional, título com textos de apoio e algo à direita. */
+/** List row: optional icon, title with supporting text and something on the right. */
 export function Row({ as = 'button', icon: Glyph, iconSize = 24, title, sub, eyebrow, end, danger, className, children, ...rest }: Props) {
   const subs = (Array.isArray(sub) ? sub : [sub]).filter(Boolean);
   return createElement(

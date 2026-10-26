@@ -1,6 +1,6 @@
 import { bookIndex } from './data/books';
 
-/** Minúsculas, sem acentos e sem sinais combinantes. Devolve também o mapa de índices para o texto original. */
+/** Lowercase, without accents and without combining marks. Also returns the index map back to the original text. */
 export function normalize(text: string): { norm: string; map: number[] } {
   let norm = '';
   const map: number[] = [];
@@ -31,7 +31,7 @@ export interface RefTarget {
 
 const REF = /^\s*((?:[123]\s*)?[^\d:.,\-\s][^\d:.,-]*?)\s*(\d+)(?:\s*[:.,]\s*(\d+)(?:\s*-\s*(\d+))?)?\s*$/u;
 
-/** "jo 3:16", "1 co 13", "salmos 23", "gn1". Nome do livro na versão atual ou abbrev. */
+/** "jo 3:16", "1 co 13", "salmos 23", "gn1". Book name in the current version or abbrev. */
 export function parseReference(input: string, books: RefBook[]): RefTarget | null {
   const m = REF.exec(input);
   if (!m) return null;
@@ -51,26 +51,26 @@ export interface Hit {
   chapter: number;
   verse: number;
   text: string;
-  /** Intervalos [início, fim) no texto original, para destaque. */
+  /** Ranges [start, end) in the original text, for highlighting. */
   ranges: [number, number][];
 }
 
-/** Quantos resultados aparecem de cada vez. */
+/** How many results show at a time. */
 export const PAGE_SIZE = 100;
-/** Em chinês e japonês um único caractere já é uma palavra. */
+/** In Chinese and Japanese a single character is already a word. */
 export const minChars = (q: string) => (/[\u3040-\u30ff\u3400-\u9fff]/.test(q) ? 1 : 2);
 
 const CJK = /[\u3040-\u30ff\u3400-\u9fff]/;
 const WORD = /[\p{L}\p{N}]/u;
 
-/** 0 = palavra inteira, 1 = início de palavra, 2 = dentro de outra palavra. */
+/** 0 = whole word, 1 = start of word, 2 = inside another word. */
 function proximity(norm: string, at: number, len: number, term: string): number {
   if (CJK.test(term)) return 0;
   if (at > 0 && WORD.test(norm[at - 1])) return 2;
   return at + len < norm.length && WORD.test(norm[at + len]) ? 1 : 0;
 }
 
-/** Todos os versículos com os termos, a palavra inteira antes do início de palavra, e este antes do resto. */
+/** All verses with the terms, whole word before start of word, and that before the rest. */
 export function searchVerses(
   query: string,
   chapters: { book: string; chapter: number; verses: string[] }[],
@@ -88,7 +88,7 @@ export function searchVerses(
       let score = 0;
       let all = true;
       for (const t of terms) {
-        // Procura a melhor ocorrência do termo: palavra inteira, depois início de palavra.
+        // Looks for the best occurrence of the term: whole word, then start of word.
         let at = norm.indexOf(t);
         if (at < 0) {
           all = false;
@@ -115,7 +115,7 @@ export function searchVerses(
       scored.push({ hit: { book: c.book, chapter: c.chapter, verse: i + 1, text, ranges: mergeRanges(ranges) }, score });
     }
   }
-  // Ordenação estável: dentro da mesma nota, mantém a ordem canônica.
+  // Stable sort: within the same score, keeps the canonical order.
   return scored.sort((a, b) => a.score - b.score).map((x) => x.hit);
 }
 

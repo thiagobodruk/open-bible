@@ -36,7 +36,7 @@ const ids = new Set(BOOKS.map((b) => b.id));
 const isInt = (n: unknown): n is number => Number.isInteger(n) && (n as number) > 0;
 const str = (v: unknown): v is string => typeof v === 'string';
 
-/** Lê um backup e devolve só os registros válidos. Lança erro se o arquivo não for um backup do Open Bible. */
+/** Reads a backup and returns only the valid records. Throws if the file is not an Open Bible backup. */
 export function parseBackup(text: string): { highlights: Highlight[]; notes: Note[]; skipped: number } {
   let raw: any;
   try {

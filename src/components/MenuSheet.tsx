@@ -43,7 +43,7 @@ export function MenuSheet() {
   };
 
   const [checking, setChecking] = useState(false);
-  // Atalho de redundância para a atualização de Ajustes: tocar na versão confere e aplica a mais recente.
+  // Redundant shortcut for the Settings update: tapping the version checks for and applies the latest one.
   const update = async () => {
     if (checking) return;
     setChecking(true);
@@ -64,7 +64,7 @@ export function MenuSheet() {
       icon: DeviceMobile,
       label: t('install'),
       run: async () => {
-        // O prompt nativo vem antes de fechar o menu: fechar mexe no histórico e atrapalharia o prompt.
+        // The native prompt comes before closing the menu: closing touches the history and would interfere with the prompt.
         if (await requestInstall()) close();
         else open('install');
       },

@@ -11,7 +11,7 @@ import { useT } from '../i18n';
 import { Row } from './Row';
 import { Empty } from './Empty';
 
-/** Lista única de livros, como no app Bíblia do iOS. O livro tocado abre a grade de capítulos logo abaixo dele. */
+/** Single list of books, like the iOS Bible app. The tapped book opens the chapter grid right below it. */
 export function NavigatorSheet() {
   const t = useT();
   const close = useUI((s) => s.close);
@@ -24,7 +24,7 @@ export function NavigatorSheet() {
   const term = normalize(q.trim()).norm.replace(/\s+/g, '');
   const visible = term ? books.filter((b) => normalize(b.name).norm.replace(/\s+/g, '').includes(term) || b.id === term) : books;
   const heading = (i: number) => (term ? null : i === firstNt ? 'testamentNew' : i === 0 ? 'testamentOld' : null);
-  // "sal 23" também funciona aqui: oferece ir direto ao capítulo.
+  // "ps 23" also works here: offers to go straight to the chapter.
   const ref = searching ? parseReference(q, books) : null;
   const pick = (id: string, n: number, v?: number) => {
     goTo(id, n, v);
@@ -34,7 +34,7 @@ export function NavigatorSheet() {
   const rows = useRef<Record<string, HTMLLIElement | null>>({});
   const first = useRef(true);
 
-  // Ao abrir, leva o livro atual ao topo. Ao expandir outro livro, garante que a grade fique visível.
+  // On open, brings the current book to the top. When expanding another book, makes sure the grid is visible.
   useEffect(() => {
     if (!expanded) return;
     const el = rows.current[expanded];
