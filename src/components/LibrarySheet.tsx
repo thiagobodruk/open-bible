@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { CheckCircle, CloudArrowDown, CloudCheck, Translate } from '@phosphor-icons/react';
 import { SearchField } from './SearchField';
 import { Sheet } from './Sheet';
@@ -19,6 +19,8 @@ export function LibrarySheet() {
   const { versionId, uiLang, set } = useSettings();
   const { installed, downloading, failed, download } = useLibrary();
   const { notify, close } = useUI();
+  // First use, with no Bible on the device: the first download should lead straight to the text.
+  const firstRun = useRef(Object.keys(installed).length === 0);
 
   const names = useMemo(() => new Intl.DisplayNames([uiLang], { type: 'language' }), [uiLang]);
   const native = (code: string) => {
@@ -68,7 +70,10 @@ export function LibrarySheet() {
   };
 
   const get = async (id: string) => {
-    if (await download(id)) choose(id, 'versionDownloaded');
+    if (await download(id)) {
+      choose(id, 'versionDownloaded');
+      if (firstRun.current) close();
+    }
     else notify(navigator.onLine ? t('downloadError') : t('offlineShort'));
   };
 
