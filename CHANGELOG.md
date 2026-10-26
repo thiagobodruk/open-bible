@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.16.0
+
+### Changed
+
+- The Library now opens as a bottom sheet over the reader instead of a full screen, and stays open after choosing or downloading a version.
+
 ## 1.15.1
 
 ### Changed
