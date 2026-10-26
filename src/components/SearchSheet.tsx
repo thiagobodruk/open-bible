@@ -12,6 +12,8 @@ import { useUI } from '../state/ui';
 import { go } from '../router';
 import { refLabel } from '../ref';
 import { useT } from '../i18n';
+import { Row } from './Row';
+import { Empty } from './Empty';
 
 function Highlighted({ hit }: { hit: Hit }) {
   const parts: React.ReactNode[] = [];
@@ -91,30 +93,25 @@ export function SearchSheet() {
       }
     >
       {ref && (
-        <button className="row goto" onClick={() => open(ref.book.id, ref.chapter, ref.verse)}>
-          <span className="grow">
-            <span className="sub" style={{ display: 'block' }}>{t('goTo')}</span>
-            <span className="title">{refLabel(ref.book.name, ref.chapter, ref.verse, ref.verseEnd)}</span>
-          </span>
-          <CaretRight size={18} weight="light" color="var(--muted)" />
-        </button>
+        <Row
+          className="goto"
+          eyebrow={t('goTo')}
+          title={refLabel(ref.book.name, ref.chapter, ref.verse, ref.verseEnd)}
+          onClick={() => open(ref.book.id, ref.chapter, ref.verse)}
+          end={<CaretRight size={18} weight="light" color="var(--muted)" />}
+        />
       )}
 
       {!typed && !ref && (
-        <div className="empty" style={{ padding: '40px 8px' }}>
-          <MagnifyingGlass size={36} weight="light" />
-          <p>{tooShort ? t('searchMin', { n: minChars(dq) }) : t('searchEmpty')}</p>
-          <p style={{ fontSize: 13, marginTop: 8 }}>{t('searchEmptyHint', { abbr: abbrOf(versionId) })}</p>
-        </div>
+        <Empty compact icon={MagnifyingGlass} iconSize={36} hint={t('searchEmptyHint', { abbr: abbrOf(versionId) })}>
+          {tooShort ? t('searchMin', { n: minChars(dq) }) : t('searchEmpty')}
+        </Empty>
       )}
 
-      {typed && chapters === null && <div className="empty" style={{ padding: '40px 8px' }}><p>{t('searchPreparing')}</p></div>}
+      {typed && chapters === null && <Empty compact>{t('searchPreparing')}</Empty>}
 
       {typed && chapters !== null && hits.length === 0 && !ref && (
-        <div className="empty" style={{ padding: '40px 8px' }}>
-          <p>{t('searchNone', { q: dq.trim() })}</p>
-          <p style={{ fontSize: 13, marginTop: 8 }}>{t('searchNoneHint')}</p>
-        </div>
+        <Empty compact hint={t('searchNoneHint')}>{t('searchNone', { q: dq.trim() })}</Empty>
       )}
 
       {hits.length > 0 && (
@@ -129,7 +126,7 @@ export function SearchSheet() {
             </button>
           ))}
           {shown.length < hits.length && (
-            <button className="row" style={{ justifyContent: 'center' }} onClick={() => setLimit((n) => n + PAGE_SIZE)}>
+            <button className="row center" onClick={() => setLimit((n) => n + PAGE_SIZE)}>
               {t('searchMore')}
             </button>
           )}

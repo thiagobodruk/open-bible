@@ -1,3 +1,4 @@
+import { getItem, removeItem, setItem } from './storage';
 import { useUI } from './state/ui';
 
 interface InstallPromptEvent extends Event {
@@ -9,28 +10,9 @@ let deferred: InstallPromptEvent | null = null;
 const listeners = new Set<() => void>();
 const emit = () => listeners.forEach((l) => l());
 
-const flag = (key: string) => {
-  try {
-    return !!localStorage.getItem(key);
-  } catch {
-    return false;
-  }
-};
-const setFlag = (key: string) => {
-  try {
-    localStorage.setItem(key, '1');
-  } catch {
-    /* sem armazenamento, vale só nesta sessão */
-  }
-};
-
-const clearFlag = (key: string) => {
-  try {
-    localStorage.removeItem(key);
-  } catch {
-    /* sem armazenamento, nada a limpar */
-  }
-};
+const flag = (key: string) => !!getItem(key);
+const setFlag = (key: string) => setItem(key, '1');
+const clearFlag = removeItem;
 
 const INSTALLED = 'ob:installed';
 const DISMISSED = 'ob:install-dismissed';

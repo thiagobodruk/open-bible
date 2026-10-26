@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { useStudy } from './state/study';
 import { detectIOS } from './install';
+import { getItem, getJson, setItem, setJson } from './storage';
 
 // Leitura em voz alta com as vozes do sistema (Web Speech API). Lê um versículo por vez,
 // o que permite destacar o trecho atual e retomar de onde parou.
@@ -18,21 +19,9 @@ interface Prefs {
 
 const DEFAULT_PREFS: Prefs = { rate: 1, voices: {}, next: true };
 
-function loadPrefs(): Prefs {
-  try {
-    return { ...DEFAULT_PREFS, ...JSON.parse(localStorage.getItem(KEY) || '{}') };
-  } catch {
-    return DEFAULT_PREFS;
-  }
-}
+const loadPrefs = (): Prefs => ({ ...DEFAULT_PREFS, ...getJson<Partial<Prefs>>(KEY, {}) });
 
-function savePrefs(p: Prefs) {
-  try {
-    localStorage.setItem(KEY, JSON.stringify(p));
-  } catch {
-    /* sem persistência */
-  }
-}
+const savePrefs = (p: Prefs) => setJson(KEY, p);
 
 export const listenSupported = () => typeof speechSynthesis !== 'undefined' && typeof SpeechSynthesisUtterance !== 'undefined';
 
@@ -192,17 +181,9 @@ const HINT_KEY = 'ob:listen-hint';
 /** No iOS o botão de silêncio cala a fala e o app não tem como saber. Avisa uma única vez, antes da primeira leitura. */
 export function silentHintDue(): boolean {
   if (!detectIOS()) return false;
-  try {
-    return !localStorage.getItem(HINT_KEY);
-  } catch {
-    return false;
-  }
+  return !getItem(HINT_KEY, '1');
 }
 
 export function markSilentHintSeen() {
-  try {
-    localStorage.setItem(HINT_KEY, '1');
-  } catch {
-    // Sem armazenamento o aviso volta a aparecer, o que é aceitável.
-  }
+  setItem(HINT_KEY, '1');
 }

@@ -8,6 +8,8 @@ import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
 import { back } from '../router';
 import { useT } from '../i18n';
+import { Chip } from '../components/Chip';
+import { ProgressBar } from '../components/ProgressBar';
 
 const COVERAGE = { nt: 'covNt', ot: 'covOt', partial: 'covPartial' } as const;
 
@@ -80,7 +82,6 @@ export function Library() {
         <div key={v.id} className={`ver ${active ? 'active' : ''}`}>
           <button
             className="grow"
-            style={{ textAlign: 'left', minWidth: 0 }}
             disabled={!isDown}
             onClick={() => choose(v.id)}
             aria-label={`${v.name}${active ? `, ${t('selected')}` : ''}`}
@@ -88,16 +89,16 @@ export function Library() {
             <div className="nm" dir={v.rtl ? 'rtl' : undefined} style={v.rtl ? { textAlign: 'left' } : undefined}>{v.name}</div>
             <div className="meta">
               <span className="abbr">{abbrOf(v.id)}</span>
-            {mineIds.has(v.id) && <span className="chip">{names.of(v.lang) ?? v.lang}</span>}
-              {v.coverage && <span className="chip">{t(COVERAGE[v.coverage])}</span>}
-              {v.rtl && <span className="chip">RTL</span>}
-              {active ? <span className="chip accent">{t('inUse')}</span> : isDown && <span className="chip">{t('downloaded')}</span>}
-              <span className="abbr" style={{ fontWeight: 400 }}>{t.mb(v.sizeMb)}</span>
+            {mineIds.has(v.id) && <Chip>{names.of(v.lang) ?? v.lang}</Chip>}
+              {v.coverage && <Chip>{t(COVERAGE[v.coverage])}</Chip>}
+              {v.rtl && <Chip>RTL</Chip>}
+              {active ? <Chip accent>{t('inUse')}</Chip> : isDown && <Chip>{t('downloaded')}</Chip>}
+              <span className="abbr light">{t.mb(v.sizeMb)}</span>
             </div>
           </button>
           <div className="state">
             {prog !== undefined ? (
-              <div className="progress" role="progressbar" aria-label={t('downloading')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(prog * 100)}><i style={{ width: `${prog * 100}%` }} /></div>
+              <ProgressBar value={prog} />
             ) : !isDown ? (
               <button className="icon-btn" aria-label={failed[v.id] ? t('retryDownload', { name: v.name }) : t('downloadVersion', { name: v.name })} onClick={() => get(v.id)}>
                 <CloudArrowDown size={26} weight="light" />
@@ -142,7 +143,7 @@ export function Library() {
             </section>
           );
         })}
-        <p className="hint" style={{ marginTop: 24 }}>{t('libraryFooter', { n: VERSIONS.length })}</p>
+        <p className="hint mt-24">{t('libraryFooter', { n: VERSIONS.length })}</p>
       </div>
     </div>
   );

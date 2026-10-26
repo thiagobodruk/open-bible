@@ -1,5 +1,6 @@
 import { ScreenHeader } from './ScreenHeader';
 import { PRIVACY_EMAIL } from '../privacy';
+import { Section } from './Section';
 
 interface Doc {
   updated: string;
@@ -14,10 +15,9 @@ export function LegalDoc({ title, doc }: { title: string; doc: Doc }) {
       <div className="screen-body privacy">
         <p className="hint">{doc.updated}</p>
         {doc.sections.map((s) => (
-          <section className="section" key={s.h}>
-            <h2>{s.h}</h2>
+          <Section key={s.h} title={s.h}>
             {s.p.map((p) => <p key={p}>{p}</p>)}
-          </section>
+          </Section>
         ))}
         <p><a href={`mailto:${PRIVACY_EMAIL}`}>{PRIVACY_EMAIL}</a></p>
       </div>

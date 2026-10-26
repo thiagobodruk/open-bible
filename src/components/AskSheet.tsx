@@ -8,6 +8,7 @@ import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { useT } from '../i18n';
 import { Button } from './Button';
+import { copyText } from '../share';
 
 /** Só o **negrito** que os modelos costumam usar; o resto fica como texto. */
 function Inline({ text }: { text: string }) {
@@ -43,12 +44,8 @@ export function AskSheet() {
   }, [status, busy, messages.length, length]);
 
   const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(`${passage?.ref ?? ''}\n\n${answer.content}`.trim());
-      notify(t('copied'));
-    } catch {
-      notify(t('copyFailed'));
-    }
+    const ok = await copyText(`${passage?.ref ?? ''}\n\n${answer.content}`.trim());
+    notify(t(ok ? 'copied' : 'copyFailed'));
   };
 
   const errorKey = ({ offline: 'askOffline', limit: 'askRateLimited', daily: 'askDaily', busy: 'askBusy', failed: 'askError' } as const)[error ?? 'failed'];

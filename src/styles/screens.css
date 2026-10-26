@@ -27,6 +27,8 @@
 .ver .nm { font-size: 16px; }
 .ver .meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; align-items: center; }
 .ver .abbr { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--muted); }
+.ver .abbr.light { font-weight: 400; }
+.ver > button.grow { text-align: left; }
 .ver .state { flex: none; display: grid; place-items: center; width: 40px; height: 40px; color: var(--muted); }
 .ver.active .nm { font-weight: 600; }
 .ver.active .state { color: var(--accent); }
@@ -48,6 +50,8 @@
 .entry .ref .date { font-size: 12px; font-weight: 400; }
 .empty { text-align: center; color: var(--muted); padding: 64px 16px; }
 .empty svg { margin-bottom: 12px; }
+.empty.compact { padding: 40px 8px; }
+.empty-hint { font-size: 13px; margin-top: 8px; }
 
 /* Navegador */
 .book-list { margin: 0 -8px; }
@@ -134,3 +138,9 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .study-tools .sort { display: flex; gap: 6px; margin-left: auto; }
 .sort-btn { display: inline-flex; align-items: center; gap: 6px; padding: 0 12px; }
 .sort-btn[aria-pressed='true'] { background: var(--fg); color: var(--bg); }
+
+/* Espaçamentos avulsos */
+.ml-8 { margin-left: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-24 { margin-top: 24px; }
+.mt-28 { margin-top: 28px; }

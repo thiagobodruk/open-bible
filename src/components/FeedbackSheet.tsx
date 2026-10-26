@@ -27,8 +27,7 @@ export function FeedbackSheet() {
         {FEEDBACK_KINDS.map((k) => <option key={k} value={k}>{t(`feedback_${k}`)}</option>)}
       </select>
       <textarea
-        className="note-input"
-        style={{ marginTop: 12 }}
+        className="note-input mt-12"
         value={text}
         maxLength={MAX}
         autoFocus

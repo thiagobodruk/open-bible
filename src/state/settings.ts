@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { suggestedVersion } from '../data/catalog';
+import { getJson, setJson } from '../storage';
 
 export type Theme = 'auto' | 'light' | 'sepia' | 'dark';
 export type FontFamily = 'serif' | 'sans' | 'mono';
@@ -51,13 +52,7 @@ export const DEFAULTS: Settings = {
 
 const KEY = 'ob:settings';
 
-function load(): Settings {
-  try {
-    return { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY) || '{}') };
-  } catch {
-    return DEFAULTS;
-  }
-}
+const load = (): Settings => ({ ...DEFAULTS, ...getJson<Partial<Settings>>(KEY, {}) });
 
 interface SettingsStore extends Settings {
   set: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
@@ -88,10 +83,6 @@ export function initSettingsEffects() {
     applyTheme(s.theme);
     document.documentElement.lang = s.uiLang;
     const { set: _s, resetText: _r, ...data } = s;
-    try {
-      localStorage.setItem(KEY, JSON.stringify(data));
-    } catch {
-      /* sem persistência, o app segue funcionando */
-    }
+    setJson(KEY, data);
   });
 }

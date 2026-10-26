@@ -1,6 +1,6 @@
 import { BookOpenText, Copy, LinkSimple, Note, ShareNetwork, Sparkle, TextColumns } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
-import { HL_COLORS, vkey, useStudy, type HlColor } from '../state/study';
+import { vkey, useStudy, type HlColor } from '../state/study';
 import { useUI } from '../state/ui';
 import { abbrOf } from '../data/catalog';
 import { useBookName, useChapter } from '../hooks';
@@ -11,6 +11,9 @@ import { shareUrl } from '../link';
 import { trackFeature } from '../analytics';
 import { useAsk } from '../state/ask';
 import { useT } from '../i18n';
+import { copyText, shareOrCopy } from '../share';
+import { ColorSwatches } from './ColorSwatches';
+import { SheetAction } from './SheetAction';
 
 /** Ações para os versículos selecionados. É um bottom sheet sem fundo escurecido, para seguir tocando nos versículos. */
 export function SelectionBar() {
@@ -34,26 +37,18 @@ export function SelectionBar() {
   };
 
   const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(citation());
-      trackFeature('copy');
-      notify(t('copied'));
-    } catch {
-      notify(t('copyFailed'));
-    }
+    const ok = await copyText(citation());
+    if (ok) trackFeature('copy');
+    notify(t(ok ? 'copied' : 'copyFailed'));
   };
 
   const share = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({ text: citation() });
-        trackFeature('share');
-      } catch {
-        /* cancelado */
-      }
-    } else {
-      copy();
-    }
+    const result = await shareOrCopy({ text: citation() });
+    if (result === 'shared') trackFeature('share');
+    else if (result === 'copied') {
+      trackFeature('copy');
+      notify(t('copied'));
+    } else if (result === 'failed') notify(t('copyFailed'));
   };
 
   return (
@@ -63,24 +58,14 @@ export function SelectionBar() {
       title={refLabel(bookName(book), chapter, selection[0], selection[selection.length - 1])}
       onClose={clearSelection}
     >
-      <div className="sheet-colors" role="group" aria-label={t('highlightColor')}>
-        {HL_COLORS.map((c) => (
-          <button
-            key={c}
-            className={`swatch c-${c}`}
-            aria-pressed={active(c)}
-            aria-label={t('highlightWith', { color: t.lang === 'de' ? t(c) : t(c).toLowerCase() })}
-            onClick={() => paint(c, texts)}
-          />
-        ))}
-      </div>
+      <ColorSwatches label={t('highlightColor')} pressed={(c) => c !== null && active(c)} onPick={(c) => paint(c, texts)} />
       <div className={`sheet-actions${aiEnabled ? '' : ' five'}`}>
-        <button className="sheet-action" onClick={() => open('note')}><Note size={24} weight="light" />{t('note')}</button>
-        {aiEnabled && <button className="sheet-action" onClick={() => useAsk.getState().openBar()}><Sparkle size={24} weight="light" />{t('askAction')}</button>}
-        <button className="sheet-action" onClick={() => open('compare')}><TextColumns size={24} weight="light" />{t('compare')}</button>
-        <button className="sheet-action" onClick={() => open('xrefs')}><LinkSimple size={24} weight="light" />{t('xrefs')}</button>
-        <button className="sheet-action" onClick={copy}><Copy size={24} weight="light" />{t('copy')}</button>
-        <button className="sheet-action" onClick={share}><ShareNetwork size={24} weight="light" />{t('share')}</button>
+        <SheetAction icon={Note} onClick={() => open('note')}>{t('note')}</SheetAction>
+        {aiEnabled && <SheetAction icon={Sparkle} onClick={() => useAsk.getState().openBar()}>{t('askAction')}</SheetAction>}
+        <SheetAction icon={TextColumns} onClick={() => open('compare')}>{t('compare')}</SheetAction>
+        <SheetAction icon={LinkSimple} onClick={() => open('xrefs')}>{t('xrefs')}</SheetAction>
+        <SheetAction icon={Copy} onClick={copy}>{t('copy')}</SheetAction>
+        <SheetAction icon={ShareNetwork} onClick={share}>{t('share')}</SheetAction>
       </div>
     </Sheet>
   );

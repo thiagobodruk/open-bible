@@ -7,6 +7,7 @@ import { useIncoming, applyIncoming } from '../state/incoming';
 import { go } from '../router';
 import { Button } from './Button';
 import { useT } from '../i18n';
+import { ProgressBar } from './ProgressBar';
 
 /** Primeira abertura: ainda não há nenhuma versão no aparelho. Oferece a sugerida para o idioma e leva à Biblioteca. */
 function useFirstDownload() {
@@ -50,7 +51,7 @@ export function DownloadActions({ onChooseOther, trailing }: { onChooseOther: ()
       <Button variant="primary" block icon={busy ? undefined : DownloadSimple} iconSide={side} onClick={start} disabled={busy}>
         {busy ? t('downloadingBtn', { pct: Math.round(progress * 100) }) : t('downloadBtn', { abbr: abbrOf(id), size: t.mb(v.sizeMb) })}
       </Button>
-      {busy && <div className="progress" role="progressbar" aria-label={t('downloading')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></div>}
+      {busy && <ProgressBar value={progress} />}
       {failure && (
         <p className="error" role="alert">
           {failure === 'offline' ? t('offlineError') : t('downloadError')}

@@ -4,6 +4,7 @@ import { firebaseConfig } from '../firebase-config';
 import { track } from '../analytics';
 import { savedAcceptance } from './terms';
 import { onSyncStatus, startSync, stopSync, type SyncStatus } from '../sync';
+import { getItem, getJson, removeItem, setItem, setJson } from '../storage';
 
 export interface Profile {
   name: string;
@@ -20,21 +21,13 @@ const REDIRECT = 'ob:auth-redirect';
 export const accountAvailable = () => firebaseConfig !== null;
 
 function savedProfile(): Profile | null {
-  try {
-    const p = JSON.parse(localStorage.getItem(KEY) || 'null');
-    return p && typeof p.name === 'string' ? { name: p.name, photo: typeof p.photo === 'string' ? p.photo : null } : null;
-  } catch {
-    return null;
-  }
+  const p = getJson<{ name?: unknown; photo?: unknown } | null>(KEY, null);
+  return p && typeof p.name === 'string' ? { name: p.name, photo: typeof p.photo === 'string' ? p.photo : null } : null;
 }
 
 function saveProfile(p: Profile | null) {
-  try {
-    if (p) localStorage.setItem(KEY, JSON.stringify(p));
-    else localStorage.removeItem(KEY);
-  } catch {
-    /* sem persistência, o perfil volta quando o Firebase carregar */
-  }
+  if (p) setJson(KEY, p);
+  else removeItem(KEY);
 }
 
 const profileOf = (u: User | null): Profile | null => (u ? { name: u.displayName ?? u.email ?? '', photo: u.photoURL } : null);
@@ -76,10 +69,10 @@ async function saveAcceptance(uid: string) {
   const a = savedAcceptance();
   const mark = `ob:terms-synced:${uid}`;
   try {
-    if (!a || localStorage.getItem(mark) === a.version) return;
+    if (!a || getItem(mark) === a.version) return;
     const [{ getApps }, fs] = await Promise.all([import('firebase/app'), import('firebase/firestore')]);
     await fs.setDoc(fs.doc(fs.getFirestore(getApps()[0]), 'users', uid), { terms: { version: a.version, acceptedAt: a.at } }, { merge: true });
-    localStorage.setItem(mark, a.version);
+    setItem(mark, a.version);
   } catch {
     /* tenta de novo no próximo login */
   }

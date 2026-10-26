@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { Check, Note, Trash, X } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
-import { HL_COLORS, useStudy, vkey, type HlColor } from '../state/study';
+import { useStudy, vkey, type HlColor } from '../state/study';
 import { useBookName, useChapter } from '../hooks';
 import { refLabel } from '../ref';
 import { useT } from '../i18n';
 import { Button, IconButton } from './Button';
+import { ColorSwatches } from './ColorSwatches';
 
 const MAX = 500;
 
@@ -68,18 +69,8 @@ export function NoteSheet({ target, onClose }: { target?: NoteTarget; onClose?: 
   return (
     <Sheet title={existing ? t('noteEdit') : t('noteNew')} icon={Note} onClose={cancel}>
       <div className="note-ref">{refLabel(bookName(book), chapter, v1, v2)}</div>
-      <blockquote className="note-quote" style={{ marginInline: 0 }}>{excerpt}</blockquote>
-      <div className="sheet-colors" role="group" aria-label={t('highlightColor')}>
-        {HL_COLORS.map((c) => (
-          <button
-            key={c}
-            className={`swatch c-${c}`}
-            aria-pressed={color === c}
-            aria-label={t('highlightWith', { color: t.lang === 'de' ? t(c) : t(c).toLowerCase() })}
-            onClick={() => setPicked(color === c ? null : c)}
-          />
-        ))}
-      </div>
+      <blockquote className="note-quote">{excerpt}</blockquote>
+      <ColorSwatches label={t('highlightColor')} pressed={(c) => color === c} onPick={(c) => setPicked(color === c ? null : c)} />
       <textarea
         className="note-input"
         value={text}

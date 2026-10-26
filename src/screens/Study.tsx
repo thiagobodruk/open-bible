@@ -8,11 +8,14 @@ import { bookIndex } from '../data/books';
 import { abbrOf } from '../data/catalog';
 import { useBookName } from '../hooks';
 import { useSettings } from '../state/settings';
-import { HL_COLORS, useStudy, type HlColor } from '../state/study';
+import { useStudy, type HlColor } from '../state/study';
 import { go } from '../router';
 import { refLabel } from '../ref';
 import { trackFeature } from '../analytics';
 import { useT } from '../i18n';
+import { Chip } from '../components/Chip';
+import { ColorSwatches } from '../components/ColorSwatches';
+import { Empty } from '../components/Empty';
 
 interface Entry {
   key: string;
@@ -75,15 +78,16 @@ export function Study() {
       <ScreenHeader title={t('study')} />
       <div className="screen-body">
         <div className="filters">
-          <div className="sheet-colors" role="group" aria-label={t('filterColor')}>
-            <button className="swatch all" aria-pressed={color === null} aria-label={t('allColors')} onClick={() => setColor(null)} />
-            {HL_COLORS.map((c) => (
-              <button key={c} className={`swatch c-${c}`} aria-pressed={color === c} aria-label={t(c)} onClick={() => {
-                trackFeature('study_filter');
-                setColor(color === c ? null : c);
-              }} />
-            ))}
-          </div>
+          <ColorSwatches
+            label={t('filterColor')}
+            describe="name"
+            pressed={(c) => color === c}
+            onAll={() => setColor(null)}
+            onPick={(c) => {
+              trackFeature('study_filter');
+              setColor(color === c ? null : c);
+            }}
+          />
           <div className="study-tools">
             <SearchField
               value={q}
@@ -116,11 +120,7 @@ export function Study() {
         </div>
 
         {entries.length === 0 && (
-          <div className="empty">
-            <Notebook size={40} weight="light" />
-            <p>{t(q || color ? 'studyNoMatch' : 'nothingYet')}</p>
-            {!q && !color && <p style={{ fontSize: 14 }}>{t('nothingHint')}</p>}
-          </div>
+          <Empty icon={Notebook} hint={!q && !color && t('nothingHint')}>{t(q || color ? 'studyNoMatch' : 'nothingYet')}</Empty>
         )}
 
         {entries.map((e) => (
@@ -136,7 +136,7 @@ export function Study() {
               {e.color && <span className={`dot c-${e.color}`} />}
               {refLabel(bookName(e.book), e.chapter, e.v1, e.v2)}
               <span className="date">{fmt.format(e.updatedAt ?? e.createdAt)}</span>
-              {e.versionId && e.versionId !== versionId && <span className="chip" style={{ marginLeft: 8 }}>{abbrOf(e.versionId)}</span>}
+              {e.versionId && e.versionId !== versionId && <Chip className="ml-8">{abbrOf(e.versionId)}</Chip>}
             </div>
             <p className="txt">{e.text}</p>
             {e.note && <p className="nt">{e.note}</p>}

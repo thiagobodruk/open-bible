@@ -14,6 +14,8 @@ import { useAccount } from '../state/account';
 import { analyticsAvailable, useAnalytics } from '../analytics';
 import { Segmented } from '../components/Segmented';
 import { useT } from '../i18n';
+import { Row } from '../components/Row';
+import { Section } from '../components/Section';
 
 const LANGS: { code: UiLang; label: string }[] = [
   { code: 'en', label: 'English' },
@@ -71,8 +73,7 @@ export function Settings() {
     <div className="screen">
       <ScreenHeader title={t('settings')} />
       <div className="screen-body">
-        <section className="section">
-          <h2>{t('uiLanguage')}</h2>
+        <Section title={t('uiLanguage')}>
           <select
             className="select"
             value={uiLang}
@@ -82,49 +83,42 @@ export function Settings() {
             {LANGS.map((l) => <option key={l.code} value={l.code}>{l.label}</option>)}
           </select>
           <p className="hint">{t('uiLanguageHint')}</p>
-        </section>
+        </Section>
 
-        <section className="section">
-          <h2>{t('downloadedVersions')}</h2>
+        <Section title={t('downloadedVersions')}>
           <div className="group">
             {downloaded.map((id) => {
               const v = findVersion(id);
               if (!v) return null;
               return (
-                <div key={id} className="row">
-                  <span className="grow">
-                    <span className="title">{v.name}</span>
-                    <span className="sub" style={{ display: 'block' }}>{abbrOf(id)} · {t.mb(v.sizeMb)}</span>
-                  </span>
-                  <button className="icon-btn" aria-label={t('removeVersion', { name: v.name })} onClick={async () => { await remove(id); notify(t('versionRemoved')); }}>
-                    <Trash size={22} weight="light" />
-                  </button>
-                </div>
+                <Row
+                  key={id}
+                  as="div"
+                  title={v.name}
+                  sub={`${abbrOf(id)} · ${t.mb(v.sizeMb)}`}
+                  end={
+                    <button className="icon-btn" aria-label={t('removeVersion', { name: v.name })} onClick={async () => { await remove(id); notify(t('versionRemoved')); }}>
+                      <Trash size={22} weight="light" />
+                    </button>
+                  }
+                />
               );
             })}
           </div>
           <p className="hint">{t('usingMb', { size: t.mb(downloadedMb(downloaded)) })}</p>
-        </section>
+        </Section>
 
-        <section className="section">
-          <h2>{t('yourData')}</h2>
+        <Section title={t('yourData')}>
           <div className="group">
-            <button className="row" onClick={() => { downloadBackup(); notify(t('backupExported')); }}>
-              <Export size={24} weight="light" />
-              <span className="grow"><span className="title">{t('exportBackup')}</span><span className="sub" style={{ display: 'block' }}>{t('exportSub', { h: highlights, n: notes })}</span></span>
-            </button>
-            <button className="row" onClick={() => fileInput.current?.click()}>
-              <Download size={24} weight="light" />
-              <span className="grow"><span className="title">{t('importBackup')}</span></span>
-            </button>
+            <Row icon={Export} title={t('exportBackup')} sub={t('exportSub', { h: highlights, n: notes })} onClick={() => { downloadBackup(); notify(t('backupExported')); }} />
+            <Row icon={Download} title={t('importBackup')} onClick={() => fileInput.current?.click()} />
           </div>
           <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={onImport} />
           <p className="hint">{t(account ? 'dataHintSynced' : 'dataHint')}</p>
-        </section>
+        </Section>
 
         {analyticsAvailable() && (
-          <section className="section">
-            <h2>{t('statsTitle')}</h2>
+          <Section title={t('statsTitle')}>
             <Segmented
               label={t('statsTitle')}
               value={consent === 'granted' ? 'on' : 'off'}
@@ -132,52 +126,34 @@ export function Settings() {
               onChange={(v) => setConsent(v === 'on')}
             />
             <p className="hint">{t('statsHint')}</p>
-          </section>
+          </Section>
         )}
 
-        <section className="section">
-          <h2>{t('app')}</h2>
+        <Section title={t('app')}>
           <div className="group">
             {canInstall && (
-              <button className="row" onClick={async () => { if (!(await requestInstall())) open('install'); }}>
-                <DeviceMobile size={24} weight="light" />
-                <span className="grow"><span className="title">{t('install')}</span><span className="sub" style={{ display: 'block' }}>{t('installSub')}</span></span>
-              </button>
+              <Row icon={DeviceMobile} title={t('install')} sub={t('installSub')} onClick={async () => { if (!(await requestInstall())) open('install'); }} />
             )}
-            <button className="row" onClick={update} disabled={checking}>
-              <ArrowsClockwise size={24} weight="light" />
-              <span className="grow"><span className="title">{checking ? t('updateChecking') : t('updateApp')}</span><span className="sub" style={{ display: 'block' }}>{t('updateCurrent', { v: buildLabel(currentBuild) })}</span>
-                {newer && <span className="sub" style={{ display: 'block' }}>{t('updateNew', { v: buildLabel(newer) })}</span>}</span>
-            </button>
-            <button className="row" onClick={() => open('feedback')}>
-              <ChatCircleText size={24} weight="light" />
-              <span className="grow"><span className="title">{t('feedback')}</span></span>
-            </button>
-            <button className="row" onClick={() => go('/terms')}>
-              <FileText size={24} weight="light" />
-              <span className="grow"><span className="title">{t('terms')}</span></span>
-            </button>
-            <button className="row" onClick={() => go('/privacy')}>
-              <ShieldCheck size={24} weight="light" />
-              <span className="grow"><span className="title">{t('privacy')}</span></span>
-            </button>
-            <a className="row" href="https://github.com/thiagobodruk/open-bible" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
-              <GithubLogo size={24} weight="light" />
-              <span className="grow"><span className="title">{t('github')}</span><span className="sub" style={{ display: 'block' }}>{t('githubSub')}</span></span>
-            </a>
+            <Row
+              icon={ArrowsClockwise}
+              title={checking ? t('updateChecking') : t('updateApp')}
+              sub={[t('updateCurrent', { v: buildLabel(currentBuild) }), newer && t('updateNew', { v: buildLabel(newer) })]}
+              onClick={update}
+              disabled={checking}
+            />
+            <Row icon={ChatCircleText} title={t('feedback')} onClick={() => open('feedback')} />
+            <Row icon={FileText} title={t('terms')} onClick={() => go('/terms')} />
+            <Row icon={ShieldCheck} title={t('privacy')} onClick={() => go('/privacy')} />
+            <Row as="a" icon={GithubLogo} title={t('github')} sub={t('githubSub')} href="https://github.com/thiagobodruk/open-bible" target="_blank" rel="noreferrer" />
           </div>
-        </section>
+        </Section>
 
         {account && (
-          <section className="section">
-            <h2>{t('account')}</h2>
+          <Section title={t('account')}>
             <div className="group">
-              <button className="row" onClick={() => open('deleteAccount')}>
-                <UserMinus size={24} weight="light" color="var(--danger)" />
-                <span className="grow"><span className="title" style={{ color: 'var(--danger)' }}>{t('deleteAccount')}</span><span className="sub" style={{ display: 'block' }}>{t('deleteAccountSub')}</span></span>
-              </button>
+              <Row icon={UserMinus} danger title={t('deleteAccount')} sub={t('deleteAccountSub')} onClick={() => open('deleteAccount')} />
             </div>
-          </section>
+          </Section>
         )}
       </div>
     </div>
