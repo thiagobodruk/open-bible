@@ -8,6 +8,8 @@ import { useBooks } from '../hooks';
 import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { useT } from '../i18n';
+import { Row } from './Row';
+import { Empty } from './Empty';
 
 /** Lista única de livros, como no app Bíblia do iOS. O livro tocado abre a grade de capítulos logo abaixo dele. */
 export function NavigatorSheet() {
@@ -71,15 +73,15 @@ export function NavigatorSheet() {
       }
     >
       {ref && (
-        <button className="row goto" onClick={() => pick(ref.book.id, ref.chapter, ref.verse)}>
-          <span className="grow">
-            <span className="sub" style={{ display: 'block' }}>{t('goTo')}</span>
-            <span className="title">{refLabel(ref.book.name, ref.chapter, ref.verse, ref.verseEnd)}</span>
-          </span>
-          <CaretRight size={18} weight="light" color="var(--muted)" />
-        </button>
+        <Row
+          className="goto"
+          eyebrow={t('goTo')}
+          title={refLabel(ref.book.name, ref.chapter, ref.verse, ref.verseEnd)}
+          onClick={() => pick(ref.book.id, ref.chapter, ref.verse)}
+          end={<CaretRight size={18} weight="light" color="var(--muted)" />}
+        />
       )}
-      {term && !ref && visible.length === 0 && <p className="empty" style={{ padding: '32px 8px' }}>{t('noBooks')}</p>}
+      {term && !ref && visible.length === 0 && <Empty compact>{t('noBooks')}</Empty>}
       <ul className="book-list">
         {visible.map((b, i) => {
           const isOpen = expanded === b.id;

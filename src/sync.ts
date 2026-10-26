@@ -6,6 +6,7 @@ import { dbDelete, dbPut } from './db';
 import { savePosition } from './state/position';
 import { DEFAULTS, useSettings, type Settings } from './state/settings';
 import { useStudy, type Highlight, type Note } from './state/study';
+import { getItem, getJson, removeItem, setItem, setJson } from './storage';
 
 type Col = 'notes' | 'highlights';
 
@@ -23,21 +24,6 @@ export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'offline' | 'error';
 const stamp = (x: { createdAt: number; updatedAt?: number }) => x.updatedAt ?? x.createdAt;
 const dirtyKey = (col: Col, id: string) => `${col}/${id}`;
 
-function readJSON<T>(key: string, fallback: T): T {
-  try {
-    return JSON.parse(localStorage.getItem(key) || 'null') ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function writeJSON(key: string, value: unknown) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* sem persistência, a próxima sincronização refaz o que faltar */
-  }
-}
 
 const withTimeout = <T>(p: Promise<T>) =>
   Promise.race([p, new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), TIMEOUT))]);
@@ -62,19 +48,13 @@ export function onSyncStatus(cb: (s: SyncStatus) => void) {
 
 const markDirty = (keys: string[]) => {
   if (!keys.length) return;
-  const set = new Set(readJSON<string[]>(DIRTY, []));
+  const set = new Set(getJson<string[]>(DIRTY, []));
   keys.forEach((k) => set.add(k));
-  writeJSON(DIRTY, [...set]);
+  setJson(DIRTY, [...set]);
 };
 
-const touchPrefs = () => {
-  try {
-    localStorage.setItem(PREFS_AT, String(Date.now()));
-  } catch {
-    /* sem persistência */
-  }
-};
-const prefsAt = () => Number(localStorage.getItem(PREFS_AT)) || 0;
+const touchPrefs = () => setItem(PREFS_AT, String(Date.now()));
+const prefsAt = () => Number(getItem(PREFS_AT)) || 0;
 
 /** Liga a sincronização à conta que entrou. Chamar de novo com a mesma conta não faz nada. */
 export async function startSync(uid: string) {
@@ -98,13 +78,9 @@ export async function startSync(uid: string) {
   session = me;
 
   // Dados de outra conta que sobraram neste aparelho já estão na nuvem dela: não entram na desta.
-  const owner = localStorage.getItem(OWNER);
+  const owner = getItem(OWNER);
   if (owner && owner !== uid) await wipeLocal();
-  try {
-    localStorage.setItem(OWNER, uid);
-  } catch {
-    /* segue sem a marca */
-  }
+  setItem(OWNER, uid);
 
   try {
     await pullAll(me);
@@ -143,12 +119,8 @@ async function wipeLocal() {
   } finally {
     applying = false;
   }
-  writeJSON(DIRTY, []);
-  try {
-    localStorage.removeItem(PREFS_AT);
-  } catch {
-    /* ok */
-  }
+  setJson(DIRTY, []);
+  removeItem(PREFS_AT);
 }
 
 const col = (s: Session, name: string) => s.fs.collection(s.db, 'users', s.uid, name);
@@ -194,7 +166,7 @@ async function pullAll(s: Session) {
 async function applyRemote(name: Col, items: Remote<Note | Highlight>[]) {
   if (!items.length) return;
   const st = useStudy.getState();
-  const dirty = new Set(readJSON<string[]>(DIRTY, []));
+  const dirty = new Set(getJson<string[]>(DIRTY, []));
   const local = name === 'notes' ? new Map<string, Note | Highlight>(st.notes.map((n) => [n.id, n])) : new Map<string, Note | Highlight>(Object.entries(st.highlights));
   const put: (Note | Highlight)[] = [];
   const del: string[] = [];
@@ -243,11 +215,7 @@ function applyPrefs(raw: Record<string, unknown> | null, initial: boolean) {
       savePosition(pos.book, pos.chapter as number);
       useStudy.getState().goTo(pos.book, pos.chapter as number);
     }
-    try {
-      localStorage.setItem(PREFS_AT, String(at));
-    } catch {
-      /* sem persistência */
-    }
+    setItem(PREFS_AT, String(at));
   } finally {
     applying = false;
   }
@@ -256,7 +224,7 @@ function applyPrefs(raw: Record<string, unknown> | null, initial: boolean) {
 /** Envia tudo o que está pendente. Itens que não existem mais viram marcadores de exclusão. */
 async function flush(s: Session) {
   if (session !== s || !navigator.onLine) return;
-  const dirty = readJSON<string[]>(DIRTY, []);
+  const dirty = getJson<string[]>(DIRTY, []);
   if (!dirty.length && !pendingPrefs) return;
   onStatus('syncing');
   const st = useStudy.getState();
@@ -295,7 +263,7 @@ async function flush(s: Session) {
       const id = rest.join('/');
       return (name === 'notes' ? cur.notes.find((n) => n.id === id) : cur.highlights[id]) === sent.get(k);
     };
-    if (sent.size) writeJSON(DIRTY, readJSON<string[]>(DIRTY, []).filter((k) => !(sent.has(k) && unchanged(k))));
+    if (sent.size) setJson(DIRTY, getJson<string[]>(DIRTY, []).filter((k) => !(sent.has(k) && unchanged(k))));
   }
 }
 

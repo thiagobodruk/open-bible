@@ -4,16 +4,12 @@ import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
 import { dictationSupported, startDictation } from '../stt';
 import { useT } from '../i18n';
+import { getItem, setItem } from '../storage';
 
 const MIC_NOTICE = 'ob:stt-notice';
 
-const noticeSeen = () => {
-  try {
-    return localStorage.getItem(MIC_NOTICE) === '1';
-  } catch {
-    return true;
-  }
-};
+// Sem armazenamento o aviso não aparece, para não repetir a cada uso.
+const noticeSeen = () => getItem(MIC_NOTICE, '1') === '1';
 
 interface Props {
   /** Referência do contexto, mostrada como pill. */
@@ -40,11 +36,7 @@ export function PromptField({ context, onClearContext, placeholder, disabled, on
     if (listening) return stopRef.current?.();
     if (!noticeSeen()) {
       notify(t('sttNotice'));
-      try {
-        localStorage.setItem(MIC_NOTICE, '1');
-      } catch {
-        /* o aviso volta na próxima vez */
-      }
+      setItem(MIC_NOTICE, '1');
     }
     const base = question.trim();
     stopRef.current = startDictation(uiLang, {

@@ -5,6 +5,7 @@ import { firebaseConfig } from './firebase-config';
 import { useLibrary } from './state/library';
 import { useSettings } from './state/settings';
 import { useUI } from './state/ui';
+import { getItem, setItem } from './storage';
 
 export type Consent = 'granted' | 'denied' | null;
 export type Feature =
@@ -19,12 +20,8 @@ const READING_KEYS = ['theme', 'font', 'fontSize', 'lineHeight', 'margins', 'ali
 export const analyticsAvailable = () => firebaseConfig !== null;
 
 function savedConsent(): Consent {
-  try {
-    const v = localStorage.getItem(KEY);
-    return v === 'granted' || v === 'denied' ? v : null;
-  } catch {
-    return null;
-  }
+  const v = getItem(KEY);
+  return v === 'granted' || v === 'denied' ? v : null;
 }
 
 interface AnalyticsStore {
@@ -36,11 +33,7 @@ export const useAnalytics = create<AnalyticsStore>((set) => ({
   consent: analyticsAvailable() ? savedConsent() : 'denied',
   setConsent: (granted) => {
     const consent: Consent = granted ? 'granted' : 'denied';
-    try {
-      localStorage.setItem(KEY, consent);
-    } catch {
-      /* sem persistência, a escolha vale até fechar o app */
-    }
+    setItem(KEY, consent);
     set({ consent });
   },
 }));

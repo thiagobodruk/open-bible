@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { TERMS_VERSION } from '../terms';
 import { useAnalytics } from '../analytics';
+import { getJson, setJson } from '../storage';
 
 /** Aceite dos termos e da política: guardado no aparelho e, quando há conta, também em `users/{uid}.terms`. */
 const KEY = 'ob:terms';
@@ -11,12 +12,8 @@ export interface Acceptance {
 }
 
 export function savedAcceptance(): Acceptance | null {
-  try {
-    const a = JSON.parse(localStorage.getItem(KEY) || 'null');
-    return a && typeof a.version === 'string' && Number.isFinite(a.at) ? a : null;
-  } catch {
-    return null;
-  }
+  const a = getJson<{ version?: unknown; at?: unknown } | null>(KEY, null);
+  return a && typeof a.version === 'string' && Number.isFinite(a.at) ? (a as Acceptance) : null;
 }
 
 interface TermsStore {
@@ -33,10 +30,7 @@ export const useTerms = create<TermsStore>((set) => ({
   accept: () => {
     // Aceitar os termos inclui as estatísticas de uso. Quem já escolheu desligar continua desligado.
     if (useAnalytics.getState().consent === null) useAnalytics.getState().setConsent(true);
-    try {
-      localStorage.setItem(KEY, JSON.stringify({ version: TERMS_VERSION, at: Date.now() } satisfies Acceptance));
-    } catch {
-      /* sem persistência, o aceite vale nesta sessão e é pedido de novo na próxima abertura */
-    }
+    // Sem armazenamento o aceite vale nesta sessão e é pedido de novo na próxima abertura.
+    setJson(KEY, { version: TERMS_VERSION, at: Date.now() } satisfies Acceptance);
   },
 }));

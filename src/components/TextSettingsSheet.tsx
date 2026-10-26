@@ -166,7 +166,7 @@ export function TextSettingsSheet() {
         />
       </div>
 
-      <Button block icon={ArrowCounterClockwise} style={{ marginTop: 28 }} onClick={s.resetText}>{t('resetText')}</Button>
+      <Button block className="mt-28" icon={ArrowCounterClockwise} onClick={s.resetText}>{t('resetText')}</Button>
     </Sheet>
   );
 }

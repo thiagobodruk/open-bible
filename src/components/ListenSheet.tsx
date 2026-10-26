@@ -6,6 +6,8 @@ import { findVersion } from '../data/catalog';
 import { useSettings } from '../state/settings';
 import { useUI } from '../state/ui';
 import { useT } from '../i18n';
+import { Row } from './Row';
+import { Section } from './Section';
 
 export function ListenSheet() {
   const t = useT();
@@ -18,25 +20,24 @@ export function ListenSheet() {
 
   return (
     <Sheet title={t('listenTitle')} icon={SpeakerHigh} onClose={close}>
-      <section className="section">
-        <h2>{t('listenVoice')}</h2>
+      <Section title={t('listenVoice')}>
         <select className="select" value={chosen} aria-label={t('listenVoice')} onChange={(e) => setVoice(lang, e.target.value)}>
           {list.map((v) => <option key={v.voiceURI} value={v.voiceURI}>{v.name} ({v.lang})</option>)}
         </select>
-      </section>
-      <section className="section">
-        <h2>{t('listenSpeed')}</h2>
+      </Section>
+      <Section title={t('listenSpeed')}>
         <Segmented
           label={t('listenSpeed')}
           value={String(rate)}
           options={RATES.map((r) => ({ value: String(r), label: `${r}×` }))}
           onChange={(v) => setRate(Number(v))}
         />
-      </section>
-      <label className="row" style={{ cursor: 'pointer' }}>
-        <span className="grow title">{t('listenNext')}</span>
-        <input type="checkbox" checked={next} onChange={(e) => setNext(e.target.checked)} style={{ width: 22, height: 22, accentColor: 'var(--accent)' }} />
-      </label>
+      </Section>
+      <Row
+        as="label"
+        title={t('listenNext')}
+        end={<input className="row-check" type="checkbox" checked={next} onChange={(e) => setNext(e.target.checked)} />}
+      />
     </Sheet>
   );
 }

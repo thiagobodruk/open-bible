@@ -8,6 +8,8 @@ import { useT } from '../i18n';
 import { appUrl } from '../link';
 import { checkForUpdate } from '../update';
 import { installAvailable, requestInstall, subscribeInstall } from '../install';
+import { shareOrCopy } from '../share';
+import { Row } from './Row';
 
 export function MenuSheet() {
   const t = useT();
@@ -22,16 +24,9 @@ export function MenuSheet() {
   const share = async () => {
     const url = appUrl();
     close();
-    try {
-      if (navigator.share) await navigator.share({ title: 'Open Bible', text: t('shareText'), url });
-      else {
-        await navigator.clipboard.writeText(url);
-        notify(t('linkCopied'));
-      }
-    } catch (e) {
-      // Fechar a folha de compartilhamento do sistema não é erro.
-      if (!(e instanceof DOMException && e.name === 'AbortError')) notify(t('linkCopyFailed'));
-    }
+    const result = await shareOrCopy({ title: 'Open Bible', text: t('shareText'), url });
+    if (result === 'copied') notify(t('linkCopied'));
+    else if (result === 'failed') notify(t('linkCopyFailed'));
   };
 
   const user = useAccount((s) => s.user);
@@ -82,11 +77,7 @@ export function MenuSheet() {
       <ul>
         {items.map(({ icon: Icon, label, run }) => (
           <li key={label}>
-            <button className="row" onClick={run}>
-              <Icon size={26} weight="light" />
-              <span className="grow title">{label}</span>
-              <CaretRight size={18} weight="light" color="var(--muted)" />
-            </button>
+            <Row icon={Icon} iconSize={26} title={label} onClick={run} end={<CaretRight size={18} weight="light" color="var(--muted)" />} />
           </li>
         ))}
       </ul>
