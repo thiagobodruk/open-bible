@@ -8,6 +8,7 @@ import { useSettings } from '../state/settings';
 import { refLabel } from '../ref';
 import { aiEnabled } from '../ai';
 import { shareUrl } from '../link';
+import { trackFeature } from '../analytics';
 import { useAsk } from '../state/ask';
 import { useT } from '../i18n';
 
@@ -35,6 +36,7 @@ export function SelectionBar() {
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(citation());
+      trackFeature('copy');
       notify(t('copied'));
     } catch {
       notify(t('copyFailed'));
@@ -45,6 +47,7 @@ export function SelectionBar() {
     if (navigator.share) {
       try {
         await navigator.share({ text: citation() });
+        trackFeature('share');
       } catch {
         /* cancelado */
       }

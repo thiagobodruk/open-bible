@@ -11,6 +11,7 @@ import { useSettings } from '../state/settings';
 import { HL_COLORS, useStudy, type HlColor } from '../state/study';
 import { go } from '../router';
 import { refLabel } from '../ref';
+import { trackFeature } from '../analytics';
 import { useT } from '../i18n';
 
 interface Entry {
@@ -42,8 +43,10 @@ export function Study() {
   const [sort, setSort] = useState<{ key: SortKey; dir: SortDir }>({ key: 'bible', dir: 'asc' });
 
   // Clicar na ordenação ativa inverte a direção; em outra, começa pela direção mais útil.
-  const pickSort = (key: SortKey) =>
+  const pickSort = (key: SortKey) => {
+    trackFeature('study_sort');
     setSort((s) => (s.key === key ? { key, dir: s.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: key === 'date' ? 'desc' : 'asc' }));
+  };
 
   const entries = useMemo(() => {
     const list: Entry[] = [];
@@ -75,13 +78,19 @@ export function Study() {
           <div className="sheet-colors" role="group" aria-label={t('filterColor')}>
             <button className="swatch all" aria-pressed={color === null} aria-label={t('allColors')} onClick={() => setColor(null)} />
             {HL_COLORS.map((c) => (
-              <button key={c} className={`swatch c-${c}`} aria-pressed={color === c} aria-label={t(c)} onClick={() => setColor(color === c ? null : c)} />
+              <button key={c} className={`swatch c-${c}`} aria-pressed={color === c} aria-label={t(c)} onClick={() => {
+                trackFeature('study_filter');
+                setColor(color === c ? null : c);
+              }} />
             ))}
           </div>
           <div className="study-tools">
             <SearchField
               value={q}
-              onChange={setQ}
+              onChange={(v) => {
+                if (!q && v) trackFeature('study_search');
+                setQ(v);
+              }}
               placeholder={t('search')}
               aria-label={t('studySearch')}
               enterKeyHint="search"

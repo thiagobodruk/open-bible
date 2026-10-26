@@ -121,7 +121,7 @@ export const useAccount = create<AccountStore>((set) => ({
       const provider = new mod.GoogleAuthProvider();
       try {
         const { user } = await mod.signInWithPopup(auth, provider);
-        track('sign_in');
+        track('sign_in', { method: 'google' });
         if (await restoreIfDeleted(user.uid)) return 'restored';
       } catch (e) {
         // Alguns navegadores e PWAs instalados não abrem popup. Nesses casos o login segue por redirecionamento.

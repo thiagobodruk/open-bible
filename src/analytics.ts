@@ -7,10 +7,14 @@ import { useSettings } from './state/settings';
 import { useUI } from './state/ui';
 
 export type Consent = 'granted' | 'denied' | null;
-export type Feature = 'highlight' | 'note' | 'listen' | 'compare' | 'ask' | 'search';
+export type Feature =
+  | 'highlight' | 'note' | 'listen' | 'compare' | 'ask' | 'search' | 'xref' | 'copy' | 'share'
+  | 'study_filter' | 'study_search' | 'study_sort' | 'reading_settings';
 
 const KEY = 'ob:analytics';
-const SCREENS: Record<string, string> = { '': 'reader', '/study': 'study', '/library': 'library', '/settings': 'settings', '/privacy': 'privacy' };
+const SCREENS: Record<string, string> = { '': 'reader', '/study': 'study', '/library': 'library', '/settings': 'settings', '/terms': 'terms', '/privacy': 'privacy' };
+
+const READING_KEYS = ['theme', 'font', 'fontSize', 'lineHeight', 'margins', 'align', 'verseNumbers', 'textMode'] as const;
 
 export const analyticsAvailable = () => firebaseConfig !== null;
 
@@ -95,9 +99,13 @@ export function initAnalytics() {
   addEventListener('appinstalled', () => track('app_install'));
   useSettings.subscribe((s, prev) => {
     if (s.versionId !== prev.versionId) track('version_use', { version: s.versionId });
+    // Só ajustes de leitura: versão e idioma da interface têm eventos ou métricas próprios.
+    if (READING_KEYS.some((k) => s[k] !== prev[k])) trackFeature('reading_settings');
   });
   useUI.subscribe((s, prev) => {
-    if (s.sheet !== prev.sheet && (s.sheet === 'compare' || s.sheet === 'search')) trackFeature(s.sheet);
+    if (s.sheet === prev.sheet) return;
+    if (s.sheet === 'compare' || s.sheet === 'search') trackFeature(s.sheet);
+    else if (s.sheet === 'xrefs') trackFeature('xref');
   });
   useLibrary.subscribe((s, prev) => {
     if (!prev.ready) return;
