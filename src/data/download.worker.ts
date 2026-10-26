@@ -24,7 +24,7 @@ async function fetchText(url: string, expected: number): Promise<string> {
     stall = setTimeout(() => ctl.abort(), 30_000);
     chunks.push(value);
     got += value.length;
-    // O servidor pode comprimir, então o total real é uma estimativa: limita a 90% até terminar de baixar.
+    // The server may compress, so the real total is an estimate: cap at 90% until the download finishes.
     post({ type: 'progress', value: Math.min(0.9, got / expected) });
   }
   const all = new Uint8Array(got);

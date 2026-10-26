@@ -39,7 +39,7 @@ export function SearchSheet() {
   const bookName = useBookName();
   const [chapters, setChapters] = useState<IndexedChapter[] | null>(null);
 
-  // Lê a versão inteira do IndexedDB uma vez, ao abrir a busca.
+  // Reads the whole version from IndexedDB once, when the search opens.
   useEffect(() => {
     let live = true;
     setChapters(null);
@@ -53,7 +53,7 @@ export function SearchSheet() {
   const hits = useMemo(() => searchVerses(dq, chapters ?? []), [dq, chapters]);
   const shown = hits.slice(0, limit);
 
-  // Nova busca volta para a primeira página.
+  // A new search goes back to the first page.
   useEffect(() => setLimit(PAGE_SIZE), [dq, chapters]);
 
   const open = (book: string, chapter: number, verse?: number) => {
@@ -85,7 +85,7 @@ export function SearchSheet() {
           onKeyDown={(e) => {
             if (e.key !== 'Enter') return;
             e.preventDefault();
-            // Referência reconhecida abre a passagem; senão recolhe o teclado para mostrar os resultados.
+            // A recognized reference opens the passage; otherwise it dismisses the keyboard to show the results.
             if (ref) open(ref.book.id, ref.chapter, ref.verse);
             else e.currentTarget.blur();
           }}

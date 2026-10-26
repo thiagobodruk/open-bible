@@ -1,4 +1,4 @@
-/* Componentes genéricos: botões, sheet, segmented, toast */
+/* Generic components: buttons, sheet, segmented, toast */
 .icon-btn {
   display: inline-grid; place-items: center;
   width: 44px; height: 44px; border-radius: 50%;
@@ -43,10 +43,10 @@
 .sheet-head { display: flex; align-items: center; gap: 4px; min-height: 44px; padding: 4px 22px; flex: none; touch-action: none; }
 .sheet-head h2 { display: flex; align-items: center; gap: 10px; min-width: 0; font-size: 17px; font-weight: 600; }
 .sheet-head h2 svg { flex: none; }
-/* Sem título visível, o cabeçalho só tem o × (oculto no celular): não ocupa espaço. */
+/* With no visible title, the header only has the × (hidden on mobile): it takes no space. */
 @media (max-width: 719.98px) { .sheet-head.bare { min-height: 0; padding: 0; } }
 .sheet-trailing { margin-left: auto; margin-right: -10px; display: flex; }
-/* Botão × visível no desktop, onde arrastar o sheet para baixo é menos natural. No celular fica oculto, mas continua no DOM para teclado e leitor de tela. */
+/* × button visible on desktop, where dragging the sheet down is less natural. Hidden on mobile, but kept in the DOM for keyboard and screen reader. */
 .sheet-close { display: grid; margin-left: auto; margin-right: -10px; }
 @media (max-width: 719.98px) { .sheet-close:not(:focus-visible) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); margin: 0; } }
 .sheet-trailing + .sheet-close { margin-left: 0; }
@@ -58,18 +58,18 @@
   .sheet { bottom: 50%; transform: translate(-50%, calc(50% + var(--dy, 0px))); border-radius: 22px; animation: pop 0.2s ease-out; }
   .sheet.modeless { bottom: 24px; transform: translate(-50%, var(--dy, 0px)); border-radius: 22px; animation: rise 0.22s cubic-bezier(0.2, 0.8, 0.2, 1); }
 }
-/* Sheet sem fundo escurecido (seleção de versículo) */
+/* Sheet without a dimmed backdrop (verse selection) */
 .sheet.modeless { z-index: 35; box-shadow: 0 -6px 28px rgba(20, 22, 28, 0.18); }
 .sheet.modeless .sheet-body { padding-top: 0; }
-/* Prompt de IA: baixo e rente à borda inferior, como o campo de mensagem de um chat. */
+/* AI prompt: low and flush with the bottom edge, like a chat message field. */
 .sheet.compact { padding-bottom: calc(env(safe-area-inset-bottom, 0px) * 0.4 + 4px); }
 .sheet.compact .sheet-grip { margin-top: 8px; }
 .sheet.compact .sheet-head { min-height: 34px; padding-top: 0; padding-bottom: 0; }
 .sheet.compact .sheet-body { padding-top: 14px; padding-bottom: 8px; }
 .sheet.compact .ask-body { gap: 10px; }
 
-/* Ações do sheet: ícone sobre o texto, no mesmo formato em seleção e menu */
-/* Seis ações em duas linhas de três. Sem a IA são cinco: três na primeira linha e duas na segunda, cada linha ocupando toda a largura. */
+/* Sheet actions: icon above the text, same format in selection and menu */
+/* Six actions in two rows of three. Without AI there are five: three on the first row and two on the second, each row filling the full width. */
 .sheet-actions { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
 .sheet-actions > * { grid-column: span 2; }
 .sheet-actions.five > :nth-child(n + 4) { grid-column: span 3; }
@@ -95,7 +95,7 @@
 .seg button { min-height: 36px; border-radius: 9px; font-size: 14px; color: var(--muted); padding: 0 8px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .seg button[aria-pressed='true'] { background: var(--bg); color: var(--fg); font-weight: 600; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
 
-/* Linha de lista */
+/* List row */
 .row { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 52px; padding: 8px 4px; text-align: left; border-radius: var(--radius-sm); }
 @media (hover: hover) { .row:hover { background: var(--surface); } }
 .row .grow { flex: 1; min-width: 0; }
@@ -118,7 +118,7 @@ label.row { cursor: pointer; }
 .toast button { color: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 @keyframes toast { from { opacity: 0; transform: translate(-50%, 10px); } }
 
-/* Marcadores de cor */
+/* Color markers */
 .dot { width: 14px; height: 14px; border-radius: 50%; flex: none; }
 .c-yellow { --c: var(--hl-yellow); } .c-green { --c: var(--hl-green); } .c-blue { --c: var(--hl-blue); }
 .c-pink { --c: var(--hl-pink); } .c-orange { --c: var(--hl-orange); }
@@ -138,14 +138,14 @@ label.row { cursor: pointer; }
 @media (hover: hover) { .btn-round:hover { background: var(--surface-2); } }
 .btn-round:active { background: var(--surface-2); }
 
-/* Com um sheet aberto, o toast sobe para o topo e não cobre as ações */
+/* With a sheet open, the toast moves to the top and does not cover the actions */
 body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top, 0px)); }
 
-/* Campo de busca fixo no topo de um sheet */
+/* Search field pinned at the top of a sheet */
 .sheet-pinned:has(> .search) { padding: 4px 22px 12px; }
 .sheet-pinned:has(> .search) + .sheet-body { padding-top: 8px; }
 .btn.block { display: flex; position: relative; width: 100%; }
-/* Em botões de largura total o ícone vai para a extremidade e o texto fica centralizado. */
+/* In full-width buttons the icon goes to the edge and the text stays centered. */
 .btn.block.lead, .btn.block.trail { padding: 0 46px; }
 .btn.block.lead > svg, .btn.block.trail > svg { position: absolute; top: 50%; margin: 0; transform: translateY(-50%); }
 .btn.block.lead > svg { left: 18px; }
@@ -154,7 +154,7 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .btn.block.sm.lead > svg { left: 14px; }
 .btn.block.sm.trail > svg { right: 14px; }
 
-/* Convite de instalação: cartão flutuante discreto no pé da tela */
+/* Install invitation: discreet floating card at the bottom of the screen */
 .install-banner {
   position: fixed; z-index: 30; left: 50%; transform: translateX(-50%);
   bottom: calc(16px + env(safe-area-inset-bottom, 0px));
@@ -166,7 +166,7 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 .install-banner .icon-btn { width: 36px; height: 36px; flex: none; }
 .install-banner .btn { flex: none; }
 
-/* Dica de gesto da primeira abertura */
+/* Gesture hint on first open */
 .swipe-hint {
   position: fixed; inset: 0; z-index: 38;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
@@ -176,10 +176,10 @@ body:has(.sheet) .toast { bottom: auto; top: calc(16px + env(safe-area-inset-top
 }
 .swipe-hint.leaving { animation: hint-out 0.35s ease-in forwards; }
 .hint-step { display: flex; flex-direction: column; align-items: center; gap: 16px; animation: hint-in 0.5s ease-out both; }
-/* Passo da IA: o texto e o dedo ficam sobre o botão flutuante, que sobe acima do fundo para receber o toque. */
+/* AI step: the text and finger sit over the floating button, which rises above the backdrop to receive the tap. */
 .swipe-hint.ai { justify-content: flex-end; align-items: flex-end; padding: 0 max(18px, env(safe-area-inset-right, 0px)) calc(22px + env(safe-area-inset-bottom, 0px)) 24px; }
-/* Texto na altura do botão, à esquerda dele; o dedo toca por cima. */
-/* Ícone acima do texto, ambos à direita; o texto fica na altura do botão, à esquerda dele. */
+/* Text at the button's height, to its left; the finger taps on top. */
+/* Icon above the text, both on the right; the text sits at the button's height, to its left. */
 .swipe-hint.ai .hint-step { align-items: flex-end; gap: 0; padding-right: 84px; text-align: right; max-width: 100%; }
 .swipe-hint.ai .tap-icon { margin: 0 4px 0 0; }
 .swipe-hint.ai .hint-step { animation-delay: 0.4s; }
@@ -199,7 +199,7 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 }
 @media (prefers-reduced-motion: reduce) { .swipe-icon, .tap-icon, body:has(.swipe-hint.ai) .ask-fab { animation: none; } }
 
-/* Leitura em voz alta */
+/* Read aloud */
 .listen-bar {
   position: fixed; z-index: 30; left: 50%; transform: translateX(-50%);
   bottom: calc(16px + env(safe-area-inset-bottom, 0px));
@@ -213,7 +213,7 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 .listen-bar .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .icon-btn.on { color: var(--accent); }
 
-/* Comparar versões */
+/* Compare versions */
 .compare-item { display: block; width: 100%; text-align: left; padding: 14px 0; border-bottom: 1px solid var(--line); }
 .compare-item:last-child { border-bottom: 0; }
 .compare-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 6px; font-size: 14px; }
@@ -223,7 +223,7 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 .compare + .btn { margin-top: 12px; }
 .compare-wait { min-height: 160px; }
 
-/* Perguntar à IA */
+/* Ask AI */
 .ask-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
 .ask-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
 .ask-chips::-webkit-scrollbar { display: none; }
@@ -266,7 +266,7 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 @keyframes ask-pulse { 50% { opacity: 0.3; } }
 @media (prefers-reduced-motion: reduce) { .ask-dots i { animation: none; opacity: 0.6; } }
 
-/* Botão flutuante da IA. Sobe quando há convite de instalação ou barra de leitura em voz alta, que o antecedem no DOM. */
+/* Floating AI button. Moves up when there is an install invitation or read-aloud bar, which precede it in the DOM. */
 .ask-fab {
   position: fixed; z-index: 25; right: max(18px, env(safe-area-inset-right, 0px)); bottom: calc(22px + env(safe-area-inset-bottom, 0px));
   display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%;

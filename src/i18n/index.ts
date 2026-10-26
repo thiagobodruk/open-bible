@@ -10,7 +10,7 @@ import ja from './locales/ja';
 
 export type Key = keyof Messages;
 type Params = Record<string, string | number>;
-/** Chaves que têm formas `_one` e `_other`. */
+/** Keys that have `_one` and `_other` forms. */
 export type PluralKey = { [K in Key]: K extends `${infer B}_one` ? B : never }[Key];
 
 export const LOCALES: Record<UiLang, Messages> = { en, 'pt-BR': ptBR, es, fr, de, 'zh-CN': zhCN, ja };
@@ -30,9 +30,9 @@ export function translatePlural(lang: UiLang, key: PluralKey, n: number, params?
 
 export interface Translator {
   (key: Key, params?: Params): string;
-  /** Texto com concordância de número: `t.n('verse', 3)`. */
+  /** Text with number agreement: `t.n('verse', 3)`. */
   n: (key: PluralKey, n: number, params?: Params) => string;
-  /** Tamanho em megabytes, com o separador decimal e a unidade do idioma. */
+  /** Size in megabytes, with the language's decimal separator and unit. */
   mb: (n: number) => string;
   lang: UiLang;
 }
@@ -45,16 +45,16 @@ export function makeTranslator(lang: UiLang): Translator {
   return t;
 }
 
-/** Tradutor para componentes: renderiza de novo quando o idioma da interface muda. */
+/** Translator for components: re-renders when the UI language changes. */
 export function useT(): Translator {
   const lang = useSettings((s) => s.uiLang);
   return useMemo(() => makeTranslator(lang), [lang]);
 }
 
-/** Tradutor para código fora de componentes (toasts, por exemplo). Lê o idioma atual a cada chamada. */
+/** Translator for code outside components (toasts, for example). Reads the current language on every call. */
 export const tr = (key: Key, params?: Params) => translate(useSettings.getState().uiLang, key, params);
 
-/** Divide um texto traduzido em `{icon}` para inserir um ícone no meio da frase. */
+/** Splits translated text on `{icon}` to insert an icon in the middle of the sentence. */
 export function splitIcon(text: string): [string, string] {
   const i = text.indexOf('{icon}');
   return i < 0 ? [text, ''] : [text.slice(0, i), text.slice(i + 6)];

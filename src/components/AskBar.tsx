@@ -13,7 +13,7 @@ import { useT } from '../i18n';
 
 const MAX_TEXT = 3000;
 
-/** Barra de pergunta no rodapé do leitor. O contexto é a seleção ou, sem seleção, o capítulo inteiro. */
+/** Question bar at the bottom of the reader. The context is the selection or, with no selection, the whole chapter. */
 export function AskBar() {
   const t = useT();
   const { book, chapter, selection } = useStudy();

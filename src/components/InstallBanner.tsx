@@ -5,7 +5,7 @@ import { useUI } from '../state/ui';
 import { canPromptInstall, dismissInstall, installOffered, isIOS, requestInstall, subscribeInstall } from '../install';
 import { Button } from './Button';
 
-/** Convite discreto para instalar o app. Aparece depois do primeiro download, sem cobrir a leitura. */
+/** Discreet invitation to install the app. Appears after the first download, without covering the reading. */
 export function InstallBanner({ hidden, hold = false }: { hidden: boolean; hold?: boolean }) {
   const t = useT();
   const open = useUI((s) => s.open);
@@ -13,7 +13,7 @@ export function InstallBanner({ hidden, hold = false }: { hidden: boolean; hold?
   const offered = useSyncExternalStore(subscribeInstall, installOffered);
   const [ready, setReady] = useState(false);
 
-  // Espera a dica de gesto sair e mais um pouco, para não disputar a atenção com ela.
+  // Waits for the gesture hint to leave plus a little more, so it doesn't compete for attention with it.
   useEffect(() => {
     if (hold) return;
     const id = setTimeout(() => setReady(true), 3000);

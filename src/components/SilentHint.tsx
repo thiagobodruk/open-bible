@@ -3,8 +3,8 @@ import { SpeakerSlash } from '@phosphor-icons/react';
 import { useT } from '../i18n';
 
 /**
- * Aviso do modo silencioso no iOS, mostrado na primeira vez que o usuário pede para ouvir.
- * O toque fecha o aviso e inicia a leitura no mesmo gesto, que o iOS exige para liberar o áudio.
+ * Silent mode notice on iOS, shown the first time the user asks to listen.
+ * The tap closes the notice and starts playback in the same gesture, which iOS requires to unlock audio.
  */
 export function SilentHint({ onConfirm, onDone }: { onConfirm: () => void; onDone: () => void }) {
   const t = useT();

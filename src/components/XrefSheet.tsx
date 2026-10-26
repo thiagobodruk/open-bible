@@ -17,7 +17,7 @@ interface Item extends Xref {
 
 type State = { status: 'loading' } | { status: 'error' } | { status: 'ready'; items: Item[] };
 
-/** Versículos relacionados aos selecionados, no texto da versão em uso. Tocar em um deles abre a leitura. */
+/** Verses related to the selected ones, in the text of the version in use. Tapping one opens the reading. */
 export function XrefSheet() {
   const t = useT();
   const close = useUI((s) => s.close);

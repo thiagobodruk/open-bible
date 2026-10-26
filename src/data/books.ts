@@ -5,7 +5,7 @@ export interface Book {
   testament: 'AT' | 'NT';
 }
 
-// Nomes em pt-BR e contagem de capítulos do cânone protestante. Na versão final os nomes vêm do arquivo da versão.
+// Names in pt-BR and chapter counts of the Protestant canon. In the final version the names come from the version file.
 const raw: [string, string, number][] = [
   ['gn', 'Gênesis', 50], ['ex', 'Êxodo', 40], ['lv', 'Levítico', 27], ['nm', 'Números', 36],
   ['dt', 'Deuteronômio', 34], ['js', 'Josué', 24], ['jz', 'Juízes', 21], ['rt', 'Rute', 4],

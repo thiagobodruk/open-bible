@@ -13,9 +13,9 @@ const apply = registerSW({
 });
 
 /**
- * Ativa o worker que está esperando e recarrega quando ele assume a página.
- * No iOS o evento controllerchange pode não chegar, então também escuta o próprio worker
- * e recarrega por tempo se nada acontecer.
+ * Activates the waiting worker and reloads when it takes over the page.
+ * On iOS the controllerchange event may not arrive, so it also listens to the worker itself
+ * and reloads on a timeout if nothing happens.
  */
 function activate() {
   const w = registration?.waiting;
@@ -36,8 +36,8 @@ const RECHECK = 10 * 60 * 1000;
 let lastCheck = Date.now();
 
 /**
- * A versão nova espera em segundo plano e entra quando o app sai de cena, sem interromper a leitura.
- * Ao voltar para o app, busca uma versão nova (no máximo a cada 10 minutos), que entrará na próxima saída.
+ * The new version waits in the background and takes over when the app goes out of view, without interrupting reading.
+ * When returning to the app, it checks for a new version (at most every 10 minutes), which will take over on the next exit.
  */
 export function initUpdates() {
   document.addEventListener('visibilitychange', () => {
@@ -54,7 +54,7 @@ export type UpdateResult = 'updating' | 'latest' | 'offline';
 
 const TIMEOUT = 20000;
 
-/** Espera o worker chegar a um dos estados, ou desiste no tempo limite. */
+/** Waits for the worker to reach one of the states, or gives up at the timeout. */
 const until = (w: ServiceWorker, states: ServiceWorkerState[]) =>
   new Promise<void>((resolve) => {
     if (states.includes(w.state)) return resolve();
@@ -62,7 +62,7 @@ const until = (w: ServiceWorker, states: ServiceWorkerState[]) =>
     setTimeout(resolve, TIMEOUT);
   });
 
-/** Busca uma versão nova agora e, se houver, aplica e recarrega a página. */
+/** Checks for a new version now and, if there is one, applies it and reloads the page. */
 export async function checkForUpdate(): Promise<UpdateResult> {
   if (waiting) {
     activate();
@@ -82,7 +82,7 @@ export async function checkForUpdate(): Promise<UpdateResult> {
     activate();
     return 'updating';
   }
-  // O worker novo já assumiu sozinho (por exemplo, na primeira sessão): basta recarregar.
+  // The new worker already took over on its own (for example, on the first session): just reload.
   if (registration.active !== before) {
     location.reload();
     return 'updating';
@@ -100,7 +100,7 @@ export const currentBuild: BuildInfo = { version: __APP_VERSION__, build: __APP_
 /** "1.0.0 (a1b2c3d)" */
 export const buildLabel = (b: BuildInfo) => `v${b.version} (${b.build})`;
 
-/** O que está publicado agora. Nulo sem conexão ou fora do site publicado. */
+/** What is published right now. Null without a connection or outside the published site. */
 export async function fetchLatestBuild(): Promise<BuildInfo | null> {
   try {
     const r = await fetch(`${import.meta.env.BASE_URL}version.json`, { cache: 'no-store' });

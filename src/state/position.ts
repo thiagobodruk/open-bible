@@ -1,4 +1,4 @@
-// Posição de leitura: espelho síncrono em localStorage, para abrir já no lugar certo.
+// Reading position: synchronous mirror in localStorage, so the app opens in the right place.
 import { getJson, setJson } from '../storage';
 
 const KEY = 'ob:position';

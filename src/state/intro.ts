@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { getItem, setItem } from '../storage';
 
-/** A abertura inicial (entrar ou pular, e as telas de apresentação) aparece uma única vez. */
+/** The initial intro (sign in or skip, and the presentation screens) shows only once. */
 const KEY = 'ob:intro';
 
-// Sem armazenamento a abertura não aparece, para não repetir a cada visita.
+// Without storage the intro does not show, to avoid repeating on every visit.
 const seen = () => getItem(KEY, '1') === '1';
 
 interface IntroStore {

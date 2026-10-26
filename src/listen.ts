@@ -3,8 +3,8 @@ import { useStudy } from './state/study';
 import { detectIOS } from './install';
 import { getItem, getJson, setItem, setJson } from './storage';
 
-// Leitura em voz alta com as vozes do sistema (Web Speech API). Lê um versículo por vez,
-// o que permite destacar o trecho atual e retomar de onde parou.
+// Read-aloud with the system voices (Web Speech API). Reads one verse at a time,
+// which lets us highlight the current passage and resume from where it stopped.
 
 const KEY = 'ob:listen';
 
@@ -12,7 +12,7 @@ export const RATES = [0.75, 1, 1.25, 1.5] as const;
 
 interface Prefs {
   rate: number;
-  /** Identificador da voz escolhida, por prefixo de idioma. */
+  /** Identifier of the chosen voice, by language prefix. */
   voices: Record<string, string>;
   next: boolean;
 }
@@ -25,21 +25,21 @@ const savePrefs = (p: Prefs) => setJson(KEY, p);
 
 export const listenSupported = () => typeof speechSynthesis !== 'undefined' && typeof SpeechSynthesisUtterance !== 'undefined';
 
-// Alguns navegadores só carregam a lista de vozes depois da primeira consulta. Fazer isso na abertura
-// evita esperar no toque do usuário, que no iOS precisa iniciar a fala.
+// Some browsers only load the voice list after the first query. Doing it at startup
+// avoids waiting on the user's tap, which on iOS must start the speech.
 if (listenSupported()) speechSynthesis.getVoices();
 
 const base = (lang: string) => lang.toLowerCase().split(/[-_]/)[0];
 
-/** Vozes do sistema para o idioma da versão. */
+/** System voices for the version's language. */
 export function voicesFor(lang: string): SpeechSynthesisVoice[] {
   if (!listenSupported()) return [];
   const b = base(lang);
   return speechSynthesis.getVoices().filter((v) => base(v.lang) === b);
 }
 
-/** Só a voz que a pessoa escolheu. Sem escolha, o sistema usa a voz padrão do idioma: no iOS, algumas vozes
- * listadas não estão baixadas e ficam mudas, e a padrão é a que sabemos que funciona. */
+/** Only the voice the person chose. Without a choice, the system uses the language's default voice: on iOS, some voices
+ * that are listed are not downloaded and stay silent, and the default is the one we know works. */
 function chosenVoice(lang: string): SpeechSynthesisVoice | undefined {
   const saved = loadPrefs().voices[base(lang)];
   return saved ? voicesFor(lang).find((v) => v.voiceURI === saved) : undefined;
@@ -49,9 +49,9 @@ type Status = 'idle' | 'playing' | 'paused';
 
 interface ListenStore extends Prefs {
   status: Status;
-  /** Versículo em leitura (1 a n). */
+  /** Verse being read (1 to n). */
   verse: number | null;
-  /** O capítulo acabou e o próximo ainda precisa ser carregado para continuar. */
+  /** The chapter ended and the next one still needs to be loaded to continue. */
   advancing: boolean;
   setRate: (r: number) => void;
   setVoice: (lang: string, uri: string) => void;
@@ -83,21 +83,21 @@ const pick = ({ rate, voices, next }: Prefs): Prefs => ({ rate, voices, next });
 
 let verses: string[] = [];
 let lang = 'en';
-// Cada fala recebe um número; respostas de falas canceladas são ignoradas.
+// Each utterance gets a number; callbacks from cancelled utterances are ignored.
 let token = 0;
-/** Chamado quando uma fala não começa. Definido pela interface para mostrar o aviso. */
+/** Called when an utterance does not start. Set by the interface to show the notice. */
 let onSilent: (() => void) | undefined;
 export function setSilentHandler(fn: () => void) {
   onSilent = fn;
 }
-// O navegador pode coletar a fala em curso se ninguém guardar a referência.
+// The browser may garbage-collect the ongoing utterance if nobody keeps the reference.
 let current: SpeechSynthesisUtterance | null = null;
 
 function speakAt(n: number) {
   const token0 = ++token;
   if (n > verses.length) return finishChapter();
-  // Chamar speak() logo depois de cancel() faz iOS e Chrome engolirem a fala. Só cancela se há algo em curso
-  // e, nesse caso, dá um instante antes de falar de novo. O primeiro toque fala na hora, ainda dentro do gesto.
+  // Calling speak() right after cancel() makes iOS and Chrome swallow the speech. It only cancels if something is ongoing
+  // and, in that case, waits a moment before speaking again. The first tap speaks right away, still inside the gesture.
   if (speechSynthesis.speaking || speechSynthesis.pending) {
     speechSynthesis.cancel();
     setTimeout(() => {
@@ -112,7 +112,7 @@ function say(n: number, token0: number) {
   u.rate = useListen.getState().rate;
   const voice = chosenVoice(lang);
   if (voice) u.voice = voice;
-  // Se a fala não começa, quase sempre é o botão de silêncio ou uma voz sem áudio: avisa em vez de ficar mudo.
+  // If the speech does not start, it is almost always the silent switch or a voice without audio: it warns instead of staying mute.
   const silent = setTimeout(() => {
     if (token0 === token) onSilent?.();
   }, 4000);
@@ -127,20 +127,20 @@ function say(n: number, token0: number) {
   };
   current = u;
   useListen.setState({ status: 'playing', verse: n, advancing: false });
-  // No iOS o sintetizador pode ficar preso em pausa depois de um cancel.
+  // On iOS the synthesizer can get stuck paused after a cancel.
   speechSynthesis.resume();
   speechSynthesis.speak(u);
 }
 
 function finishChapter() {
   if (useListen.getState().next && useStudy.getState().step(1)) {
-    // O Reader retoma a leitura quando o texto do próximo capítulo chegar.
+    // The Reader resumes reading when the next chapter's text arrives.
     useListen.setState({ advancing: true });
     scrollTo(0, 0);
   } else stop();
 }
 
-/** Começa a ler. Devolve falso quando não há voz para o idioma. */
+/** Starts reading. Returns false when there is no voice for the language. */
 export function start(text: string[], language: string, from = 1): boolean {
   if (!listenSupported() || text.length === 0) return false;
   if (voicesFor(language).length === 0) return false;
@@ -150,7 +150,7 @@ export function start(text: string[], language: string, from = 1): boolean {
   return true;
 }
 
-/** Continua a leitura no capítulo recém-aberto. */
+/** Continues reading in the newly opened chapter. */
 export function resume(text: string[], language: string) {
   start(text, language, 1);
 }
@@ -178,7 +178,7 @@ export function stop() {
 
 const HINT_KEY = 'ob:listen-hint';
 
-/** No iOS o botão de silêncio cala a fala e o app não tem como saber. Avisa uma única vez, antes da primeira leitura. */
+/** On iOS the silent switch mutes the speech and the app has no way to know. Warns only once, before the first reading. */
 export function silentHintDue(): boolean {
   if (!detectIOS()) return false;
   return !getItem(HINT_KEY, '1');

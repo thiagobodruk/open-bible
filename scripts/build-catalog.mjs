@@ -1,4 +1,4 @@
-// Gera src/data/catalog.json a partir do repo thiagobodruk/bible, fixado em um commit.
+// Generates src/data/catalog.json from the thiagobodruk/bible repo, pinned to a commit.
 // Uso: node scripts/build-catalog.mjs [sha]
 import { writeFile } from 'node:fs/promises';
 

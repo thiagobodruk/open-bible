@@ -2,7 +2,7 @@ import { getItem, setItem } from './storage';
 
 const KEY = 'ob:hint-pager';
 
-/** O aviso de gestos aparece uma única vez. Sem armazenamento disponível, não aparece, para não repetir a cada abertura. */
+/** The gestures hint shows only once. Without available storage it does not show, to avoid repeating on every launch. */
 export function hintPending(): boolean {
   return !getItem(KEY, '1');
 }

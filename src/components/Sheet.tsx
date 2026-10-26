@@ -4,31 +4,31 @@ import { useT } from '../i18n';
 
 interface Props {
   title: string;
-  /** Ícone ao lado do título. */
+  /** Icon next to the title. */
   icon?: Icon;
-  /** Mantém o título só para leitores de tela. */
+  /** Keeps the title for screen readers only. */
   hideTitle?: boolean;
   onClose: () => void;
   children: ReactNode;
   leading?: ReactNode;
-  /** Ação no canto direito do cabeçalho. */
+  /** Action in the right corner of the header. */
   trailing?: ReactNode;
   tall?: boolean;
-  /** Conteúdo fixo entre o título e a área rolável. */
+  /** Fixed content between the title and the scrollable area. */
   pinned?: ReactNode;
-  /** Conteúdo fixo no rodapé, abaixo da área rolável. */
+  /** Fixed content in the footer, below the scrollable area. */
   footer?: ReactNode;
-  /** Mais baixo, com o conteúdo rente à borda inferior (prompt de IA). */
+  /** Lower, with the content flush with the bottom edge (AI prompt). */
   compact?: boolean;
-  /** Sem fundo escurecido e sem tomar o foco: a página atrás continua tocável. */
+  /** No dimmed backdrop and no focus taking: the page behind stays tappable. */
   modeless?: boolean;
 }
 
-const CLOSE_DISTANCE = 110; // px arrastados para fechar
+const CLOSE_DISTANCE = 110; // px dragged to close
 const CLOSE_VELOCITY = 0.6; // px/ms
 const ANIM = 180;
 
-/** Bottom sheet padrão. Fecha ao arrastar para baixo, tocar fora (se houver fundo) ou com Esc. O botão × fica visível no desktop e só para teclado e leitor de tela no celular. */
+/** Standard bottom sheet. Closes by dragging down, tapping outside (if there is a backdrop) or with Esc. The × button is visible on desktop and only for keyboard and screen reader on mobile. */
 export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, leading, trailing, tall, pinned, footer, compact, modeless }: Props) {
   const t = useT();
   const ref = useRef<HTMLDivElement>(null);
@@ -42,7 +42,7 @@ export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, lea
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') return close.current();
       if (e.key !== 'Tab' || modeless || !ref.current) return;
-      // Foco preso: Tab circula dentro do sheet em vez de ir para a página atrás.
+      // Focus trap: Tab cycles inside the sheet instead of going to the page behind.
       const items = [...ref.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])')];
       if (items.length === 0) return e.preventDefault();
       const first = items[0];
@@ -66,7 +66,7 @@ export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, lea
     };
   }, [modeless]);
 
-  // Arrastar para baixo: toque em qualquer ponto (se o conteúdo estiver no topo) e mouse pelo cabeçalho.
+  // Drag down: touch anywhere (if the content is at the top) and mouse by the header.
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -133,7 +133,7 @@ export function Sheet({ title, icon: HeadIcon, hideTitle, onClose, children, lea
     el.addEventListener('touchend', te);
     el.addEventListener('touchcancel', te);
 
-    // Mouse (desktop): só pelo cabeçalho.
+    // Mouse (desktop): only by the header.
     const md = (e: PointerEvent) => {
       const t = e.target as HTMLElement;
       if (e.pointerType !== 'mouse' || !t.closest('.sheet-grip, .sheet-head') || t.closest('button, a')) return;

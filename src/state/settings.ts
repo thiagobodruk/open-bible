@@ -25,7 +25,7 @@ export interface Settings {
 
 const SUPPORTED: UiLang[] = ['en', 'pt-BR', 'es', 'fr', 'de', 'zh-CN', 'ja'];
 
-/** Idioma da interface a partir das preferências do navegador. Sem correspondência, inglês. */
+/** UI language from the browser preferences. Falls back to English when nothing matches. */
 export function detectUiLang(langs: readonly string[] = navigator.languages?.length ? navigator.languages : [navigator.language]): UiLang {
   for (const l of langs) {
     const base = l.toLowerCase().split('-')[0];
@@ -56,7 +56,7 @@ const load = (): Settings => ({ ...DEFAULTS, ...getJson<Partial<Settings>>(KEY, 
 
 interface SettingsStore extends Settings {
   set: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
-  /** Restaura só os ajustes de leitura. Idioma da interface e versão ficam como estão. */
+  /** Resets only the reading settings. UI language and version stay as they are. */
   resetText: () => void;
 }
 

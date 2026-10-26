@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-/** Bloco de uma tela ou folha: título em caixa-alta e o conteúdo logo abaixo. */
+/** Block of a screen or sheet: uppercase title and the content right below. */
 export function Section({ title, children }: { title?: ReactNode; children: ReactNode }) {
   return (
     <section className="section">

@@ -3,12 +3,12 @@ import { HandSwipeLeft, HandTap } from '@phosphor-icons/react';
 import { useAsk } from '../state/ask';
 import { useT } from '../i18n';
 
-const SWIPE_MS = 4400; // duas voltas do gesto
-const GUARD_MS = 1000; // depois de cada passo, toques rápidos não pulam o próximo
+const SWIPE_MS = 4400; // two loops of the gesture
+const GUARD_MS = 1000; // after each step, quick taps don't skip the next one
 
 /**
- * Dicas da primeira abertura. Primeiro mostra o gesto de paginar; depois, com a IA ativa, aponta para o botão
- * flutuante e espera o toque nele. Cada passo entra e sai com fade; tocar fora ou abrir o prompt encerra.
+ * First-launch hints. First shows the paging gesture; then, with AI enabled, points to the
+ * floating button and waits for a tap on it. Each step fades in and out; tapping outside or opening the prompt ends it.
  */
 export function SwipeHint({ onDone, withAi }: { onDone: () => void; withAi: boolean }) {
   const t = useT();

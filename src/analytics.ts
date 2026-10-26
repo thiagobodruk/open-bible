@@ -1,5 +1,5 @@
-// Estatísticas de uso anônimas (Google Analytics pelo Firebase). Só funcionam com o consentimento de quem usa.
-// Os eventos dizem apenas que algo foi usado. Nunca levam texto de versículo, notas nem perguntas à IA.
+// Anonymous usage statistics (Google Analytics via Firebase). They only run with the user's consent.
+// Events only say that something was used. They never carry verse text, notes or AI questions.
 import { create } from 'zustand';
 import { firebaseConfig } from './firebase-config';
 import { useLibrary } from './state/library';
@@ -46,7 +46,7 @@ interface Loaded {
 
 let loading: Promise<Loaded | null> | null = null;
 
-/** Carrega o Analytics só depois do consentimento. Sem coleta de sinais do Google para anúncios. */
+/** Loads Analytics only after consent. No Google signals collection for ads. */
 function load(): Promise<Loaded | null> {
   loading ??= (async () => {
     const [{ getApps, initializeApp }, mod] = await Promise.all([import('firebase/app'), import('firebase/analytics')]);
@@ -61,7 +61,7 @@ function load(): Promise<Loaded | null> {
   return loading;
 }
 
-/** Registra um evento. Sem consentimento, não faz nada. */
+/** Records an event. Without consent, does nothing. */
 export function track(name: string, params?: Params) {
   if (useAnalytics.getState().consent !== 'granted') return;
   void load().then((l) => {
@@ -74,7 +74,7 @@ export const trackFeature = (feature: Feature) => track('feature_use', { feature
 
 let started = false;
 
-/** Liga os observadores de telas, versões e instalação e aplica a escolha atual. */
+/** Wires up the screen, version and install observers and applies the current choice. */
 export function initAnalytics() {
   if (started || !analyticsAvailable()) return;
   started = true;
@@ -92,7 +92,7 @@ export function initAnalytics() {
   addEventListener('appinstalled', () => track('app_install'));
   useSettings.subscribe((s, prev) => {
     if (s.versionId !== prev.versionId) track('version_use', { version: s.versionId });
-    // Só ajustes de leitura: versão e idioma da interface têm eventos ou métricas próprios.
+    // Reading settings only: version and interface language have their own events or metrics.
     if (READING_KEYS.some((k) => s[k] !== prev[k])) trackFeature('reading_settings');
   });
   useUI.subscribe((s, prev) => {

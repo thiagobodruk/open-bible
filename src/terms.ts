@@ -1,6 +1,6 @@
 import type { UiLang } from './state/settings';
 
-/** Versão dos termos e da política que a pessoa aceita. Ao mudar o texto de qualquer um, atualize a data. */
+/** Version of the terms and policy the person accepts. When changing the text of either, update the date. */
 export const TERMS_VERSION = '2026-10-25';
 
 interface Doc {
@@ -8,7 +8,7 @@ interface Doc {
   sections: { h: string; p: string[] }[];
 }
 
-/** Termos de uso por idioma. O inglês é a referência; ao mudar o texto, atualize todos e a data. */
+/** Terms of use by language. English is the reference; when changing the text, update all of them and the date. */
 export const TERMS: Record<UiLang, Doc> = {
   en: {
     updated: 'Last updated: October 25, 2026',

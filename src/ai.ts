@@ -1,4 +1,4 @@
-/** Cliente do Worker de IA (worker/). Sem VITE_AI_URL no build, o recurso fica desligado. */
+/** AI Worker client (worker/). Without VITE_AI_URL at build time, the feature is off. */
 export const AI_URL: string = import.meta.env.VITE_AI_URL ?? '';
 export const aiEnabled = AI_URL.length > 0;
 
@@ -6,7 +6,7 @@ export interface AiPassage {
   ref: string;
   version: string;
   text: string;
-  /** O capítulo inteiro, quando o trecho é uma seleção: para onde a pill volta ao remover o verso. */
+  /** The whole chapter, when the passage is a selection: where the pill goes back to when a verse is removed. */
   wide?: { ref: string; text: string };
 }
 
@@ -15,7 +15,7 @@ export interface AiMessage {
   content: string;
 }
 
-/** limit: muitas perguntas em um minuto. daily: o limite do dia deste aparelho. busy: a cota do serviço acabou. */
+/** limit: too many questions in one minute. daily: this device's daily limit. busy: the service quota ran out. */
 export type AiErrorKind = 'offline' | 'limit' | 'daily' | 'busy' | 'failed';
 
 export class AiError extends Error {
@@ -33,7 +33,7 @@ interface Request {
   onText: (chunk: string) => void;
 }
 
-/** Envia a pergunta e entrega a resposta aos poucos, lendo o fluxo de eventos no formato OpenAI. */
+/** Sends the question and delivers the answer piece by piece, reading the event stream in OpenAI format. */
 export async function askAI({ question, passage, lang, history, signal, onText }: Request): Promise<void> {
   let res: Response;
   try {
@@ -75,7 +75,7 @@ export async function askAI({ question, passage, lang, history, signal, onText }
             onText(piece);
           }
         } catch {
-          /* linha incompleta ou de outro tipo */
+          /* incomplete line or of another type */
         }
       }
     }

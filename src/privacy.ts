@@ -7,7 +7,7 @@ interface Policy {
   sections: { h: string; p: string[] }[];
 }
 
-/** Política de privacidade por idioma. O inglês é a referência; ao mudar o texto, atualize todos e a data. */
+/** Privacy policy by language. English is the reference; when changing the text, update all of them and the date. */
 export const PRIVACY: Record<UiLang, Policy> = {
   en: {
     updated: 'Last updated: October 25, 2026',

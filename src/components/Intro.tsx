@@ -13,7 +13,7 @@ type Step = 'signin' | 'offline' | 'study' | 'download';
 
 const ICONS = { signin: UserCircle, offline: BookOpenText, study: Sparkle } as const;
 
-/** Caixa de aceite dos termos de uso e da política de privacidade, com links para os dois textos. */
+/** Acceptance box for the terms of use and privacy policy, with links to both texts. */
 function TermsCheck() {
   const t = useT();
   const checked = useTerms((s) => s.checked);
@@ -30,14 +30,14 @@ function TermsCheck() {
   );
 }
 
-/** Primeira abertura, depois da splash: entrar com o Google (ou pular) e três telas de apresentação. */
+/** First launch, after the splash: sign in with Google (or skip) and three intro screens. */
 export function Intro() {
   const t = useT();
   const notify = useUI((s) => s.notify);
   const finish = useIntro((s) => s.finish);
   const user = useAccount((s) => s.user);
   const busy = useAccount((s) => s.busy);
-  // Quem já entrou não vê o passo de entrar: ao concluir o login, o mesmo índice passa a apontar para o slide seguinte.
+  // Users already signed in don't see the sign-in step: once login completes, the same index points to the next slide.
   const steps = useMemo<Step[]>(() => [...(accountAvailable() && !user ? (['signin'] as const) : []), 'offline', 'study', 'download'], [user]);
   const [i, setI] = useState(0);
   const step = steps[i];
@@ -49,14 +49,14 @@ export function Intro() {
   }, []);
 
   const accepted = useTerms((s) => s.checked);
-  // Sem aceitar os termos não há como entrar nem avançar.
+  // Without accepting the terms there is no way to sign in or move on.
   const next = () => {
     if (step === 'signin' && !accepted) return;
     setI((n) => Math.min(n + 1, steps.length - 1));
   };
   const prev = () => setI((n) => Math.max(n - 1, 0));
 
-  // Deslizar ou usar as setas avança e volta entre os slides.
+  // Swiping or using the arrows moves forward and back between slides.
   const touch = useRef<{ x: number; y: number } | null>(null);
   const onTouchEnd = (e: React.TouchEvent) => {
     const from = touch.current;
@@ -88,7 +88,7 @@ export function Intro() {
   const title = { signin: 'signInTitle', offline: 'introOfflineTitle', study: 'introStudyTitle' } as const;
   const body = { signin: 'signInBody', offline: 'introOfflineBody', study: 'introStudyBody' } as const;
 
-  // Escolher outra versão leva à Biblioteca, que fica atrás da apresentação enquanto ela estiver aberta.
+  // Choosing another version leads to the Library, which stays behind the intro while it is open.
   const chooseOther = () => {
     finish();
     go('/library');

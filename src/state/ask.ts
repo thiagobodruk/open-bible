@@ -3,7 +3,7 @@ import { trackFeature } from '../analytics';
 import { askAI, AiError, type AiErrorKind, type AiMessage, type AiPassage } from '../ai';
 
 interface AskStore {
-  /** A barra de pergunta no rodapé do leitor. */
+  /** The question bar at the bottom of the reader. */
   bar: boolean;
   toggleBar: () => void;
   openBar: () => void;
@@ -12,18 +12,18 @@ interface AskStore {
   messages: AiMessage[];
   status: 'idle' | 'loading' | 'streaming' | 'error';
   error: AiErrorKind | null;
-  /** Começa uma conversa nova sobre o trecho. */
+  /** Starts a new conversation about the passage. */
   start: (question: string, passage: AiPassage, lang: string) => void;
   /** Continua a conversa atual. */
   followUp: (question: string, lang: string) => void;
   retry: (lang: string) => void;
-  /** Troca a seleção pelo capítulo inteiro nas próximas perguntas. */
+  /** Swaps the selection for the whole chapter in the next questions. */
   widen: () => void;
-  /** Interrompe a resposta em andamento. */
+  /** Stops the answer in progress. */
   stop: () => void;
 }
 
-/** A resposta só aparece depois disso, para os pontinhos não piscarem. */
+/** The answer only shows after this, so the dots do not flicker. */
 const MIN_THINKING = 1000;
 
 let controller: AbortController | undefined;

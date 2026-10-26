@@ -1,6 +1,6 @@
 import type { UiLang } from './state/settings';
 
-/** Ditado pela API de reconhecimento de voz do navegador. Quem transcreve é o serviço do próprio navegador. */
+/** Dictation through the browser's speech recognition API. The transcription is done by the browser's own service. */
 interface Recognition {
   lang: string;
   interimResults: boolean;
@@ -40,7 +40,7 @@ interface Handlers {
   onError: (kind: DictationError) => void;
 }
 
-/** Começa a ouvir. Devolve uma função que interrompe. */
+/** Starts listening. Returns a function that stops it. */
 export function startDictation(lang: UiLang, { onText, onEnd, onError }: Handlers): (() => void) | null {
   const Recognizer = ctor();
   if (!Recognizer) return null;

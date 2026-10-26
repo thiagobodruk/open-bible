@@ -1,4 +1,4 @@
-/* Tokens de cor. Três temas completos; "auto" resolve para claro ou escuro antes do primeiro paint. */
+/* Color tokens. Three complete themes; "auto" resolves to light or dark before first paint. */
 :root {
   --bg: #faf9f7;
   --surface: #f1efeb;
@@ -26,7 +26,7 @@
   --radius: 14px;
   --radius-sm: 10px;
   --shadow: 0 10px 30px rgba(20, 22, 28, 0.16);
-  /* Barra de seleção e toast: branco no claro, preto no escuro */
+  /* Selection bar and toast: white in light, black in dark */
   --float-bg: #ffffff;
   --float-fg: var(--fg);
   --float-line: var(--line);

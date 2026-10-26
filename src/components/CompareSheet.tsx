@@ -18,7 +18,7 @@ interface Row {
   verses: { n: number; text: string }[];
 }
 
-/** Os versículos selecionados lado a lado em todas as versões baixadas. Tocar em uma versão abre a leitura nela. */
+/** The selected verses side by side in all downloaded versions. Tapping a version opens the reading in it. */
 export function CompareSheet() {
   const t = useT();
   const close = useUI((s) => s.close);

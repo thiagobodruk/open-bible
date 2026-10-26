@@ -28,7 +28,7 @@ export const useLibrary = create<LibraryStore>((set, get) => ({
     } catch {
       set({ ready: true });
     }
-    // Pede ao navegador que não apague os dados sozinho quando faltar espaço.
+    // Asks the browser not to evict the data on its own when space runs low.
     navigator.storage?.persist?.().catch(() => {});
   },
 

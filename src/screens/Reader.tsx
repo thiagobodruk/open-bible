@@ -35,7 +35,7 @@ export function Reader() {
   const [barMini, setBarMini] = useState(false);
   const [hint, setHint] = useState(false);
   const [silentHint, setSilentHint] = useState(false);
-  /** Versículo que recebe o Tab: só um por capítulo, as setas movem entre eles. */
+  /** Verse that receives Tab: only one per chapter, arrows move between them. */
   const [tabV, setTabV] = useState(1);
   const [dir, setDir] = useState<'next' | 'prev' | null>(null);
   const touch = useRef<{ x: number; y: number } | null>(null);
@@ -63,7 +63,7 @@ export function Reader() {
     else trackFeature('listen');
   };
 
-  // O toque no aviso do modo silencioso inicia a leitura, já dentro do gesto do usuário.
+  // Tapping the silent mode notice starts playback, already inside the user gesture.
   const confirmSilentHint = () => {
     markSilentHintSeen();
     if (!start(verses, versionInfo?.lang ?? 'en')) notify(t('listenNoVoice'));
@@ -81,14 +81,14 @@ export function Reader() {
     }
   };
 
-  // A posição salva pode não existir na versão atual (por exemplo, uma versão só com o NT).
+  // The saved position may not exist in the current version (for example, an NT-only version).
   useEffect(() => {
     if (!installed || books.some((x) => x.id === book && chapter <= x.chapters)) return;
     const target = books.find((x) => x.id === book) ?? books[0];
     if (target) useStudy.getState().goTo(target.id, 1);
   }, [installed, books, book, chapter]);
 
-  // Trocar de capítulo por conta própria encerra a leitura. Quando ela mesma avança, continua no novo texto.
+  // Changing chapter manually stops playback. When playback advances by itself, it continues in the new text.
   useEffect(() => {
     const l = useListen.getState();
     if (l.status !== 'idle' && !l.advancing) stop();
@@ -107,7 +107,7 @@ export function Reader() {
   }, [notify, t]);
   useEffect(() => () => stop(), []);
 
-  // Acompanha o versículo lido, sem rolar se ele já está à vista.
+  // Follows the verse being read, without scrolling if it is already in view.
   useEffect(() => {
     if (listenVerse === null) return;
     const el = document.getElementById(`v-${listenVerse}`);
@@ -116,7 +116,7 @@ export function Reader() {
     if (r.top < 110 || r.bottom > innerHeight - 110) el.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }, [listenVerse]);
 
-  // Barra retrátil: some ao rolar para baixo, volta ao rolar para cima.
+  // Collapsible bar: hides on scroll down, returns on scroll up.
   useEffect(() => {
     let last = scrollY;
     const onScroll = () => {
@@ -142,7 +142,7 @@ export function Reader() {
     return () => removeEventListener('keydown', onKey);
   });
 
-  // Vem de Meu estudo com um versículo em foco
+  // Comes from My study with a verse in focus
   useEffect(() => {
     if (focusVerse === null) return;
     if (text.status === 'loading') return;
@@ -154,7 +154,7 @@ export function Reader() {
     clearFocus();
   }, [focusVerse, focusTo, clearFocus, book, chapter, text.status]);
 
-  // Dica de gesto só na primeira abertura. Vale como vista quando aparece ou quando o usuário já troca de capítulo.
+  // Gesture hint only on first launch. Counts as seen when it appears or when the user already changes chapter.
   useEffect(() => {
     if (!installed || !isMobile() || !hintPending()) return;
     const id = setTimeout(() => {
@@ -184,7 +184,7 @@ export function Reader() {
     const target = e.target as HTMLElement;
     const el = target.closest<HTMLElement>('[data-v]');
     if (el && target.closest('.note-mark')) {
-      // O ícone de nota abre a edição direto, com só aquele versículo selecionado.
+      // The note icon opens editing directly, with only that verse selected.
       const study = useStudy.getState();
       study.clearSelection();
       study.toggleVerse(Number(el.dataset.v));

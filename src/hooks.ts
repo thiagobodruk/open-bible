@@ -5,7 +5,7 @@ import { localBookName } from './i18n/books';
 import { useLibrary } from './state/library';
 import { useSettings } from './state/settings';
 
-/** Livros da versão em uso, com os nomes do arquivo da versão. Sem versão instalada, o cânone com nomes no idioma da interface. */
+/** Books of the version in use, with the names from the version file. Without an installed version, the canon with names in the interface language. */
 export function useBooks(): Book[] {
   const versionId = useSettings((s) => s.versionId);
   const uiLang = useSettings((s) => s.uiLang);
@@ -35,7 +35,7 @@ export type ChapterState =
   | { status: 'missing' }
   | { status: 'ready'; verses: string[] };
 
-/** Texto de um capítulo da versão em uso, lido do IndexedDB. */
+/** Text of a chapter of the version in use, read from IndexedDB. */
 export function useChapter(book: string, chapter: number): ChapterState {
   const versionId = useSettings((s) => s.versionId);
   const installed = useLibrary((s) => !!s.installed[versionId]);

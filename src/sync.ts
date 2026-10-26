@@ -1,6 +1,6 @@
-// Sincronização com o Firestore: notas, marcações, posição de leitura e ajustes de quem entrou com o Google.
-// O aparelho continua sendo a fonte de leitura: tudo funciona offline e as mudanças vão para a nuvem quando houver rede.
-// Em cada item vale o mais recente (updatedAt). Itens apagados viram marcadores (`deleted`) para a exclusão chegar aos outros aparelhos.
+// Firestore sync: notes, highlights, reading position and settings for users signed in with Google.
+// The device remains the source for reading: everything works offline and changes go to the cloud when there is a network.
+// For each item the most recent wins (updatedAt). Deleted items become markers (`deleted`) so the deletion reaches the other devices.
 import type { Firestore } from 'firebase/firestore';
 import { dbDelete, dbPut } from './db';
 import { savePosition } from './state/position';
@@ -16,7 +16,7 @@ const PREFS_AT = 'ob:sync-prefs-at';
 const FLUSH_DELAY = 1500;
 const PREFS_DELAY = 3000;
 const TIMEOUT = 15000;
-/** Ajustes de leitura sincronizados. Idioma da interface e versão ficam de fora: dependem do aparelho. */
+/** Synced reading settings. Interface language and version are left out: they depend on the device. */
 const PREF_KEYS = ['theme', 'font', 'fontSize', 'lineHeight', 'margins', 'align', 'verseNumbers', 'textMode'] as const satisfies readonly (keyof Settings)[];
 
 export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'offline' | 'error';
@@ -32,7 +32,7 @@ interface Session {
   uid: string;
   db: Firestore;
   fs: typeof import('firebase/firestore');
-  /** A primeira busca na nuvem já deu certo. */
+  /** The first fetch from the cloud has already succeeded. */
   pulled: boolean;
   stop: () => void;
 }
@@ -56,7 +56,7 @@ const markDirty = (keys: string[]) => {
 const touchPrefs = () => setItem(PREFS_AT, String(Date.now()));
 const prefsAt = () => Number(getItem(PREFS_AT)) || 0;
 
-/** Liga a sincronização à conta que entrou. Chamar de novo com a mesma conta não faz nada. */
+/** Connects sync to the account that signed in. Calling again with the same account does nothing. */
 export async function startSync(uid: string) {
   if (session?.uid === uid) return;
   stopSync();
@@ -77,7 +77,7 @@ export async function startSync(uid: string) {
   };
   session = me;
 
-  // Dados de outra conta que sobraram neste aparelho já estão na nuvem dela: não entram na desta.
+  // Data from another account left on this device is already in that account's cloud: it does not go into this one.
   const owner = getItem(OWNER);
   if (owner && owner !== uid) await wipeLocal();
   setItem(OWNER, uid);
@@ -90,7 +90,7 @@ export async function startSync(uid: string) {
   } catch (e) {
     if (stopped) return;
     onStatus(navigator.onLine ? 'error' : 'offline');
-    // Sem rede ou com erro, o que ficou pendente segue marcado e sobe quando a conexão voltar.
+    // Without a network or on error, what is pending stays marked and goes up when the connection returns.
     watchOnline(me, cleanups);
     watchLocal(me, cleanups);
     throw e;
@@ -115,7 +115,7 @@ async function wipeLocal() {
     useStudy.setState({ highlights: {}, notes: [] });
     await Promise.all([dbDelete('highlights', Object.keys(highlights)), dbDelete('notes', notes.map((n) => n.id))]);
   } catch {
-    /* o que sobrar é sobrescrito pela mescla */
+    /* whatever is left is overwritten by the merge */
   } finally {
     applying = false;
   }
@@ -139,7 +139,7 @@ function parseRemote(id: string, raw: Record<string, unknown>): Remote<Note | Hi
   return { id, deleted: false, at, data: data as unknown as Note | Highlight };
 }
 
-/** Traz da nuvem tudo o que é mais novo do que o local e aplica no aparelho. Depois sobe o que só existe aqui ou é mais novo. */
+/** Pulls from the cloud everything newer than the local copy and applies it to the device. Then uploads what only exists here or is newer. */
 async function pullAll(s: Session) {
   const [notesSnap, hlSnap, prefsSnap] = await withTimeout(
     Promise.all([s.fs.getDocs(col(s, 'notes')), s.fs.getDocs(col(s, 'highlights')), s.fs.getDoc(s.fs.doc(s.db, 'users', s.uid, 'meta', 'prefs'))]),
@@ -149,7 +149,7 @@ async function pullAll(s: Session) {
   await applyRemote('notes', remoteNotes);
   await applyRemote('highlights', remoteHl);
 
-  // O que existe só neste aparelho, ou é mais novo que a nuvem, precisa subir.
+  // What exists only on this device, or is newer than the cloud, needs to go up.
   const st = useStudy.getState();
   const known = (list: Remote<unknown>[]) => new Map(list.map((r) => [r.id, r]));
   const rn = known(remoteNotes);
@@ -162,7 +162,7 @@ async function pullAll(s: Session) {
   applyPrefs(prefsSnap.exists() ? (prefsSnap.data() as Record<string, unknown>) : null, true);
 }
 
-/** Aplica no aparelho o que veio da nuvem, sem devolver a mudança para lá. */
+/** Applies to the device what came from the cloud, without sending the change back there. */
 async function applyRemote(name: Col, items: Remote<Note | Highlight>[]) {
   if (!items.length) return;
   const st = useStudy.getState();
@@ -172,7 +172,7 @@ async function applyRemote(name: Col, items: Remote<Note | Highlight>[]) {
   const del: string[] = [];
   for (const r of items) {
     const cur = local.get(r.id);
-    // Apagado aqui e ainda não enviado: a exclusão sobe em vez de o item voltar.
+    // Deleted here and not yet sent: the deletion goes up instead of the item coming back.
     if (!cur && dirty.has(dirtyKey(name, r.id))) continue;
     if (r.deleted) {
       if (cur && stamp(cur) <= r.at) {
@@ -199,7 +199,7 @@ async function applyRemote(name: Col, items: Remote<Note | Highlight>[]) {
 function applyPrefs(raw: Record<string, unknown> | null, initial: boolean) {
   const at = raw && typeof raw.updatedAt === 'number' ? raw.updatedAt : 0;
   if (!raw || at <= prefsAt()) {
-    // Sem ajustes na nuvem, ou os daqui são mais novos: sobem na próxima sincronização.
+    // No settings in the cloud, or the local ones are newer: they go up on the next sync.
     if (initial && (!raw || prefsAt() > at)) pendingPrefs = true;
     return;
   }
@@ -209,7 +209,7 @@ function applyPrefs(raw: Record<string, unknown> | null, initial: boolean) {
     const patch: Partial<Settings> = {};
     for (const k of PREF_KEYS) if (remote[k] !== undefined && typeof remote[k] === typeof DEFAULTS[k]) (patch as Record<string, unknown>)[k] = remote[k];
     useSettings.setState(patch);
-    // A posição só muda na abertura: trocar de capítulo no meio da leitura seria um susto.
+    // The position only changes on launch: switching chapters in the middle of reading would be a shock.
     const pos = raw.position as { book?: unknown; chapter?: unknown } | undefined;
     if (initial && pos && typeof pos.book === 'string' && Number.isInteger(pos.chapter) && (pos.chapter as number) > 0) {
       savePosition(pos.book, pos.chapter as number);
@@ -221,7 +221,7 @@ function applyPrefs(raw: Record<string, unknown> | null, initial: boolean) {
   }
 }
 
-/** Envia tudo o que está pendente. Itens que não existem mais viram marcadores de exclusão. */
+/** Sends everything that is pending. Items that no longer exist become deletion markers. */
 async function flush(s: Session) {
   if (session !== s || !navigator.onLine) return;
   const dirty = getJson<string[]>(DIRTY, []);
@@ -256,7 +256,7 @@ async function flush(s: Session) {
   } catch {
     onStatus(navigator.onLine ? 'error' : 'offline');
   } finally {
-    // Só sai da fila o que não mudou durante o envio.
+    // Only what did not change during the upload leaves the queue.
     const cur = useStudy.getState();
     const unchanged = (k: string) => {
       const [name, ...rest] = k.split('/');
@@ -275,7 +275,7 @@ function pushPrefs(s: Session) {
   return s.fs.setDoc(s.fs.doc(s.db, 'users', s.uid, 'meta', 'prefs'), { settings, position: { book, chapter }, updatedAt: prefsAt() || Date.now() });
 }
 
-/** Mudanças feitas neste aparelho: marca o que mudou e agenda o envio. */
+/** Changes made on this device: marks what changed and schedules the upload. */
 function watchLocal(s: Session, cleanups: (() => void)[]) {
   let flushTimer: ReturnType<typeof setTimeout> | undefined;
   let prefsTimer: ReturnType<typeof setTimeout> | undefined;
@@ -324,7 +324,7 @@ function watchLocal(s: Session, cleanups: (() => void)[]) {
   });
 }
 
-/** Mudanças vindas de outro aparelho chegam ao vivo enquanto o app está aberto. */
+/** Changes from another device arrive live while the app is open. */
 function watchRemote(s: Session, cleanups: (() => void)[]) {
   const listen = (name: Col) =>
     s.fs.onSnapshot(
@@ -355,7 +355,7 @@ function watchRemote(s: Session, cleanups: (() => void)[]) {
 function watchOnline(s: Session, cleanups: (() => void)[]) {
   const retry = () => {
     if (s.pulled) return void flush(s);
-    // A busca inicial falhou (sem rede): recomeça a sincronização desta conta.
+    // The initial fetch failed (no network): restarts sync for this account.
     stopSync();
     void startSync(s.uid).catch(() => undefined);
   };

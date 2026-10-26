@@ -1,6 +1,6 @@
-// Copiar e compartilhar com o que o aparelho oferecer.
+// Copy and share with whatever the device offers.
 
-/** Copia para a área de transferência. Devolve `false` se o navegador negar. */
+/** Copies to the clipboard. Returns `false` if the browser denies it. */
 export async function copyText(text: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(text);
@@ -13,8 +13,8 @@ export async function copyText(text: string): Promise<boolean> {
 export type ShareResult = 'shared' | 'copied' | 'cancelled' | 'failed';
 
 /**
- * Abre a folha de compartilhamento do sistema. Sem ela, copia o link (ou o texto).
- * Fechar a folha sem escolher nada é `cancelled`, não erro.
+ * Opens the system share sheet. Without it, copies the link (or the text).
+ * Closing the sheet without choosing anything is `cancelled`, not an error.
  */
 export async function shareOrCopy(data: { title?: string; text?: string; url?: string }): Promise<ShareResult> {
   if (!navigator.share) return (await copyText(data.url ?? data.text ?? '')) ? 'copied' : 'failed';

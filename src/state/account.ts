@@ -13,9 +13,9 @@ export interface Profile {
 
 export type SignInResult = 'ok' | 'restored' | 'cancelled' | 'offline' | 'failed';
 
-/** Último perfil conhecido, para o menu já abrir com a conta certa, mesmo offline. */
+/** Last known profile, so the menu opens with the right account, even offline. */
 const KEY = 'ob:account';
-/** Marca a ida ao Google por redirecionamento, para o Firebase carregar na volta. */
+/** Marks the trip to Google by redirect, so Firebase loads on return. */
 const REDIRECT = 'ob:auth-redirect';
 
 export const accountAvailable = () => firebaseConfig !== null;
@@ -39,7 +39,7 @@ interface Loaded {
 
 let loading: Promise<Loaded> | null = null;
 
-/** Carrega o Firebase só quando alguém precisa dele, para não pesar na primeira abertura. */
+/** Loads Firebase only when someone needs it, to keep the first open light. */
 export function warmAccount(): Promise<Loaded> {
   if (!loading) {
     loading = (async () => {
@@ -64,7 +64,7 @@ export function warmAccount(): Promise<Loaded> {
   return loading;
 }
 
-/** Grava no Firestore o aceite dos termos feito neste aparelho, uma vez por conta. Falhar aqui não impede o login. */
+/** Writes the terms acceptance made on this device to Firestore, once per account. Failing here does not block sign-in. */
 async function saveAcceptance(uid: string) {
   const a = savedAcceptance();
   const mark = `ob:terms-synced:${uid}`;
@@ -74,11 +74,11 @@ async function saveAcceptance(uid: string) {
     await fs.setDoc(fs.doc(fs.getFirestore(getApps()[0]), 'users', uid), { terms: { version: a.version, acceptedAt: a.at } }, { merge: true });
     setItem(mark, a.version);
   } catch {
-    /* tenta de novo no próximo login */
+    /* tries again on the next sign-in */
   }
 }
 
-/** Tira a marca de exclusão de uma conta que volta a entrar. Falhar aqui não impede o login. */
+/** Removes the deletion mark from an account that signs in again. Failing here does not block sign-in. */
 async function restoreIfDeleted(uid: string): Promise<boolean> {
   try {
     const [{ getApps }, fs] = await Promise.all([import('firebase/app'), import('firebase/firestore')]);
@@ -99,7 +99,7 @@ interface AccountStore {
   busy: boolean;
   signIn: () => Promise<SignInResult>;
   signOut: () => Promise<void>;
-  /** Exclusão suave: marca `users/{uid}.deletedAt` no Firestore e sai. A remoção definitiva dos dados é feita depois. */
+  /** Soft delete: sets `users/{uid}.deletedAt` in Firestore and signs out. Permanent removal of the data happens later. */
   deleteAccount: () => Promise<void>;
 }
 
@@ -117,12 +117,12 @@ export const useAccount = create<AccountStore>((set) => ({
         track('sign_in', { method: 'google' });
         if (await restoreIfDeleted(user.uid)) return 'restored';
       } catch (e) {
-        // Alguns navegadores e PWAs instalados não abrem popup. Nesses casos o login segue por redirecionamento.
+        // Some browsers and installed PWAs do not open popups. In those cases sign-in goes through a redirect.
         if (codeOf(e) !== 'auth/popup-blocked' && codeOf(e) !== 'auth/operation-not-supported-in-this-environment') throw e;
         try {
           sessionStorage.setItem(REDIRECT, '1');
         } catch {
-          /* sem a marca, o Firebase carrega na próxima abertura */
+          /* without the mark, Firebase loads on the next open */
         }
         await mod.signInWithRedirect(auth, provider);
       }
@@ -152,7 +152,7 @@ export const useAccount = create<AccountStore>((set) => ({
 
 onSyncStatus((sync) => useAccount.setState({ sync }));
 
-/** Na abertura, só carrega o Firebase de quem já tem conta ou acabou de voltar do login por redirecionamento. */
+/** On startup, loads Firebase only for people who already have an account or just returned from a redirect sign-in. */
 export function initAccount() {
   if (!accountAvailable()) return;
   let redirected = false;
@@ -160,7 +160,7 @@ export function initAccount() {
     redirected = sessionStorage.getItem(REDIRECT) === '1';
     sessionStorage.removeItem(REDIRECT);
   } catch {
-    /* segue sem a marca */
+    /* continues without the mark */
   }
   if (redirected || savedProfile()) void warmAccount().catch(() => undefined);
 }

@@ -4,7 +4,7 @@ import type { Icon, IconWeight } from '@phosphor-icons/react';
 interface Look {
   variant?: 'primary' | 'secondary';
   size?: 'md' | 'sm';
-  /** Ocupa a largura disponível. O ícone vai para a extremidade do botão e o texto fica centralizado. */
+  /** Takes the available width. The icon goes to the edge of the button and the text is centered. */
   block?: boolean;
   icon?: Icon;
   iconSide?: 'left' | 'right';
@@ -23,7 +23,7 @@ function Content({ icon: Glyph, iconSide = 'left', iconWeight = 'regular', size 
   return iconSide === 'left' ? <>{glyph}{children}</> : <>{children}{glyph}</>;
 }
 
-/** Botão primário ou secundário, sem ícone ou com ícone à esquerda ou à direita. */
+/** Primary or secondary button, with no icon or with an icon on the left or right. */
 export function Button({ variant, size, block, icon, iconSide, iconWeight, className, children, type = 'button', ...rest }: Look & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>) {
   const look = { variant, size, block, icon, iconSide, iconWeight, children };
   return (
@@ -33,7 +33,7 @@ export function Button({ variant, size, block, icon, iconSide, iconWeight, class
   );
 }
 
-/** Mesmo visual do botão, para links. */
+/** Same look as the button, for links. */
 export function ButtonLink({ variant, size, block, icon, iconSide, iconWeight, className, children, ...rest }: Look & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'children'>) {
   const look = { variant, size, block, icon, iconSide, iconWeight, children };
   return (
@@ -43,7 +43,7 @@ export function ButtonLink({ variant, size, block, icon, iconSide, iconWeight, c
   );
 }
 
-/** Botão redondo secundário, só com ícone e borda. O rótulo vira aria-label e dica. */
+/** Secondary round button, icon and border only. The label becomes aria-label and tooltip. */
 export function IconButton({ icon: Glyph, label, tone, iconWeight = 'light', className, type = 'button', ...rest }: {
   icon: Icon;
   label: string;

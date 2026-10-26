@@ -45,7 +45,7 @@ export function Study() {
   const [q, setQ] = useState('');
   const [sort, setSort] = useState<{ key: SortKey; dir: SortDir }>({ key: 'bible', dir: 'asc' });
 
-  // Clicar na ordenação ativa inverte a direção; em outra, começa pela direção mais útil.
+  // Clicking the active sort flips the direction; clicking another starts with the most useful direction.
   const pickSort = (key: SortKey) => {
     trackFeature('study_sort');
     setSort((s) => (s.key === key ? { key, dir: s.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: key === 'date' ? 'desc' : 'asc' }));

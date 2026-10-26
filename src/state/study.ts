@@ -17,11 +17,11 @@ export interface Highlight {
   chapter: number;
   verse: number;
   color: HlColor;
-  /** Texto e versão no momento da marcação, para exibir em Meu estudo. */
+  /** Text and version at the time of marking, to show in My study. */
   text: string;
   versionId: string;
   createdAt: number;
-  /** Última mudança de cor. Sem ele, vale createdAt. */
+  /** Last color change. Without it, createdAt applies. */
   updatedAt?: number;
 }
 
@@ -35,11 +35,11 @@ export interface Note {
   excerpt: string;
   versionId: string;
   createdAt: number;
-  /** Última edição. Sem ele, vale createdAt. */
+  /** Last edit. Without it, createdAt applies. */
   updatedAt?: number;
 }
 
-/** Livros da versão em uso, na ordem canônica. Sem versão instalada, o cânone completo. */
+/** Books of the version in use, in canonical order. With no version installed, the full canon. */
 export function currentBooks() {
   const meta = useLibrary.getState().installed[useSettings.getState().versionId];
   if (!meta) return BOOKS.map((b) => ({ id: b.id, chapters: b.chapters }));
@@ -51,13 +51,13 @@ interface StudyStore {
   book: string;
   chapter: number;
   focusVerse: number | null;
-  /** Último versículo do trecho em foco. */
+  /** Last verse of the focused passage. */
   focusTo: number | null;
   selection: number[];
   highlights: Record<string, Highlight>;
   notes: Note[];
   hydrate: () => Promise<void>;
-  /** Substitui marcações e notas (importação de backup). */
+  /** Replaces highlights and notes (backup import). */
   merge: (highlights: Highlight[], notes: Note[]) => Promise<void>;
   goTo: (book: string, chapter: number, verse?: number, to?: number) => void;
   step: (delta: 1 | -1) => boolean;
@@ -66,7 +66,7 @@ interface StudyStore {
   clearFocus: () => void;
   paint: (color: HlColor, texts: Record<number, string>) => void;
   saveNote: (text: string, excerpt: string, existingId?: string, at?: { book: string; chapter: number; verseStart: number; verseEnd: number }) => void;
-  /** Pinta ou, com color nulo, limpa a marcação dos versículos de v1 a v2. */
+  /** Paints or, with a null color, clears the highlight on verses v1 to v2. */
   setColor: (book: string, chapter: number, v1: number, v2: number, color: HlColor | null, texts: Record<number, string>) => void;
   deleteNote: (id: string) => void;
   removeHighlight: (key: string) => void;
@@ -75,7 +75,7 @@ interface StudyStore {
 const start = loadPosition();
 
 const persistFail = () => {
-  // Falha de gravação não derruba a leitura. O aviso fica a cargo de quem chamou, se quiser.
+  // A write failure does not break reading. Warning the user is up to the caller, if wanted.
 };
 
 export const useStudy = create<StudyStore>((set, get) => ({
@@ -91,7 +91,7 @@ export const useStudy = create<StudyStore>((set, get) => ({
   hydrate: async () => {
     try {
       const [hs, ns] = await Promise.all([dbAll<Highlight>('highlights'), dbAll<Note>('notes')]);
-      // Marcações feitas antes da carga terminar continuam valendo.
+      // Highlights made before loading finishes still count.
       set((s) => ({
         highlights: { ...Object.fromEntries(hs.map((h) => [h.key, h])), ...s.highlights },
         notes: [...ns.filter((n) => !s.notes.some((x) => x.id === n.id)), ...s.notes],
