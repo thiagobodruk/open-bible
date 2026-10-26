@@ -21,7 +21,7 @@ export function removeItem(key: string) {
   try {
     localStorage.removeItem(key);
   } catch {
-    /* sem armazenamento, nada a limpar */
+    /* no storage, nothing to clear */
   }
 }
 
