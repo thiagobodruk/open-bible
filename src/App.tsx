@@ -9,7 +9,6 @@ import { useIntro } from './state/intro';
 import { Intro } from './components/Intro';
 import { appUrl, readPath, searchWithoutRef } from './link';
 import { Reader } from './screens/Reader';
-import { Study } from './screens/Study';
 import { Settings } from './screens/Settings';
 import { Privacy } from './screens/Privacy';
 import { Terms } from './screens/Terms';
@@ -26,11 +25,12 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { ListenSheet } from './components/ListenSheet';
 import { SearchSheet } from './components/SearchSheet';
 import { LibrarySheet } from './components/LibrarySheet';
+import { StudySheet } from './components/StudySheet';
 import { DeleteAccountSheet } from './components/DeleteAccountSheet';
 import { Toast } from './components/Toast';
 
-/** The old #/library link now opens the reader with the library sheet on top. */
-let openLibraryFromLink = location.hash === '#/library';
+/** The old #/library and #/study links now open the reader with that sheet on top. */
+let sheetFromLink: 'library' | 'study' | null = location.hash === '#/library' ? 'library' : location.hash === '#/study' ? 'study' : null;
 
 export default function App() {
   const route = useRoute();
@@ -61,7 +61,7 @@ export default function App() {
     };
     sync();
     // Closing a sheet goes back one history entry, which may hold a URL from before the reading changed.
-    // With a route in the URL (#/study), the router navigates, so it does nothing.
+    // With a route in the URL (#/settings), the router navigates, so it does nothing.
     const onPop = () => !location.hash && sync();
     addEventListener('popstate', onPop);
     return () => removeEventListener('popstate', onPop);
@@ -70,17 +70,17 @@ export default function App() {
   // Changing screens closes sheets and scrolls back to the top
   useEffect(() => {
     close();
-    if (openLibraryFromLink && route === '/') {
-      openLibraryFromLink = false;
+    if (sheetFromLink && route === '/') {
+      const name = sheetFromLink;
+      sheetFromLink = null;
       history.replaceState(null, '', location.pathname + location.search);
-      useUI.getState().open('library');
+      useUI.getState().open(name);
     }
   }, [route, close]);
 
   return (
     <>
       {route === '/' && <Reader />}
-      {route === '/study' && <Study />}
       {route === '/settings' && <Settings />}
       {route === '/privacy' && <Privacy />}
       {route === '/terms' && <Terms />}
@@ -98,6 +98,7 @@ export default function App() {
       )}
       {sheet === 'search' && <SearchSheet />}
       {sheet === 'library' && <LibrarySheet />}
+      {sheet === 'study' && <StudySheet />}
       {sheet === 'install' && <InstallSheet />}
       {sheet === 'feedback' && <FeedbackSheet />}
       {sheet === 'listen' && <ListenSheet />}

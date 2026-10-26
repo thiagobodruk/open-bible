@@ -13,7 +13,7 @@ export type Feature =
   | 'study_filter' | 'study_search' | 'study_sort' | 'reading_settings';
 
 const KEY = 'ob:analytics';
-const SCREENS: Record<string, string> = { '': 'reader', '/study': 'study', '/settings': 'settings', '/terms': 'terms', '/privacy': 'privacy' };
+const SCREENS: Record<string, string> = { '': 'reader', '/settings': 'settings', '/terms': 'terms', '/privacy': 'privacy' };
 
 const READING_KEYS = ['theme', 'font', 'fontSize', 'lineHeight', 'margins', 'align', 'verseNumbers', 'textMode'] as const;
 
@@ -100,6 +100,7 @@ export function initAnalytics() {
     if (s.sheet === 'compare' || s.sheet === 'search') trackFeature(s.sheet);
     else if (s.sheet === 'xrefs') trackFeature('xref');
     else if (s.sheet === 'library') track('screen_view', { screen_name: 'library' });
+    else if (s.sheet === 'study') track('screen_view', { screen_name: 'study' });
   });
   useLibrary.subscribe((s, prev) => {
     if (!prev.ready) return;
