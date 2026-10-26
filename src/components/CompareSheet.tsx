@@ -21,7 +21,7 @@ interface Row {
 /** The selected verses side by side in all downloaded versions. Tapping a version opens the reading in it. */
 export function CompareSheet() {
   const t = useT();
-  const close = useUI((s) => s.close);
+  const { close, open } = useUI();
   const { book, chapter, selection, goTo } = useStudy();
   const installed = useLibrary((s) => s.installed);
   const versionId = useSettings((s) => s.versionId);
@@ -59,10 +59,7 @@ export function CompareSheet() {
     scrollTo(0, 0);
   };
 
-  const more = () => {
-    close();
-    go('/library');
-  };
+  const more = () => open('library');
 
   return (
     <Sheet title={t('compareTitle')} icon={TextColumns} onClose={close}>

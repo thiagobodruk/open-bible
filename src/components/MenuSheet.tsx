@@ -57,7 +57,7 @@ export function MenuSheet() {
   const all = [
     ...(canSignIn ? [{ icon: UserCircle, label: t('signIn'), run: signIn }] : []),
     { icon: Notepad, label: t('study'), run: () => nav('/study') },
-    { icon: Translate, label: t('library'), run: () => nav('/library') },
+    { icon: Translate, label: t('library'), run: () => open('library') },
     { icon: GearSix, label: t('settings'), run: () => nav('/settings') },
     { icon: ShareNetwork, label: t('shareApp'), run: share },
     {
