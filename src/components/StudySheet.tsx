@@ -44,7 +44,7 @@ export function StudySheet() {
   const versionId = useSettings((s) => s.versionId);
   const [color, setColor] = useState<HlColor | null>(null);
   const [q, setQ] = useState('');
-  const [sort, setSort] = useState<{ key: SortKey; dir: SortDir }>({ key: 'bible', dir: 'asc' });
+  const [sort, setSort] = useState<{ key: SortKey; dir: SortDir }>({ key: 'date', dir: 'desc' });
 
   // Clicking the active sort flips the direction; clicking another starts with the most useful direction.
   const pickSort = (key: SortKey) => {
