@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.17.3
+
+### Changed
+
+- My study opens with the most recent entries first.
+
 ## 1.17.2
 
 ### Fixed
