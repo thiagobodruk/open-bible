@@ -7,7 +7,6 @@ import { useBookName, useChapter } from '../hooks';
 import { useSettings } from '../state/settings';
 import { refLabel } from '../ref';
 import { aiEnabled } from '../ai';
-import { shareUrl } from '../link';
 import { trackFeature } from '../analytics';
 import { useAsk } from '../state/ask';
 import { useT } from '../i18n';
@@ -28,23 +27,21 @@ export function SelectionBar() {
   const texts = Object.fromEntries(selection.map((v) => [v, verses[v - 1]]));
   const active = (c: HlColor) => selection.every((v) => highlights[vkey(book, chapter, v)]?.color === c);
 
-  const citation = (withLink: boolean) => {
+  const citation = () => {
     const first = selection[0];
     const last = selection[selection.length - 1];
     const body = selection.map((v) => verses[v - 1]).join('\n');
-    const ref = `${refLabel(bookName(book), chapter, first, last)} (${abbrOf(versionId)})`;
-    if (!withLink) return `${body}\n${ref}`;
-    return `${body}\n${ref}\n${shareUrl(versionId, book, chapter, { from: first, to: last })}`;
+    return `${body}\n${refLabel(bookName(book), chapter, first, last)} (${abbrOf(versionId)})`;
   };
 
   const copy = async () => {
-    const ok = await copyText(citation(false));
+    const ok = await copyText(citation());
     if (ok) trackFeature('copy');
     notify(t(ok ? 'copied' : 'copyFailed'));
   };
 
   const share = async () => {
-    const result = await shareOrCopy({ text: citation(true) });
+    const result = await shareOrCopy({ text: citation() });
     if (result === 'shared') trackFeature('share');
     else if (result === 'copied') {
       trackFeature('copy');
