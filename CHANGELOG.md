@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.17.2
+
+### Fixed
+
+- The verse you tap near the bottom of the screen is no longer hidden by the selection sheet; the page scrolls to keep it in view.
+
 ## 1.17.1
 
 ### Changed
