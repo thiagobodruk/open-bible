@@ -153,6 +153,27 @@ export function Reader() {
     clearFocus();
   }, [focusVerse, focusTo, clearFocus, book, chapter, text.status]);
 
+  // The selection sheet can cover the tapped verse: scroll it to the middle of the visible area above the sheet
+  const prevSel = useRef<number[]>([]);
+  useEffect(() => {
+    const added = selection.filter((v) => !prevSel.current.includes(v));
+    prevSel.current = selection;
+    const target = added[added.length - 1];
+    if (target === undefined) return;
+    const id = setTimeout(() => {
+      const el = document.getElementById(`v-${target}`);
+      const sheet = document.querySelector('.sheet.modeless');
+      if (!el || !sheet) return;
+      const top = document.querySelector('.topbar')?.getBoundingClientRect().bottom ?? 0;
+      const bottom = sheet.getBoundingClientRect().top;
+      const r = el.getBoundingClientRect();
+      if (r.bottom <= bottom - 16 && r.top >= top) return;
+      const dy = r.top + r.height / 2 - (top + bottom) / 2;
+      window.scrollBy({ top: dy, behavior: 'smooth' });
+    }, 260);
+    return () => clearTimeout(id);
+  }, [selection]);
+
   // Gesture hint only on first launch. Counts as seen when it appears or when the user already changes chapter.
   useEffect(() => {
     if (!installed || !isMobile() || !hintPending()) return;
