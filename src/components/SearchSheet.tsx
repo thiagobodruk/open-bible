@@ -218,7 +218,7 @@ export function SearchSheet() {
       )}
 
       {!typed && !ref && (
-        <Empty compact icon={MagnifyingGlass} iconSize={36} hint={multi ? t('searchEmptyHintMany', { n: selected.length }) : t('searchEmptyHint', { abbr: abbrOf(versionId) })}>
+        <Empty compact icon={MagnifyingGlass} iconSize={36} hint={t('searchExamples')}>
           {tooShort ? t('searchMin', { n: minChars(dq) }) : t('searchEmpty')}
         </Empty>
       )}
