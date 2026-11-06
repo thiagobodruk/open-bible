@@ -9,6 +9,7 @@ import { highlightRanges, minChars, PAGE_SIZE, parseReference, searchVerses, typ
 import { useLibrary } from '../state/library';
 import { trackFeature } from '../analytics';
 import { Chip } from './Chip';
+import { Row } from './Row';
 import { useSettings } from '../state/settings';
 import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
@@ -183,22 +184,38 @@ export function SearchSheet() {
         </>
       }
     >
-      {ref && (passages.length > 0 ? passages : [{ id: versionId, text: null }]).map((p, i) => (
-        <button
-          key={p.id}
-          className="entry hit goto"
-          style={i > 0 ? { marginTop: 0 } : undefined}
-          onClick={() => open(ref.book.id, ref.chapter, ref.verse, p.id, ref.verseEnd)}
-        >
-          <div className="ref">
-            {!p.text && <span>{t('goTo')}</span>}
-            <span className="goto-ref">{refLabel(nameIn(p.id, ref.book.id), ref.chapter, ref.verse, ref.verseEnd)}</span>
-            {showVersion && <Chip>{abbrOf(p.id)}</Chip>}
-            {i === 0 && <CaretRight size={16} weight="light" color="var(--muted)" className="goto-caret" />}
-          </div>
-          {p.text && <p className="txt">{p.text}</p>}
-        </button>
-      ))}
+      {ref && (passages.length > 0 ? passages : [{ id: versionId, text: null }]).map((p, i) =>
+        p.text ? (
+          <button
+            key={p.id}
+            className="entry hit goto"
+            style={i > 0 ? { marginTop: 0 } : undefined}
+            onClick={() => open(ref.book.id, ref.chapter, ref.verse, p.id, ref.verseEnd)}
+          >
+            <div className="ref">
+              <span className="goto-ref">{refLabel(nameIn(p.id, ref.book.id), ref.chapter, ref.verse, ref.verseEnd)}</span>
+              {showVersion && <Chip>{abbrOf(p.id)}</Chip>}
+              <CaretRight size={16} weight="light" color="var(--muted)" className="goto-caret" />
+            </div>
+            <p className="txt">{p.text}</p>
+          </button>
+        ) : (
+          <Row
+            key={p.id}
+            className="goto"
+            style={i > 0 ? { marginTop: 8 } : undefined}
+            eyebrow={t('goTo')}
+            title={
+              <>
+                {refLabel(nameIn(p.id, ref.book.id), ref.chapter, ref.verse, ref.verseEnd)}
+                {showVersion && <Chip className="ml-8">{abbrOf(p.id)}</Chip>}
+              </>
+            }
+            onClick={() => open(ref.book.id, ref.chapter, ref.verse, p.id, ref.verseEnd)}
+            end={<CaretRight size={18} weight="light" color="var(--muted)" />}
+          />
+        ),
+      )}
 
       {!typed && !ref && (
         <Empty compact icon={MagnifyingGlass} iconSize={36} hint={multi ? t('searchEmptyHintMany', { n: selected.length }) : t('searchEmptyHint', { abbr: abbrOf(versionId) })}>
