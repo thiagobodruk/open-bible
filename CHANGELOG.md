@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.17.5
+
+### Fixed
+
+- Opening a search result for a specific verse, such as "Genesis 1:27", now shows that verse instead of the start of the chapter.
+
 ## 1.17.4
 
 ### Fixed
