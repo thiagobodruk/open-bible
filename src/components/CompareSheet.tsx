@@ -53,10 +53,11 @@ export function CompareSheet() {
 
   const read = (id: string) => {
     setSetting('versionId', id);
+    // Scroll first: the verse focus triggered by goTo scrolls to the verse and must not be undone.
+    scrollTo(0, 0);
     goTo(book, chapter, first);
     close();
     go('/');
-    scrollTo(0, 0);
   };
 
   const more = () => open('library');
