@@ -183,7 +183,6 @@ export function SearchSheet() {
       {ref && ref.verse === undefined && (
         <Row
           className="goto"
-          eyebrow={t('goTo')}
           title={refLabel(ref.book.name, ref.chapter)}
           onClick={() => open(ref.book.id, ref.chapter)}
           end={<CaretRight size={18} weight="light" color="var(--muted)" />}
@@ -198,7 +197,6 @@ export function SearchSheet() {
           onClick={() => open(ref.book.id, ref.chapter, ref.verse, p.id, ref.verseEnd)}
         >
           <div className="ref">
-            {i === 0 && <span>{t('goTo')}</span>}
             <span className="goto-ref">{refLabel(nameIn(p.id, ref.book.id), ref.chapter, ref.verse, ref.verseEnd)}</span>
             {multi && <Chip>{abbrOf(p.id)}</Chip>}
             {i === 0 && <CaretRight size={16} weight="light" color="var(--muted)" className="goto-caret" />}
