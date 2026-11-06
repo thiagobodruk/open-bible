@@ -87,6 +87,8 @@ export function SearchSheet() {
   // Null while some selected version is still loading.
   const chapters = useMemo(() => (selected.every((id) => indexes[id]) ? selected : null), [selected, indexes]);
   const multi = selected.length > 1;
+  // With more than one version installed, every result names its version, even when only one is selected.
+  const showVersion = versions.length > 1;
 
   const ref = useMemo(() => parseReference(dq, books), [dq, books]);
   const hits = useMemo(
@@ -198,7 +200,7 @@ export function SearchSheet() {
         >
           <div className="ref">
             <span className="goto-ref">{refLabel(nameIn(p.id, ref.book.id), ref.chapter, ref.verse, ref.verseEnd)}</span>
-            {multi && <Chip>{abbrOf(p.id)}</Chip>}
+            {showVersion && <Chip>{abbrOf(p.id)}</Chip>}
             {i === 0 && <CaretRight size={16} weight="light" color="var(--muted)" className="goto-caret" />}
           </div>
           {p.text && <p className="txt">{p.text}</p>}
@@ -227,7 +229,7 @@ export function SearchSheet() {
             <button key={`${h.versionId}.${h.book}.${h.chapter}.${h.verse}`} className="entry hit" onClick={() => open(h.book, h.chapter, h.verse, h.versionId)}>
               <div className="ref">
                 {refLabel(nameIn(h.versionId, h.book), h.chapter, h.verse)}
-                {multi && <Chip>{abbrOf(h.versionId)}</Chip>}
+                {showVersion && <Chip>{abbrOf(h.versionId)}</Chip>}
               </div>
               <p className="txt"><Highlighted hit={h} query={dq} /></p>
             </button>
