@@ -113,6 +113,9 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .entry-edit { position: absolute; top: 50%; right: 4px; transform: translateY(-50%); width: 40px; height: 40px; }
 .confirm-text { font-size: 15px; line-height: 1.5; margin: 4px 0 8px; }
 .search-clear { width: 32px; height: 32px; margin: 0 -8px 0 0; flex: none; }
+.search-mic { width: 32px; height: 32px; margin: 0 -4px 0 0; flex: none; border-radius: 50%; }
+.search-mic.on { color: var(--accent-fg); background: var(--accent); animation: ask-pulse 1.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .search-mic.on { animation: none; } }
 
 .menu-version { display: block; width: 100%; margin-top: 18px; text-align: center; font-size: 12px; color: var(--muted); }
 .privacy p { margin: 8px 0 0; font-size: 15px; line-height: 1.6; }
@@ -135,3 +138,10 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .mt-12 { margin-top: 12px; }
 .mt-24 { margin-top: 24px; }
 .mt-28 { margin-top: 28px; }
+
+/* Versions included in the search */
+.vchips { display: flex; gap: 8px; overflow-x: auto; padding: 12px 0 2px; scrollbar-width: none; }
+.vchips::-webkit-scrollbar { display: none; }
+.vchips .chip-btn { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: var(--muted); background: none; border: 1px solid var(--line); }
+.vchips .chip-btn[aria-pressed='true'] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.entry.hit .ref .chip { margin-left: 0; }

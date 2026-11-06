@@ -1,15 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { BookmarkSimple, Microphone, PaperPlaneTilt, X } from '@phosphor-icons/react';
-import { useSettings } from '../state/settings';
-import { useUI } from '../state/ui';
-import { dictationSupported, startDictation } from '../stt';
+import { useDictation } from '../useDictation';
 import { useT } from '../i18n';
-import { getItem, setItem } from '../storage';
-
-const MIC_NOTICE = 'ob:stt-notice';
-
-// Without storage the notice doesn't show, to avoid repeating on every use.
-const noticeSeen = () => getItem(MIC_NOTICE, '1') === '1';
 
 interface Props {
   /** Context reference, shown as a pill. */
@@ -24,37 +16,14 @@ interface Props {
 /** Question field with the reference as a pill and voice dictation. Same in the prompt and on the answer screen. */
 export function PromptField({ context, onClearContext, placeholder, disabled, onSubmit }: Props) {
   const t = useT();
-  const uiLang = useSettings((s) => s.uiLang);
-  const notify = useUI((s) => s.notify);
   const [question, setQuestion] = useState('');
-  const [listening, setListening] = useState(false);
-  const stopRef = useRef<(() => void) | null>(null);
-
-  useEffect(() => () => stopRef.current?.(), []);
-
-  const toggleMic = () => {
-    if (listening) return stopRef.current?.();
-    if (!noticeSeen()) {
-      notify(t('sttNotice'));
-      setItem(MIC_NOTICE, '1');
-    }
-    const base = question.trim();
-    stopRef.current = startDictation(uiLang, {
-      onText: (spoken) => setQuestion(base ? `${base} ${spoken}` : spoken),
-      onEnd: () => {
-        setListening(false);
-        stopRef.current = null;
-      },
-      onError: (kind) => notify(t(kind === 'denied' ? 'sttDenied' : kind === 'network' ? 'sttNetwork' : 'sttFailed')),
-    });
-    setListening(stopRef.current !== null);
-  };
+  const mic = useDictation(question, setQuestion);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const asked = question.trim();
     if (!asked || disabled) return;
-    stopRef.current?.();
+    mic.stop();
     setQuestion('');
     onSubmit(asked);
   };
@@ -80,13 +49,13 @@ export function PromptField({ context, onClearContext, placeholder, disabled, on
           enterKeyHint="send"
           disabled={disabled}
         />
-        {dictationSupported() && (
+        {mic.supported && (
           <button
             type="button"
-            className={`ask-mic${listening ? ' on' : ''}`}
-            onClick={toggleMic}
-            aria-pressed={listening}
-            aria-label={listening ? t('askMicStop') : t('askMic')}
+            className={`ask-mic${mic.listening ? ' on' : ''}`}
+            onClick={mic.toggle}
+            aria-pressed={mic.listening}
+            aria-label={mic.listening ? t('askMicStop') : t('askMic')}
             disabled={disabled}
           >
             <Microphone size={22} weight="regular" />
