@@ -9,13 +9,13 @@ import { highlightRanges, minChars, PAGE_SIZE, parseReference, searchVerses, typ
 import { useLibrary } from '../state/library';
 import { trackFeature } from '../analytics';
 import { Chip } from './Chip';
+import { Row } from './Row';
 import { useSettings } from '../state/settings';
 import { useStudy } from '../state/study';
 import { useUI } from '../state/ui';
 import { go } from '../router';
 import { refLabel } from '../ref';
 import { useT } from '../i18n';
-import { Row } from './Row';
 import { Empty } from './Empty';
 
 function Highlighted({ hit, query }: { hit: Hit; query: string }) {
@@ -87,6 +87,8 @@ export function SearchSheet() {
   // Null while some selected version is still loading.
   const chapters = useMemo(() => (selected.every((id) => indexes[id]) ? selected : null), [selected, indexes]);
   const multi = selected.length > 1;
+  // With more than one version installed, every result names its version, even when only one is selected.
+  const showVersion = versions.length > 1;
 
   const ref = useMemo(() => parseReference(dq, books), [dq, books]);
   const hits = useMemo(
@@ -98,20 +100,44 @@ export function SearchSheet() {
   // A new search goes back to the first page.
   useEffect(() => setLimit(PAGE_SIZE), [dq, chapters]);
 
-  const open = (book: string, chapter: number, verse?: number, version = versionId) => {
+  const open = (book: string, chapter: number, verse?: number, version = versionId, to?: number) => {
     // Scroll first: the verse focus triggered by goTo scrolls to the verse and must not be undone.
     scrollTo(0, 0);
     if (version !== versionId) {
       setSetting('versionId', version);
       notify(t('searchVersionChanged', { abbr: abbrOf(version) }));
     }
-    goTo(book, chapter, verse);
+    goTo(book, chapter, verse, to);
     close();
     go('/');
   };
 
   /** Book name as the version of the result calls it, so each result reads in its own language. */
   const nameIn = (id: string, book: string) => installed[id]?.books.find((b) => b.id === book)?.name ?? bookName(book);
+
+  // Typed reference in each selected version that has it. A verse shows its text, a range adds the verse numbers,
+  // and a whole chapter has no preview, so its card says where it goes.
+  const passages = useMemo((): { id: string; text: React.ReactNode[] | null }[] => {
+    if (!ref) return [];
+    const { verse, verseEnd } = ref;
+    return selected.flatMap((id): { id: string; text: React.ReactNode[] | null }[] => {
+      const verses = indexes[id]?.find((c) => c.book === ref.book.id && c.chapter === ref.chapter)?.verses;
+      if (!verses) return [];
+      if (verse === undefined) return [{ id, text: null }];
+      const last = Math.min(verseEnd ?? verse, verses.length);
+      const parts: React.ReactNode[] = [];
+      for (let v = verse; v <= last; v++) {
+        parts.push(
+          <Fragment key={v}>
+            {v > verse && ' '}
+            {last > verse && <sup>{v} </sup>}
+            {verses[v - 1]}
+          </Fragment>,
+        );
+      }
+      return parts.length ? [{ id, text: parts }] : [];
+    });
+  }, [ref, selected, indexes]);
 
   const typed = dq.trim().length >= minChars(dq);
   const tooShort = !typed && dq.trim().length > 0;
@@ -158,14 +184,37 @@ export function SearchSheet() {
         </>
       }
     >
-      {ref && (
-        <Row
-          className="goto"
-          eyebrow={t('goTo')}
-          title={refLabel(ref.book.name, ref.chapter, ref.verse, ref.verseEnd)}
-          onClick={() => open(ref.book.id, ref.chapter, ref.verse)}
-          end={<CaretRight size={18} weight="light" color="var(--muted)" />}
-        />
+      {ref && (passages.length > 0 ? passages : [{ id: versionId, text: null }]).map((p, i) =>
+        p.text ? (
+          <button
+            key={p.id}
+            className="entry hit goto"
+            style={i > 0 ? { marginTop: 0 } : undefined}
+            onClick={() => open(ref.book.id, ref.chapter, ref.verse, p.id, ref.verseEnd)}
+          >
+            <div className="ref">
+              <span className="goto-ref">{refLabel(nameIn(p.id, ref.book.id), ref.chapter, ref.verse, ref.verseEnd)}</span>
+              {showVersion && <Chip>{abbrOf(p.id)}</Chip>}
+              <CaretRight size={16} weight="light" color="var(--muted)" className="goto-caret" />
+            </div>
+            <p className="txt">{p.text}</p>
+          </button>
+        ) : (
+          <Row
+            key={p.id}
+            className="goto"
+            style={i > 0 ? { marginTop: 8 } : undefined}
+            eyebrow={t('goTo')}
+            title={
+              <>
+                {refLabel(nameIn(p.id, ref.book.id), ref.chapter, ref.verse, ref.verseEnd)}
+                {showVersion && <Chip className="ml-8">{abbrOf(p.id)}</Chip>}
+              </>
+            }
+            onClick={() => open(ref.book.id, ref.chapter, ref.verse, p.id, ref.verseEnd)}
+            end={<CaretRight size={18} weight="light" color="var(--muted)" />}
+          />
+        ),
       )}
 
       {!typed && !ref && (
@@ -190,7 +239,7 @@ export function SearchSheet() {
             <button key={`${h.versionId}.${h.book}.${h.chapter}.${h.verse}`} className="entry hit" onClick={() => open(h.book, h.chapter, h.verse, h.versionId)}>
               <div className="ref">
                 {refLabel(nameIn(h.versionId, h.book), h.chapter, h.verse)}
-                {multi && <Chip>{abbrOf(h.versionId)}</Chip>}
+                {showVersion && <Chip>{abbrOf(h.versionId)}</Chip>}
               </div>
               <p className="txt"><Highlighted hit={h} query={dq} /></p>
             </button>
