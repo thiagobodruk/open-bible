@@ -4,7 +4,7 @@ import { SearchField } from './SearchField';
 import { Sheet } from './Sheet';
 import { loadSearchIndex, pruneSearchIndex, type IndexedChapter } from '../data/bible';
 import { abbrOf } from '../data/catalog';
-import { useBookName, useBooks, useChapter } from '../hooks';
+import { useBookName, useBooks } from '../hooks';
 import { highlightRanges, minChars, PAGE_SIZE, parseReference, searchVerses, type Hit } from '../search';
 import { useLibrary } from '../state/library';
 import { trackFeature } from '../analytics';
@@ -89,24 +89,6 @@ export function SearchSheet() {
   const multi = selected.length > 1;
 
   const ref = useMemo(() => parseReference(dq, books), [dq, books]);
-  const text = useChapter(ref?.book.id ?? '', ref?.chapter ?? 0);
-  // Preview of the typed passage. A range shows the verse numbers, a single verse only its text.
-  const passage = useMemo(() => {
-    if (!ref || ref.verse === undefined || text.status !== 'ready') return null;
-    const last = Math.min(ref.verseEnd ?? ref.verse, text.verses.length);
-    const parts: React.ReactNode[] = [];
-    for (let v = ref.verse; v <= last; v++) {
-      if (!text.verses[v - 1]) continue;
-      parts.push(
-        <Fragment key={v}>
-          {v > ref.verse && ' '}
-          {last > ref.verse && <sup>{v} </sup>}
-          {text.verses[v - 1]}
-        </Fragment>,
-      );
-    }
-    return parts.length ? parts : null;
-  }, [ref, text]);
   const hits = useMemo(
     () => (chapters ? searchVerses(dq, chapters.map((id) => ({ versionId: id, chapters: indexes[id] })), versionId) : []),
     [dq, chapters, indexes, versionId],
@@ -130,6 +112,28 @@ export function SearchSheet() {
 
   /** Book name as the version of the result calls it, so each result reads in its own language. */
   const nameIn = (id: string, book: string) => installed[id]?.books.find((b) => b.id === book)?.name ?? bookName(book);
+
+  // Preview of the typed passage in each selected version that has it. A range shows the verse numbers, a single verse only its text.
+  const passages = useMemo(() => {
+    if (!ref || ref.verse === undefined) return [];
+    const { verse, verseEnd } = ref;
+    return selected.flatMap((id) => {
+      const verses = indexes[id]?.find((c) => c.book === ref.book.id && c.chapter === ref.chapter)?.verses;
+      if (!verses) return [];
+      const last = Math.min(verseEnd ?? verse, verses.length);
+      const parts: React.ReactNode[] = [];
+      for (let v = verse; v <= last; v++) {
+        parts.push(
+          <Fragment key={v}>
+            {v > verse && ' '}
+            {last > verse && <sup>{v} </sup>}
+            {verses[v - 1]}
+          </Fragment>,
+        );
+      }
+      return parts.length ? [{ id, text: parts }] : [];
+    });
+  }, [ref, selected, indexes]);
 
   const typed = dq.trim().length >= minChars(dq);
   const tooShort = !typed && dq.trim().length > 0;
@@ -186,16 +190,22 @@ export function SearchSheet() {
         />
       )}
 
-      {ref && ref.verse !== undefined && (
-        <button className="entry hit goto" onClick={() => open(ref.book.id, ref.chapter, ref.verse, versionId, ref.verseEnd)}>
+      {ref && ref.verse !== undefined && (passages.length > 0 ? passages : [{ id: versionId, text: null }]).map((p, i) => (
+        <button
+          key={p.id}
+          className="entry hit goto"
+          style={i > 0 ? { marginTop: 0 } : undefined}
+          onClick={() => open(ref.book.id, ref.chapter, ref.verse, p.id, ref.verseEnd)}
+        >
           <div className="ref">
-            <span>{t('goTo')}</span>
-            <span className="goto-ref">{refLabel(ref.book.name, ref.chapter, ref.verse, ref.verseEnd)}</span>
-            <CaretRight size={16} weight="light" color="var(--muted)" className="goto-caret" />
+            {i === 0 && <span>{t('goTo')}</span>}
+            <span className="goto-ref">{refLabel(nameIn(p.id, ref.book.id), ref.chapter, ref.verse, ref.verseEnd)}</span>
+            {multi && <Chip>{abbrOf(p.id)}</Chip>}
+            {i === 0 && <CaretRight size={16} weight="light" color="var(--muted)" className="goto-caret" />}
           </div>
-          {passage && <p className="txt">{passage}</p>}
+          {p.text && <p className="txt">{p.text}</p>}
         </button>
-      )}
+      ))}
 
       {!typed && !ref && (
         <Empty compact icon={MagnifyingGlass} iconSize={36} hint={multi ? t('searchEmptyHintMany', { n: selected.length }) : t('searchEmptyHint', { abbr: abbrOf(versionId) })}>
