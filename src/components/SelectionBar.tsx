@@ -59,7 +59,11 @@ export function SelectionBar() {
       title={refLabel(bookName(book), chapter, selection[0], selection[selection.length - 1])}
       onClose={clearSelection}
     >
-      <ColorSwatches label={t('highlightColor')} pressed={(c) => c !== null && active(c)} onPick={(c) => paint(c, texts)} />
+      <ColorSwatches label={t('highlightColor')} pressed={(c) => c !== null && active(c)} onPick={(c) => {
+          paint(c, texts);
+          // Picking a color finishes the action: the sheet closes and the highlight shows.
+          clearSelection();
+        }} />
       <div className={`sheet-actions${aiEnabled ? '' : ' five'}`}>
         <SheetAction icon={Note} onClick={() => open('note')}>{t('note')}</SheetAction>
         {aiEnabled && <SheetAction icon={Sparkle} onClick={() => useAsk.getState().openBar()}>{t('askAction')}</SheetAction>}
