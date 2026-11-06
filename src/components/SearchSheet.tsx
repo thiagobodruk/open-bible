@@ -15,7 +15,6 @@ import { useUI } from '../state/ui';
 import { go } from '../router';
 import { refLabel } from '../ref';
 import { useT } from '../i18n';
-import { Row } from './Row';
 import { Empty } from './Empty';
 
 function Highlighted({ hit, query }: { hit: Hit; query: string }) {
@@ -115,13 +114,15 @@ export function SearchSheet() {
   /** Book name as the version of the result calls it, so each result reads in its own language. */
   const nameIn = (id: string, book: string) => installed[id]?.books.find((b) => b.id === book)?.name ?? bookName(book);
 
-  // Preview of the typed passage in each selected version that has it. A range shows the verse numbers, a single verse only its text.
-  const passages = useMemo(() => {
-    if (!ref || ref.verse === undefined) return [];
+  // Typed reference in each selected version that has it. A verse shows its text, a range adds the verse numbers,
+  // and a whole chapter has no preview, so its card says where it goes.
+  const passages = useMemo((): { id: string; text: React.ReactNode[] | null }[] => {
+    if (!ref) return [];
     const { verse, verseEnd } = ref;
-    return selected.flatMap((id) => {
+    return selected.flatMap((id): { id: string; text: React.ReactNode[] | null }[] => {
       const verses = indexes[id]?.find((c) => c.book === ref.book.id && c.chapter === ref.chapter)?.verses;
       if (!verses) return [];
+      if (verse === undefined) return [{ id, text: null }];
       const last = Math.min(verseEnd ?? verse, verses.length);
       const parts: React.ReactNode[] = [];
       for (let v = verse; v <= last; v++) {
@@ -182,16 +183,7 @@ export function SearchSheet() {
         </>
       }
     >
-      {ref && ref.verse === undefined && (
-        <Row
-          className="goto"
-          title={refLabel(ref.book.name, ref.chapter)}
-          onClick={() => open(ref.book.id, ref.chapter)}
-          end={<CaretRight size={18} weight="light" color="var(--muted)" />}
-        />
-      )}
-
-      {ref && ref.verse !== undefined && (passages.length > 0 ? passages : [{ id: versionId, text: null }]).map((p, i) => (
+      {ref && (passages.length > 0 ? passages : [{ id: versionId, text: null }]).map((p, i) => (
         <button
           key={p.id}
           className="entry hit goto"
@@ -199,6 +191,7 @@ export function SearchSheet() {
           onClick={() => open(ref.book.id, ref.chapter, ref.verse, p.id, ref.verseEnd)}
         >
           <div className="ref">
+            {!p.text && <span>{t('goTo')}</span>}
             <span className="goto-ref">{refLabel(nameIn(p.id, ref.book.id), ref.chapter, ref.verse, ref.verseEnd)}</span>
             {showVersion && <Chip>{abbrOf(p.id)}</Chip>}
             {i === 0 && <CaretRight size={16} weight="light" color="var(--muted)" className="goto-caret" />}
