@@ -88,8 +88,6 @@ const ptBR: Messages = {
   goTo: 'Ir para',
   searchEmpty: 'Busque uma palavra ou vá direto a um trecho.',
   searchExamples: 'Por exemplo: amor, Jo 3:16 ou Sl 23.',
-  searchEmptyHint: 'Busca no texto da versão {abbr}, direto neste aparelho.',
-  searchEmptyHintMany: 'Busca no texto de {n} versões, direto neste aparelho.',
   searchVersions: 'Buscar nas versões',
   searchInVersions: 'em {n} versões',
   searchVersionChanged: 'Versão alterada para {abbr}',

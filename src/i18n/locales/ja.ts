@@ -88,8 +88,6 @@ const ja: Messages = {
   goTo: '移動',
   searchEmpty: '単語を検索するか、聖句に直接移動できます。',
   searchExamples: '例: 愛、ヨハネ 3:16、詩篇 23',
-  searchEmptyHint: 'このデバイス上で {abbr} 訳の本文を検索します。',
-  searchEmptyHintMany: 'この端末で {n} 訳の本文を検索します。',
   searchVersions: '検索する訳',
   searchInVersions: '{n} 訳から',
   searchVersionChanged: '訳を {abbr} に変更しました',

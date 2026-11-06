@@ -88,8 +88,6 @@ const es: Messages = {
   goTo: 'Ir a',
   searchEmpty: 'Busca una palabra o ve directo a un pasaje.',
   searchExamples: 'Por ejemplo: amor, Jn 3:16 o Sal 23.',
-  searchEmptyHint: 'Busca en el texto de la versión {abbr}, en este mismo dispositivo.',
-  searchEmptyHintMany: 'Busca en el texto de {n} versiones, en este dispositivo.',
   searchVersions: 'Buscar en versiones',
   searchInVersions: 'en {n} versiones',
   searchVersionChanged: 'Versión cambiada a {abbr}',

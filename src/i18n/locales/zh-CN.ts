@@ -88,8 +88,6 @@ const zhCN: Messages = {
   goTo: '前往',
   searchEmpty: '搜索一个词，或直接跳到某段经文。',
   searchExamples: '例如：爱、约翰福音 3:16 或 诗篇 23',
-  searchEmptyHint: '在本机搜索 {abbr} 译本的经文。',
-  searchEmptyHintMany: '在本设备上搜索 {n} 个版本的经文。',
   searchVersions: '在这些版本中搜索',
   searchInVersions: '共 {n} 个版本',
   searchVersionChanged: '已切换到 {abbr} 版本',
