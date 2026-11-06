@@ -82,7 +82,7 @@ const ja: Messages = {
   notePlaceholder: 'メモを入力',
   noteLabel: 'メモの内容',
 
-  searchPlaceholder: '単語または聖句、例: ヨハネ 3:16',
+  searchPlaceholder: '単語または聖句',
   searchLabel: '本文を検索',
   clearSearch: '検索をクリア',
   goTo: '移動',

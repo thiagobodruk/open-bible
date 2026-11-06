@@ -82,7 +82,7 @@ const fr: Messages = {
   notePlaceholder: 'Écrivez votre note',
   noteLabel: 'Texte de la note',
 
-  searchPlaceholder: 'Un mot ou une référence, comme jo 3:16',
+  searchPlaceholder: 'Mot ou référence',
   searchLabel: 'Rechercher dans le texte',
   clearSearch: 'Effacer la recherche',
   goTo: 'Aller à',

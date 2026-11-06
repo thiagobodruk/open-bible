@@ -82,7 +82,7 @@ const ptBR: Messages = {
   notePlaceholder: 'Escreva sua nota',
   noteLabel: 'Texto da nota',
 
-  searchPlaceholder: 'Palavra ou referência, como jo 3:16',
+  searchPlaceholder: 'Palavra ou referência',
   searchLabel: 'Buscar no texto',
   clearSearch: 'Limpar busca',
   goTo: 'Ir para',

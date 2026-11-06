@@ -80,7 +80,7 @@ const en = {
   notePlaceholder: 'Write your note',
   noteLabel: 'Note text',
 
-  searchPlaceholder: 'A word or a reference, like jo 3:16',
+  searchPlaceholder: 'Word or reference',
   searchLabel: 'Search the text',
   clearSearch: 'Clear search',
   goTo: 'Go to',

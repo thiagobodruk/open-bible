@@ -82,7 +82,7 @@ const zhCN: Messages = {
   notePlaceholder: '写下你的笔记',
   noteLabel: '笔记内容',
 
-  searchPlaceholder: '输入词语或经文出处，如 约翰 3:16',
+  searchPlaceholder: '词语或经文出处',
   searchLabel: '搜索经文',
   clearSearch: '清除搜索',
   goTo: '前往',

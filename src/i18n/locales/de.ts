@@ -82,7 +82,7 @@ const de: Messages = {
   notePlaceholder: 'Schreibe deine Notiz',
   noteLabel: 'Notiztext',
 
-  searchPlaceholder: 'Ein Wort oder eine Stelle, z. B. joh 3,16',
+  searchPlaceholder: 'Wort oder Stelle',
   searchLabel: 'Im Text suchen',
   clearSearch: 'Suche löschen',
   goTo: 'Gehe zu',
