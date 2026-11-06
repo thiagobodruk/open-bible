@@ -1,3 +1,4 @@
+import { normalize } from '../search';
 import { dbDelete, dbDeleteRange, dbGet, dbPut, dbRange } from '../db';
 
 export interface BookText {
@@ -59,22 +60,35 @@ export async function deleteVersion(id: string): Promise<void> {
   await dbDelete('versions', [id]);
   await dbDeleteRange('books', `${id}:`);
   for (const k of [...cache.keys()]) if (k.startsWith(`${id}:`)) cache.delete(k);
-  if (indexed?.versionId === id) indexed = null;
+  indexed.delete(id);
 }
 
 export interface IndexedChapter {
   book: string;
   chapter: number;
   verses: string[];
+  /** The same verses without accents and in lowercase, computed once so each search only scans them. */
+  norms: string[];
 }
 
-let indexed: { versionId: string; chapters: IndexedChapter[] } | null = null;
+const indexed = new Map<string, Promise<IndexedChapter[]>>();
 
-/** All chapters of the version, in the order read from IndexedDB. Kept in memory only for the last version fetched. */
-export async function loadSearchIndex(versionId: string): Promise<IndexedChapter[]> {
-  if (indexed?.versionId === versionId) return indexed.chapters;
-  const books = await loadAllBooks(versionId);
-  const chapters = books.flatMap((b) => b.chapters.map((verses, i) => ({ book: b.id, chapter: i + 1, verses })));
-  indexed = { versionId, chapters };
-  return chapters;
+/** All chapters of the version, in the order read from IndexedDB. Kept in memory until `pruneSearchIndex` drops it. */
+export function loadSearchIndex(versionId: string): Promise<IndexedChapter[]> {
+  let p = indexed.get(versionId);
+  if (!p) {
+    p = loadAllBooks(versionId).then((books) =>
+      books.flatMap((b) =>
+        b.chapters.map((verses, i) => ({ book: b.id, chapter: i + 1, verses, norms: verses.map((v) => normalize(v).norm) })),
+      ),
+    );
+    p.catch(() => indexed.delete(versionId));
+    indexed.set(versionId, p);
+  }
+  return p;
+}
+
+/** Frees the memory of every version except the ones to keep. */
+export function pruneSearchIndex(keep: string[]): void {
+  for (const id of [...indexed.keys()]) if (!keep.includes(id)) indexed.delete(id);
 }

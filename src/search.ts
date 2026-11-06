@@ -29,7 +29,7 @@ export interface RefTarget {
   verseEnd?: number;
 }
 
-const REF = /^\s*((?:[123]\s*)?[^\d:.,\-\s][^\d:.,-]*?)\s*(\d+)(?:\s*[:.,]\s*(\d+)(?:\s*-\s*(\d+))?)?\s*$/u;
+const REF = /^\s*((?:[123]\s*)?[^\d:.,\-\s][^\d:.,-]*?)\s*(\d+)(?:(?:\s*[:.,]\s*|\s+)(\d+)(?:\s*-\s*(\d+))?)?\s*$/u;
 
 /** "jo 3:16", "1 co 13", "salmos 23", "gn1". Book name in the current version or abbrev. */
 export function parseReference(input: string, books: RefBook[]): RefTarget | null {
@@ -47,12 +47,11 @@ export function parseReference(input: string, books: RefBook[]): RefTarget | nul
 }
 
 export interface Hit {
+  versionId: string;
   book: string;
   chapter: number;
   verse: number;
   text: string;
-  /** Ranges [start, end) in the original text, for highlighting. */
-  ranges: [number, number][];
 }
 
 /** How many results show at a time. */
@@ -70,53 +69,77 @@ function proximity(norm: string, at: number, len: number, term: string): number 
   return at + len < norm.length && WORD.test(norm[at + len]) ? 1 : 0;
 }
 
-/** All verses with the terms, whole word before start of word, and that before the rest. */
-export function searchVerses(
-  query: string,
-  chapters: { book: string; chapter: number; verses: string[] }[],
-): Hit[] {
+export interface SearchIndex {
+  versionId: string;
+  chapters: { book: string; chapter: number; verses: string[]; norms?: string[] }[];
+}
+
+/** All verses with the terms in every index, whole word before start of word, and that before the rest. */
+export function searchVerses(query: string, indexes: SearchIndex[], activeId?: string): Hit[] {
   const terms = normalize(query.trim()).norm.split(/\s+/).filter(Boolean);
   if (terms.length === 0 || terms.join('').length < minChars(query)) return [];
 
-  const scored: { hit: Hit; score: number }[] = [];
-  const ordered = [...chapters].sort((a, b) => bookIndex(a.book) - bookIndex(b.book) || a.chapter - b.chapter);
-  for (const c of ordered) {
-    for (let i = 0; i < c.verses.length; i++) {
-      const text = c.verses[i];
-      const { norm, map } = normalize(text);
-      const ranges: [number, number][] = [];
-      let score = 0;
-      let all = true;
-      for (const t of terms) {
-        // Looks for the best occurrence of the term: whole word, then start of word.
-        let at = norm.indexOf(t);
-        if (at < 0) {
-          all = false;
-          break;
-        }
-        let best = at;
-        let bestScore = proximity(norm, at, t.length, t);
-        while (bestScore > 0) {
-          at = norm.indexOf(t, at + 1);
-          if (at < 0) break;
-          const sc = proximity(norm, at, t.length, t);
-          if (sc < bestScore) {
-            best = at;
-            bestScore = sc;
+  const scored: { hit: Hit; score: number; at: number; order: number }[] = [];
+  indexes.forEach(({ versionId, chapters }, order) => {
+    for (const c of chapters) {
+      for (let i = 0; i < c.verses.length; i++) {
+        const norm = c.norms?.[i] ?? normalize(c.verses[i]).norm;
+        let score = 0;
+        let all = true;
+        for (const t of terms) {
+          const best = bestMatch(norm, t);
+          if (best < 0) {
+            all = false;
+            break;
           }
+          score += proximity(norm, best, t.length, t);
         }
-        score += bestScore;
-        const start = map[best];
-        const last = map[best + t.length - 1];
-        const end = last + String.fromCodePoint(text.codePointAt(last)!).length;
-        ranges.push([start, end]);
+        if (!all) continue;
+        scored.push({
+          hit: { versionId, book: c.book, chapter: c.chapter, verse: i + 1, text: c.verses[i] },
+          score,
+          at: bookIndex(c.book) * 1e7 + c.chapter * 1e3 + i + 1,
+          order: versionId === activeId ? -1 : order,
+        });
       }
-      if (!all) continue;
-      scored.push({ hit: { book: c.book, chapter: c.chapter, verse: i + 1, text, ranges: mergeRanges(ranges) }, score });
+    }
+  });
+  // Relevance first, then the canonical order, then the active version before the others.
+  scored.sort((a, b) => a.score - b.score || a.at - b.at || a.order - b.order);
+  return scored.map((x) => x.hit);
+}
+
+/** Start of the best occurrence of the term: whole word, then start of word. -1 when it is absent. */
+function bestMatch(norm: string, t: string): number {
+  let at = norm.indexOf(t);
+  if (at < 0) return -1;
+  let best = at;
+  let bestScore = proximity(norm, at, t.length, t);
+  while (bestScore > 0) {
+    at = norm.indexOf(t, at + 1);
+    if (at < 0) break;
+    const sc = proximity(norm, at, t.length, t);
+    if (sc < bestScore) {
+      best = at;
+      bestScore = sc;
     }
   }
-  // Stable sort: within the same score, keeps the canonical order.
-  return scored.sort((a, b) => a.score - b.score).map((x) => x.hit);
+  return best;
+}
+
+/** Ranges [start, end) in the original text to highlight, for the terms of a query. */
+export function highlightRanges(query: string, text: string): [number, number][] {
+  const terms = normalize(query.trim()).norm.split(/\s+/).filter(Boolean);
+  const { norm, map } = normalize(text);
+  const ranges: [number, number][] = [];
+  for (const t of terms) {
+    const best = bestMatch(norm, t);
+    if (best < 0) continue;
+    const start = map[best];
+    const last = map[best + t.length - 1];
+    ranges.push([start, last + String.fromCodePoint(text.codePointAt(last)!).length]);
+  }
+  return mergeRanges(ranges);
 }
 
 function mergeRanges(r: [number, number][]): [number, number][] {
