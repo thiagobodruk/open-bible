@@ -87,6 +87,7 @@ const fr: Messages = {
   clearSearch: 'Effacer la recherche',
   goTo: 'Aller à',
   searchEmpty: 'Cherchez un mot ou allez directement à un passage.',
+  searchExamples: 'Par exemple : amour, Jn 3:16 ou Ps 23.',
   searchEmptyHint: 'Recherche dans le texte de la version {abbr}, directement sur cet appareil.',
   searchEmptyHintMany: 'Cherche dans le texte de {n} versions, sur cet appareil.',
   searchVersions: 'Rechercher dans les versions',

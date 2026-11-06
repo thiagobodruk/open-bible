@@ -136,6 +136,8 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 /* Spacing utilities */
 .ml-8 { margin-left: 8px; }
 .mt-12 { margin-top: 12px; }
+.block { display: block; }
+.mt-6 { margin-top: 6px; }
 .mt-24 { margin-top: 24px; }
 .mt-28 { margin-top: 28px; }
 

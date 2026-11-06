@@ -218,7 +218,13 @@ export function SearchSheet() {
       )}
 
       {!typed && !ref && (
-        <Empty compact icon={MagnifyingGlass} iconSize={36} hint={multi ? t('searchEmptyHintMany', { n: selected.length }) : t('searchEmptyHint', { abbr: abbrOf(versionId) })}>
+        <Empty compact icon={MagnifyingGlass} iconSize={36} hint={
+            <>
+              <span className="block">{t('searchExamples')}</span>
+              <span className="block mt-6">{multi ? t('searchEmptyHintMany', { n: selected.length }) : t('searchEmptyHint', { abbr: abbrOf(versionId) })}</span>
+            </>
+          }
+        >
           {tooShort ? t('searchMin', { n: minChars(dq) }) : t('searchEmpty')}
         </Empty>
       )}

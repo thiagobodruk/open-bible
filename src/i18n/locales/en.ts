@@ -85,6 +85,7 @@ const en = {
   clearSearch: 'Clear search',
   goTo: 'Go to',
   searchEmpty: 'Search for a word or jump straight to a passage.',
+  searchExamples: 'For example: love, John 3:16 or Ps 23.',
   searchEmptyHint: 'Searches the text of the {abbr} version, right on this device.',
   searchEmptyHintMany: 'Searches the text of {n} versions, right on this device.',
   searchVersions: 'Search in versions',
