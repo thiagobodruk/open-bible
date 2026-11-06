@@ -145,3 +145,11 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .vchips .chip-btn { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: var(--muted); background: none; border: 1px solid var(--line); }
 .vchips .chip-btn[aria-pressed='true'] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 .entry.hit .ref .chip { margin-left: 0; }
+
+/* Typed reference: same card as a result, with a preview of the passage */
+.entry.hit.goto { margin-top: 12px; border-left-color: var(--accent); }
+.entry.hit.goto .ref { gap: 6px; }
+.entry.hit.goto .goto-ref { color: var(--fg); }
+.entry.hit.goto .goto-caret { margin-left: auto; flex: none; }
+.entry.hit.goto .txt { display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical; overflow: hidden; }
+.entry.hit.goto .txt sup { font-size: 0.7em; color: var(--muted); }

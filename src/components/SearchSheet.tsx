@@ -4,7 +4,7 @@ import { SearchField } from './SearchField';
 import { Sheet } from './Sheet';
 import { loadSearchIndex, pruneSearchIndex, type IndexedChapter } from '../data/bible';
 import { abbrOf } from '../data/catalog';
-import { useBookName, useBooks } from '../hooks';
+import { useBookName, useBooks, useChapter } from '../hooks';
 import { highlightRanges, minChars, PAGE_SIZE, parseReference, searchVerses, type Hit } from '../search';
 import { useLibrary } from '../state/library';
 import { trackFeature } from '../analytics';
@@ -89,6 +89,24 @@ export function SearchSheet() {
   const multi = selected.length > 1;
 
   const ref = useMemo(() => parseReference(dq, books), [dq, books]);
+  const text = useChapter(ref?.book.id ?? '', ref?.chapter ?? 0);
+  // Preview of the typed passage. A range shows the verse numbers, a single verse only its text.
+  const passage = useMemo(() => {
+    if (!ref || ref.verse === undefined || text.status !== 'ready') return null;
+    const last = Math.min(ref.verseEnd ?? ref.verse, text.verses.length);
+    const parts: React.ReactNode[] = [];
+    for (let v = ref.verse; v <= last; v++) {
+      if (!text.verses[v - 1]) continue;
+      parts.push(
+        <Fragment key={v}>
+          {v > ref.verse && ' '}
+          {last > ref.verse && <sup>{v} </sup>}
+          {text.verses[v - 1]}
+        </Fragment>,
+      );
+    }
+    return parts.length ? parts : null;
+  }, [ref, text]);
   const hits = useMemo(
     () => (chapters ? searchVerses(dq, chapters.map((id) => ({ versionId: id, chapters: indexes[id] })), versionId) : []),
     [dq, chapters, indexes, versionId],
@@ -98,14 +116,14 @@ export function SearchSheet() {
   // A new search goes back to the first page.
   useEffect(() => setLimit(PAGE_SIZE), [dq, chapters]);
 
-  const open = (book: string, chapter: number, verse?: number, version = versionId) => {
+  const open = (book: string, chapter: number, verse?: number, version = versionId, to?: number) => {
     // Scroll first: the verse focus triggered by goTo scrolls to the verse and must not be undone.
     scrollTo(0, 0);
     if (version !== versionId) {
       setSetting('versionId', version);
       notify(t('searchVersionChanged', { abbr: abbrOf(version) }));
     }
-    goTo(book, chapter, verse);
+    goTo(book, chapter, verse, to);
     close();
     go('/');
   };
@@ -158,14 +176,25 @@ export function SearchSheet() {
         </>
       }
     >
-      {ref && (
+      {ref && ref.verse === undefined && (
         <Row
           className="goto"
           eyebrow={t('goTo')}
-          title={refLabel(ref.book.name, ref.chapter, ref.verse, ref.verseEnd)}
-          onClick={() => open(ref.book.id, ref.chapter, ref.verse)}
+          title={refLabel(ref.book.name, ref.chapter)}
+          onClick={() => open(ref.book.id, ref.chapter)}
           end={<CaretRight size={18} weight="light" color="var(--muted)" />}
         />
+      )}
+
+      {ref && ref.verse !== undefined && (
+        <button className="entry hit goto" onClick={() => open(ref.book.id, ref.chapter, ref.verse, versionId, ref.verseEnd)}>
+          <div className="ref">
+            <span>{t('goTo')}</span>
+            <span className="goto-ref">{refLabel(ref.book.name, ref.chapter, ref.verse, ref.verseEnd)}</span>
+            <CaretRight size={16} weight="light" color="var(--muted)" className="goto-caret" />
+          </div>
+          {passage && <p className="txt">{passage}</p>}
+        </button>
       )}
 
       {!typed && !ref && (
