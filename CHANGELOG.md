@@ -2,6 +2,17 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.18.0
+
+### Added
+
+- Search can include several of the versions saved on the device, chosen with chips above the results. Each result shows its version.
+- Voice dictation in the search field.
+
+### Changed
+
+- Opening a result from another version switches to that version and shows a notice.
+
 ## 1.17.5
 
 ### Fixed
