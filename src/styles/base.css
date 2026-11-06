@@ -1,5 +1,6 @@
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+/* No horizontal pan or bounce of the page: the swipe between chapters is handled in JS. */
+html { -webkit-text-size-adjust: 100%; overflow-x: clip; overscroll-behavior-x: none; }
 body {
   margin: 0;
   background: var(--bg);
@@ -8,7 +9,8 @@ body {
   font-size: 16px;
   line-height: 1.5;
   -webkit-tap-highlight-color: transparent;
-  overscroll-behavior-y: none;
+  overscroll-behavior: none;
+  overflow-x: clip;
 }
 button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 input, textarea, select { font: inherit; color: inherit; }
