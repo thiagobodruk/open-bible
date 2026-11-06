@@ -57,10 +57,11 @@ export function SearchSheet() {
   useEffect(() => setLimit(PAGE_SIZE), [dq, chapters]);
 
   const open = (book: string, chapter: number, verse?: number) => {
+    // Scroll first: the verse focus triggered by goTo scrolls to the verse and must not be undone.
+    scrollTo(0, 0);
     goTo(book, chapter, verse);
     close();
     go('/');
-    scrollTo(0, 0);
   };
 
   const typed = dq.trim().length >= minChars(dq);

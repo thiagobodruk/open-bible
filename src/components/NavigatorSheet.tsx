@@ -27,8 +27,9 @@ export function NavigatorSheet() {
   // "ps 23" also works here: offers to go straight to the chapter.
   const ref = searching ? parseReference(q, books) : null;
   const pick = (id: string, n: number, v?: number) => {
-    goTo(id, n, v);
+    // Scroll first: the verse focus triggered by goTo scrolls to the verse and must not be undone.
     scrollTo(0, 0);
+    goTo(id, n, v);
     close();
   };
   const rows = useRef<Record<string, HTMLLIElement | null>>({});

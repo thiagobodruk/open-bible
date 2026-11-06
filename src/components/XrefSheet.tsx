@@ -49,10 +49,11 @@ export function XrefSheet() {
   }, [book, chapter, selKey, versionId]);
 
   const read = (x: Xref) => {
+    // Scroll first: the verse focus triggered by goTo scrolls to the verse and must not be undone.
+    scrollTo(0, 0);
     goTo(x.book, x.chapter, x.first);
     close();
     go('/');
-    scrollTo(0, 0);
   };
 
   return (

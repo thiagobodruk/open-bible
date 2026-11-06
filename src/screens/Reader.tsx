@@ -148,6 +148,10 @@ export function Reader() {
     const el = document.getElementById(`v-${focusVerse}`);
     if (el) {
       el.scrollIntoView({ block: 'center' });
+      // Closing the sheet that sent us here pops its history entry, and the browser then restores that entry's scroll position.
+      const again = () => requestAnimationFrame(() => el.scrollIntoView({ block: 'center' }));
+      addEventListener('popstate', again, { once: true });
+      setTimeout(() => removeEventListener('popstate', again), 1000);
       for (let v = focusVerse; v <= (focusTo ?? focusVerse); v++) document.getElementById(`v-${v}`)?.classList.add('flash');
     }
     clearFocus();
