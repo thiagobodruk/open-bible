@@ -2,6 +2,16 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.19.0
+
+### Added
+
+- Searching for a verse or range, such as "gn 1.27" or "mt 28:18-20", shows the passage text, one card per selected version.
+
+### Changed
+
+- Search results always show their version when more than one version is installed.
+
 ## 1.18.0
 
 ### Added
