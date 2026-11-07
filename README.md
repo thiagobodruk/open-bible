@@ -6,7 +6,7 @@
 
 **A free, minimalist Bible reader for everyone, everywhere 🇧🇷 🇬🇧 🇪🇸 🇨🇳 🇫🇷 🇩🇪 🇯🇵**
 
-Offline-first and installable on Android and iOS. No account, no backend, no tracking.
+Offline-first and installable on Android and iOS. No ads, no account required, and no tracking without your consent.
 
 **[🚀 Live demo: thiagobodruk.github.io/open-bible](https://thiagobodruk.github.io/open-bible/)**
 
@@ -45,9 +45,11 @@ Open Bible reads its texts from the [Bible](https://github.com/thiagobodruk/bibl
 - **Study tools:** select verses, highlight them in five colors, write notes, copy or share, and review everything in **My study**.
 - **Compare:** select verses and compare them across the versions you have downloaded.
 - **Cross-references:** select verses and tap References to see related passages from the public-domain Treasury of Scripture Knowledge, shown in the version you are reading. Each book's file is downloaded the first time you use it and then works offline.
-- **Ask AI (optional):** a round button on the reading page opens a prompt at the bottom of the screen, and the **AI** action appears when you select verses. Pick a shortcut (Summarize, Explain, Context) or write your own question, about the selected verses or the whole chapter. The passage shows as a pill inside the field, and you can remove the verses to go back to the chapter. Answers are short, stream in after a brief pause, and end with a reminder that the AI can make mistakes. You can dictate the question with the microphone where the browser supports speech recognition. The question and the passage go to an AI service through a small Cloudflare Worker (`worker/`) that holds the API key, so the key is never in the app. The Worker limits requests per IP and instructs the model to stay on the text and the Bible, refuse harmful content, stay neutral between traditions and point to help in a crisis. The button only appears when the app is built with the Worker address (the `AI_URL` repository variable). Everything else keeps working offline.
-- **Search:** full-text search in the current version, plus quick references such as `jn 3:16`.
-- **Private by design:** highlights, notes, and settings stay in your browser (IndexedDB and localStorage), with JSON export and import for backups.
+- **Ask AI (optional):** a round button on the reading page opens a prompt at the bottom of the screen, and the **AI** action appears when you select verses. Pick a shortcut (Summarize, Explain, Relate, Context) or write your own question, about the selected verses or the whole chapter. The passage shows as a pill inside the field, and you can remove the verses to go back to the chapter. Relate connects the passage with other parts of the Bible, using its cross-references as a starting point. Answers are short, stream in after a brief pause, use lists, bold and italics, and end with a reminder that the AI can make mistakes. Bible references in an answer are links: tapping one opens a preview of the passage inside the answer, with a button to open it in the reader. You can dictate the question with the microphone where the browser supports speech recognition. The question and the passage go to an AI service through a small Cloudflare Worker (`worker/`) that holds the API key, so the key is never in the app. The Worker limits requests per IP and instructs the model to stay on the text and the Bible, refuse harmful content, stay neutral between traditions and point to help in a crisis. The action only appears when the app is built with the Worker address (the `AI_URL` repository variable). Everything else keeps working offline.
+- **Search:** full-text search in the active version. Chips let you include other versions you have downloaded, and each result shows its version; tapping one opens it in that version. Type a reference such as `jn 3:16` or `mt 28:18-20` to preview the passage in each selected version. A microphone dictates into the field where the browser supports speech recognition.
+- **Private by design:** highlights, notes, and settings are stored on your device (IndexedDB and localStorage), with JSON export and import for backups.
+- **Account and sync (optional):** sign in with Google to keep your notes, highlights, reading position and reading settings in sync across devices through Firebase. The device stays the source: everything works offline, changes go to the cloud when there is a network, and the most recent change wins. You can delete your account from Settings. Without signing in, nothing leaves your device.
+- **Usage statistics (optional):** anonymous Google Analytics events through Firebase, only after you agree. They say that a feature was used and never carry verse text, notes or AI questions. The terms of use and the privacy policy are inside the app.
 - **Interface in 7 languages:** English, Portuguese (Brazil), Spanish, French, German, Simplified Chinese, and Japanese. The language follows your browser and can be changed in Settings, independently of the Bible language.
 - **Listen:** read a chapter aloud with your device's own voices (Web Speech API), with play and pause, speed, voice choice and automatic advance to the next chapter. No audio is downloaded or sent anywhere; the quality and the languages depend on the voices installed on the device.
 - **Feedback:** the menu and Settings have a form for bugs, suggestions, translation errors and version requests. It opens a prefilled GitHub issue with the app version, Bible version and passage attached. Nothing is sent until you submit it on GitHub.
@@ -71,7 +73,10 @@ Open Bible reads its texts from the [Bible](https://github.com/thiagobodruk/bibl
 | Cross-references (Treasury of Scripture Knowledge) | Done |
 | Compare versions side by side | Done |
 | Ask AI with a Cloudflare Worker and an AI service (optional) | Done |
-| Voice dictation for the AI question | Done |
+| Voice dictation for the AI question and the search | Done |
+| Search in several downloaded versions, with a passage preview for typed references | Done |
+| Google sign-in and sync of notes, highlights and settings (Firebase) | Done |
+| Anonymous usage statistics with consent | Done |
 
 ## How it works
 
@@ -79,7 +84,8 @@ Open Bible reads its texts from the [Bible](https://github.com/thiagobodruk/bibl
 2. Downloading a version fetches its JSON file from jsDelivr, with a fallback to GitHub, inside a Web Worker. The data is validated and stored by book in IndexedDB.
 3. Reading, search, highlights, and notes all work from local data, so the app keeps working offline.
 4. Cross-references are static JSON files in `public/xrefs/`, one per book, generated by `scripts/build-xrefs.mjs` from the Treasury of Scripture Knowledge (up to 10 per verse). Each file is fetched on first use and cached by the service worker.
-5. Ask AI is the only feature that needs a server: the app posts the question and the passage to the Worker, which checks the origin, applies the rate limits and streams the AI answer back.
+5. Ask AI needs a server: the app posts the question and the passage to the Worker, which checks the origin, applies the rate limits and streams the AI answer back. For Relate, the app also sends a short list of the passage's cross-references.
+6. Signing in and syncing, and the usage statistics, use a Firebase project configured in `src/firebase-config.ts`. Firestore keeps each person's data under `users/{uid}`, protected by `firestore.rules`. Everything else works without any server.
 
 ## Development
 
@@ -91,6 +97,8 @@ npm run dev       # dev server at http://localhost:5173/open-bible/
 npm run build     # typecheck and production build into dist/
 npm run preview   # serve the build at http://localhost:4173/open-bible/
 ```
+
+Sign-in, sync and statistics use the Firebase project in `src/firebase-config.ts`. For your own fork, create a Firebase project, enable Google sign-in, publish `firestore.rules` and replace the configuration there. Setting it to `null` turns the three features off and the app works as a plain offline reader.
 
 To try Ask AI locally, deploy the Worker (see below), add `http://localhost:5173` to `ALLOWED_ORIGINS` in `worker/wrangler.toml`, and start the dev server with `VITE_AI_URL=<worker url> npm run dev`.
 
@@ -110,7 +118,7 @@ node scripts/build-catalog.mjs [commit-sha]
 
 ## Ask AI Worker
 
-The Ask AI feature needs a small server, because the AI service key must never reach the browser. The Worker in `worker/` is that server: a [Cloudflare Worker](https://developers.cloudflare.com/workers/) that keeps your key as a secret, accepts calls only from your site, limits requests per IP, caps the size of each question and answer, and streams the reply back. Its system prompt keeps answers short, on the text and the Bible, and refuses harmful content. It is deployed separately from the site and is optional: without it the AI button is hidden and everything else works.
+The Ask AI feature needs a small server, because the AI service key must never reach the browser. The Worker in `worker/` is that server: a [Cloudflare Worker](https://developers.cloudflare.com/workers/) that keeps your key as a secret, accepts calls only from your site, limits requests per IP, caps the size of each question and answer, and streams the reply back. Its system prompt keeps answers short and easy to scan, on the text and the Bible, and refuses harmful content. It is deployed separately from the site and is optional: without it the AI button is hidden and everything else works.
 
 ### Set it up with your own API key
 
@@ -210,6 +218,7 @@ The app shows a generic message; the Worker answers with a JSON code such as `{ 
 | PWA and offline | [`vite-plugin-pwa`](https://vite-pwa-org.netlify.app) (Workbox) |
 | Icons | [Phosphor Icons](https://phosphoricons.com) |
 | Fonts | Inter and Literata via [Fontsource](https://fontsource.org), bundled at build time |
+| Account, sync and statistics (optional) | [Firebase](https://firebase.google.com): Authentication (Google), Firestore and Analytics |
 | AI (optional) | An AI service through a [Cloudflare Worker](https://developers.cloudflare.com/workers/) |
 | Hosting | GitHub Pages, deployed by GitHub Actions |
 
@@ -217,24 +226,29 @@ The app shows a generic message; the Worker answers with a JSON code such as `{ 
 
 ```
 src/
-├─ components/   sheets, selection bar, AI prompt and answer, toast, search field
-├─ screens/      Reader, Study (My study), Library, Settings
+├─ components/   sheets (selection, search, library, My study, AI), selection bar, AI prompt and answer, toast
+├─ screens/      Reader, Settings, Privacy and Terms
 ├─ data/         books, catalog, IndexedDB access, download worker, cross-references
 ├─ i18n/         translator and one locale file per interface language
-├─ state/        Zustand stores: settings, study, library, UI, AI
+├─ state/        Zustand stores: settings, study, library, UI, AI, account
 ├─ styles/       theme tokens and CSS by area
 ├─ ai.ts         client for the Worker (streaming)
-└─ stt.ts        voice dictation
+├─ search.ts     text search and reference parsing
+├─ stt.ts, useDictation.ts   voice dictation
+├─ sync.ts       Firestore sync
+├─ analytics.ts  usage statistics, only with consent
+└─ firebase-config.ts   Firebase project (null turns sign-in, sync and statistics off)
 public/xrefs/    cross-reference files, one per book
 scripts/         catalog and cross-reference generators
 worker/          Cloudflare Worker for Ask AI
+firestore.rules  per-user access rules for Firestore
 ```
 
 ## Deployment
 
 GitHub Pages deploys the app through `.github/workflows/deploy.yml` on every push to `main`. The app is served from `/open-bible/`, set in `vite.config.ts` (`base`) and reused by the PWA manifest. The build also emits `404.html` with the same content as `index.html`, so GitHub Pages opens chapter links such as `/open-bible/pt_nvi/jo/3`.
 
-The Worker is not part of this workflow: deploy it with `npx wrangler deploy` inside `worker/` whenever it changes.
+The Worker has its own workflow, `.github/workflows/worker.yml`, which publishes `worker/` to Cloudflare whenever it changes on `main` (see [Deploy it from GitHub](#deploy-it-from-github)). You can also deploy it by hand with `npx wrangler deploy` inside `worker/`.
 
 One-time repository setting: **Settings > Pages > Build and deployment > Source: GitHub Actions**.
 
