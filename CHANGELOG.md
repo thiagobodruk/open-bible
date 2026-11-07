@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.21.0
+
+### Changed
+
+- The highlight colors follow a new palette, and the fifth color is purple instead of orange. Highlights you already made keep working.
+
 ## 1.20.4
 
 ### Changed
