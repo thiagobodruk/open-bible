@@ -78,8 +78,8 @@ export function AskBar() {
         <div className="ask-chips">
           <button className="chip-btn" onClick={() => ask(t('askSummaryQ'))}>{t('askSummary')}</button>
           <button className="chip-btn" onClick={() => ask(t('askExplainQ'))}>{t('askExplain')}</button>
-          <button className="chip-btn" onClick={() => ask(t('askContextQ'))}>{t('askContext')}</button>
           <button className="chip-btn" onClick={relate}>{t('askRelate')}</button>
+          <button className="chip-btn" onClick={() => ask(t('askContextQ'))}>{t('askContext')}</button>
         </div>
         <PromptField
           context={ref}
