@@ -106,7 +106,7 @@ const ptBR: Messages = {
   green: 'Verde',
   blue: 'Azul',
   pink: 'Rosa',
-  orange: 'Laranja',
+  orange: 'Roxo',
   shareApp: 'Compartilhar app',
   listen: 'Ouvir capítulo',
   listenNoVoice: 'Seu aparelho não tem voz para este idioma',

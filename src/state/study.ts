@@ -6,6 +6,7 @@ import { useSettings } from './settings';
 import { loadPosition, savePosition } from './position';
 import { trackFeature } from '../analytics';
 
+/** The fifth color is stored as "orange" because that was its name before the palette changed to purple. Highlights, backups and sync keep working. */
 export type HlColor = 'yellow' | 'green' | 'blue' | 'pink' | 'orange';
 export const HL_COLORS: HlColor[] = ['yellow', 'green', 'blue', 'pink', 'orange'];
 
