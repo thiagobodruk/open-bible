@@ -45,6 +45,8 @@ const fr: Messages = {
   askSummary: "Résumer",
   askExplainQ: 'Explique ce passage en termes simples.',
   askContextQ: 'Quel est le contexte historique et littéraire de ce passage ?',
+  askRelate: 'Relier',
+  askRelateQ: 'Relie ce passage à d’autres passages de la Bible.',
   askSummaryQ: 'Résume ce passage en quelques phrases.',
   askDisclaimer: "L'IA peut faire des erreurs. Vérifiez toujours les réponses.",
   askError: "Impossible d'obtenir une réponse. Réessayez.",

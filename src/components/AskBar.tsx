@@ -9,10 +9,16 @@ import { useUI } from '../state/ui';
 import { abbrOf } from '../data/catalog';
 import { useBookName, useChapter } from '../hooks';
 import { refLabel } from '../ref';
+import { loadBook } from '../data/bible';
+import { xrefsFor } from '../data/xrefs';
+import { trackFeature } from '../analytics';
 import { useT } from '../i18n';
 import { useScrollFade } from '../useScrollFade';
 
 const MAX_TEXT = 3000;
+/** Cross-references sent to the AI as a starting point, and how much of each text. */
+const MAX_RELATED = 12;
+const RELATED_SNIPPET = 160;
 
 /** Question bar at the bottom of the reader. The context is the selection or, with no selection, the whole chapter. */
 export function AskBar() {
@@ -32,7 +38,7 @@ export function AskBar() {
     ? refLabel(bookName(book), chapter, selection[0], selection[selection.length - 1])
     : refLabel(bookName(book), chapter);
 
-  const ask = (q: string) => {
+  const ask = (q: string, related?: string[]) => {
     const asked = q.trim();
     if (!asked || !verses.length) return;
     const passage: AiPassage = {
@@ -42,9 +48,30 @@ export function AskBar() {
       wide: selection.length
         ? { ref: refLabel(bookName(book), chapter), text: verses.map((v, i) => `${i + 1} ${v}`).join('\n').slice(0, MAX_TEXT) }
         : undefined,
+      related: related?.length ? related : undefined,
     };
     useAsk.getState().start(asked, passage, uiLang);
     open('ask');
+  };
+
+  /** Starts from the cross-references of the selection, which are only a lead: the AI may go further. */
+  const relate = async () => {
+    if (!verses.length) return;
+    trackFeature('ask_relate');
+    let related: string[] = [];
+    try {
+      const found = (await xrefsFor(book, chapter, numbers)).slice(0, MAX_RELATED);
+      related = await Promise.all(
+        found.map(async (x) => {
+          const label = refLabel(bookName(x.book), x.chapter, x.first, x.last);
+          const body = (await loadBook(versionId, x.book))?.chapters[x.chapter - 1]?.slice(x.first - 1, x.last).join(' ') ?? '';
+          return body ? `${label}: ${body.slice(0, RELATED_SNIPPET)}` : label;
+        }),
+      );
+    } catch {
+      // Without the references file the AI still relates the passage on its own.
+    }
+    ask(t('askRelateQ'), related);
   };
 
   return (
@@ -53,6 +80,7 @@ export function AskBar() {
         <div className="ask-chips" ref={chips}>
           <button className="chip-btn" onClick={() => ask(t('askSummaryQ'))}>{t('askSummary')}</button>
           <button className="chip-btn" onClick={() => ask(t('askExplainQ'))}>{t('askExplain')}</button>
+          <button className="chip-btn" onClick={relate}>{t('askRelate')}</button>
           <button className="chip-btn" onClick={() => ask(t('askContextQ'))}>{t('askContext')}</button>
         </div>
         <PromptField

@@ -45,6 +45,8 @@ const es: Messages = {
   askSummary: "Resumir",
   askExplainQ: 'Explica este pasaje en lenguaje sencillo.',
   askContextQ: '¿Cuál es el contexto histórico y literario de este pasaje?',
+  askRelate: 'Relacionar',
+  askRelateQ: 'Relaciona este pasaje con otros pasajes de la Biblia.',
   askSummaryQ: 'Resume este pasaje en pocas frases.',
   askDisclaimer: "La IA puede cometer errores. Comprueba siempre las respuestas.",
   askError: 'No se pudo obtener la respuesta. Inténtalo de nuevo.',

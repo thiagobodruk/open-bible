@@ -45,6 +45,8 @@ const ptBR: Messages = {
   askSummary: "Resumir",
   askExplainQ: 'Explique esta passagem em linguagem simples.',
   askContextQ: 'Qual é o contexto histórico e literário desta passagem?',
+  askRelate: 'Relacionar',
+  askRelateQ: 'Relacione esta passagem com outras passagens da Bíblia.',
   askSummaryQ: 'Resuma esta passagem em poucas frases.',
   askDisclaimer: "A IA pode cometer erros. Sempre confira as respostas.",
   askError: 'Não foi possível obter a resposta. Tente de novo.',

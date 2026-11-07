@@ -43,6 +43,8 @@ const en = {
   askSummary: "Summarize",
   askExplainQ: 'Explain this passage in simple terms.',
   askContextQ: 'What is the historical and literary context of this passage?',
+  askRelate: 'Relate',
+  askRelateQ: 'Connect this passage to other passages in the Bible.',
   askSummaryQ: 'Summarize this passage in a few sentences.',
   askDisclaimer: "AI can make mistakes. Always check the answers.",
   askError: 'Could not get an answer. Try again.',

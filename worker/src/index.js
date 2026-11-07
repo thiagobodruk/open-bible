@@ -15,7 +15,7 @@ const LANGS = {
   ja: 'Japanese',
 };
 
-const LIMITS = { question: 600, ref: 120, version: 80, text: 3000, history: 10, turn: 3000 };
+const LIMITS = { question: 600, ref: 120, version: 80, text: 3000, history: 10, turn: 3000, related: 12, relatedItem: 260 };
 const DEFAULT_MODEL = 'openai/gpt-oss-20b';
 const DEFAULT_DAILY_LIMIT = 30;
 
@@ -81,6 +81,20 @@ export function buildMessages(body) {
     messages.push({
       role: 'system',
       content: `The reader is looking at ${ref || 'a passage'}${version ? ` (${version})` : ''}:\n"""\n${passage}\n"""`,
+    });
+  }
+  // Cross-references the app found for the passage. They are only leads for the Relate shortcut.
+  const related = (Array.isArray(body.passage?.related) ? body.passage.related : [])
+    .map((r) => text(r, LIMITS.relatedItem))
+    .filter(Boolean)
+    .slice(0, LIMITS.related);
+  if (related.length) {
+    messages.push({
+      role: 'system',
+      content:
+        'Cross-references the app found for this passage (Treasury of Scripture Knowledge). Use them as leads, not as a limit: you may also cite other passages you are sure about.\n' +
+        related.map((r) => `- ${r}`).join('\n') +
+        '\nWhen the reader asks to relate the passage to other parts of the Bible: pick the 3 to 5 strongest connections, one bullet each. Start each bullet with the kind of link in **bold** (quotation, fulfillment, contrast, same theme, background), then the reference in full and one short sentence on how it connects to the selected text. For this request you may use up to 220 words, with no introduction and no closing summary. Skip any connection you are not sure about.',
     });
   }
   const history = Array.isArray(body.history) ? body.history.slice(-LIMITS.history) : [];

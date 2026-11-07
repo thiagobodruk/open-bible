@@ -45,6 +45,8 @@ const ja: Messages = {
   askSummary: "要約",
   askExplainQ: 'この箇所をやさしい言葉で説明してください。',
   askContextQ: 'この箇所の歴史的・文学的な背景は何ですか？',
+  askRelate: '関連',
+  askRelateQ: 'この箇所を聖書の他の箇所と結びつけてください。',
   askSummaryQ: 'この箇所を数文で要約してください。',
   askDisclaimer: "AIは間違えることがあります。回答は必ず確認してください。",
   askError: '回答を取得できませんでした。もう一度お試しください。',
