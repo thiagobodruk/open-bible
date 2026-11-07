@@ -255,7 +255,8 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 .ask-msg.user { white-space: pre-wrap; justify-self: end; max-width: 88%; padding: 10px 14px; border-radius: 18px 18px 4px 18px; background: var(--surface); }
 .ask-msg.assistant { display: grid; gap: 12px; font-family: var(--font-serif); font-size: 17px; }
 .ai-para { display: grid; gap: 2px; }
-.ask-msg.assistant li > .ref-preview { margin: 8px 0 4px -1.3em; width: calc(100% + 1.3em); }
+.ai-para > .ref-preview { margin: 10px 0 12px; }
+.ask-msg.assistant li > .ref-preview { margin: 10px 0 8px -1.3em; width: calc(100% + 1.3em); }
 .ask-msg.assistant ul, .ask-msg.assistant ol { display: grid; gap: 6px; padding-left: 1.3em; }
 .ask-msg.assistant ul { list-style: disc; }
 .ask-msg.assistant ol { list-style: decimal; }

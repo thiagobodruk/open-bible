@@ -57,9 +57,9 @@ function Passage({ target, onOpen, onClose }: { target: RefTarget; onOpen: () =>
   const versionId = useSettings((s) => s.versionId);
   const text = useChapter(target.book.id, target.chapter);
   const ready = text.status === 'ready';
-  // The preview opens below the link; make sure it is in view.
+  // The preview opens below the link; bring it to the middle of the visible area.
   useEffect(() => {
-    if (ready) box.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    if (ready) box.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }, [ready]);
   if (text.status !== 'ready') return null;
   const { verse, verseEnd } = target;
