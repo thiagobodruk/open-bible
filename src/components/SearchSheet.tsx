@@ -105,7 +105,7 @@ export function SearchSheet() {
     scrollTo(0, 0);
     if (version !== versionId) {
       setSetting('versionId', version);
-      notify(t('searchVersionChanged', { abbr: abbrOf(version) }));
+      notify(t('versionToast', { abbr: abbrOf(version) }));
     }
     goTo(book, chapter, verse, to);
     close();
