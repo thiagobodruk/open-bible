@@ -29,6 +29,7 @@ const en = {
   askTitle: "Ask the AI",
   askMic: "Dictate",
   askMicStop: "Stop dictation",
+  askOpenPassage: 'Open in the reader',
   sttDenied: "Microphone access is blocked. Allow it in your browser settings.",
   sttNetwork: "Voice typing needs an internet connection.",
   sttFailed: "Could not use voice typing.",

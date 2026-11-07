@@ -31,6 +31,7 @@ const de: Messages = {
   askTitle: "Frag die KI",
   askMic: "Diktieren",
   askMicStop: "Diktat beenden",
+  askOpenPassage: 'Im Leser öffnen',
   sttDenied: "Der Mikrofonzugriff ist blockiert. Erlaube ihn in den Browsereinstellungen.",
   sttNetwork: "Diktieren braucht eine Internetverbindung.",
   sttFailed: "Diktieren ist nicht möglich.",

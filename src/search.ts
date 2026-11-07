@@ -46,6 +46,29 @@ export function parseReference(input: string, books: RefBook[]): RefTarget | nul
   return { book, chapter, verse: m[3] ? Number(m[3]) : undefined, verseEnd: m[4] ? Number(m[4]) : undefined };
 }
 
+/** Bible references found in running text, such as "Mateus 24:15" or "Marcos 13". Only books of the list count. */
+export function findReferences(text: string, books: RefBook[]): { start: number; end: number; target: RefTarget }[] {
+  type Found = { start: number; end: number; target: RefTarget };
+  const tail = String.raw`\s*\d+(?:\s*:\s*\d+(?:\s*[-\u2013]\s*\d+)?)?`;
+  const scan = (re: RegExp): Found[] =>
+    [...text.matchAll(re)].flatMap((m) => {
+      const start = m.index!;
+      const raw = m[0];
+      const target = parseReference(raw.replace(/\u2013/g, '-'), books);
+      if (target) return [{ start, end: start + raw.length, target }];
+      // "de Daniel 7": the first word is not part of the name, so try again without it.
+      const rest = raw.replace(/^\S+\s+/, '');
+      const again = rest !== raw ? parseReference(rest.replace(/\u2013/g, '-'), books) : null;
+      return again ? [{ start: start + raw.length - rest.length, end: start + raw.length, target: again }] : [];
+    });
+  // Numbered books first ("1 João 4:8"), so the number is not taken as the chapter of the word before it.
+  const numbered = scan(new RegExp(String.raw`[123]\s?\p{L}[\p{L}.]*` + tail, 'gu'));
+  const plain = scan(new RegExp(String.raw`\p{L}[\p{L}.]*(?:\s+\p{L}[\p{L}.]*)?` + tail, 'gu')).filter(
+    (f) => !numbered.some((n) => f.start < n.end && n.start < f.end),
+  );
+  return [...numbered, ...plain].sort((a, b) => a.start - b.start);
+}
+
 export interface Hit {
   versionId: string;
   book: string;

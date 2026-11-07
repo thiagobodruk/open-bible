@@ -31,6 +31,7 @@ const ptBR: Messages = {
   askTitle: "Pergunte para a IA",
   askMic: "Ditar",
   askMicStop: "Parar ditado",
+  askOpenPassage: 'Abrir na leitura',
   sttDenied: "O acesso ao microfone está bloqueado. Libere nas configurações do navegador.",
   sttNetwork: "O ditado precisa de conexão com a internet.",
   sttFailed: "Não foi possível usar o ditado.",

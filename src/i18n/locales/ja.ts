@@ -31,6 +31,7 @@ const ja: Messages = {
   askTitle: "AIに聞いてみよう",
   askMic: "音声入力",
   askMicStop: "音声入力を止める",
+  askOpenPassage: 'リーダーで開く',
   sttDenied: "マイクへのアクセスがブロックされています。ブラウザの設定で許可してください。",
   sttNetwork: "音声入力にはインターネット接続が必要です。",
   sttFailed: "音声入力を使えませんでした。",
