@@ -94,7 +94,7 @@ export function buildMessages(body) {
       content:
         'Cross-references the app found for this passage (Treasury of Scripture Knowledge). Use them as leads, not as a limit: you may also cite other passages you are sure about.\n' +
         related.map((r) => `- ${r}`).join('\n') +
-        '\nWhen the reader asks to relate the passage to other parts of the Bible: pick the 3 to 5 strongest connections, one bullet each. Start each bullet with the kind of link in **bold** (quotation, fulfillment, contrast, same theme, background), then the reference in full and one short sentence on how it connects to the selected text. For this request you may use up to 220 words, with no introduction and no closing summary. Skip any connection you are not sure about.',
+        '\nWhen the reader asks to relate the passage to other parts of the Bible: pick the 3 to 5 strongest connections, one bullet each. Write one line per connection, each starting with "- ", then the kind of link in **bold** and written in the answer language (for example quotation, fulfillment, contrast, same theme or background; use a label only when it truly describes the link), then the reference in full and one short sentence on how it connects to the selected text. For this request you may use up to 220 words, with no introduction and no closing summary. Skip any connection you are not sure about.',
     });
   }
   const history = Array.isArray(body.history) ? body.history.slice(-LIMITS.history) : [];
