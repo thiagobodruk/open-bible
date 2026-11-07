@@ -69,6 +69,12 @@ export function LibrarySheet() {
     notify(t(key, { abbr: abbrOf(id) }));
   };
 
+  /** Choosing an installed version closes the sheet; the toast says the version changed. */
+  const pick = (id: string) => {
+    if (id !== versionId) choose(id);
+    close();
+  };
+
   const get = async (id: string) => {
     if (await download(id)) {
       choose(id, 'versionDownloaded');
@@ -86,7 +92,7 @@ export function LibrarySheet() {
           <button
             className="grow"
             disabled={!isDown}
-            onClick={() => choose(v.id)}
+            onClick={() => pick(v.id)}
             aria-label={`${v.name}${active ? `, ${t('selected')}` : ''}`}
           >
             <div className="nm" dir={v.rtl ? 'rtl' : undefined} style={v.rtl ? { textAlign: 'left' } : undefined}>{v.name}</div>
