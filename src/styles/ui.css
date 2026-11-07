@@ -254,7 +254,9 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 .ask-msg { font-size: 16px; line-height: 1.6; }
 .ask-msg.user { white-space: pre-wrap; justify-self: end; max-width: 88%; padding: 10px 14px; border-radius: 18px 18px 4px 18px; background: var(--surface); }
 .ask-msg.assistant { display: grid; gap: 12px; font-family: var(--font-serif); font-size: 17px; }
-.ask-msg.assistant p { white-space: pre-line; }
+.ai-para { display: grid; gap: 2px; }
+.ai-para > .ref-preview { margin: 10px 0 12px; }
+.ask-msg.assistant li > .ref-preview { margin: 10px 0 8px -1.3em; width: calc(100% + 1.3em); }
 .ask-msg.assistant ul, .ask-msg.assistant ol { display: grid; gap: 6px; padding-left: 1.3em; }
 .ask-msg.assistant ul { list-style: disc; }
 .ask-msg.assistant ol { list-style: decimal; }
@@ -263,7 +265,9 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 .ref-link { font: inherit; color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; cursor: pointer; }
 .ref-link[aria-expanded='true'] { background: color-mix(in srgb, var(--accent) 14%, transparent); border-radius: 4px; }
 .ref-preview { display: grid; gap: 8px; justify-items: start; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--surface); border-left: 3px solid var(--accent); font-family: var(--font-serif); font-size: 15.5px; line-height: 1.55; }
-.ref-preview-head { display: flex; align-items: center; gap: 8px; font-family: var(--font-ui); font-size: 13px; }
+.ref-preview { width: 100%; }
+.ref-preview-head { display: flex; align-items: center; gap: 8px; width: 100%; font-family: var(--font-ui); font-size: 13px; }
+.ref-preview-close { width: 28px; height: 28px; margin: -4px -6px -4px auto; color: var(--muted); }
 .ref-preview p { white-space: normal; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical; overflow: hidden; }
 .ref-preview sup { font-size: 0.7em; color: var(--muted); }
 .ask-error { display: grid; gap: 10px; justify-items: start; color: var(--danger); font-size: 15px; }
