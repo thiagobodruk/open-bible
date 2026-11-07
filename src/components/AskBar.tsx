@@ -13,6 +13,7 @@ import { loadBook } from '../data/bible';
 import { xrefsFor } from '../data/xrefs';
 import { trackFeature } from '../analytics';
 import { useT } from '../i18n';
+import { useScrollFade } from '../useScrollFade';
 
 const MAX_TEXT = 3000;
 /** Cross-references sent to the AI as a starting point, and how much of each text. */
@@ -29,6 +30,7 @@ export function AskBar() {
   const closeBar = useAsk((s) => s.closeBar);
   const bookName = useBookName();
   const text = useChapter(book, chapter);
+  const chips = useScrollFade<HTMLDivElement>();
 
   const verses = text.status === 'ready' ? text.verses : [];
   const numbers = selection.length ? selection : verses.map((_, i) => i + 1);
@@ -75,7 +77,7 @@ export function AskBar() {
   return (
     <Sheet modeless compact title={t('askTitle')} icon={Sparkle} onClose={closeBar}>
       <div className="ask-body">
-        <div className="ask-chips">
+        <div className="ask-chips" ref={chips}>
           <button className="chip-btn" onClick={() => ask(t('askSummaryQ'))}>{t('askSummary')}</button>
           <button className="chip-btn" onClick={() => ask(t('askExplainQ'))}>{t('askExplain')}</button>
           <button className="chip-btn" onClick={relate}>{t('askRelate')}</button>

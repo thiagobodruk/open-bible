@@ -16,6 +16,7 @@ import { useUI } from '../state/ui';
 import { go } from '../router';
 import { refLabel } from '../ref';
 import { useT } from '../i18n';
+import { useScrollFade } from '../useScrollFade';
 import { Empty } from './Empty';
 
 function Highlighted({ hit, query }: { hit: Hit; query: string }) {
@@ -46,6 +47,7 @@ export function SearchSheet() {
 
   const books = useBooks();
   const bookName = useBookName();
+  const chipsRow = useScrollFade<HTMLDivElement>();
 
   // Installed versions, the active one first. The selection only keeps versions that are still installed.
   const versions = useMemo(
@@ -169,7 +171,7 @@ export function SearchSheet() {
           }}
         />
         {versions.length > 1 && (
-          <div className="vchips" role="group" aria-label={t('searchVersions')}>
+          <div className="vchips" ref={chipsRow} role="group" aria-label={t('searchVersions')}>
             {versions.map((id) => {
               const on = selected.includes(id);
               return (

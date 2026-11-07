@@ -80,11 +80,11 @@
 .sheet-colors .swatch { width: 38px; height: 38px; border-radius: 50%; background: var(--c); border: 2px solid transparent; flex: none; }
 .sheet-colors .swatch.all { background: conic-gradient(var(--hl-yellow), var(--hl-green), var(--hl-blue), var(--hl-pink), var(--hl-orange), var(--hl-yellow)); background-origin: border-box; }
 .sheet-colors .swatch[aria-pressed='true'] { border-color: var(--bg); box-shadow: 0 0 0 2px var(--fg); }
-:root[data-theme='dark'] .sheet-colors .swatch.c-green { --c: #5a9a5e; }
-:root[data-theme='dark'] .sheet-colors .swatch.c-yellow { --c: #c9ae3d; }
-:root[data-theme='dark'] .sheet-colors .swatch.c-blue { --c: #5a8fd1; }
-:root[data-theme='dark'] .sheet-colors .swatch.c-pink { --c: #c9718f; }
-:root[data-theme='dark'] .sheet-colors .swatch.c-orange { --c: #d28d4d; }
+:root[data-theme='dark'] .sheet-colors .swatch.c-green { --c: #8cca3f; }
+:root[data-theme='dark'] .sheet-colors .swatch.c-yellow { --c: #cec33b; }
+:root[data-theme='dark'] .sheet-colors .swatch.c-blue { --c: #3ba5ce; }
+:root[data-theme='dark'] .sheet-colors .swatch.c-pink { --c: #ce3b95; }
+:root[data-theme='dark'] .sheet-colors .swatch.c-orange { --c: #953bce; }
 
 @keyframes fade { from { opacity: 0; } }
 @keyframes rise { from { transform: translate(-50%, 24px); opacity: 0; } }
@@ -227,6 +227,11 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 .ask-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
 .ask-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
 .ask-chips::-webkit-scrollbar { display: none; }
+/* Rows that scroll sideways fade out at the edge that has more content (--fl and --fr come from useScrollFade). */
+.ask-chips, .vchips {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fl, 0px), #000 calc(100% - var(--fr, 0px)), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--fl, 0px), #000 calc(100% - var(--fr, 0px)), transparent);
+}
 .chip-btn { flex: none; height: 34px; padding: 0 14px; border-radius: 999px; background: var(--surface); font-size: 14px; font-weight: 500; }
 @media (hover: hover) { .chip-btn:hover { background: var(--surface-2); } }
 .ask-form { display: flex; align-items: center; gap: 8px; }
