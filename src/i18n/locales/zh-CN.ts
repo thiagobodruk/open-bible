@@ -31,6 +31,7 @@ const zhCN: Messages = {
   askTitle: "向 AI 提问",
   askMic: "语音输入",
   askMicStop: "停止语音输入",
+  askOpenPassage: '在阅读中打开',
   sttDenied: "麦克风权限被阻止，请在浏览器设置中允许。",
   sttNetwork: "语音输入需要联网。",
   sttFailed: "无法使用语音输入。",

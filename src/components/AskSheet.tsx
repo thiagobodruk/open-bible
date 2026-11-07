@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { ArrowClockwise, Copy, Sparkle, WarningCircle } from '@phosphor-icons/react';
 import { PromptField } from './PromptField';
 import { Sheet } from './Sheet';
@@ -9,15 +9,7 @@ import { useUI } from '../state/ui';
 import { useT } from '../i18n';
 import { Button } from './Button';
 import { copyText } from '../share';
-
-/** Only the **bold** that models tend to use; the rest stays as plain text. */
-function Inline({ text }: { text: string }) {
-  return (
-    <>
-      {text.split(/\*\*(.+?)\*\*/g).map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : <Fragment key={i}>{part}</Fragment>))}
-    </>
-  );
-}
+import { AiText } from './AiText';
 
 export function AskSheet() {
   const t = useT();
@@ -80,7 +72,7 @@ export function AskSheet() {
         {passage && <div className="ask-ref">{passage.ref} · {passage.version}</div>}
         {messages.map((m, i) => (
           <div key={i} ref={i === messages.length - 2 ? asked : undefined} className={`ask-msg ${m.role}`}>
-            {m.content ? <Inline text={m.content} /> : busy && i === messages.length - 1 ? <span className="ask-dots" role="status" aria-label={t('askThinking')}><i /><i /><i /></span> : null}
+            {m.content ? (m.role === 'assistant' ? <AiText text={m.content} /> : m.content) : busy && i === messages.length - 1 ? <span className="ask-dots" role="status" aria-label={t('askThinking')}><i /><i /><i /></span> : null}
           </div>
         ))}
         {answer?.role === 'assistant' && answer.content && !busy && status !== 'error' && (

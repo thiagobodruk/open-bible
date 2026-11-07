@@ -31,6 +31,7 @@ const fr: Messages = {
   askTitle: "Demandez à l'IA",
   askMic: "Dicter",
   askMicStop: "Arrêter la dictée",
+  askOpenPassage: 'Ouvrir dans la lecture',
   sttDenied: "L'accès au micro est bloqué. Autorisez-le dans les réglages du navigateur.",
   sttNetwork: "La dictée a besoin d'une connexion internet.",
   sttFailed: "Impossible d'utiliser la dictée.",

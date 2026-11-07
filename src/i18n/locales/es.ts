@@ -31,6 +31,7 @@ const es: Messages = {
   askTitle: "Pregunta a la IA",
   askMic: "Dictar",
   askMicStop: "Detener dictado",
+  askOpenPassage: 'Abrir en la lectura',
   sttDenied: "El acceso al micrófono está bloqueado. Permítelo en los ajustes del navegador.",
   sttNetwork: "El dictado necesita conexión a internet.",
   sttFailed: "No se pudo usar el dictado.",
