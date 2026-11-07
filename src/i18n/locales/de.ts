@@ -106,7 +106,7 @@ const de: Messages = {
   green: 'Grün',
   blue: 'Blau',
   pink: 'Rosa',
-  orange: 'Orange',
+  orange: 'Lila',
   shareApp: 'App teilen',
   listen: 'Kapitel anhören',
   listenNoVoice: 'Dein Gerät hat keine Stimme für diese Sprache',

@@ -106,7 +106,7 @@ const ja: Messages = {
   green: '緑',
   blue: '青',
   pink: 'ピンク',
-  orange: 'オレンジ',
+  orange: '紫',
   shareApp: 'アプリを共有',
   listen: 'この章を聞く',
   listenNoVoice: 'この言語の音声がこの端末にありません',

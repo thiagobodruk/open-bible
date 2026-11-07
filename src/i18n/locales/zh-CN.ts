@@ -106,7 +106,7 @@ const zhCN: Messages = {
   green: '绿色',
   blue: '蓝色',
   pink: '粉色',
-  orange: '橙色',
+  orange: '紫色',
   shareApp: '分享应用',
   listen: '收听本章',
   listenNoVoice: '你的设备没有此语言的语音',

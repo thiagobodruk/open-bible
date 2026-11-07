@@ -80,11 +80,11 @@
 .sheet-colors .swatch { width: 38px; height: 38px; border-radius: 50%; background: var(--c); border: 2px solid transparent; flex: none; }
 .sheet-colors .swatch.all { background: conic-gradient(var(--hl-yellow), var(--hl-green), var(--hl-blue), var(--hl-pink), var(--hl-orange), var(--hl-yellow)); background-origin: border-box; }
 .sheet-colors .swatch[aria-pressed='true'] { border-color: var(--bg); box-shadow: 0 0 0 2px var(--fg); }
-:root[data-theme='dark'] .sheet-colors .swatch.c-green { --c: #5a9a5e; }
-:root[data-theme='dark'] .sheet-colors .swatch.c-yellow { --c: #c9ae3d; }
-:root[data-theme='dark'] .sheet-colors .swatch.c-blue { --c: #5a8fd1; }
-:root[data-theme='dark'] .sheet-colors .swatch.c-pink { --c: #c9718f; }
-:root[data-theme='dark'] .sheet-colors .swatch.c-orange { --c: #d28d4d; }
+:root[data-theme='dark'] .sheet-colors .swatch.c-green { --c: #8cca3f; }
+:root[data-theme='dark'] .sheet-colors .swatch.c-yellow { --c: #cec33b; }
+:root[data-theme='dark'] .sheet-colors .swatch.c-blue { --c: #3ba5ce; }
+:root[data-theme='dark'] .sheet-colors .swatch.c-pink { --c: #ce3b95; }
+:root[data-theme='dark'] .sheet-colors .swatch.c-orange { --c: #953bce; }
 
 @keyframes fade { from { opacity: 0; } }
 @keyframes rise { from { transform: translate(-50%, 24px); opacity: 0; } }

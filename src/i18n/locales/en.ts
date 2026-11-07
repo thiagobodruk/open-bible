@@ -104,7 +104,7 @@ const en = {
   green: 'Green',
   blue: 'Blue',
   pink: 'Pink',
-  orange: 'Orange',
+  orange: 'Purple',
   shareApp: 'Share app',
   listen: 'Listen to chapter',
   listenNoVoice: 'No voice for this language on your device',
