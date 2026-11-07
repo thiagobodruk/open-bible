@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.20.3
+
+### Changed
+
+- The AI action and its sheet are called "Perguntar" / "Ask AI" instead of "IA" and "Pergunte para a IA".
+
 ## 1.20.2
 
 ### Changed
