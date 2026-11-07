@@ -26,7 +26,7 @@ const en = {
   xrefsEmpty: 'No cross-references for this passage.',
   xrefsError: 'Could not load the cross-references. Connect once to download them.',
   ask: 'Ask AI',
-  askTitle: "Ask the AI",
+  askTitle: 'Ask AI',
   askMic: "Dictate",
   askMicStop: "Stop dictation",
   askOpenPassage: 'Open in the reader',

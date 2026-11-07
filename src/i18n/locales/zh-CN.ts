@@ -28,7 +28,7 @@ const zhCN: Messages = {
   xrefsEmpty: '此段经文没有互相参照。',
   xrefsError: '无法加载互相参照。请联网一次以下载。',
   ask: '询问 AI',
-  askTitle: "向 AI 提问",
+  askTitle: '提问',
   askMic: "语音输入",
   askMicStop: "停止语音输入",
   askOpenPassage: '在阅读中打开',

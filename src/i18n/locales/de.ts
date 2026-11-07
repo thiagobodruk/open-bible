@@ -28,7 +28,7 @@ const de: Messages = {
   xrefsEmpty: 'Keine Querverweise für diese Stelle.',
   xrefsError: 'Querverweise konnten nicht geladen werden. Einmal online gehen, um sie herunterzuladen.',
   ask: 'KI fragen',
-  askTitle: "Frag die KI",
+  askTitle: 'Fragen',
   askMic: "Diktieren",
   askMicStop: "Diktat beenden",
   askOpenPassage: 'Im Leser öffnen',

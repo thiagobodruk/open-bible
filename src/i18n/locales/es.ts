@@ -28,7 +28,7 @@ const es: Messages = {
   xrefsEmpty: 'No hay referencias cruzadas para este pasaje.',
   xrefsError: 'No se pudieron cargar las referencias. Conéctate una vez para descargarlas.',
   ask: 'Preguntar a la IA',
-  askTitle: "Pregunta a la IA",
+  askTitle: 'Preguntar',
   askMic: "Dictar",
   askMicStop: "Detener dictado",
   askOpenPassage: 'Abrir en la lectura',

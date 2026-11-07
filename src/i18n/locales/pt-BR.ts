@@ -28,7 +28,7 @@ const ptBR: Messages = {
   xrefsEmpty: 'Sem referências cruzadas para esta passagem.',
   xrefsError: 'Não foi possível carregar as referências. Conecte-se uma vez para baixá-las.',
   ask: 'Perguntar à IA',
-  askTitle: "Pergunte para a IA",
+  askTitle: 'Perguntar',
   askMic: "Ditar",
   askMicStop: "Parar ditado",
   askOpenPassage: 'Abrir na leitura',

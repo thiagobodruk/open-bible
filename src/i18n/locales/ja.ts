@@ -28,7 +28,7 @@ const ja: Messages = {
   xrefsEmpty: 'この箇所の相互参照はありません。',
   xrefsError: '相互参照を読み込めませんでした。一度オンラインで接続してダウンロードしてください。',
   ask: 'AIに質問',
-  askTitle: "AIに聞いてみよう",
+  askTitle: '質問',
   askMic: "音声入力",
   askMicStop: "音声入力を止める",
   askOpenPassage: 'リーダーで開く',
