@@ -2,6 +2,16 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.20.0
+
+### Added
+
+- AI answers now show lists, bold and italic, and Bible references open a preview of the passage inside the answer.
+
+### Changed
+
+- AI answers are more objective: shorter paragraphs and short bullet lists.
+
 ## 1.19.3
 
 ### Changed
