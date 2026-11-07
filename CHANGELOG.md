@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.20.1
+
+### Fixed
+
+- Bible references with a range, such as "Mateus 6:25‑34", are linked in full in AI answers.
+
 ## 1.20.0
 
 ### Added
