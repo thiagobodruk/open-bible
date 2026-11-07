@@ -45,6 +45,8 @@ const zhCN: Messages = {
   askSummary: "总结",
   askExplainQ: '请用简单的话解释这段经文。',
   askContextQ: '这段经文的历史和文学背景是什么？',
+  askRelate: '关联',
+  askRelateQ: '把这段经文与圣经中的其他经文联系起来。',
   askSummaryQ: '请用几句话总结这段经文。',
   askDisclaimer: "AI 可能出错，请务必核实回答。",
   askError: '无法获得回答，请重试。',

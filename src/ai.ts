@@ -8,6 +8,8 @@ export interface AiPassage {
   text: string;
   /** The whole chapter, when the passage is a selection: where the pill goes back to when a verse is removed. */
   wide?: { ref: string; text: string };
+  /** Passages the app found related to this one, each "Reference: text". Used by the Relate shortcut. */
+  related?: string[];
 }
 
 export interface AiMessage {
@@ -40,7 +42,7 @@ export async function askAI({ question, passage, lang, history, signal, onText }
     res = await fetch(`${AI_URL.replace(/\/$/, '')}/ask`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ question, passage: { ref: passage.ref, version: passage.version, text: passage.text }, lang, history }),
+      body: JSON.stringify({ question, passage: { ref: passage.ref, version: passage.version, text: passage.text, related: passage.related }, lang, history }),
       signal,
     });
   } catch {

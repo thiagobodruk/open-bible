@@ -45,6 +45,8 @@ const de: Messages = {
   askSummary: "Zusammenfassen",
   askExplainQ: 'Erkläre diese Stelle in einfachen Worten.',
   askContextQ: 'Was ist der historische und literarische Kontext dieser Stelle?',
+  askRelate: 'Verknüpfen',
+  askRelateQ: 'Verbinde diese Stelle mit anderen Stellen der Bibel.',
   askSummaryQ: 'Fasse diese Stelle in wenigen Sätzen zusammen.',
   askDisclaimer: "KI kann Fehler machen. Prüfe die Antworten immer.",
   askError: 'Keine Antwort erhalten. Versuche es erneut.',

@@ -10,7 +10,7 @@ import { getItem, setItem } from './storage';
 export type Consent = 'granted' | 'denied' | null;
 export type Feature =
   | 'highlight' | 'note' | 'listen' | 'compare' | 'ask' | 'search' | 'xref' | 'copy' | 'share'
-  | 'study_filter' | 'study_search' | 'study_sort' | 'reading_settings' | 'search_versions' | 'search_dictation';
+  | 'study_filter' | 'study_search' | 'study_sort' | 'reading_settings' | 'search_versions' | 'search_dictation' | 'ask_relate';
 
 const KEY = 'ob:analytics';
 const SCREENS: Record<string, string> = { '': 'reader', '/settings': 'settings', '/terms': 'terms', '/privacy': 'privacy' };
