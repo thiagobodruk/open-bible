@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.20.2
+
+### Changed
+
+- The passage preview in an AI answer opens next to the link you tapped and can be closed with a × button.
+
 ## 1.20.1
 
 ### Fixed
