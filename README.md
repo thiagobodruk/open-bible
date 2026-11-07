@@ -133,7 +133,7 @@ You need a free [Cloudflare account](https://dash.cloudflare.com/sign-up), Node 
    - `ALLOWED_ORIGINS`: the sites allowed to call the Worker, separated by commas. Use your site address (for example `https://<you>.github.io`). Add `http://localhost:5173` to test locally.
    - `MODEL`: the model name your service offers. A lighter model is cheaper and faster, a larger one answers better.
    - `API_URL`: the chat completions endpoint of your service. Uncomment it if you are not using the default one.
-   - `MAX_TOKENS`: the longest answer, including any thinking the model does first. 700 is enough for 1 to 3 short paragraphs.
+   - `MAX_TOKENS`: the longest answer, including any thinking the model does first. 700 is enough for a short answer.
    - `[[ratelimits]]`: requests per IP per minute (6 by default). Remove the block to run without it.
 
 4. **Store your API key as a secret.** Paste it when asked. It is encrypted by Cloudflare and never written to a file or to this repository.
@@ -168,6 +168,15 @@ You need a free [Cloudflare account](https://dash.cloudflare.com/sign-up), Node 
 8. **Optional: a daily limit per IP.** Run `npx wrangler kv namespace create DAILY`, uncomment the `[[kv_namespaces]]` block in `wrangler.toml`, paste the id it prints, adjust `DAILY_LIMIT`, and deploy again.
 
 To run everything locally, put the key in `worker/.dev.vars` (ignored by git) as `GROQ_API_KEY=your-key`, start the Worker with `npx wrangler dev`, and start the app with `VITE_AI_URL=http://localhost:8787 npm run dev`.
+
+### Deploy it from GitHub
+
+Instead of running `npx wrangler deploy` by hand, the `Deploy the AI Worker` workflow publishes `worker/` every time it changes on `main`, and it can be run on demand from the Actions tab.
+
+1. In the Cloudflare dashboard, open **My Profile > API Tokens > Create Token**, use the **Edit Cloudflare Workers** template and create it. Copy the token once.
+2. In the repository, open **Settings > Secrets and variables > Actions > New repository secret**, name it `CLOUDFLARE_API_TOKEN` and paste the token.
+3. If the token can reach more than one Cloudflare account, add a repository **variable** (not a secret) named `CLOUDFLARE_ACCOUNT_ID` with the account id.
+4. Run **Actions > Deploy the AI Worker > Run workflow**. The API key secret (`GROQ_API_KEY`) stays in Cloudflare and is not touched.
 
 ### Keeping it safe and cheap
 
