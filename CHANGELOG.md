@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.22.1
+
+### Changed
+
+- Relate answers list each connection as a bullet, with the kind of link in the language of the answer.
+
 ## 1.22.0
 
 ### Added
