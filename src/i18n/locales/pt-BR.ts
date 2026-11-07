@@ -37,7 +37,7 @@ const ptBR: Messages = {
   sttFailed: "Não foi possível usar o ditado.",
   sttNotice: "O serviço de voz do seu navegador transforma sua fala em texto.",
   askRemoveContext: "Usar o capítulo inteiro",
-  askAction: 'IA',
+  askAction: 'Perguntar',
   askPlaceholder: 'Pergunte sobre esta passagem',
   askSend: 'Enviar',
   askExplain: 'Explicar',

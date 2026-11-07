@@ -37,7 +37,7 @@ const zhCN: Messages = {
   sttFailed: "无法使用语音输入。",
   sttNotice: "浏览器的语音服务会把您的声音转换为文字。",
   askRemoveContext: "改用整章",
-  askAction: 'AI',
+  askAction: '提问',
   askPlaceholder: '就这段经文提问',
   askSend: '发送',
   askExplain: '解释',

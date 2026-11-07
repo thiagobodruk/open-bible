@@ -37,7 +37,7 @@ const ja: Messages = {
   sttFailed: "音声入力を使えませんでした。",
   sttNotice: "ブラウザの音声サービスが音声をテキストに変換します。",
   askRemoveContext: "章全体を使う",
-  askAction: 'AI',
+  askAction: '質問',
   askPlaceholder: 'この箇所について質問',
   askSend: '送信',
   askExplain: '説明',

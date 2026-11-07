@@ -37,7 +37,7 @@ const fr: Messages = {
   sttFailed: "Impossible d'utiliser la dictée.",
   sttNotice: "Le service vocal de votre navigateur transforme votre voix en texte.",
   askRemoveContext: "Utiliser tout le chapitre",
-  askAction: 'IA',
+  askAction: 'Demander',
   askPlaceholder: 'Posez une question sur ce passage',
   askSend: 'Envoyer',
   askExplain: 'Expliquer',

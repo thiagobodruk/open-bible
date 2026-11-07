@@ -37,7 +37,7 @@ const de: Messages = {
   sttFailed: "Diktieren ist nicht möglich.",
   sttNotice: "Der Sprachdienst deines Browsers wandelt deine Stimme in Text um.",
   askRemoveContext: "Das ganze Kapitel verwenden",
-  askAction: 'KI',
+  askAction: 'Fragen',
   askPlaceholder: 'Frage zu dieser Stelle',
   askSend: 'Senden',
   askExplain: 'Erklären',

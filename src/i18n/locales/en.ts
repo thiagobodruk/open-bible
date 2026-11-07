@@ -35,7 +35,7 @@ const en = {
   sttFailed: "Could not use voice typing.",
   sttNotice: "Your browser's speech service turns your voice into text.",
   askRemoveContext: "Use the whole chapter instead",
-  askAction: 'AI',
+  askAction: 'Ask AI',
   askPlaceholder: 'Ask about this passage',
   askSend: 'Send',
   askExplain: 'Explain',

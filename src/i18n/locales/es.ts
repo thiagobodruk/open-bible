@@ -37,7 +37,7 @@ const es: Messages = {
   sttFailed: "No se pudo usar el dictado.",
   sttNotice: "El servicio de voz de tu navegador convierte tu voz en texto.",
   askRemoveContext: "Usar el capítulo entero",
-  askAction: 'IA',
+  askAction: 'Preguntar',
   askPlaceholder: 'Pregunta sobre este pasaje',
   askSend: 'Enviar',
   askExplain: 'Explicar',
