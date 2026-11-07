@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.22.0
+
+### Added
+
+- Relate, a new AI shortcut that connects the passage with other parts of the Bible, using the cross-references as a starting point.
+
 ## 1.21.0
 
 ### Changed
