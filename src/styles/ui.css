@@ -227,6 +227,11 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 .ask-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
 .ask-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
 .ask-chips::-webkit-scrollbar { display: none; }
+/* Rows that scroll sideways fade out at the edge that has more content (--fl and --fr come from useScrollFade). */
+.ask-chips, .vchips {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fl, 0px), #000 calc(100% - var(--fr, 0px)), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--fl, 0px), #000 calc(100% - var(--fr, 0px)), transparent);
+}
 .chip-btn { flex: none; height: 34px; padding: 0 14px; border-radius: 999px; background: var(--surface); font-size: 14px; font-weight: 500; }
 @media (hover: hover) { .chip-btn:hover { background: var(--surface-2); } }
 .ask-form { display: flex; align-items: center; gap: 8px; }
