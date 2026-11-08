@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.23.0
+
+### Added
+
+- Search by theme with the AI: type a question such as "texts about perseverance" in the search field and send it to get a list of passages with a short note each.
+
 ## 1.22.1
 
 ### Changed
