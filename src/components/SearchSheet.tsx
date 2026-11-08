@@ -1,5 +1,5 @@
-import { Fragment, useDeferredValue, useEffect, useMemo, useState } from 'react';
-import { CaretRight, Check, MagnifyingGlass } from '@phosphor-icons/react';
+import { Fragment, useDeferredValue, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { CaretRight, Check, MagnifyingGlass, Sparkle } from '@phosphor-icons/react';
 import { SearchField } from './SearchField';
 import { Sheet } from './Sheet';
 import { loadSearchIndex, pruneSearchIndex, type IndexedChapter } from '../data/bible';
@@ -17,6 +17,9 @@ import { go } from '../router';
 import { refLabel } from '../ref';
 import { useT } from '../i18n';
 import { useScrollFade } from '../useScrollFade';
+import { aiEnabled, type AiPassage } from '../ai';
+import { looksLikePrompt } from '../aiSearch';
+import { useAsk } from '../state/ask';
 import { Empty } from './Empty';
 
 function Highlighted({ hit, query }: { hit: Hit; query: string }) {
@@ -29,6 +32,16 @@ function Highlighted({ hit, query }: { hit: Hit; query: string }) {
   parts.push(hit.text.slice(at));
   return <>{parts.map((p, i) => <Fragment key={i}>{p}</Fragment>)}</>;
 }
+
+const watchOnline = (cb: () => void) => {
+  addEventListener('online', cb);
+  addEventListener('offline', cb);
+  return () => {
+    removeEventListener('online', cb);
+    removeEventListener('offline', cb);
+  };
+};
+const useOnline = () => useSyncExternalStore(watchOnline, () => navigator.onLine, () => true);
 
 /** Versions included in the search. Kept while the app is open, so reopening the search keeps the choice. */
 let sessionSelection: string[] = [];
@@ -141,6 +154,20 @@ export function SearchSheet() {
     });
   }, [ref, selected, indexes]);
 
+  // A sentence, not keywords: the field offers it to the AI. Nothing is sent before the reader confirms.
+  const uiLang = useSettings((s) => s.uiLang);
+  const online = useOnline();
+  const canAsk = aiEnabled && online && !ref && q.trim().length >= 3;
+  const asking = canAsk && looksLikePrompt(q, uiLang);
+  const askAi = () => {
+    const question = q.trim();
+    if (!canAsk || !question) return;
+    trackFeature('ask_search');
+    const passage: AiPassage = { ref: '', version: abbrOf(versionId), text: '', topic: true };
+    useAsk.getState().start(question, passage, uiLang);
+    useUI.getState().open('ask');
+  };
+
   const typed = dq.trim().length >= minChars(dq);
   const tooShort = !typed && dq.trim().length > 0;
 
@@ -159,7 +186,8 @@ export function SearchSheet() {
           onChange={setQ}
           placeholder={t('searchPlaceholder')}
           aria-label={t('searchLabel')}
-          enterKeyHint="search"
+          enterKeyHint={asking ? 'send' : 'search'}
+          ask={canAsk ? { active: asking, label: t('searchAsk'), onAsk: askAi } : undefined}
           autoCapitalize="none"
           autoCorrect="off"
           onKeyDown={(e) => {
@@ -167,6 +195,7 @@ export function SearchSheet() {
             e.preventDefault();
             // A recognized reference opens the passage; otherwise it dismisses the keyboard to show the results.
             if (ref) open(ref.book.id, ref.chapter, ref.verse);
+            else if (asking) askAi();
             else e.currentTarget.blur();
           }}
         />
@@ -227,7 +256,17 @@ export function SearchSheet() {
 
       {typed && chapters === null && <Empty compact>{t('searchPreparing')}</Empty>}
 
-      {typed && chapters !== null && hits.length === 0 && !ref && (
+      {asking && (
+        <button className="row goto" onClick={askAi}>
+          <Sparkle size={24} weight="light" />
+          <span className="grow">
+            <span className="sub">{t('searchAskEyebrow')}</span>
+            <span className="title">{t('searchAskHint')}</span>
+          </span>
+        </button>
+      )}
+
+      {typed && chapters !== null && hits.length === 0 && !ref && !asking && (
         <Empty compact hint={t('searchNoneHint')}>{t('searchNone', { q: dq.trim() })}</Empty>
       )}
 

@@ -1,4 +1,4 @@
-import { MagnifyingGlass, Microphone, X } from '@phosphor-icons/react';
+import { ArrowRight, MagnifyingGlass, Microphone, Sparkle, X } from '@phosphor-icons/react';
 import { useT } from '../i18n';
 import { useDictation } from '../useDictation';
 
@@ -8,16 +8,18 @@ interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onCha
   clearLabel?: string;
   /** Adds a microphone that dictates into the field. Called when dictation starts. */
   dictate?: { onStart?: () => void };
+  /** Offers the question to the AI. `active` says the text already reads like a question. */
+  ask?: { active: boolean; label: string; onAsk: () => void };
   style?: React.CSSProperties;
 }
 
 /** Search field with a × button that clears the text and returns focus to the field, and optional voice dictation. */
-export function SearchField({ value, onChange, clearLabel, style, dictate, ...input }: Props) {
+export function SearchField({ value, onChange, clearLabel, style, dictate, ask, ...input }: Props) {
   const t = useT();
   const mic = useDictation(value, onChange, dictate?.onStart);
   return (
-    <label className="search" style={style}>
-      <MagnifyingGlass size={20} weight="light" />
+    <label className={`search${ask?.active ? ' ai' : ''}`} style={style}>
+      {ask?.active ? <Sparkle size={20} weight="fill" /> : <MagnifyingGlass size={20} weight="light" />}
       <input {...input} value={value} onChange={(e) => onChange(e.target.value)} />
       {dictate && mic.supported && (
         <button
@@ -29,6 +31,17 @@ export function SearchField({ value, onChange, clearLabel, style, dictate, ...in
           onClick={mic.toggle}
         >
           <Microphone size={20} weight="regular" />
+        </button>
+      )}
+      {ask && value.trim() && (
+        <button
+          type="button"
+          className={`icon-btn search-ask${ask.active ? ' on' : ''}`}
+          aria-label={ask.label}
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={ask.onAsk}
+        >
+          {ask.active ? <ArrowRight size={20} weight="bold" /> : <Sparkle size={20} weight="light" />}
         </button>
       )}
       {value && (

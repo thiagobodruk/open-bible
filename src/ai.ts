@@ -10,6 +10,8 @@ export interface AiPassage {
   wide?: { ref: string; text: string };
   /** Passages the app found related to this one, each "Reference: text". Used by the Relate shortcut. */
   related?: string[];
+  /** A search by theme: there is no passage, and the AI answers with a list of passages. */
+  topic?: boolean;
 }
 
 export interface AiMessage {
@@ -42,7 +44,7 @@ export async function askAI({ question, passage, lang, history, signal, onText }
     res = await fetch(`${AI_URL.replace(/\/$/, '')}/ask`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ question, passage: { ref: passage.ref, version: passage.version, text: passage.text, related: passage.related }, lang, history }),
+      body: JSON.stringify({ question, passage: { ref: passage.ref, version: passage.version, text: passage.text, related: passage.related }, mode: passage.topic ? 'topic' : undefined, lang, history }),
       signal,
     });
   } catch {
