@@ -15,10 +15,12 @@ import { Button } from './Button';
 
 type Block =
   | { type: 'p'; text: string }
+  | { type: 'quote'; text: string }
   | { type: 'ul' | 'ol'; items: string[] };
 
 const BULLET = /^\s*[-*•]\s+(.*)$/;
 const NUMBERED = /^\s*\d+[.)]\s+(.*)$/;
+const QUOTE = /^\s*>\s?(.*)$/;
 
 /** Splits the answer into paragraphs and lists. Headings become bold paragraphs. */
 function parse(text: string): Block[] {
@@ -29,6 +31,15 @@ function parse(text: string): Block[] {
     para = [];
   };
   for (const line of text.split('\n')) {
+    const quote = QUOTE.exec(line);
+    if (quote) {
+      // Consecutive "> " lines make one quote.
+      flush();
+      const last = blocks[blocks.length - 1];
+      if (last && last.type === 'quote') last.text += `\n${quote[1]}`;
+      else blocks.push({ type: 'quote', text: quote[1] });
+      continue;
+    }
     const bullet = BULLET.exec(line);
     const numbered = bullet ? null : NUMBERED.exec(line);
     const item = bullet ?? numbered;
@@ -174,7 +185,14 @@ export function AiText({ text }: { text: string }) {
               ))}
             </div>
           )}
-          {b.type !== 'p' &&
+          {b.type === 'quote' && (
+            <blockquote className="ai-quote">
+              {b.text.split('\n').filter((ln) => ln.trim()).map((ln, k) => (
+                <p key={k}>{inline(ln.trim(), `q${i}-${k}`, `q${i}-${k}`)}</p>
+              ))}
+            </blockquote>
+          )}
+          {b.type !== 'p' && b.type !== 'quote' &&
             (b.type === 'ul' ? (
               <ul>{b.items.map((it, j) => <li key={j}>{inline(it, `u${i}-${j}`, `u${i}-${j}`)}{preview(`u${i}-${j}`)}</li>)}</ul>
             ) : (
