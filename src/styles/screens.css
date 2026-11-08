@@ -113,6 +113,10 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 .entry-edit { position: absolute; top: 50%; right: 4px; transform: translateY(-50%); width: 40px; height: 40px; }
 .confirm-text { font-size: 15px; line-height: 1.5; margin: 4px 0 8px; }
 .search-clear { width: 32px; height: 32px; margin: 0 -8px 0 0; flex: none; }
+.search.ai { box-shadow: inset 0 0 0 1.5px var(--accent); color: var(--accent); }
+.search.ai input { color: var(--fg); }
+.search-ask { width: 32px; height: 32px; margin: 0 -4px 0 0; flex: none; border-radius: 50%; }
+.search-ask.on { color: var(--accent-fg); background: var(--accent); }
 .search-mic { width: 32px; height: 32px; margin: 0 -4px 0 0; flex: none; border-radius: 50%; }
 .search-mic.on { color: var(--accent-fg); background: var(--accent); animation: ask-pulse 1.2s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .search-mic.on { animation: none; } }

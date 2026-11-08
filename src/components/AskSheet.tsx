@@ -36,7 +36,7 @@ export function AskSheet() {
   }, [status, busy, messages.length, length]);
 
   const copy = async () => {
-    const ok = await copyText(`${passage?.ref ?? ''}\n\n${answer.content}`.trim());
+    const ok = await copyText(`${passage?.topic ? '' : passage?.ref ?? ''}\n\n${answer.content}`.trim());
     notify(t(ok ? 'copied' : 'copyFailed'));
   };
 
@@ -53,7 +53,7 @@ export function AskSheet() {
         <div className="ask-foot">
           {status !== 'error' && (
             <PromptField
-              context={passage?.ref ?? ''}
+              context={passage?.topic ? undefined : passage?.ref ?? ''}
               onClearContext={passage?.wide ? () => { widen(); useStudy.getState().clearSelection(); } : undefined}
               placeholder={t('askFollowUp')}
               disabled={busy}
@@ -69,7 +69,7 @@ export function AskSheet() {
       }
     >
       <div className="ask-chat">
-        {passage && <div className="ask-ref">{passage.ref} · {passage.version}</div>}
+        {passage && <div className="ask-ref">{passage.topic ? t('askTopicRef', { abbr: passage.version }) : `${passage.ref} · ${passage.version}`}</div>}
         {messages.map((m, i) => (
           <div key={i} ref={i === messages.length - 2 ? asked : undefined} className={`ask-msg ${m.role}`}>
             {m.content ? (m.role === 'assistant' ? <AiText text={m.content} /> : m.content) : busy && i === messages.length - 1 ? <span className="ask-dots" role="status" aria-label={t('askThinking')}><i /><i /><i /></span> : null}

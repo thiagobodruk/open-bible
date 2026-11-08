@@ -77,7 +77,14 @@ export function buildMessages(body) {
   const version = text(body.passage?.version, LIMITS.version);
 
   const messages = [{ role: 'system', content: SYSTEM(language) }];
-  if (passage) {
+  const topic = body.mode === 'topic';
+  if (topic) {
+    messages.push({
+      role: 'system',
+      content:
+        'The reader is searching the Bible by theme or question and has no passage open. Answer with the 4 to 6 passages that best fit, one bullet per passage: each line starts with "- ", then the reference in full in **bold** (Book chapter:verse, with the book name in the answer language, a single verse or a short range), then " - " and one short sentence on what the text says about the theme. Order them from the clearest to the broader ones. Use only passages you are sure exist and that really speak to the theme. No introduction and no closing summary; at most 160 words. If the request is not about the Bible, follow the SCOPE rule.',
+    });
+  } else if (passage) {
     messages.push({
       role: 'system',
       content: `The reader is looking at ${ref || 'a passage'}${version ? ` (${version})` : ''}:\n"""\n${passage}\n"""`,

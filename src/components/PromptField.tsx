@@ -4,8 +4,8 @@ import { useDictation } from '../useDictation';
 import { useT } from '../i18n';
 
 interface Props {
-  /** Context reference, shown as a pill. */
-  context: string;
+  /** Context reference, shown as a pill. Without it, no pill. */
+  context?: string;
   /** With this, the pill gets a × that discards the context. */
   onClearContext?: () => void;
   placeholder: string;
@@ -30,15 +30,17 @@ export function PromptField({ context, onClearContext, placeholder, disabled, on
 
   return (
     <form className="ask-field" onSubmit={submit}>
-      <span className="ask-pill">
-        <BookmarkSimple size={15} weight="light" aria-hidden="true" />
-        <span>{context}</span>
-        {onClearContext && (
-          <button type="button" onClick={onClearContext} aria-label={t('askRemoveContext')}>
-            <X size={13} weight="bold" />
-          </button>
-        )}
-      </span>
+      {context && (
+        <span className="ask-pill">
+          <BookmarkSimple size={15} weight="light" aria-hidden="true" />
+          <span>{context}</span>
+          {onClearContext && (
+            <button type="button" onClick={onClearContext} aria-label={t('askRemoveContext')}>
+              <X size={13} weight="bold" />
+            </button>
+          )}
+        </span>
+      )}
       <div className="ask-row">
         <input
           value={question}
