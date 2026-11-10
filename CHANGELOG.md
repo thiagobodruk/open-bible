@@ -2,6 +2,13 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.24.0
+
+### Added
+
+- Daily devotional with the verse of the day, in your Bible version, a short reflection, a task for the day and a prayer. Find it in the menu, share or copy it, and ask a question about it.
+- Optional setting that opens the devotional the first time you open the app each day, offered in the onboarding and in the devotional itself.
+
 ## 1.23.2
 
 ### Changed
