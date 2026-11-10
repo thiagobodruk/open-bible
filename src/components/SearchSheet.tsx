@@ -1,4 +1,4 @@
-import { Fragment, useDeferredValue, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { Fragment, useDeferredValue, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { CaretRight, Check, MagnifyingGlass, Sparkle } from '@phosphor-icons/react';
 import { SearchField } from './SearchField';
 import { Sheet } from './Sheet';
@@ -45,6 +45,9 @@ const useOnline = () => useSyncExternalStore(watchOnline, () => navigator.onLine
 
 /** Versions included in the search. Kept while the app is open, so reopening the search keeps the choice. */
 let sessionSelection: string[] = [];
+/** Last search, kept while the app is open so reopening the sheet shows the same results. Gone on reload. */
+let sessionQuery = '';
+let sessionLimit = PAGE_SIZE;
 
 export function SearchSheet() {
   const t = useT();
@@ -54,9 +57,11 @@ export function SearchSheet() {
   const versionId = useSettings((s) => s.versionId);
   const setSetting = useSettings((s) => s.set);
   const installed = useLibrary((s) => s.installed);
-  const [q, setQ] = useState('');
+  const [q, setQ] = useState(sessionQuery);
   const dq = useDeferredValue(q);
-  const [limit, setLimit] = useState(PAGE_SIZE);
+  const [limit, setLimit] = useState(sessionLimit);
+  sessionQuery = q;
+  sessionLimit = limit;
 
   const books = useBooks();
   const bookName = useBookName();
@@ -113,7 +118,13 @@ export function SearchSheet() {
   const shown = hits.slice(0, limit);
 
   // A new search goes back to the first page.
-  useEffect(() => setLimit(PAGE_SIZE), [dq, chapters]);
+  const lastQuery = useRef(`${dq}|${key}`);
+  useEffect(() => {
+    const id = `${dq}|${key}`;
+    if (lastQuery.current === id) return;
+    lastQuery.current = id;
+    setLimit(PAGE_SIZE);
+  }, [dq, key]);
 
   const open = (book: string, chapter: number, verse?: number, version = versionId, to?: number) => {
     // Scroll first: the verse focus triggered by goTo scrolls to the verse and must not be undone.
