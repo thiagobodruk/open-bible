@@ -2,6 +2,13 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.24.1
+
+### Changed
+
+- The devotional verse opens the reading when tapped, and the Devotional menu item moved below My study.
+- The devotional texts are saved on the device after the first download, so the progress bar only appears once.
+
 ## 1.24.0
 
 ### Added
