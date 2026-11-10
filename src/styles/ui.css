@@ -298,3 +298,30 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 }
 @media (hover: hover) { .ask-fab:hover { filter: brightness(1.08); } }
 .install-banner ~ .ask-fab, .listen-bar ~ .ask-fab { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+
+/* Devocional */
+.dev { display: grid; gap: 16px; padding-bottom: 8px; }
+.dev-date { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.dev-title { margin: 0; font-family: var(--font-serif); font-size: 24px; line-height: 1.25; font-weight: 600; text-wrap: balance; }
+.dev-verse { margin: 0; padding-left: 14px; border-left: 2px solid var(--line); display: grid; gap: 6px; }
+.dev-verse p { margin: 0; font-family: var(--font-serif); font-size: 17px; line-height: 1.6; font-style: italic; color: var(--muted); text-wrap: pretty; }
+.dev-verse cite { font-style: normal; font-size: 13px; font-weight: 600; color: var(--muted); }
+.dev-body { display: grid; gap: 12px; font-family: var(--font-serif); font-size: 17px; line-height: 1.7; }
+.dev-body p { margin: 0; }
+.dev-box { display: grid; gap: 4px; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--surface); }
+.dev-box h3, .dev-prayer h3 { margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.dev-box p { margin: 0; font-family: var(--font-serif); font-size: 16px; line-height: 1.6; }
+.dev-prayer { display: grid; gap: 4px; }
+.dev-prayer h3 { color: var(--muted); }
+.dev-prayer p { margin: 0; font-family: var(--font-serif); font-style: italic; font-size: 16px; line-height: 1.65; }
+.dev-invite { display: grid; gap: 6px; padding: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.dev-invite b { font-size: 15px; font-weight: 600; }
+.dev-invite p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.dev-invite-btns { display: flex; gap: 8px; margin-top: 6px; }
+.dev-invite-btns .btn { flex: 1; }
+.dev-note { display: flex; align-items: flex-start; gap: 6px; margin: 0; font-size: 12px; line-height: 1.4; color: var(--muted); }
+.dev-note svg { flex: none; margin-top: 1px; }
+.dev-load { display: grid; justify-items: center; gap: 10px; padding: 12px 0; text-align: center; font-size: 14px; color: var(--muted); }
+.dev-load p { margin: 0; }
+.dev-load .progress { width: 100%; max-width: 240px; }
+.dev-load .lbl { color: var(--fg); font-weight: 500; font-variant-numeric: tabular-nums; }

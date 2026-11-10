@@ -6,6 +6,7 @@ import { downloadedMb, useLibrary } from '../state/library';
 import { downloadBackup, parseBackup } from '../backup';
 import { useSettings, type UiLang } from '../state/settings';
 import { useStudy } from '../state/study';
+import { useDevotional } from '../state/devotional';
 import { useUI } from '../state/ui';
 import { installAvailable, requestInstall, subscribeInstall } from '../install';
 import { buildLabel, checkForUpdate, currentBuild, fetchLatestBuild, type BuildInfo } from '../update';
@@ -30,7 +31,7 @@ const LANGS: { code: UiLang; label: string }[] = [
 export function Settings() {
   const t = useT();
   const canInstall = useSyncExternalStore(subscribeInstall, installAvailable);
-  const { uiLang, set } = useSettings();
+  const { uiLang, devotional, set } = useSettings();
   const { installed, remove } = useLibrary();
   const downloaded = Object.keys(installed);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -83,6 +84,16 @@ export function Settings() {
             {LANGS.map((l) => <option key={l.code} value={l.code}>{l.label}</option>)}
           </select>
           <p className="hint">{t('uiLanguageHint')}</p>
+        </Section>
+
+        <Section title={t('devotionalDaily')}>
+          <Segmented
+            label={t('devotionalDaily')}
+            value={devotional ? 'on' : 'off'}
+            options={[{ value: 'on', label: t('on') }, { value: 'off', label: t('off') }]}
+            onChange={(v) => (v === 'on' ? useDevotional.getState().enable() : set('devotional', false))}
+          />
+          <p className="hint">{t('devotionalHint')}</p>
         </Section>
 
         <Section title={t('downloadedVersions')}>

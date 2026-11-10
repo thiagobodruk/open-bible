@@ -10,7 +10,7 @@ import { getItem, setItem } from './storage';
 export type Consent = 'granted' | 'denied' | null;
 export type Feature =
   | 'highlight' | 'note' | 'listen' | 'compare' | 'ask' | 'search' | 'xref' | 'copy' | 'share'
-  | 'study_filter' | 'study_search' | 'study_sort' | 'reading_settings' | 'search_versions' | 'search_dictation' | 'ask_relate' | 'ask_search';
+  | 'study_filter' | 'study_search' | 'study_sort' | 'reading_settings' | 'search_versions' | 'search_dictation' | 'ask_relate' | 'ask_search' | 'devotional';
 
 const KEY = 'ob:analytics';
 const SCREENS: Record<string, string> = { '': 'reader', '/settings': 'settings', '/terms': 'terms', '/privacy': 'privacy' };
@@ -97,7 +97,7 @@ export function initAnalytics() {
   });
   useUI.subscribe((s, prev) => {
     if (s.sheet === prev.sheet) return;
-    if (s.sheet === 'compare' || s.sheet === 'search') trackFeature(s.sheet);
+    if (s.sheet === 'compare' || s.sheet === 'search' || s.sheet === 'devotional') trackFeature(s.sheet);
     else if (s.sheet === 'xrefs') trackFeature('xref');
     else if (s.sheet === 'library') track('screen_view', { screen_name: 'library' });
     else if (s.sheet === 'study') track('screen_view', { screen_name: 'study' });

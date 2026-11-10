@@ -26,6 +26,8 @@ import { ListenSheet } from './components/ListenSheet';
 import { SearchSheet } from './components/SearchSheet';
 import { LibrarySheet } from './components/LibrarySheet';
 import { StudySheet } from './components/StudySheet';
+import { DevotionalSheet } from './components/DevotionalSheet';
+import { markShownToday, shownToday } from './state/devotional';
 import { DeleteAccountSheet } from './components/DeleteAccountSheet';
 import { Toast } from './components/Toast';
 
@@ -78,6 +80,14 @@ export default function App() {
     }
   }, [route, close]);
 
+  // With the daily devotional on, it opens by itself the first time the app opens each day. Not over the intro or a shared link.
+  const devotionalOn = useSettings((s) => s.devotional);
+  useEffect(() => {
+    if (!devotionalOn || route !== '/' || !ready || !installed || pending || !introDone || sheet || shownToday()) return;
+    markShownToday();
+    useUI.getState().open('devotional');
+  }, [devotionalOn, route, ready, installed, pending, introDone, sheet]);
+
   return (
     <>
       {route === '/' && <Reader />}
@@ -99,6 +109,7 @@ export default function App() {
       {sheet === 'search' && <SearchSheet />}
       {sheet === 'library' && <LibrarySheet />}
       {sheet === 'study' && <StudySheet />}
+      {sheet === 'devotional' && <DevotionalSheet />}
       {sheet === 'install' && <InstallSheet />}
       {sheet === 'feedback' && <FeedbackSheet />}
       {sheet === 'listen' && <ListenSheet />}

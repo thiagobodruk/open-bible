@@ -13,4 +13,5 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: node scripts/validate-devotional.mjs
       - run: npm run build
