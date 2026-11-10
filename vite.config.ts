@@ -73,6 +73,8 @@ export default defineConfig({
         runtimeCaching: [
           // This function is copied into the service worker, where `base` does not exist, so the path is spelled out.
           { urlPattern: ({ url }) => url.pathname.startsWith('/open-bible/xrefs/'), handler: 'StaleWhileRevalidate', options: { cacheName: 'xrefs' } },
+          // Devotional packs, one per language, downloaded the first time the devotional opens.
+          { urlPattern: ({ url }) => url.pathname.startsWith('/open-bible/devotional/'), handler: 'StaleWhileRevalidate', options: { cacheName: 'devotional' } },
         ],
       },
     }),

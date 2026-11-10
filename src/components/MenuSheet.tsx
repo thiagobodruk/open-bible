@@ -1,5 +1,5 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { DeviceMobile, GearSix, Notepad, ShareNetwork, Translate, CaretRight, SignOut, UserCircle } from '@phosphor-icons/react';
+import { DeviceMobile, GearSix, Notepad, ShareNetwork, SunHorizon, Translate, CaretRight, SignOut, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
@@ -56,6 +56,7 @@ export function MenuSheet() {
 
   const all = [
     ...(canSignIn ? [{ icon: UserCircle, label: t('signIn'), run: signIn }] : []),
+    { icon: SunHorizon, label: t('devotional'), run: () => open('devotional') },
     { icon: Notepad, label: t('study'), run: () => open('study') },
     { icon: Translate, label: t('library'), run: () => open('library') },
     { icon: GearSix, label: t('settings'), run: () => nav('/settings') },

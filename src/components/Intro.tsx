@@ -1,16 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, BookOpenText, GoogleLogo, Sparkle, UserCircle } from '@phosphor-icons/react';
+import { ArrowRight, BookOpenText, GoogleLogo, Sparkle, SunHorizon, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { useIntro } from '../state/intro';
+import { useDevotional } from '../state/devotional';
 import { useTerms } from '../state/terms';
 import { useUI } from '../state/ui';
 import { Button } from './Button';
 import { DownloadActions, DownloadInfo } from './Welcome';
 import { useT } from '../i18n';
 
-type Step = 'signin' | 'offline' | 'study' | 'download';
+type Step = 'signin' | 'offline' | 'study' | 'devotional' | 'download';
 
-const ICONS = { signin: UserCircle, offline: BookOpenText, study: Sparkle } as const;
+const ICONS = { signin: UserCircle, offline: BookOpenText, study: Sparkle, devotional: SunHorizon } as const;
 
 /** Acceptance box for the terms of use and privacy policy, with links to both texts. */
 function TermsCheck() {
@@ -37,7 +38,7 @@ export function Intro() {
   const user = useAccount((s) => s.user);
   const busy = useAccount((s) => s.busy);
   // Users already signed in don't see the sign-in step: once login completes, the same index points to the next slide.
-  const steps = useMemo<Step[]>(() => [...(accountAvailable() && !user ? (['signin'] as const) : []), 'offline', 'study', 'download'], [user]);
+  const steps = useMemo<Step[]>(() => [...(accountAvailable() && !user ? (['signin'] as const) : []), 'offline', 'study', 'devotional', 'download'], [user]);
   const [i, setI] = useState(0);
   const step = steps[i];
   const Icon = step === 'download' ? null : ICONS[step];
@@ -84,8 +85,8 @@ export function Intro() {
     else if (result === 'failed') notify(t('signInFailed'));
   };
 
-  const title = { signin: 'signInTitle', offline: 'introOfflineTitle', study: 'introStudyTitle' } as const;
-  const body = { signin: 'signInBody', offline: 'introOfflineBody', study: 'introStudyBody' } as const;
+  const title = { signin: 'signInTitle', offline: 'introOfflineTitle', study: 'introStudyTitle', devotional: 'introDevotionalTitle' } as const;
+  const body = { signin: 'signInBody', offline: 'introOfflineBody', study: 'introStudyBody', devotional: 'introDevotionalBody' } as const;
 
   // Choosing another version opens the Library over the reader, once the intro is gone.
   const chooseOther = () => {
@@ -114,6 +115,12 @@ export function Intro() {
         </div>
         {step === 'download' ? (
           <DownloadActions trailing onChooseOther={chooseOther} />
+        ) : step === 'devotional' ? (
+          <>
+            <Button variant="primary" block onClick={() => { useDevotional.getState().enable(); next(); }}>{t('introDevotionalEnable')}</Button>
+            <Button block onClick={() => { useDevotional.getState().markAsked(); next(); }}>{t('devotionalNotNow')}</Button>
+            <p className="intro-hint">{t('introDevotionalHint')}</p>
+          </>
         ) : step === 'signin' ? (
           <Button variant="primary" block icon={GoogleLogo} iconSide="right" iconWeight="bold" onClick={signIn} disabled={busy || !accepted}>{t('signIn')}</Button>
         ) : (

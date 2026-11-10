@@ -21,6 +21,8 @@ export interface Settings {
   align: Align;
   verseNumbers: VerseNumbers;
   textMode: TextMode;
+  /** Opens the verse of the day and the devotional by itself, once a day. */
+  devotional: boolean;
 }
 
 const SUPPORTED: UiLang[] = ['en', 'pt-BR', 'es', 'fr', 'de', 'zh-CN', 'ja'];
@@ -48,6 +50,7 @@ export const DEFAULTS: Settings = {
   align: 'left',
   verseNumbers: 'subtle',
   textMode: 'verses',
+  devotional: false,
 };
 
 const KEY = 'ob:settings';
@@ -56,14 +59,14 @@ const load = (): Settings => ({ ...DEFAULTS, ...getJson<Partial<Settings>>(KEY, 
 
 interface SettingsStore extends Settings {
   set: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
-  /** Resets only the reading settings. UI language and version stay as they are. */
+  /** Resets only the reading settings. UI language, version and the daily devotional stay as they are. */
   resetText: () => void;
 }
 
 export const useSettings = create<SettingsStore>((set) => ({
   ...load(),
   set: (key, value) => set({ [key]: value } as Partial<Settings>),
-  resetText: () => set(({ uiLang, versionId }) => ({ ...DEFAULTS, uiLang, versionId })),
+  resetText: () => set(({ uiLang, versionId, devotional }) => ({ ...DEFAULTS, uiLang, versionId, devotional })),
 }));
 
 const dark = matchMedia('(prefers-color-scheme: dark)');
