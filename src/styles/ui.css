@@ -303,9 +303,13 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 .dev { display: grid; gap: 16px; padding-bottom: 8px; }
 .dev-date { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
 .dev-title { margin: 0; font-family: var(--font-serif); font-size: 24px; line-height: 1.25; font-weight: 600; text-wrap: balance; }
-.dev-verse { margin: 0; padding-left: 14px; border-left: 2px solid var(--line); display: grid; gap: 6px; }
-.dev-verse p { margin: 0; font-family: var(--font-serif); font-size: 17px; line-height: 1.6; font-style: italic; color: var(--muted); text-wrap: pretty; }
-.dev-verse cite { font-style: normal; font-size: 13px; font-weight: 600; color: var(--muted); }
+.dev-verse { margin: 0; border-left: 2px solid var(--line); }
+.dev-verse-btn { all: unset; box-sizing: border-box; width: 100%; padding-left: 14px; display: grid; gap: 6px; cursor: pointer; }
+.dev-verse-btn:disabled { cursor: default; }
+.dev-verse-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.dev-verse-btn .q { font-family: var(--font-serif); font-size: 17px; line-height: 1.6; font-style: italic; color: var(--muted); text-wrap: pretty; }
+.dev-verse-btn cite { display: inline-flex; align-items: center; gap: 4px; font-style: normal; font-size: 13px; font-weight: 600; color: var(--muted); }
+.dev-verse-btn:not(:disabled):hover cite, .dev-verse-btn:not(:disabled):active cite { color: var(--accent); }
 .dev-body { display: grid; gap: 12px; font-family: var(--font-serif); font-size: 17px; line-height: 1.7; }
 .dev-body p { margin: 0; }
 .dev-box { display: grid; gap: 4px; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--surface); }

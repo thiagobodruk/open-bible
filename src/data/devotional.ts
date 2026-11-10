@@ -18,6 +18,7 @@ export interface Devotional {
 }
 
 export interface DevotionalPack {
+  version: number;
   lang: string;
   /** Texts for the dates that move every year. */
   moveable: Record<MoveableKey, Devotional>;
@@ -83,33 +84,23 @@ export const packLang = (ui: UiLang): PackLang => ((PACKS as readonly string[]).
 /** Bytes of each pack once decoded, only to draw the progress bar when the server does not say how big it is. */
 const ESTIMATE = 360_000;
 
-const packs = new Map<PackLang, Promise<DevotionalPack>>();
-
-/** Downloads the language pack the first time. The service worker keeps it, so it works offline afterwards. */
-export function loadPack(lang: PackLang, onProgress: (fraction: number) => void): Promise<DevotionalPack> {
-  let pack = packs.get(lang);
-  if (!pack) {
-    pack = (async () => {
-      const res = await fetch(`${import.meta.env.BASE_URL}devotional/${lang}.json`);
-      if (!res.ok || !res.body) throw new Error(`devotional ${lang}: ${res.status}`);
-      // With compression the header counts the compressed bytes, so it only serves when the body arrives as it is.
-      const sent = Number(res.headers.get('content-length')) || 0;
-      const total = res.headers.get('content-encoding') ? ESTIMATE : sent || ESTIMATE;
-      const reader = res.body.getReader();
-      const chunks: Uint8Array[] = [];
-      let received = 0;
-      for (;;) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
-        received += value.length;
-        onProgress(Math.min(received / total, 0.99));
-      }
-      const text = new TextDecoder().decode(await new Blob(chunks as BlobPart[]).arrayBuffer());
-      return JSON.parse(text) as DevotionalPack;
-    })();
-    packs.set(lang, pack);
-    pack.catch(() => packs.delete(lang));
+/** Downloads the pack of a language. The caller keeps it on the device, like the Bible versions. */
+export async function downloadPack(lang: PackLang, onProgress: (fraction: number) => void): Promise<DevotionalPack> {
+  const res = await fetch(`${import.meta.env.BASE_URL}devotional/${lang}.json`);
+  if (!res.ok || !res.body) throw new Error(`devotional ${lang}: ${res.status}`);
+  // With compression the header counts the compressed bytes, so it only serves when the body arrives as it is.
+  const sent = Number(res.headers.get('content-length')) || 0;
+  const total = res.headers.get('content-encoding') ? ESTIMATE : sent || ESTIMATE;
+  const reader = res.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let received = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    received += value.length;
+    onProgress(Math.min(received / total, 0.99));
   }
-  return pack;
+  const text = new TextDecoder().decode(await new Blob(chunks as BlobPart[]).arrayBuffer());
+  return JSON.parse(text) as DevotionalPack;
 }
