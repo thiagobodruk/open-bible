@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowClockwise, CloudArrowDown, Copy, ShareNetwork, SunHorizon, WarningCircle } from '@phosphor-icons/react';
+import { ArrowClockwise, CaretRight, CloudArrowDown, Copy, ShareNetwork, SunHorizon, WarningCircle } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { PromptField } from './PromptField';
 import { ProgressBar } from './ProgressBar';
@@ -115,9 +115,11 @@ export function DevotionalSheet() {
         <div className="dev-date">{date}</div>
         {devotional && <h2 className="dev-title">{devotional.title}</h2>}
         <blockquote className="dev-verse">
-          {verse.status === 'ready' && <p>{verseText}</p>}
-          {verse.status === 'missing' && <p>{t('devotionalMissing')}</p>}
-          <cite>{label} · {abbrOf(versionId)}</cite>
+          <button type="button" className="dev-verse-btn" title={t('devotionalRead')} disabled={verse.status !== 'ready'} onClick={readChapter}>
+            {verse.status === 'ready' && <span className="q">{verseText}</span>}
+            {verse.status === 'missing' && <span className="q">{t('devotionalMissing')}</span>}
+            <cite>{label} · {abbrOf(versionId)}<CaretRight size={12} weight="bold" aria-hidden="true" /></cite>
+          </button>
         </blockquote>
 
         {status === 'ready' && devotional ? (
@@ -135,7 +137,6 @@ export function DevotionalSheet() {
                 </div>
               </div>
             )}
-            {verse.status === 'ready' && <Button block onClick={readChapter}>{t('devotionalRead')}</Button>}
             <p className="dev-note"><WarningCircle size={14} weight="regular" aria-hidden="true" />{t('devotionalNote')}</p>
           </>
         ) : status === 'error' || status === 'offline' ? (
@@ -143,14 +144,14 @@ export function DevotionalSheet() {
             <p>{t(status === 'offline' ? 'offlineShort' : 'downloadError')}</p>
             <Button size="sm" icon={ArrowClockwise} onClick={() => void load()}>{t('askRetry')}</Button>
           </div>
-        ) : (
+        ) : status === 'loading' ? (
           <div className="dev-load" role="status">
             <CloudArrowDown size={32} weight="light" aria-hidden="true" />
             <ProgressBar value={progress} />
             <p className="lbl">{t('downloadingBtn', { pct })}</p>
             <p>{t('devotionalPack', { lang: names.of(packLang(uiLang)) ?? packLang(uiLang) })}</p>
           </div>
-        )}
+        ) : null}
       </div>
     </Sheet>
   );

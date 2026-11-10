@@ -1,8 +1,8 @@
 // Minimal IndexedDB access. Everything the user generates lives here, only in this browser.
 const NAME = 'open-bible';
-const VERSION = 1;
+const VERSION = 2;
 
-export type StoreName = 'books' | 'versions' | 'highlights' | 'notes';
+export type StoreName = 'books' | 'versions' | 'highlights' | 'notes' | 'devotional';
 
 let opened: Promise<IDBDatabase> | null = null;
 
@@ -11,10 +11,14 @@ function open(): Promise<IDBDatabase> {
     const req = indexedDB.open(NAME, VERSION);
     req.onupgradeneeded = () => {
       const db = req.result;
-      db.createObjectStore('books'); // key: "<version>:<book>"
-      db.createObjectStore('versions', { keyPath: 'id' });
-      db.createObjectStore('highlights', { keyPath: 'key' });
-      db.createObjectStore('notes', { keyPath: 'id' });
+      const make = (name: string, options?: IDBObjectStoreParameters) => {
+        if (!db.objectStoreNames.contains(name)) db.createObjectStore(name, options);
+      };
+      make('books'); // key: "<version>:<book>"
+      make('versions', { keyPath: 'id' });
+      make('highlights', { keyPath: 'key' });
+      make('notes', { keyPath: 'id' });
+      make('devotional'); // key: pack language
     };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => {
