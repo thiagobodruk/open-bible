@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.25.0
+
+### Added
+
+- Usage statistics for the daily devotional, the intro and shared links.
+
 ## 1.24.4
 
 ### Changed
