@@ -73,6 +73,19 @@ export function todayFor(date: Date): Today {
   return { key: here, ref: list.days[here] };
 }
 
+const KEYS = Object.keys(list.days);
+
+/** Position of the date in the calendar, from 1 (January 1st) to 366 (December 31st), counting February 29th. It is the day ID of share links. */
+export const dayId = (d: Date) => KEYS.indexOf(dayKey(d)) + 1;
+
+/** The date of a day ID in the given year, or `null` for an ID out of range. February 29th falls on a leap year. */
+export function dateOfDayId(id: number, year = new Date().getFullYear()): Date | null {
+  const key = KEYS[id - 1];
+  if (!key) return null;
+  const [month, day] = key.split('-').map(Number);
+  return new Date(key === '02-29' ? 2024 : year, month - 1, day);
+}
+
 /** Local date as YYYY-MM-DD, to remember on which day the devotional was shown. */
 export const dateStamp = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 

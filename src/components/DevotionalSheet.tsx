@@ -10,13 +10,13 @@ import { useSettings } from '../state/settings';
 import { useStudy } from '../state/study';
 import { useAsk } from '../state/ask';
 import { useDevotional } from '../state/devotional';
-import { packLang, todayFor } from '../data/devotional';
+import { packLang, dateOfDayId, dayId, todayFor } from '../data/devotional';
 import { loadBook } from '../data/bible';
 import { abbrOf } from '../data/catalog';
 import { useBookName } from '../hooks';
 import { refLabel } from '../ref';
 import { copyText, shareOrCopy } from '../share';
-import { appUrl } from '../link';
+import { devotionalUrl } from '../link';
 import { go } from '../router';
 
 type Verse = { status: 'loading' } | { status: 'missing' } | { status: 'ready'; texts: string[] };
@@ -32,7 +32,12 @@ export function DevotionalSheet() {
   const enabled = useSettings((s) => s.devotional);
   const { status, progress, pack, asked, load, enable, markAsked } = useDevotional();
   const bookName = useBookName();
-  const day = useMemo(() => new Date(), []);
+  // A share link opens the devotional of the day it carries, in this year. Without one, it is today's.
+  const day = useMemo(() => {
+    const linked = useDevotional.getState().day;
+    return (linked && dateOfDayId(linked)) || new Date();
+  }, []);
+  useEffect(() => () => useDevotional.setState({ day: null }), []);
   const today = useMemo(() => todayFor(day), [day]);
   const { ref } = today;
   const [verse, setVerse] = useState<Verse>({ status: 'loading' });
@@ -69,7 +74,7 @@ export function DevotionalSheet() {
           ...devotional.paragraphs,
           `> *${t('devotionalToday')}:* ${devotional.today}`,
           `> *${t('devotionalPrayer')}:* ${devotional.prayer}`,
-          appUrl(),
+          devotionalUrl(dayId(day)),
         ].join('\n\n')
       : '';
 

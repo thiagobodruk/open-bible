@@ -7,7 +7,7 @@ import { useLibrary } from './state/library';
 import { useIncoming } from './state/incoming';
 import { useIntro } from './state/intro';
 import { Intro } from './components/Intro';
-import { appUrl, readPath, searchWithoutRef } from './link';
+import { appUrl, readPath, searchWithoutRef, sheetFromHash } from './link';
 import { Reader } from './screens/Reader';
 import { Settings } from './screens/Settings';
 import { Privacy } from './screens/Privacy';
@@ -27,12 +27,12 @@ import { SearchSheet } from './components/SearchSheet';
 import { LibrarySheet } from './components/LibrarySheet';
 import { StudySheet } from './components/StudySheet';
 import { DevotionalSheet } from './components/DevotionalSheet';
-import { markShownToday, shownToday } from './state/devotional';
+import { markShownToday, shownToday, useDevotional } from './state/devotional';
 import { DeleteAccountSheet } from './components/DeleteAccountSheet';
 import { Toast } from './components/Toast';
 
-/** The old #/library and #/study links now open the reader with that sheet on top. */
-let sheetFromLink: 'library' | 'study' | null = location.hash === '#/library' ? 'library' : location.hash === '#/study' ? 'study' : null;
+/** The #/library, #/study and #/devotional/<day> links open the reader with that sheet on top. */
+let sheetFromLink = sheetFromHash(location.hash);
 
 export default function App() {
   const route = useRoute();
@@ -73,9 +73,10 @@ export default function App() {
   useEffect(() => {
     close();
     if (sheetFromLink && route === '/') {
-      const name = sheetFromLink;
+      const { name, day } = sheetFromLink;
       sheetFromLink = null;
       history.replaceState(null, '', location.pathname + location.search);
+      if (name === 'devotional') useDevotional.setState({ day: day ?? null });
       useUI.getState().open(name);
     }
   }, [route, close]);

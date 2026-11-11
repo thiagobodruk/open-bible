@@ -19,6 +19,8 @@ interface DevotionalStore {
   progress: number;
   pack: DevotionalPack | null;
   asked: boolean;
+  /** Day ID (1-366) a share link asked for, until the sheet closes. `null` is today. */
+  day: number | null;
   /** Opens the pack of the interface language (English when the language has none) from the device, downloading it only the first time. */
   load: () => Promise<void>;
   markAsked: () => void;
@@ -46,6 +48,7 @@ export const useDevotional = create<DevotionalStore>((set, get) => ({
   progress: 0,
   pack: null,
   asked: getItem(ASKED) === '1',
+  day: null,
   load: async () => {
     const lang = packLang(useSettings.getState().uiLang);
     if (get().pack?.lang === lang) return set({ status: 'ready' });

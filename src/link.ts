@@ -66,3 +66,14 @@ export function parseReadPath(pathname: string): ReadLink | null {
 
 /** App URL, without a reading. This is what the share button sends. */
 export const appUrl = () => new URL(base, location.origin).href;
+
+/** URL of the devotional of a day (1-366): /open-bible/#/devotional/42. It opens the app with the devotional sheet. */
+export const devotionalUrl = (dayId: number) => `${appUrl()}#/devotional/${dayId}`;
+
+/** The sheet requested by the URL hash: #/library, #/study, #/devotional or #/devotional/<day ID>. */
+export function sheetFromHash(hash: string): { name: 'library' | 'study' | 'devotional'; day?: number } | null {
+  if (hash === '#/library') return { name: 'library' };
+  if (hash === '#/study') return { name: 'study' };
+  const m = /^#\/devotional(?:\/(\d{1,3}))?$/.exec(hash);
+  return m ? { name: 'devotional', ...(m[1] && { day: Number(m[1]) }) } : null;
+}
