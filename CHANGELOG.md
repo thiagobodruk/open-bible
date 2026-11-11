@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.24.4
+
+### Changed
+
+- The link shared with the daily devotional now opens the devotional of that day.
+
 ## 1.24.3
 
 ### Changed
