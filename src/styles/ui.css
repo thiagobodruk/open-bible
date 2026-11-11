@@ -323,8 +323,6 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 .dev-invite p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
 .dev-invite-btns { display: flex; gap: 8px; margin-top: 6px; }
 .dev-invite-btns .btn { flex: 1; }
-.dev-note { display: flex; align-items: flex-start; gap: 6px; margin: 0; font-size: 12px; line-height: 1.4; color: var(--muted); }
-.dev-note svg { flex: none; margin-top: 1px; }
 .dev-load { display: grid; justify-items: center; gap: 10px; padding: 12px 0; text-align: center; font-size: 14px; color: var(--muted); }
 .dev-load p { margin: 0; }
 .dev-load .progress { width: 100%; max-width: 240px; }
