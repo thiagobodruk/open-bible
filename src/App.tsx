@@ -7,6 +7,7 @@ import { useLibrary } from './state/library';
 import { useIncoming } from './state/incoming';
 import { useIntro } from './state/intro';
 import { Intro } from './components/Intro';
+import { track } from './analytics';
 import { appUrl, readPath, searchWithoutRef, sheetFromHash } from './link';
 import { Reader } from './screens/Reader';
 import { Settings } from './screens/Settings';
@@ -76,7 +77,10 @@ export default function App() {
       const { name, day } = sheetFromLink;
       sheetFromLink = null;
       history.replaceState(null, '', location.pathname + location.search);
-      if (name === 'devotional') useDevotional.setState({ day: day ?? null });
+      if (name === 'devotional') {
+        track('link_open', { kind: 'devotional' });
+        useDevotional.setState({ day: day ?? null, source: 'link' });
+      }
       useUI.getState().open(name);
     }
   }, [route, close]);
@@ -86,6 +90,7 @@ export default function App() {
   useEffect(() => {
     if (!devotionalOn || route !== '/' || !ready || !installed || pending || !introDone || sheet || shownToday()) return;
     markShownToday();
+    useDevotional.setState({ source: 'auto' });
     useUI.getState().open('devotional');
   }, [devotionalOn, route, ready, installed, pending, introDone, sheet]);
 

@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, BookOpenText, GoogleLogo, Sparkle, SunHorizon, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
-import { useIntro } from '../state/intro';
+import { markIntroViewed, useIntro } from '../state/intro';
 import { useDevotional } from '../state/devotional';
+import { track } from '../analytics';
 import { useTerms } from '../state/terms';
 import { useUI } from '../state/ui';
 import { Button } from './Button';
@@ -41,6 +42,10 @@ export function Intro() {
   const steps = useMemo<Step[]>(() => [...(accountAvailable() && !user ? (['signin'] as const) : []), 'offline', 'study', 'devotional', 'download'], [user]);
   const [i, setI] = useState(0);
   const step = steps[i];
+  useEffect(() => {
+    markIntroViewed();
+    track('intro_step', { step });
+  }, [step]);
   const Icon = step === 'download' ? null : ICONS[step];
   
 
@@ -117,7 +122,7 @@ export function Intro() {
           <DownloadActions trailing onChooseOther={chooseOther} />
         ) : step === 'devotional' ? (
           <>
-            <Button variant="primary" block onClick={() => { useDevotional.getState().enable(); next(); }}>{t('introDevotionalEnable')}</Button>
+            <Button variant="primary" block onClick={() => { useDevotional.getState().enable('intro'); next(); }}>{t('introDevotionalEnable')}</Button>
             <Button block onClick={() => { useDevotional.getState().markAsked(); next(); }}>{t('devotionalNotNow')}</Button>
             <p className="intro-hint">{t('introDevotionalHint')}</p>
           </>
