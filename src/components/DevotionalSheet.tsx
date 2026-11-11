@@ -17,6 +17,7 @@ import { useBookName } from '../hooks';
 import { refLabel } from '../ref';
 import { copyText, shareOrCopy } from '../share';
 import { devotionalUrl } from '../link';
+import { track } from '../analytics';
 import { go } from '../router';
 
 type Verse = { status: 'loading' } | { status: 'missing' } | { status: 'ready'; texts: string[] };
@@ -37,7 +38,10 @@ export function DevotionalSheet() {
     const linked = useDevotional.getState().day;
     return (linked && dateOfDayId(linked)) || new Date();
   }, []);
-  useEffect(() => () => useDevotional.setState({ day: null }), []);
+  useEffect(() => {
+    track('devotional_open', { source: useDevotional.getState().source });
+    return () => useDevotional.setState({ day: null, source: 'menu' });
+  }, []);
   const today = useMemo(() => todayFor(day), [day]);
   const { ref } = today;
   const [verse, setVerse] = useState<Verse>({ status: 'loading' });
@@ -78,15 +82,21 @@ export function DevotionalSheet() {
         ].join('\n\n')
       : '';
 
-  const copy = async () => notify(t((await copyText(text())) ? 'copied' : 'copyFailed'));
+  const copy = async () => {
+    const ok = await copyText(text());
+    if (ok) track('devotional_copy');
+    notify(t(ok ? 'copied' : 'copyFailed'));
+  };
   const share = async () => {
     const result = await shareOrCopy({ text: text() });
+    if (result === 'shared' || result === 'copied') track('devotional_share', { result });
     if (result === 'copied') notify(t('copied'));
     else if (result === 'failed') notify(t('copyFailed'));
   };
 
   const readChapter = () => {
     // Scroll first: the verse focus triggered by goTo scrolls to the verse and must not be undone.
+    track('devotional_read');
     scrollTo(0, 0);
     useStudy.getState().goTo(ref.book, ref.chapter, ref.from, ref.to);
     close();
@@ -95,6 +105,7 @@ export function DevotionalSheet() {
 
   const ask = (question: string) => {
     if (verse.status !== 'ready') return;
+    track('devotional_ask');
     const passage = { ref: label, version: abbrOf(versionId), text: verse.texts.map((v, i) => `${ref.from + i} ${v}`).join('\n') };
     useAsk.getState().start(question, passage, uiLang);
     open('ask');
@@ -144,7 +155,7 @@ export function DevotionalSheet() {
                 <b>{t('devotionalInviteTitle')}</b>
                 <p>{t('devotionalInviteBody')}</p>
                 <div className="dev-invite-btns">
-                  <Button variant="primary" size="sm" onClick={enable}>{t('devotionalEnable')}</Button>
+                  <Button variant="primary" size="sm" onClick={() => enable('invite')}>{t('devotionalEnable')}</Button>
                   <Button size="sm" onClick={markAsked}>{t('devotionalNotNow')}</Button>
                 </div>
               </div>

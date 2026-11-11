@@ -12,7 +12,7 @@ import { installAvailable, requestInstall, subscribeInstall } from '../install';
 import { buildLabel, checkForUpdate, currentBuild, fetchLatestBuild, type BuildInfo } from '../update';
 import { go } from '../router';
 import { useAccount } from '../state/account';
-import { analyticsAvailable, useAnalytics } from '../analytics';
+import { analyticsAvailable, track, useAnalytics } from '../analytics';
 import { Segmented } from '../components/Segmented';
 import { useT } from '../i18n';
 import { Row } from '../components/Row';
@@ -91,7 +91,13 @@ export function Settings() {
             label={t('devotionalDaily')}
             value={devotional ? 'on' : 'off'}
             options={[{ value: 'on', label: t('on') }, { value: 'off', label: t('off') }]}
-            onChange={(v) => (v === 'on' ? useDevotional.getState().enable() : set('devotional', false))}
+            onChange={(v) => {
+              if (v === 'on') useDevotional.getState().enable('settings');
+              else {
+                set('devotional', false);
+                track('devotional_disable');
+              }
+            }}
           />
           <p className="hint">{t('devotionalHint')}</p>
         </Section>

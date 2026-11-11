@@ -3,6 +3,7 @@ import { getItem, setItem } from '../storage';
 import { dbGet, dbPut } from '../db';
 import { dateStamp, downloadPack, packLang, type DevotionalPack, type PackLang } from '../data/devotional';
 import { useSettings } from './settings';
+import { track } from '../analytics';
 
 /** "1" once the person answered the invitation to turn the daily devotional on, in the onboarding or in the sheet. */
 const ASKED = 'ob:devotionalAsked';
@@ -11,6 +12,9 @@ const SHOWN = 'ob:devotionalShown';
 
 /** The progress bar stays at least this long, so it does not flash when the pack is already close. */
 const MIN_LOADING = 300;
+
+export type OpenSource = 'auto' | 'menu' | 'link';
+export type EnableSource = 'settings' | 'intro' | 'invite';
 
 interface DevotionalStore {
   /** `idle` while the device is checked, `loading` only while the pack is downloaded. */
@@ -21,11 +25,13 @@ interface DevotionalStore {
   asked: boolean;
   /** Day ID (1-366) a share link asked for, until the sheet closes. `null` is today. */
   day: number | null;
+  /** What opened the sheet, for the usage statistics: the first open of the day, a share link or the menu. */
+  source: OpenSource;
   /** Opens the pack of the interface language (English when the language has none) from the device, downloading it only the first time. */
   load: () => Promise<void>;
   markAsked: () => void;
-  /** Turns the daily devotional on. It was just shown or chosen, so it waits for tomorrow to open by itself. */
-  enable: () => void;
+  /** Turns the daily devotional on, from where the person chose it. It was just shown or chosen, so it waits for tomorrow to open by itself. */
+  enable: (source: EnableSource) => void;
 }
 
 let current = 0;
@@ -49,6 +55,7 @@ export const useDevotional = create<DevotionalStore>((set, get) => ({
   pack: null,
   asked: getItem(ASKED) === '1',
   day: null,
+  source: 'menu',
   load: async () => {
     const lang = packLang(useSettings.getState().uiLang);
     if (get().pack?.lang === lang) return set({ status: 'ready' });
@@ -71,14 +78,19 @@ export const useDevotional = create<DevotionalStore>((set, get) => ({
       if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait));
       if (id === current) set({ pack, status: 'ready', progress: 1 });
     } catch {
-      if (id === current) set({ status: navigator.onLine === false ? 'offline' : 'error' });
+      if (id === current) {
+        const reason = navigator.onLine === false ? 'offline' : 'error';
+        track('devotional_error', { reason });
+        set({ status: reason });
+      }
     }
   },
   markAsked: () => {
     setItem(ASKED, '1');
     set({ asked: true });
   },
-  enable: () => {
+  enable: (source) => {
+    track('devotional_enable', { source });
     useSettings.getState().set('devotional', true);
     get().markAsked();
     markShownToday();
