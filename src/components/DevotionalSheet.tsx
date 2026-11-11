@@ -60,15 +60,22 @@ export function DevotionalSheet() {
   const names = useMemo(() => new Intl.DisplayNames([uiLang], { type: 'language' }), [uiLang]);
   const date = new Intl.DateTimeFormat(uiLang, { day: 'numeric', month: 'long' }).format(day);
 
+  // Chat-style markup (*bold*, _italic_, > quote) that WhatsApp and Telegram render.
   const text = () =>
     devotional
-      ? [devotional.title, `${label}${verseText ? `\n${verseText}` : ''}`, ...devotional.paragraphs, `${t('devotionalToday')}: ${devotional.today}`, `${t('devotionalPrayer')}: ${devotional.prayer}`].join('\n\n')
+      ? [
+          `*${devotional.title}*\n${date}`,
+          `> ${verseText ? `_${verseText}_ — ` : ''}*${label}*`,
+          ...devotional.paragraphs,
+          `> *${t('devotionalToday')}:* ${devotional.today}`,
+          `> *${t('devotionalPrayer')}:* ${devotional.prayer}`,
+          appUrl(),
+        ].join('\n\n')
       : '';
 
   const copy = async () => notify(t((await copyText(text())) ? 'copied' : 'copyFailed'));
   const share = async () => {
-    const body = text();
-    const result = await shareOrCopy(typeof navigator.share === 'function' ? { title: devotional?.title, text: body, url: appUrl() } : { text: `${body}\n\n${appUrl()}` });
+    const result = await shareOrCopy({ text: text() });
     if (result === 'copied') notify(t('copied'));
     else if (result === 'failed') notify(t('copyFailed'));
   };
