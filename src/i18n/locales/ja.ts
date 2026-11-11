@@ -300,7 +300,6 @@ const ja: Messages = {
   devotionalToday: '今日の一歩',
   devotionalPrayer: '祈り',
   devotionalRead: '章を読む',
-  devotionalNote: 'AIの助けで書かれ、確認済みです。必ず聖書と照らし合わせてください。',
   devotionalAsk: 'この内容について質問',
   devotionalMissing: 'このバージョンにはこの箇所が含まれていません。',
   devotionalInviteTitle: '毎日デボーションを受け取りますか？',

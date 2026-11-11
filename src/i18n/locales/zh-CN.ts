@@ -300,7 +300,6 @@ const zhCN: Messages = {
   devotionalToday: '今日行动',
   devotionalPrayer: '祷告',
   devotionalRead: '阅读本章',
-  devotionalNote: '由 AI 协助撰写并经审阅。请始终对照圣经。',
   devotionalAsk: '就此提问',
   devotionalMissing: '此版本不包含这段经文。',
   devotionalInviteTitle: '每天接收灵修吗？',

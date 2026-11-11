@@ -300,7 +300,6 @@ const ptBR: Messages = {
   devotionalToday: 'Para hoje',
   devotionalPrayer: 'Oração',
   devotionalRead: 'Ler o capítulo',
-  devotionalNote: 'Escrito com ajuda de IA e revisado. Sempre confira com a Bíblia.',
   devotionalAsk: 'Pergunte sobre este texto',
   devotionalMissing: 'Esta versão não inclui este trecho.',
   devotionalInviteTitle: 'Receber o devocional todo dia?',

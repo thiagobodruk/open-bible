@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowClockwise, CaretRight, CloudArrowDown, Copy, ShareNetwork, SunHorizon, WarningCircle } from '@phosphor-icons/react';
+import { ArrowClockwise, CaretRight, CloudArrowDown, Copy, ShareNetwork, SunHorizon } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { PromptField } from './PromptField';
 import { ProgressBar } from './ProgressBar';
@@ -137,7 +137,6 @@ export function DevotionalSheet() {
                 </div>
               </div>
             )}
-            <p className="dev-note"><WarningCircle size={14} weight="regular" aria-hidden="true" />{t('devotionalNote')}</p>
           </>
         ) : status === 'error' || status === 'offline' ? (
           <div className="dev-load" role="alert">

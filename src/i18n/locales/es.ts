@@ -300,7 +300,6 @@ const es: Messages = {
   devotionalToday: 'Para hoy',
   devotionalPrayer: 'Oración',
   devotionalRead: 'Leer el capítulo',
-  devotionalNote: 'Escrito con ayuda de IA y revisado. Compáralo siempre con la Biblia.',
   devotionalAsk: 'Pregunta sobre este texto',
   devotionalMissing: 'Esta versión no incluye este pasaje.',
   devotionalInviteTitle: '¿Recibir el devocional todos los días?',

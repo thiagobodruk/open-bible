@@ -298,7 +298,6 @@ const en = {
   devotionalToday: 'For today',
   devotionalPrayer: 'Prayer',
   devotionalRead: 'Read the chapter',
-  devotionalNote: 'Written with AI help and reviewed. Always compare with the Bible.',
   devotionalAsk: 'Ask about this text',
   devotionalMissing: 'This version does not include this passage.',
   devotionalInviteTitle: 'Get the devotional every day?',

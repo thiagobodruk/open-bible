@@ -300,7 +300,6 @@ const de: Messages = {
   devotionalToday: 'Für heute',
   devotionalPrayer: 'Gebet',
   devotionalRead: 'Kapitel lesen',
-  devotionalNote: 'Mit KI-Hilfe geschrieben und geprüft. Vergleiche immer mit der Bibel.',
   devotionalAsk: 'Frage zum Text',
   devotionalMissing: 'Diese Version enthält diese Stelle nicht.',
   devotionalInviteTitle: 'Jeden Tag eine Andacht erhalten?',
