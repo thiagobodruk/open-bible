@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.24.3
+
+### Changed
+
+- Sharing and copying the daily devotional now uses a formatted layout that WhatsApp and Telegram render.
+
 ## 1.24.2
 
 ### Changed
