@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.25.1
+
+### Changed
+
+- The Portuguese devotionals use everyday language in the prayers and capitalize the pronouns and titles that refer to God.
+
 ## 1.25.0
 
 ### Added
