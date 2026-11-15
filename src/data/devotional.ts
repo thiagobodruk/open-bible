@@ -86,6 +86,25 @@ export function dateOfDayId(id: number, year = new Date().getFullYear()): Date |
   return new Date(key === '02-29' ? 2024 : year, month - 1, day);
 }
 
+const MOVEABLE: readonly string[] = ['goodFriday', 'easter', 'pentecost'];
+
+/** True for the text key of a day: "MM-DD" from the verse list, or one of the three moveable dates. */
+export const isDayKey = (key: unknown): key is string => typeof key === 'string' && (KEYS.includes(key) || MOVEABLE.includes(key));
+
+/** The verse of the day for a text key. */
+export const refOfKey = (key: string): VerseRef | undefined => list.days[key] ?? list.moveable[key as MoveableKey];
+
+/** The date of a text key in the given year. The moveable dates follow that year's Easter. */
+export function dateOfKey(key: string, year = new Date().getFullYear()): Date | null {
+  if (MOVEABLE.includes(key)) {
+    const easter = easterSunday(year);
+    return key === 'easter' ? easter : key === 'goodFriday' ? addDays(easter, -2) : addDays(easter, 49);
+  }
+  const m = /^(\d{2})-(\d{2})$/.exec(key);
+  if (!m || !list.days[key]) return null;
+  return new Date(key === '02-29' ? 2024 : year, Number(m[1]) - 1, Number(m[2]));
+}
+
 /** Local date as YYYY-MM-DD, to remember on which day the devotional was shown. */
 export const dateStamp = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 

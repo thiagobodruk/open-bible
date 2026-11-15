@@ -1,7 +1,8 @@
 import { BOOKS } from './data/books';
 
 const chaptersOf = new Map(BOOKS.map((b) => [b.id, b.chapters]));
-import { HL_COLORS, useStudy, vkey, type Highlight, type HlColor, type Note } from './state/study';
+import { isDayKey } from './data/devotional';
+import { HL_COLORS, useStudy, vkey, type Highlight, type HlColor, type Like, type Note } from './state/study';
 
 const APP = 'open-bible';
 const SCHEMA = 1;
@@ -13,11 +14,13 @@ export interface Backup {
   exportedAt: string;
   highlights: Highlight[];
   notes: Note[];
+  /** Liked devotionals. Backups made before they existed do not have it. */
+  likes?: Like[];
 }
 
 export function buildBackup(): Backup {
-  const { highlights, notes } = useStudy.getState();
-  return { app: APP, schema: SCHEMA, exportedAt: new Date().toISOString(), highlights: Object.values(highlights), notes };
+  const { highlights, notes, likes } = useStudy.getState();
+  return { app: APP, schema: SCHEMA, exportedAt: new Date().toISOString(), highlights: Object.values(highlights), notes, likes: Object.values(likes) };
 }
 
 export function downloadBackup() {
@@ -37,7 +40,7 @@ const isInt = (n: unknown): n is number => Number.isInteger(n) && (n as number) 
 const str = (v: unknown): v is string => typeof v === 'string';
 
 /** Reads a backup and returns only the valid records. Throws if the file is not an Open Bible backup. */
-export function parseBackup(text: string): { highlights: Highlight[]; notes: Note[]; skipped: number } {
+export function parseBackup(text: string): { highlights: Highlight[]; notes: Note[]; likes: Like[]; skipped: number } {
   let raw: any;
   try {
     raw = JSON.parse(text);
@@ -85,5 +88,18 @@ export function parseBackup(text: string): { highlights: Highlight[]; notes: Not
       ...(Number.isFinite(n.updatedAt) ? { updatedAt: n.updatedAt } : {}),
     });
   }
-  return { highlights, notes, skipped };
+
+  const likes: Like[] = [];
+  for (const l of Array.isArray(raw.likes) ? raw.likes : []) {
+    if (!l || !isDayKey(l.key)) {
+      skipped++;
+      continue;
+    }
+    likes.push({
+      key: l.key,
+      createdAt: Number.isFinite(l.createdAt) ? l.createdAt : Date.now(),
+      ...(Number.isFinite(l.updatedAt) ? { updatedAt: l.updatedAt } : {}),
+    });
+  }
+  return { highlights, notes, likes, skipped };
 }

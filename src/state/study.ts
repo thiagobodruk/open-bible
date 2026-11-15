@@ -26,6 +26,15 @@ export interface Highlight {
   updatedAt?: number;
 }
 
+/** A liked devotional. The key is the text key of the day ("11-11", or goodFriday, easter, pentecost), so it does not depend on the year or the language. */
+export interface Like {
+  key: string;
+  /** When it was liked. */
+  createdAt: number;
+  /** Liking it again after removing it. Without it, createdAt applies. */
+  updatedAt?: number;
+}
+
 export interface Note {
   id: string;
   book: string;
@@ -57,9 +66,14 @@ interface StudyStore {
   selection: number[];
   highlights: Record<string, Highlight>;
   notes: Note[];
+  likes: Record<string, Like>;
   hydrate: () => Promise<void>;
-  /** Replaces highlights and notes (backup import). */
-  merge: (highlights: Highlight[], notes: Note[]) => Promise<void>;
+  /** Merges highlights, notes and liked devotionals into the ones on the device (backup import). */
+  merge: (highlights: Highlight[], notes: Note[], likes?: Like[]) => Promise<void>;
+  /** Likes or unlikes the devotional of the day. Returns whether it is liked now. */
+  toggleLike: (key: string) => boolean;
+  like: (key: string) => void;
+  unlike: (key: string) => void;
   goTo: (book: string, chapter: number, verse?: number, to?: number) => void;
   step: (delta: 1 | -1) => boolean;
   toggleVerse: (v: number) => void;
@@ -88,14 +102,16 @@ export const useStudy = create<StudyStore>((set, get) => ({
   selection: [],
   highlights: {},
   notes: [],
+  likes: {},
 
   hydrate: async () => {
     try {
-      const [hs, ns] = await Promise.all([dbAll<Highlight>('highlights'), dbAll<Note>('notes')]);
+      const [hs, ns, ls] = await Promise.all([dbAll<Highlight>('highlights'), dbAll<Note>('notes'), dbAll<Like>('likes')]);
       // Highlights made before loading finishes still count.
       set((s) => ({
         highlights: { ...Object.fromEntries(hs.map((h) => [h.key, h])), ...s.highlights },
         notes: [...ns.filter((n) => !s.notes.some((x) => x.id === n.id)), ...s.notes],
+        likes: { ...Object.fromEntries(ls.map((l) => [l.key, l])), ...s.likes },
         hydrated: true,
       }));
     } catch {
@@ -103,7 +119,7 @@ export const useStudy = create<StudyStore>((set, get) => ({
     }
   },
 
-  merge: async (highlights, notes) => {
+  merge: async (highlights, notes, likes = []) => {
     const s = get();
     const hl = { ...s.highlights };
     const hstamp = (h: Highlight) => h.updatedAt ?? h.createdAt;
@@ -111,9 +127,13 @@ export const useStudy = create<StudyStore>((set, get) => ({
     const byId = new Map(s.notes.map((n) => [n.id, n]));
     const stamp = (n: Note) => n.updatedAt ?? n.createdAt;
     for (const n of notes) if (!byId.has(n.id) || stamp(byId.get(n.id)!) < stamp(n)) byId.set(n.id, n);
+    const lk = { ...s.likes };
+    const lstamp = (l: Like) => l.updatedAt ?? l.createdAt;
+    for (const l of likes) if (!lk[l.key] || lstamp(lk[l.key]) < lstamp(l)) lk[l.key] = l;
     await dbPut('highlights', Object.values(hl));
     await dbPut('notes', [...byId.values()]);
-    set({ highlights: hl, notes: [...byId.values()] });
+    await dbPut('likes', Object.values(lk));
+    set({ highlights: hl, notes: [...byId.values()], likes: lk });
   },
 
   goTo: (book, chapter, verse, to) => {
@@ -229,5 +249,25 @@ export const useStudy = create<StudyStore>((set, get) => ({
   deleteNote: (id) => {
     set((s) => ({ notes: s.notes.filter((n) => n.id !== id) }));
     dbDelete('notes', [id]).catch(persistFail);
+  },
+
+  like: (key) => {
+    if (get().likes[key]) return;
+    const liked: Like = { key, createdAt: Date.now() };
+    set((s) => ({ likes: { ...s.likes, [key]: liked } }));
+    dbPut('likes', [liked]).catch(persistFail);
+  },
+
+  unlike: (key) => {
+    if (!get().likes[key]) return;
+    set((s) => ({ likes: Object.fromEntries(Object.entries(s.likes).filter(([k]) => k !== key)) }));
+    dbDelete('likes', [key]).catch(persistFail);
+  },
+
+  toggleLike: (key) => {
+    const liked = !get().likes[key];
+    if (liked) get().like(key);
+    else get().unlike(key);
+    return liked;
   },
 }));

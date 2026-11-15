@@ -311,6 +311,19 @@ const de: Messages = {
   introDevotionalBody: 'Erhalte jeden Tag einen Vers und eine kurze Andacht, die inspirieren soll. Sie dauert weniger als eine Minute.',
   introDevotionalEnable: 'Tägliche Andacht einschalten',
   introDevotionalHint: 'Du kannst das später in den Einstellungen ändern.',
+  like: 'Gefällt mir',
+  unlike: 'Gefällt mir nicht mehr',
+  likeAdded: 'Zu den Favoriten hinzugefügt',
+  likeRemoved: 'Aus den Favoriten entfernt',
+  likeSee: 'Ansehen',
+  likeUndo: 'Rückgängig',
+  studyVerses: 'Verse',
+  studyDevotionals: 'Andachten',
+  likedEmpty: 'Noch keine Andachten markiert',
+  likedEmptyHint: 'Tippe auf das Herz bei einer Andacht, um sie hier zu behalten und wieder zu lesen.',
+  likedOpenToday: 'Heutige Andacht öffnen',
+  likedAt: 'Markiert am {date}',
+  studyType: 'Art des Eintrags',
 };
 
 export default de;

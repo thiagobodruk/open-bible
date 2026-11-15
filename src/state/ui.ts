@@ -8,8 +8,12 @@ interface Toast {
   action?: { label: string; run: () => void };
 }
 
+export type StudyTab = 'verses' | 'devotionals';
+
 interface UIStore {
   sheet: SheetName;
+  /** The tab My study opens on. Whoever opens the sheet sets it, and the sheet puts it back when it closes. */
+  studyTab: StudyTab;
   toast: Toast | null;
   /** While true, the page address stays at the app root instead of pointing to the chapter. */
   homeUrl: boolean;
@@ -29,6 +33,7 @@ let timer: ReturnType<typeof setTimeout> | undefined;
 
 export const useUI = create<UIStore>((set) => ({
   sheet: null,
+  studyTab: 'verses',
   toast: null,
   homeUrl: false,
   setHomeUrl: (homeUrl) => set({ homeUrl }),

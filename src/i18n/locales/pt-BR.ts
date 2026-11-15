@@ -311,6 +311,19 @@ const ptBR: Messages = {
   introDevotionalBody: 'Receba todo dia um versículo e um devocional curto, escrito para inspirar. Leva menos de um minuto.',
   introDevotionalEnable: 'Ativar devocional diário',
   introDevotionalHint: 'Você pode mudar isso depois em Ajustes.',
+  like: 'Curtir',
+  unlike: 'Descurtir',
+  likeAdded: 'Adicionado aos curtidos',
+  likeRemoved: 'Removido dos curtidos',
+  likeSee: 'Ver',
+  likeUndo: 'Desfazer',
+  studyVerses: 'Versículos',
+  studyDevotionals: 'Devocionais',
+  likedEmpty: 'Nenhum devocional curtido ainda',
+  likedEmptyHint: 'Toque no coração em um devocional para guardá-lo aqui e reler quando quiser.',
+  likedOpenToday: 'Abrir o devocional de hoje',
+  likedAt: 'Curtido em {date}',
+  studyType: 'Tipo de item',
 };
 
 export default ptBR;

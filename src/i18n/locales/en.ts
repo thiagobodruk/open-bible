@@ -309,6 +309,19 @@ const en = {
   introDevotionalBody: 'Get a verse and a short devotional every day, written to inspire. It takes less than a minute.',
   introDevotionalEnable: 'Turn on daily devotional',
   introDevotionalHint: 'You can change this later in Settings.',
+  like: 'Like',
+  unlike: 'Unlike',
+  likeAdded: 'Added to liked',
+  likeRemoved: 'Removed from liked',
+  likeSee: 'See',
+  likeUndo: 'Undo',
+  studyVerses: 'Verses',
+  studyDevotionals: 'Devotionals',
+  likedEmpty: 'No liked devotionals yet',
+  likedEmptyHint: 'Tap the heart on a devotional to keep it here and read it again.',
+  likedOpenToday: "Open today's devotional",
+  likedAt: 'Liked {date}',
+  studyType: 'Type of item',
 };
 
 export default en;

@@ -49,6 +49,7 @@
 .empty svg { margin-bottom: 12px; }
 .empty.compact { padding: 40px 8px; }
 .empty-hint { font-size: 13px; margin-top: 8px; }
+.empty-action { display: flex; justify-content: center; margin-top: 20px; }
 
 /* Navegador */
 .book-list { margin: 0 -8px; }
@@ -110,6 +111,12 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 
 .entry-row { position: relative; }
 .entry-row .entry { margin-inline: -10px; padding: 16px 64px 16px 10px; border-left: 0; border-radius: var(--radius-sm); }
+.entry-row .entry.dev-like { padding-right: 10px; }
+.dev-like .dl-title { font-family: var(--font-serif); font-size: 18px; line-height: 1.3; font-weight: 600; margin-top: 6px; }
+.dev-like .dl-verse { font-size: 13px; font-weight: 600; color: var(--accent); margin-top: 2px; }
+.dev-like .dl-excerpt { margin-top: 6px; font-size: 14px; line-height: 1.5; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.dev-like .ref .date { text-transform: none; }
+.seg-n { font-size: 13px; font-weight: 600; color: var(--muted); }
 .entry-edit { position: absolute; top: 50%; right: 4px; transform: translateY(-50%); width: 40px; height: 40px; }
 .confirm-text { font-size: 15px; line-height: 1.5; margin: 4px 0 8px; }
 .search-clear { width: 32px; height: 32px; margin: 0 -8px 0 0; flex: none; }

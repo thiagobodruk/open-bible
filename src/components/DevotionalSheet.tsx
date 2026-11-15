@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowClockwise, CaretRight, CloudArrowDown, Copy, ShareNetwork, SunHorizon } from '@phosphor-icons/react';
+import { ArrowClockwise, CaretRight, CloudArrowDown, Copy, Heart, ShareNetwork, SunHorizon } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { PromptField } from './PromptField';
 import { ProgressBar } from './ProgressBar';
@@ -82,6 +82,29 @@ export function DevotionalSheet() {
         ].join('\n\n')
       : '';
 
+  const liked = useStudy((s) => !!s.likes[today.key]);
+  const seeLiked = () => {
+    useUI.setState({ studyTab: 'devotionals' });
+    close();
+    open('study');
+  };
+  // Liking and unliking both leave a short notice: "See" goes to the list, "Undo" brings the like back.
+  const toggleLike = () => {
+    const now = useStudy.getState().toggleLike(today.key);
+    track(now ? 'devotional_like' : 'devotional_unlike', { source: 'sheet' });
+    if (now) {
+      notify(t('likeAdded'), { label: t('likeSee'), run: seeLiked });
+    } else {
+      notify(t('likeRemoved'), {
+        label: t('likeUndo'),
+        run: () => {
+          useStudy.getState().like(today.key);
+          track('devotional_like', { source: 'undo' });
+        },
+      });
+    }
+  };
+
   const copy = async () => {
     const ok = await copyText(text());
     if (ok) track('devotional_copy');
@@ -123,6 +146,7 @@ export function DevotionalSheet() {
       trailing={
         devotional ? (
           <>
+            <button className={liked ? 'icon-btn liked' : 'icon-btn'} onClick={toggleLike} aria-label={t(liked ? 'unlike' : 'like')} aria-pressed={liked}><Heart size={22} weight={liked ? 'fill' : 'light'} /></button>
             <button className="icon-btn" onClick={share} aria-label={t('share')}><ShareNetwork size={22} weight="light" /></button>
             <button className="icon-btn" onClick={copy} aria-label={t('copy')}><Copy size={22} weight="light" /></button>
           </>

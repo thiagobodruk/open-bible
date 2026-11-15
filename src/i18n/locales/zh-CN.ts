@@ -311,6 +311,19 @@ const zhCN: Messages = {
   introDevotionalBody: '每天收到一节经文和一篇简短灵修，用来激励你。只需不到一分钟。',
   introDevotionalEnable: '开启每日灵修',
   introDevotionalHint: '以后可以在设置中更改。',
+  like: '点赞',
+  unlike: '取消点赞',
+  likeAdded: '已加入点赞',
+  likeRemoved: '已从点赞中移除',
+  likeSee: '查看',
+  likeUndo: '撤销',
+  studyVerses: '经文',
+  studyDevotionals: '灵修',
+  likedEmpty: '还没有点赞的灵修',
+  likedEmptyHint: '点按灵修上的心形图标，就能保存到这里，方便以后重读。',
+  likedOpenToday: '打开今天的灵修',
+  likedAt: '{date}点赞',
+  studyType: '条目类型',
 };
 
 export default zhCN;

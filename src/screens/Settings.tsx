@@ -62,8 +62,8 @@ export function Settings() {
     e.target.value = '';
     if (!file) return;
     try {
-      const { highlights: hs, notes: ns, skipped } = parseBackup(await file.text());
-      await useStudy.getState().merge(hs, ns);
+      const { highlights: hs, notes: ns, likes: ls, skipped } = parseBackup(await file.text());
+      await useStudy.getState().merge(hs, ns, ls);
       notify(skipped ? t('importedSkipped', { h: hs.length, n: ns.length, s: skipped }) : t('imported', { h: hs.length, n: ns.length }));
     } catch {
       notify(t('backupInvalid'));

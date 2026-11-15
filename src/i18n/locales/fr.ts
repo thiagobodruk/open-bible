@@ -311,6 +311,19 @@ const fr: Messages = {
   introDevotionalBody: 'Recevez chaque jour un verset et une courte méditation, écrite pour inspirer. Cela prend moins d’une minute.',
   introDevotionalEnable: 'Activer la méditation quotidienne',
   introDevotionalHint: 'Vous pourrez le changer plus tard dans les Réglages.',
+  like: 'Aimer',
+  unlike: 'Ne plus aimer',
+  likeAdded: 'Ajouté aux favoris',
+  likeRemoved: 'Retiré des favoris',
+  likeSee: 'Voir',
+  likeUndo: 'Annuler',
+  studyVerses: 'Versets',
+  studyDevotionals: 'Dévotionnels',
+  likedEmpty: 'Aucun dévotionnel aimé pour l’instant',
+  likedEmptyHint: 'Touchez le cœur sur un dévotionnel pour le garder ici et le relire quand vous voulez.',
+  likedOpenToday: 'Ouvrir le dévotionnel du jour',
+  likedAt: 'Aimé le {date}',
+  studyType: 'Type d’élément',
 };
 
 export default fr;

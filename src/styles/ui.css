@@ -212,6 +212,7 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
 .listen-bar .btn.sm { flex: none; min-width: 52px; padding: 0 10px; }
 .listen-bar .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .icon-btn.on { color: var(--accent); }
+.icon-btn.liked { color: var(--muted); }
 
 /* Compare versions */
 .compare-item { display: block; width: 100%; text-align: left; padding: 14px 0; border-bottom: 1px solid var(--line); }

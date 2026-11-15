@@ -311,6 +311,19 @@ const es: Messages = {
   introDevotionalBody: 'Recibe cada día un versículo y un devocional breve, escrito para inspirar. Lleva menos de un minuto.',
   introDevotionalEnable: 'Activar devocional diario',
   introDevotionalHint: 'Puedes cambiarlo después en Ajustes.',
+  like: 'Me gusta',
+  unlike: 'Quitar me gusta',
+  likeAdded: 'Añadido a favoritos',
+  likeRemoved: 'Quitado de favoritos',
+  likeSee: 'Ver',
+  likeUndo: 'Deshacer',
+  studyVerses: 'Versículos',
+  studyDevotionals: 'Devocionales',
+  likedEmpty: 'Aún no hay devocionales favoritos',
+  likedEmptyHint: 'Toca el corazón en un devocional para guardarlo aquí y releerlo cuando quieras.',
+  likedOpenToday: 'Abrir el devocional de hoy',
+  likedAt: 'Guardado el {date}',
+  studyType: 'Tipo de elemento',
 };
 
 export default es;

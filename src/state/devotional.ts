@@ -13,7 +13,7 @@ const SHOWN = 'ob:devotionalShown';
 /** The progress bar stays at least this long, so it does not flash when the pack is already close. */
 const MIN_LOADING = 300;
 
-export type OpenSource = 'auto' | 'menu' | 'link';
+export type OpenSource = 'auto' | 'menu' | 'link' | 'likes';
 export type EnableSource = 'settings' | 'intro' | 'invite';
 
 interface DevotionalStore {

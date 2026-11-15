@@ -311,6 +311,19 @@ const ja: Messages = {
   introDevotionalBody: '毎日、聖句と短いデボーションが届きます。励ましのために書かれ、1分もかかりません。',
   introDevotionalEnable: '毎日のデボーションをオンにする',
   introDevotionalHint: '後で設定から変更できます。',
+  like: 'いいね',
+  unlike: 'いいねを外す',
+  likeAdded: 'いいねに追加しました',
+  likeRemoved: 'いいねから外しました',
+  likeSee: '見る',
+  likeUndo: '元に戻す',
+  studyVerses: '聖句',
+  studyDevotionals: 'デボーション',
+  likedEmpty: 'いいねしたデボーションはまだありません',
+  likedEmptyHint: 'デボーションのハートをタップすると、ここに保存して読み返せます。',
+  likedOpenToday: '今日のデボーションを開く',
+  likedAt: '{date}にいいね',
+  studyType: '項目の種類',
 };
 
 export default ja;
