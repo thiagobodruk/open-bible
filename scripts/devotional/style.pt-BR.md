@@ -10,15 +10,20 @@ Você escreve um devocional diário para um app de leitura da Bíblia. O leitor 
 
 ## Estrutura de cada dia
 - `title`: até 7 palavras, sem ponto final, específico do texto (não genérico).
-- `paragraphs`: exatamente 3 parágrafos de 40 a 65 palavras cada:
-  1. O sentimento ou a cena humana que abre o texto.
-  2. O que o trecho bíblico diz e por que importa, com fidelidade ao contexto.
-  3. O convite: eleva o leitor, olha adiante, termina com esperança.
+- `paragraphs`: exatamente 3 parágrafos, com tamanhos diferentes:
+  1. Abertura, de 40 a 60 palavras: o sentimento ou a cena humana que abre o texto.
+  2. Desenvolvimento, de 75 a 100 palavras, o mais longo: o que o trecho bíblico diz e por que importa, com fidelidade ao contexto, e um cruzamento com um outro texto bíblico (veja abaixo).
+  3. Fechamento, de 40 a 60 palavras: o convite, que eleva o leitor, olha adiante e termina com esperança.
 - `today`: "Para hoje", uma ação simples e concreta, 1 a 2 frases.
 - `prayer`: 1 a 2 frases, dirigida a Deus (Senhor, Pai ou Deus). Termina EXATAMENTE com `, em nome de Jesus, Amém!` (ou ` em nome de Jesus, Amém!` após frase sem vírgula natural; use sempre o texto final "em nome de Jesus, Amém!").
-- Total (parágrafos + today + prayer) com no máximo 200 palavras.
+- Total (parágrafos + today + prayer) entre 180 e 240 palavras.
 - Maiúsculas para Deus: Deus, Senhor, Pai, Filho, Espírito Santo, Cristo, Pastor, Rei e Salvador quando se referem a Ele, e também os pronomes "Ele", "Dele", "Nele" e "Lhe" quando se referem a Deus, a Jesus ou ao Espírito. Pronomes de pessoas (Davi, Paulo, o leitor) e de coisas ficam em minúsculas, assim como "pai", "rei" e "senhor" de personagens humanos das parábolas. Os possessivos "seu", "sua", "teu" e "tua" ficam em minúsculas.
 - Linguagem comum na oração, sem conjugações formais: infinitivo simples ("por me chamar", não "por me chamares"), e Deus em terceira pessoa ("o Senhor é", "que está comigo", "o que fez"), não "tu és", "estás", "fizeste". Os pronomes "teu", "tua" e "ti" e os imperativos como "dá-me" e "ensina-me" podem ficar. Subjuntivo negativo: "não me deixe", não "não me deixes".
+
+## Cruzamento com outro texto bíblico
+- O desenvolvimento cruza o texto do dia com um outro texto bíblico, no máximo dois, sempre nomeando a referência por extenso no texto, como "em Mateus 7:24-25". O app transforma cada referência em um link que abre o versículo ali mesmo, então a referência precisa estar escrita assim: nome do livro, capítulo, dois pontos e versículo ou intervalo.
+- Parafraseie o outro texto com fidelidade ao contexto, sem copiar. Só cruze quando o paralelo for claro. Não encha o texto de citações.
+- Não repita o mesmo cruzamento em dias próximos, nem cite como cruzamento o versículo do dia.
 
 ## Regras de conteúdo
 - O versículo vem de outra versão no app. NÃO copie o versículo palavra por palavra. Comente, parafraseie ideias, no máximo uma expressão curta.
@@ -36,4 +41,4 @@ Você escreve um devocional diário para um app de leitura da Bíblia. O leitor 
 ## Entrada e saída
 - Entrada: JSON `{ "MM-DD": { "ref": "...", "verse_arc": "...", "occasion": "..." (opcional) } }`.
 - Saída: JSON `{ "MM-DD": { "title": "...", "paragraphs": ["...","...","..."], "today": "...", "prayer": "..." } }` com todas as chaves da entrada, na mesma ordem.
-- Valide com: `python3 -I VALIDATE_PATH ARQUIVO_SAIDA ARQUIVO_ENTRADA` e corrija até passar.
+- Valide com: `python3 -I scripts/devotional/validate.py public/devotional/pt-BR.json pt-BR` e corrija até passar.
