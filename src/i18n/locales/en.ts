@@ -322,6 +322,12 @@ const en = {
   likedOpenToday: "Open today's devotional",
   likedAt: 'Liked {date}',
   studyType: 'Type of item',
+  devotionalAll: 'All devotionals',
+  devotionalBack: 'Back to devotional',
+  devotionalTodayTag: 'Today',
+  devotionalJump: 'Go to today',
+  devotionalListHint: 'The 366 texts repeat every year.',
+  devotionalLiked: 'Liked',
 };
 
 export default en;

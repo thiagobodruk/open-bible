@@ -324,6 +324,12 @@ const ptBR: Messages = {
   likedOpenToday: 'Abrir o devocional de hoje',
   likedAt: 'Curtido em {date}',
   studyType: 'Tipo de item',
+  devotionalAll: 'Todos os devocionais',
+  devotionalBack: 'Voltar ao devocional',
+  devotionalTodayTag: 'Hoje',
+  devotionalJump: 'Ir para hoje',
+  devotionalListHint: 'Os 366 textos se repetem a cada ano.',
+  devotionalLiked: 'Curtido',
 };
 
 export default ptBR;

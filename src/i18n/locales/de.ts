@@ -324,6 +324,12 @@ const de: Messages = {
   likedOpenToday: 'Heutige Andacht öffnen',
   likedAt: 'Markiert am {date}',
   studyType: 'Art des Eintrags',
+  devotionalAll: 'Alle Andachten',
+  devotionalBack: 'Zurück zur Andacht',
+  devotionalTodayTag: 'Heute',
+  devotionalJump: 'Zu heute',
+  devotionalListHint: 'Die 366 Texte wiederholen sich jedes Jahr.',
+  devotionalLiked: 'Gefällt mir',
 };
 
 export default de;

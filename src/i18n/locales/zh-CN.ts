@@ -324,6 +324,12 @@ const zhCN: Messages = {
   likedOpenToday: '打开今天的灵修',
   likedAt: '{date}点赞',
   studyType: '条目类型',
+  devotionalAll: '全部灵修',
+  devotionalBack: '返回灵修',
+  devotionalTodayTag: '今天',
+  devotionalJump: '回到今天',
+  devotionalListHint: '366篇内容每年循环。',
+  devotionalLiked: '已点赞',
 };
 
 export default zhCN;

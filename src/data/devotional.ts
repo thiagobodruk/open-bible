@@ -75,6 +75,9 @@ export function todayFor(date: Date): Today {
 
 const KEYS = Object.keys(list.days);
 
+/** How many days the calendar has, counting February 29th. */
+export const DAY_COUNT = KEYS.length;
+
 /** Position of the date in the calendar, from 1 (January 1st) to 366 (December 31st), counting February 29th. It is the day ID of share links. */
 export const dayId = (d: Date) => KEYS.indexOf(dayKey(d)) + 1;
 
