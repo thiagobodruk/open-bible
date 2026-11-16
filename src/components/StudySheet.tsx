@@ -113,8 +113,6 @@ export function StudySheet() {
       .sort((a, b) => sign * (a.at - b.at));
   }, [likes, pack, q, likeDir, likeDate, bookName]);
 
-  const total = Object.keys(likes).length;
-
   const openLike = (key: string) => {
     const date = dateOfKey(key);
     if (!date) return;
@@ -149,15 +147,7 @@ export function StudySheet() {
               onChange={pickTab}
               options={[
                 { value: 'verses', label: t('studyVerses') },
-                {
-                  value: 'devotionals',
-                  label: (
-                    <>
-                      {t('studyDevotionals')}
-                      {total > 0 && <span className="seg-n">{total}</span>}
-                    </>
-                  ),
-                },
+                { value: 'devotionals', label: t('studyDevotionals') },
               ]}
             />
             {tab === 'verses' && <ColorSwatches
