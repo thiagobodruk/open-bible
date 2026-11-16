@@ -324,6 +324,12 @@ const es: Messages = {
   likedOpenToday: 'Abrir el devocional de hoy',
   likedAt: 'Guardado el {date}',
   studyType: 'Tipo de elemento',
+  devotionalAll: 'Todos los devocionales',
+  devotionalBack: 'Volver al devocional',
+  devotionalTodayTag: 'Hoy',
+  devotionalJump: 'Ir a hoy',
+  devotionalListHint: 'Los 366 textos se repiten cada año.',
+  devotionalLiked: 'Me gusta',
 };
 
 export default es;

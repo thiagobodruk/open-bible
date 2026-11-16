@@ -324,6 +324,12 @@ const ja: Messages = {
   likedOpenToday: '今日のデボーションを開く',
   likedAt: '{date}にいいね',
   studyType: '項目の種類',
+  devotionalAll: 'すべてのデボーション',
+  devotionalBack: 'デボーションに戻る',
+  devotionalTodayTag: '今日',
+  devotionalJump: '今日へ移動',
+  devotionalListHint: '366の文章は毎年くり返されます。',
+  devotionalLiked: 'いいね済み',
 };
 
 export default ja;

@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
-import { ArrowClockwise, CaretRight, CloudArrowDown, Copy, Heart, ShareNetwork, SunHorizon } from '@phosphor-icons/react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowClockwise, CaretRight, CloudArrowDown, Copy, Heart, ListBullets, ShareNetwork, SunHorizon } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
+import { DevotionalList } from './DevotionalList';
 import { PromptField } from './PromptField';
 import { ProgressBar } from './ProgressBar';
 import { Button } from './Button';
@@ -34,15 +35,28 @@ export function DevotionalSheet() {
   const { status, progress, pack, asked, load, enable, markAsked } = useDevotional();
   const bookName = useBookName();
   // A share link opens the devotional of the day it carries, in this year. Without one, it is today's.
-  const day = useMemo(() => {
+  const [day, setDay] = useState(() => {
     const linked = useDevotional.getState().day;
     return (linked && dateOfDayId(linked)) || new Date();
-  }, []);
+  });
+  const [view, setView] = useState<'read' | 'list'>('read');
+  const page = useRef<HTMLDivElement>(null);
+  // Switching between the text and the list keeps one sheet, so the scroll goes back to the top by hand.
+  useEffect(() => {
+    if (view === 'read') page.current?.closest('.sheet-body')?.scrollTo(0, 0);
+  }, [view, day]);
   useEffect(() => {
     track('devotional_open', { source: useDevotional.getState().source });
     return () => useDevotional.setState({ day: null, source: 'menu' });
   }, []);
   const today = useMemo(() => todayFor(day), [day]);
+  const pickDay = (id: number) => {
+    const picked = dateOfDayId(id);
+    if (!picked) return;
+    track('devotional_open', { source: 'list' });
+    setDay(picked);
+    setView('read');
+  };
   const { ref } = today;
   const [verse, setVerse] = useState<Verse>({ status: 'loading' });
 
@@ -136,6 +150,8 @@ export function DevotionalSheet() {
 
   const pct = Math.round(progress * 100);
 
+  if (view === 'list') return <DevotionalList onBack={() => setView('read')} onPick={pickDay} />;
+
   return (
     <Sheet
       title={t('devotional')}
@@ -158,8 +174,16 @@ export function DevotionalSheet() {
         </div>
       }
     >
-      <div className="dev">
-        <div className="dev-date">{date}</div>
+      <div className="dev" ref={page}>
+        <div className="dev-meta">
+          <div className="dev-date">{date}</div>
+          {devotional && (
+            <button type="button" className="dev-all" onClick={() => setView('list')}>
+              <ListBullets size={18} weight="light" aria-hidden="true" />
+              {t('devotionalAll')}
+            </button>
+          )}
+        </div>
         {devotional && <h2 className="dev-title">{devotional.title}</h2>}
         <blockquote className="dev-verse">
           <button type="button" className="dev-verse-btn" title={t('devotionalRead')} disabled={verse.status !== 'ready'} onClick={readChapter}>

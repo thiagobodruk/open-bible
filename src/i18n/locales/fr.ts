@@ -324,6 +324,12 @@ const fr: Messages = {
   likedOpenToday: 'Ouvrir le dévotionnel du jour',
   likedAt: 'Aimé le {date}',
   studyType: 'Type d’élément',
+  devotionalAll: 'Toutes les méditations',
+  devotionalBack: 'Retour à la méditation',
+  devotionalTodayTag: 'Aujourd’hui',
+  devotionalJump: 'Aller à aujourd’hui',
+  devotionalListHint: 'Les 366 textes reviennent chaque année.',
+  devotionalLiked: 'Aimé',
 };
 
 export default fr;
