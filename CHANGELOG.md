@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.27.0
+
+### Added
+
+- A button in the devotional to browse all devotionals of the year, with today highlighted, past days dimmed and liked ones marked with a heart.
+
 ## 1.26.1
 
 ### Changed
