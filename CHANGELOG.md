@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.29.0
+
+### Changed
+
+- Devotionals are longer: an opening, a longer development that connects the passage with another Bible passage, and a closing. Each referenced passage opens in a preview right in the text.
+
 ## 1.28.0
 
 ### Added
