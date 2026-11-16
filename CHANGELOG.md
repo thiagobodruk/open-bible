@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.28.0
+
+### Added
+
+- Bible references in the devotional text are links that show the passage right there.
+
 ## 1.27.0
 
 ### Added
