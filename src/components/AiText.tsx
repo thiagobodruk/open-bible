@@ -101,8 +101,8 @@ function Passage({ target, onOpen, onClose }: { target: RefTarget; onOpen: () =>
   );
 }
 
-/** Answer of the AI: paragraphs, lists, bold and italic, and Bible references that open a preview of the passage. */
-export function AiText({ text }: { text: string }) {
+/** Bible references found in a text become links that open a preview of the passage right below the line that holds them. One preview is open at a time. */
+export function useRefLinks() {
   const uiLang = useSettings((s) => s.uiLang);
   const versionBooks = useBooks();
   const close = useUI((s) => s.close);
@@ -119,7 +119,6 @@ export function AiText({ text }: { text: string }) {
     });
     return [...versionBooks, ...extra];
   }, [versionBooks, uiLang]);
-  const blocks = useMemo(() => parse(text), [text]);
 
   const open = (r: RefTarget) => {
     // Scroll first: the verse focus triggered by goTo scrolls to the verse and must not be undone.
@@ -154,6 +153,17 @@ export function AiText({ text }: { text: string }) {
     return out.map((n, i) => (typeof n === 'string' ? <Fragment key={i}>{n}</Fragment> : n));
   };
 
+  const preview = (line: string) =>
+    opened?.line === line && <Passage target={opened.target} onOpen={() => open(opened.target)} onClose={() => setOpened(null)} />;
+
+  return { refs, preview };
+}
+
+/** Answer of the AI: paragraphs, lists, bold and italic, and Bible references that open a preview of the passage. */
+export function AiText({ text }: { text: string }) {
+  const { refs, preview } = useRefLinks();
+  const blocks = useMemo(() => parse(text), [text]);
+
   const inline = (s: string, where: string, line: string): React.ReactNode[] => {
     const out: React.ReactNode[] = [];
     let at = 0;
@@ -167,9 +177,6 @@ export function AiText({ text }: { text: string }) {
     if (at < s.length) out.push(<Fragment key={`t${at}`}>{refs(s.slice(at), String(at), where, line)}</Fragment>);
     return out;
   };
-
-  const preview = (line: string) =>
-    opened?.line === line && <Passage target={opened.target} onOpen={() => open(opened.target)} onClose={() => setOpened(null)} />;
 
   return (
     <>

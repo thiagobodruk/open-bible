@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowClockwise, CaretRight, CloudArrowDown, Copy, Heart, ListBullets, ShareNetwork, SunHorizon } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { DevotionalList } from './DevotionalList';
+import { useRefLinks } from './AiText';
 import { PromptField } from './PromptField';
 import { ProgressBar } from './ProgressBar';
 import { Button } from './Button';
@@ -34,6 +35,7 @@ export function DevotionalSheet() {
   const enabled = useSettings((s) => s.devotional);
   const { status, progress, pack, asked, load, enable, markAsked } = useDevotional();
   const bookName = useBookName();
+  const { refs, preview } = useRefLinks();
   // A share link opens the devotional of the day it carries, in this year. Without one, it is today's.
   const [day, setDay] = useState(() => {
     const linked = useDevotional.getState().day;
@@ -195,7 +197,7 @@ export function DevotionalSheet() {
 
         {status === 'ready' && devotional ? (
           <>
-            <div className="dev-body">{devotional.paragraphs.map((p, i) => <p key={i}>{p}</p>)}</div>
+            <div className="dev-body">{devotional.paragraphs.map((p, i) => <Fragment key={i}><p>{refs(p, 'p', `p${i}`, `p${i}`)}</p>{preview(`p${i}`)}</Fragment>)}</div>
             <div className="dev-box"><h3>{t('devotionalToday')}</h3><p>{devotional.today}</p></div>
             <div className="dev-prayer"><h3>{t('devotionalPrayer')}</h3><p>{devotional.prayer}</p></div>
             {!asked && !enabled && (
