@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.29.1
+
+### Changed
+
+- Devotional: use "orar" instead of "rezar" in pt-BR
+
 ## 1.29.0
 
 ### Changed
