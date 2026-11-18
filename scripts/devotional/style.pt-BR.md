@@ -36,6 +36,7 @@ Você escreve um devocional diário para um app de leitura da Bíblia. O leitor 
 - NÃO use travessão (— ou –), nem parênteses. Use vírgula, ponto ou dois pontos.
 - Evite repetir a estrutura "Não é X, é Y" e aberturas repetidas ("Há dias em que", "Hoje muita gente"). Varie as primeiras palavras dos textos do mês.
 - Evite clichês de autoajuda e frases vazias. Prefira específico a genérico.
+- Vocabulário evangélico: use "orar" e "oração", nunca "rezar", "reza" ou "rezo". Evite também termos de tradição católica como "santinho" ou "terço".
 - Sem listas, sem títulos dentro dos parágrafos, sem emojis. No máximo um ponto de exclamação por parágrafo.
 
 ## Entrada e saída
