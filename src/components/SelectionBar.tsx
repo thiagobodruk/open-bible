@@ -31,7 +31,8 @@ export function SelectionBar() {
   const citation = (withLink: boolean) => {
     const first = selection[0];
     const last = selection[selection.length - 1];
-    const body = selection.map((v) => verses[v - 1]).join('\n');
+    // One running paragraph: verse breaks read badly when pasted into chats.
+    const body = selection.map((v) => verses[v - 1]?.trim()).filter(Boolean).join(' ');
     const ref = `${refLabel(bookName(book), chapter, first, last)} (${abbrOf(versionId)})`;
     if (!withLink) return `${body}\n${ref}`;
     return `${body}\n${ref}\n${shareUrl(versionId, book, chapter, { from: first, to: last })}`;

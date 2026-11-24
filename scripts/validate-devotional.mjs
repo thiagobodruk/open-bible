@@ -50,7 +50,12 @@ for (const f of files) {
     if (!e.title || words(e.title) > 7 || e.title.endsWith('.')) fail(here(`${k}: bad title`));
     if (titles.has(e.title)) fail(here(`${k}: title repeats ${titles.get(e.title)}`));
     titles.set(e.title, k);
-    if (words([...(e.paragraphs ?? []), e.today, e.prayer].join(' ')) > 205) fail(here(`${k}: more than 200 words`));
+    // Opening 25-75 words, development 70-115, closing 25-75 (same bounds as scripts/devotional/validate.py).
+    const range = [[25, 75], [70, 115], [25, 75]];
+    (e.paragraphs ?? []).forEach((p, i) => {
+      const n = words(p);
+      if (n < range[i][0] || n > range[i][1]) fail(here(`${k}: paragraph ${i + 1} has ${n} words`));
+    });
   }
   const perMonth = Array.from({ length: 12 }, (_, i) => Object.keys(pack.days).filter((k) => k.startsWith(String(i + 1).padStart(2, '0'))).length);
   rows.push(`${lang}: ${Object.keys(pack.days).length} days + ${Object.keys(pack.moveable).length} moveable (months: ${perMonth.join(' ')})`);
