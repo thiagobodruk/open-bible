@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.32.0
+
+### Changed
+
+- Planos de leitura: confete ao concluir um plano
+
 ## 1.31.7
 
 ### Changed
