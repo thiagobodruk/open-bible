@@ -276,8 +276,6 @@ export function SearchSheet() {
   }, [qq]);
 
   const errorKey = ({ offline: 'askOffline', limit: 'askRateLimited', daily: 'askDaily', busy: 'askBusy', failed: 'askError' } as const)[aiError ?? 'failed'];
-  // A verse found in several versions gets the AI note only once.
-  const noted = new Set<string>();
   const showAi = typed && chapters !== null && !ref && (aiMine || asking);
 
   return (
@@ -384,9 +382,7 @@ export function SearchSheet() {
               : `${shown.length < hits.length ? t('searchShown', { n: shown.length, total: hits.length }) : t.n('result', hits.length)}${multi ? ` ${t('searchInVersions', { n: selected.length })}` : ''}`}
           </p>
           {shown.map((h) => {
-            const k = hitKey(h);
-            const note = noted.has(k) ? undefined : notes.get(k);
-            if (note) noted.add(k);
+            const note = notes.get(hitKey(h));
             return (
               <button key={`${h.versionId}.${h.book}.${h.chapter}.${h.verse}`} className="entry hit" onClick={() => open(h.book, h.chapter, h.verse, h.versionId)}>
                 <div className="ref">
