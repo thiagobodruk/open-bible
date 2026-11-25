@@ -4,6 +4,7 @@ import { ScreenHeader } from '../components/ScreenHeader';
 import { abbrOf, findVersion } from '../data/catalog';
 import { downloadedMb, useLibrary } from '../state/library';
 import { downloadBackup, parseBackup } from '../backup';
+import { usePlans } from '../state/plans';
 import { useSettings, type UiLang } from '../state/settings';
 import { useStudy } from '../state/study';
 import { useDevotional } from '../state/devotional';
@@ -62,8 +63,9 @@ export function Settings() {
     e.target.value = '';
     if (!file) return;
     try {
-      const { highlights: hs, notes: ns, likes: ls, skipped } = parseBackup(await file.text());
+      const { highlights: hs, notes: ns, likes: ls, plans: ps, skipped } = parseBackup(await file.text());
       await useStudy.getState().merge(hs, ns, ls);
+      await usePlans.getState().merge(ps);
       notify(skipped ? t('importedSkipped', { h: hs.length, n: ns.length, s: skipped }) : t('imported', { h: hs.length, n: ns.length }));
     } catch {
       notify(t('backupInvalid'));

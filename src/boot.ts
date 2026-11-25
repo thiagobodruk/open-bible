@@ -1,6 +1,7 @@
 import { useLibrary } from './state/library';
 import { useSettings } from './state/settings';
 import { useStudy } from './state/study';
+import { usePlans } from './state/plans';
 import { applyIncoming, useIncoming } from './state/incoming';
 import { track } from './analytics';
 
@@ -8,7 +9,7 @@ import { track } from './analytics';
 export async function boot() {
   // Only the `?ref=` links are shared ones: the plain reading path is also where the app leaves the address after every visit.
   const shared = new URLSearchParams(location.search).has('ref');
-  await Promise.all([useLibrary.getState().hydrate(), useStudy.getState().hydrate()]);
+  await Promise.all([useLibrary.getState().hydrate(), useStudy.getState().hydrate(), usePlans.getState().hydrate()]);
   const link = useIncoming.getState().incoming;
   if (link && shared) track('link_open', { kind: 'read' });
   if (link && useLibrary.getState().installed[link.versionId]) applyIncoming();

@@ -21,6 +21,7 @@ import { useIncoming } from '../state/incoming';
 import { hintPending, markHintSeen } from '../hint';
 import { isMobile } from '../install';
 import { ListenBar } from '../components/ListenBar';
+import { PlanBar } from '../components/PlanBar';
 import { listenSupported, resume, setSilentHandler, markSilentHintSeen, silentHintDue, start, stop, useListen } from '../listen';
 import { trackFeature } from '../analytics';
 import { useT } from '../i18n';
@@ -315,6 +316,7 @@ export function Reader() {
       {silentHint && <SilentHint onConfirm={confirmSilentHint} onDone={() => setSilentHint(false)} />}
       {hint && <SwipeHint withAi={aiEnabled} onDone={() => setHint(false)} />}
       {listenStatus !== 'idle' && !hasSelection && !askBar && sheet !== 'menu' && <ListenBar />}
+      {listenStatus === 'idle' && !hasSelection && !askBar && !sheet && <PlanBar />}
       <InstallBanner hidden={blocked || listenStatus !== 'idle'} hold={hint} />
       {hasSelection && !sheet && !askBar && <SelectionBar />}
       {askBar && (!sheet || sheet === 'ask') && <AskBar />}

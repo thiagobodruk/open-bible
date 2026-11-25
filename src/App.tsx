@@ -29,6 +29,7 @@ import { LibrarySheet } from './components/LibrarySheet';
 import { StudySheet } from './components/StudySheet';
 import { DevotionalSheet } from './components/DevotionalSheet';
 import { markShownToday, shownToday, useDevotional } from './state/devotional';
+import { PlansSheet } from './components/PlansSheet';
 import { DeleteAccountSheet } from './components/DeleteAccountSheet';
 import { Toast } from './components/Toast';
 
@@ -116,6 +117,7 @@ export default function App() {
       {sheet === 'library' && <LibrarySheet />}
       {sheet === 'study' && <StudySheet />}
       {sheet === 'devotional' && <DevotionalSheet />}
+      {sheet === 'plans' && <PlansSheet />}
       {sheet === 'install' && <InstallSheet />}
       {sheet === 'feedback' && <FeedbackSheet />}
       {sheet === 'listen' && <ListenSheet />}
