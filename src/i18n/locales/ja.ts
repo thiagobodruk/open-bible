@@ -397,6 +397,9 @@ const ja: Messages = {
   planMarkRead: "既読にする",
   planMarkUnread: "未読にする",
   planBarLeft: "残り {left} / {total}",
+  planStart: "開始",
+  planFirstReads: "最初の読書",
+  planAndMore: "ほか{days}",
 };
 
 export default ja;

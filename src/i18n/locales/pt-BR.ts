@@ -397,6 +397,9 @@ const ptBR: Messages = {
   planMarkRead: "Marcar como lido",
   planMarkUnread: "Marcar como não lido",
   planBarLeft: "falta {left} de {total}",
+  planStart: "Iniciar",
+  planFirstReads: "Primeiras leituras",
+  planAndMore: "e mais {days}",
 };
 
 export default ptBR;

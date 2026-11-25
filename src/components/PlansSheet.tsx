@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { CaretDown, CaretLeft, CaretUp, Check, CheckCircle, Circle, Eraser, ListChecks, ListPlus, Minus, PencilSimple, Plus, Trash, ArrowClockwise } from '@phosphor-icons/react';
+import { CaretDown, CaretLeft, CaretUp, Check, CheckCircle, Circle, Eraser, ListChecks, ListPlus, Minus, PencilSimple, Plus, Trash, ArrowClockwise, Play } from '@phosphor-icons/react';
 import { Sheet } from './Sheet';
 import { Row } from './Row';
 import { Button } from './Button';
@@ -53,7 +53,7 @@ const chaptersText = (t: Translator, n: number) => t.n('planChapters', n, { n: n
 const sameDay = (a: number, b = Date.now()) => new Date(a).toDateString() === new Date(b).toDateString();
 const byRecent = (a: Plan, b: Plan) => (b.readAt ?? b.startedAt) - (a.readAt ?? a.startedAt);
 
-type View = { k: 'list' } | { k: 'new' } | { k: 'custom' } | { k: 'plan'; id: string } | { k: 'delete'; id: string };
+type View = { k: 'list' } | { k: 'new' } | { k: 'preset'; id: PresetId } | { k: 'custom' } | { k: 'plan'; id: string } | { k: 'delete'; id: string };
 
 export function PlansSheet() {
   const t = useT();
@@ -76,7 +76,8 @@ export function PlansSheet() {
     if ((view.k === 'plan' || view.k === 'delete') && !plan) setView({ k: 'list' });
   }, [view, plan]);
 
-  if (view.k === 'new') return <NewPlan onClose={close} lead={plans.length ? back({ k: 'list' }) : undefined} onCustom={() => setView({ k: 'custom' })} onCreated={(id) => setView({ k: 'plan', id })} />;
+  if (view.k === 'new') return <NewPlan onClose={close} lead={plans.length ? back({ k: 'list' }) : undefined} onCustom={() => setView({ k: 'custom' })} onPreset={(id) => setView({ k: 'preset', id })} />;
+  if (view.k === 'preset') return <PresetView preset={PRESETS.find((p) => p.id === view.id)!} onClose={close} lead={back({ k: 'new' })} onCreated={(id) => setView({ k: 'plan', id })} />;
   if (view.k === 'custom') return <CustomPlan onClose={close} lead={back({ k: 'new' })} onCreated={(id) => setView({ k: 'plan', id })} />;
   if (view.k === 'plan' && plan) return <PlanView plan={plan} onClose={close} lead={back({ k: 'list' })} onDelete={() => setView({ k: 'delete', id: plan.id })} onAgain={(id) => setView({ k: 'plan', id })} />;
   if (view.k === 'delete' && plan) {
@@ -161,17 +162,11 @@ const summaryOf = (t: Translator, chapters: number, days: number) => {
   return { days: d, avgText: t.n('planAvg', avg, { n: text }) };
 };
 
-function NewPlan({ onClose, lead, onCustom, onCreated }: { onClose: () => void; lead: React.ReactNode; onCustom: () => void; onCreated: (id: string) => void }) {
+function NewPlan({ onClose, lead, onCustom, onPreset }: { onClose: () => void; lead: React.ReactNode; onCustom: () => void; onPreset: (id: PresetId) => void }) {
   const t = useT();
-  const create = (p: Preset) => {
-    const items = itemsOfBooks(p.books);
-    const plan = usePlans.getState().create({ name: '', preset: p.id, items, days: p.days });
-    trackFeature('plan_create');
-    useUI.getState().notify(t('planCreated'));
-    onCreated(plan.id);
-  };
   return (
     <Sheet title={t('plansNew')} icon={ListPlus} onClose={onClose} leading={lead}>
+      <div className="plan-form">
       <Row icon={PencilSimple} iconSize={24} className="plan-custom-row" title={t('plansCustom')} sub={t('plansCustomSub')} onClick={onCustom} />
       <h3 className="plan-eyebrow">{t('plansReady')}</h3>
       <ul>
@@ -180,11 +175,56 @@ function NewPlan({ onClose, lead, onCustom, onCreated }: { onClose: () => void; 
           const { days, avgText } = summaryOf(t, n, p.days);
           return (
             <li key={p.id}>
-              <Row title={t(PRESET_NAME[p.id])} sub={`${chaptersText(t, n)} · ${t.n('planDays', days)} · ${avgText}`} onClick={() => create(p)} />
+              <Row title={t(PRESET_NAME[p.id])} sub={`${chaptersText(t, n)} · ${t.n('planDays', days)} · ${avgText}`} onClick={() => onPreset(p.id)} />
             </li>
           );
         })}
       </ul>
+      </div>
+    </Sheet>
+  );
+}
+
+/** What a ready-made plan holds, to look at before joining it. Nothing starts until "Start". */
+function PresetView({ preset, onClose, lead, onCreated }: { preset: Preset; onClose: () => void; lead: React.ReactNode; onCreated: (id: string) => void }) {
+  const t = useT();
+  const bookName = useBookName();
+  const items = useMemo(() => itemsOfBooks(preset.books), [preset]);
+  const readings = readingsOf({ items, days: preset.days });
+  const { days, avgText } = summaryOf(t, items.length, preset.days);
+  const SHOWN = 6;
+  const start = () => {
+    const plan = usePlans.getState().create({ name: '', preset: preset.id, items, days: preset.days });
+    trackFeature('plan_create');
+    useUI.getState().notify(t('planCreated'));
+    onCreated(plan.id);
+  };
+  return (
+    <Sheet
+      title={t(PRESET_NAME[preset.id])}
+      icon={ListChecks}
+      onClose={onClose}
+      leading={lead}
+      footer={<div className="plan-foot"><Button block variant="primary" icon={Play} onClick={start}>{t('planStart')}</Button></div>}
+    >
+      <div className="plan-form">
+        <div className="plan-card static">
+          <b>{`${chaptersText(t, items.length)} · ${t.n('planDays', days)}`}</b>
+          <span className="plan-sub">{avgText}</span>
+        </div>
+        <h3 className="plan-eyebrow">{t('planFirstReads')}</h3>
+        <ul className="plan-days">
+          {readings.slice(0, SHOWN).map((r, i) => (
+            <li key={i} className="plan-day peek">
+              <span className="plan-day-body">
+                <span className="title">{refOfItems(items.slice(r.start, r.end), bookName)}</span>
+                <span className="sub">{t('planDay', { n: i + 1 })}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        {readings.length > SHOWN && <p className="hint">{t('planAndMore', { days: t.n('planDays', readings.length - SHOWN) })}</p>}
+      </div>
     </Sheet>
   );
 }
@@ -232,6 +272,7 @@ function CustomPlan({ onClose, lead, onCreated }: { onClose: () => void; lead: R
       icon={PencilSimple}
       onClose={onClose}
       leading={lead}
+      tall
       footer={
         <div className="plan-foot">
           <span>
@@ -252,6 +293,7 @@ function CustomPlan({ onClose, lead, onCreated }: { onClose: () => void; lead: R
         </div>
       }
     >
+      <div className="plan-form">
       <h3 className="plan-eyebrow">{t('planDuration')}</h3>
       <div className="plan-chips">
         {DURATIONS.map((d) => (
@@ -302,6 +344,7 @@ function CustomPlan({ onClose, lead, onCreated }: { onClose: () => void; lead: R
           );
         })}
       </ul>
+      </div>
     </Sheet>
   );
 }
@@ -354,6 +397,7 @@ function PlanView({ plan, onClose, lead, onDelete, onAgain }: { plan: Plan; onCl
         </div>
       }
     >
+      <div className="plan-form">
       {finished ? (
         <div className="plan-card static plan-finished">
           <CheckCircle size={36} weight="fill" className="plan-ok" />
@@ -392,6 +436,7 @@ function PlanView({ plan, onClose, lead, onDelete, onAgain }: { plan: Plan; onCl
           );
         })}
       </ul>
+      </div>
     </Sheet>
   );
 }
