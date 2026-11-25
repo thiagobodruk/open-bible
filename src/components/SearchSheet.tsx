@@ -64,8 +64,6 @@ let sessionSelection: string[] = [];
 let sessionQuery = '';
 let sessionLimit = PAGE_SIZE;
 
-const VARIANT = (() => { try { return localStorage.getItem('__v') || 'A'; } catch { return 'A'; } })();
-
 export function SearchSheet() {
   const t = useT();
   const close = useUI((s) => s.close);
@@ -284,8 +282,9 @@ export function SearchSheet() {
       icon={MagnifyingGlass}
       onClose={close}
       tall
+      // After an answer, the follow-up field of the Ask sheet stays at the bottom: asking there continues the conversation.
       footer={
-        VARIANT === 'B' && aiMine && !busy && !failed && answer?.content ? (
+        aiMine && !busy && !failed && answer?.content ? (
           <div className="ask-foot">
             <PromptField placeholder={t('askFollowUp')} onSubmit={(q) => { useAsk.getState().followUp(q, uiLang); useUI.getState().open('ask'); }} />
           </div>
@@ -453,13 +452,10 @@ export function SearchSheet() {
             </div>
           )}
           {aiMine && !busy && !failed && answer?.content && (
-            <>
-              <p className="ask-note ai-foot">
-                <WarningCircle size={14} weight="regular" aria-hidden="true" />
-                {t('askDisclaimer')}
-              </p>
-              {VARIANT === 'A' && <Button block icon={Sparkle} onClick={() => useUI.getState().open('ask')}>{t('searchAiContinue')}</Button>}
-            </>
+            <p className="ask-note ai-foot">
+              <WarningCircle size={14} weight="regular" aria-hidden="true" />
+              {t('askDisclaimer')}
+            </p>
           )}
         </>
       )}

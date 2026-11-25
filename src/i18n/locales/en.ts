@@ -97,7 +97,6 @@ const en = {
   searchAiLoading: 'Looking for suggestions…',
   searchAiTitle: 'AI suggestions',
   searchAiShow: 'See AI suggestions',
-  searchAiContinue: 'Keep chatting with the AI',
   searchAiNone: 'The AI did not find a passage that matches your search.',
   searchVersions: 'Search in versions',
   searchInVersions: 'in {n} versions',

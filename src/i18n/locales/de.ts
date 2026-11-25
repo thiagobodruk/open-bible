@@ -99,7 +99,6 @@ const de: Messages = {
   searchAiLoading: 'Suche nach Vorschlägen …',
   searchAiTitle: 'Vorschläge der KI',
   searchAiShow: 'KI-Vorschläge ansehen',
-  searchAiContinue: 'Mit der KI weiterchatten',
   searchAiNone: 'Die KI hat keine passende Stelle zu deiner Suche gefunden.',
   searchVersions: 'In Versionen suchen',
   searchInVersions: 'in {n} Versionen',

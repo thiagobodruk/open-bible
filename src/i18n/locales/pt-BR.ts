@@ -99,7 +99,6 @@ const ptBR: Messages = {
   searchAiLoading: 'Buscando sugestões…',
   searchAiTitle: 'Sugestões da IA',
   searchAiShow: 'Ver sugestões da IA',
-  searchAiContinue: 'Continuar conversando na IA',
   searchAiNone: 'A IA não encontrou uma passagem que combine com a sua busca.',
   searchVersions: 'Buscar nas versões',
   searchInVersions: 'em {n} versões',
