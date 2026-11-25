@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.33.0
+
+### Changed
+
+- Planos de leitura: sincronização com a conta Google
+
 ## 1.32.0
 
 ### Changed
