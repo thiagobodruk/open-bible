@@ -227,7 +227,7 @@ button.plan-card { cursor: pointer; }
 .plan-foot .actions { display: flex; gap: 8px; margin-top: 0; }
 .plan-foot .actions .btn { flex: 1; white-space: nowrap; }
 .plan-days { display: grid; }
-.plan-day { display: flex; align-items: center; gap: 4px; padding: 2px 8px 2px 4px; border-radius: var(--radius-sm); }
+.plan-day { display: flex; align-items: center; gap: 4px; padding: 2px 14px 2px 4px; border-radius: var(--radius-sm); }
 .plan-day.now { background: var(--surface); }
 .plan-state { flex: none; display: grid; place-items: center; width: 44px; height: 44px; color: var(--muted); }
 .plan-day-body { flex: 1; min-width: 0; display: grid; text-align: left; padding: 8px 0; }
