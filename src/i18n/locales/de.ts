@@ -396,7 +396,7 @@ const de: Messages = {
   planAgain: "Noch einmal lesen",
   planMarkRead: "Als gelesen markieren",
   planMarkUnread: "Als ungelesen markieren",
-  planBarLeft: "noch {left} von {total}",
+  planCount: "{done} von {total}",
   planStart: "Starten",
   planFirstReads: "Erste Lesungen",
   planAndMore: "und {days} weitere",

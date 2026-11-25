@@ -396,7 +396,7 @@ const ptBR: Messages = {
   planAgain: "Ler de novo",
   planMarkRead: "Marcar como lido",
   planMarkUnread: "Marcar como não lido",
-  planBarLeft: "falta {left} de {total}",
+  planCount: "{done} de {total}",
   planStart: "Iniciar",
   planFirstReads: "Primeiras leituras",
   planAndMore: "e mais {days}",

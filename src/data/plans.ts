@@ -17,6 +17,8 @@ export interface Plan {
   done: number[];
   /** When a chapter was last marked. The plan with the latest one is the one the menu shows. */
   readAt?: number;
+  /** When a whole daily reading was last completed. A single chapter of a longer reading does not count. */
+  lastDoneAt?: number;
   /** Set when every chapter is read. */
   finishedAt?: number;
 }
@@ -171,6 +173,10 @@ export function withMarks(plan: Plan, indexes: number[], on: boolean, now = Date
   const next: Plan = { ...plan, done, ...(on ? { readAt: now } : {}) };
   if (done.length === plan.items.length) next.finishedAt = plan.finishedAt ?? now;
   else delete next.finishedAt;
+  const before = progressOf(plan).done;
+  const after = progressOf(next).done;
+  if (after > before) next.lastDoneAt = now;
+  else if (after < before) delete next.lastDoneAt;
   return next;
 }
 
@@ -210,6 +216,7 @@ export function sanitizePlan(raw: unknown): Plan | null {
     startedAt: Number.isFinite(p.startedAt) ? (p.startedAt as number) : Date.now(),
     done: [...new Set(done)].sort((a, b) => a - b),
     ...(Number.isFinite(p.readAt) ? { readAt: p.readAt } : {}),
+    ...(Number.isFinite(p.lastDoneAt) ? { lastDoneAt: p.lastDoneAt } : {}),
   };
   if (plan.done.length === items.length) plan.finishedAt = Number.isFinite(p.finishedAt) ? (p.finishedAt as number) : Date.now();
   return plan;

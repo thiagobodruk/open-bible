@@ -396,7 +396,7 @@ const zhCN: Messages = {
   planAgain: "再读一遍",
   planMarkRead: "标记为已读",
   planMarkUnread: "标记为未读",
-  planBarLeft: "还剩 {left} / {total}",
+  planCount: "{done} / {total}",
   planStart: "开始",
   planFirstReads: "最初的阅读",
   planAndMore: "另有 {days}",

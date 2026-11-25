@@ -227,7 +227,7 @@ button.plan-card { cursor: pointer; }
 .plan-foot .actions { display: flex; gap: 8px; margin-top: 0; }
 .plan-foot .actions .btn { flex: 1; white-space: nowrap; }
 .plan-days { display: grid; }
-.plan-day { display: flex; align-items: center; gap: 4px; padding: 2px 8px 2px 4px; border-radius: var(--radius-sm); }
+.plan-day { display: flex; align-items: center; gap: 4px; padding: 2px 14px 2px 4px; border-radius: var(--radius-sm); }
 .plan-day.now { background: var(--surface); }
 .plan-state { flex: none; display: grid; place-items: center; width: 44px; height: 44px; color: var(--muted); }
 .plan-day-body { flex: 1; min-width: 0; display: grid; text-align: left; padding: 8px 0; }
@@ -245,8 +245,15 @@ button.plan-card { cursor: pointer; }
 .plan-reader-bar { padding: 8px 10px 8px 14px; }
 .plan-reader-bar .grow { display: grid; overflow: visible; white-space: normal; }
 .plan-reader-bar b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.plan-reader-bar .plan-sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plan-bar-count { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 13px; font-weight: 400; color: var(--muted); }
+.plan-bar-count .plan-bar-track { flex: none; width: 96px; }
+.plan-bar-count .plan-bar-track i { transition: width 0.2s ease-out; }
+@media (prefers-reduced-motion: reduce) { .plan-bar-count .plan-bar-track i { transition: none; } }
 
 .plan-day.peek { padding-left: 4px; }
 .plan-day.peek .plan-day-body { padding: 10px 0; }
 .plan-form > .hint { margin: 0; }
+
+/* Lists of rows separated by a thin line, as the books of a custom plan and the versions */
+.plan-divided li { border-bottom: 1px solid var(--line); }
+.plan-divided .row { border-radius: 0; }
