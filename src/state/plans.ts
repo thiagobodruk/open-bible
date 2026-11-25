@@ -10,6 +10,8 @@ interface PlansStore {
   /** Readings whose bar in the reader the person closed ("planId:day"). Lasts until the app reloads. */
   dismissed: string[];
   dismiss: (key: string) => void;
+  /** Opening a reading on purpose brings its bar back. */
+  undismiss: (key: string) => void;
   hydrate: () => Promise<void>;
   create: (init: { name: string; preset?: PresetId; items: string[]; days: number }) => Plan;
   remove: (id: string) => void;
@@ -29,6 +31,7 @@ export const usePlans = create<PlansStore>((set, get) => ({
   focus: null,
   dismissed: [],
   dismiss: (key) => set((s) => (s.dismissed.includes(key) ? s : { dismissed: [...s.dismissed, key] })),
+  undismiss: (key) => set((s) => (s.dismissed.includes(key) ? { dismissed: s.dismissed.filter((k) => k !== key) } : s)),
 
   hydrate: async () => {
     try {
