@@ -124,7 +124,7 @@ function PlanList({ onClose, onNew, onOpen }: { onClose: () => void; onNew: () =
         {active.map((p) => {
           const { next } = progressOf(p);
           const r = readingsOf(p)[next];
-          const readToday = !!p.readAt && sameDay(p.readAt);
+          const readToday = !!p.lastDoneAt && sameDay(p.lastDoneAt);
           return (
             <button key={p.id} className="plan-card" onClick={() => onOpen(p.id)}>
               <span className="plan-top">
