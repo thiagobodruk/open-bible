@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.33.1
+
+### Changed
+
+- Conta: gravar e-mail, nome e última visita em users/{uid}
+
 ## 1.33.0
 
 ### Changed
