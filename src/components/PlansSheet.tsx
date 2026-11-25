@@ -142,7 +142,7 @@ function PlanList({ onClose, onNew, onOpen }: { onClose: () => void; onNew: () =
       {finished.length > 0 && (
         <>
           <h3 className="plan-eyebrow">{t('plansDone')}</h3>
-          <ul>
+          <ul className="plan-divided">
             {finished.map((p) => (
               <li key={p.id}>
                 <Row icon={CheckCircle} iconSize={24} title={planTitle(t, p)} sub={t('planFinishedOn', { date: fmt.format(p.finishedAt) })} onClick={() => onOpen(p.id)} className="plan-done-row" />
@@ -169,7 +169,7 @@ function NewPlan({ onClose, lead, onCustom, onPreset }: { onClose: () => void; l
       <div className="plan-form">
       <Row icon={PencilSimple} iconSize={24} className="plan-custom-row" title={t('plansCustom')} sub={t('plansCustomSub')} onClick={onCustom} />
       <h3 className="plan-eyebrow">{t('plansReady')}</h3>
-      <ul>
+      <ul className="plan-divided">
         {PRESETS.map((p) => {
           const n = itemsOfBooks(p.books).length;
           const { days, avgText } = summaryOf(t, n, p.days);
