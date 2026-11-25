@@ -1,9 +1,9 @@
-import { Check } from '@phosphor-icons/react';
+import { CaretRight, Check } from '@phosphor-icons/react';
 import { useStudy } from '../state/study';
 import { usePlans } from '../state/plans';
 import { useBookName } from '../hooks';
 import { useT } from '../i18n';
-import { chaptersLeft, latestActive, pendingIndex, readingsOf, refOfItems } from '../data/plans';
+import { chaptersLeft, latestActive, parseItem, pendingIndex, readingsOf, refOfItems } from '../data/plans';
 import { Button } from './Button';
 import { markPlan, planTitle } from './PlansSheet';
 
@@ -22,13 +22,30 @@ export function PlanBar() {
   const r = readings[at];
   const left = chaptersLeft(plan, r);
   const ref = refOfItems(plan.items.slice(r.start, r.end), bookName);
+  // Another chapter of this reading is still to read after this one: the button moves on to it instead of closing the reading.
+  let later = -1;
+  for (let i = index + 1; i < r.end; i++) {
+    if (!plan.done.includes(i)) {
+      later = i;
+      break;
+    }
+  }
+  const advance = () => {
+    markPlan(t, plan.id, [index], true);
+    const to = parseItem(plan.items[later]);
+    useStudy.getState().goTo(to.book, to.chapter);
+  };
   return (
     <div className="listen-bar plan-reader-bar" role="region" aria-label={planTitle(t, plan)}>
       <span className="grow">
         <b>{planTitle(t, plan)} · {t('planDay', { n: at + 1 })}</b>
         <span className="plan-sub">{ref} · {t('planBarLeft', { left, total: r.end - r.start })}</span>
       </span>
-      <Button variant="primary" size="sm" icon={Check} onClick={() => markPlan(t, plan.id, [index], true)}>{t('planMarkRead')}</Button>
+      {later >= 0 ? (
+        <Button variant="primary" size="sm" icon={CaretRight} iconSide="right" onClick={advance}>{t('planNext')}</Button>
+      ) : (
+        <Button variant="primary" size="sm" icon={Check} onClick={() => markPlan(t, plan.id, [index], true)}>{t('planMarkRead')}</Button>
+      )}
     </div>
   );
 }
