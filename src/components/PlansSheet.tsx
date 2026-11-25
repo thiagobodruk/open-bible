@@ -8,6 +8,7 @@ import { ConfirmSheet } from './ConfirmSheet';
 import { SearchField } from './SearchField';
 import { useUI } from '../state/ui';
 import { usePlans } from '../state/plans';
+import { celebrate } from '../confetti';
 import { useStudy } from '../state/study';
 import { useBookName, useBooks } from '../hooks';
 import { go } from '../router';
@@ -363,6 +364,10 @@ function PlanView({ plan, onClose, lead, onDelete, onAgain }: { plan: Plan; onCl
   const prog = progressOf(plan);
   const done = useMemo(() => new Set(plan.done), [plan.done]);
   const finished = !!plan.finishedAt;
+  // Confetti when the plan has just been completed, not every time an old finished plan is opened.
+  useEffect(() => {
+    if (plan.finishedAt && Date.now() - plan.finishedAt < 60_000) void celebrate();
+  }, [plan.finishedAt]);
   const nextRef = useRef<HTMLLIElement>(null);
   useEffect(() => {
     nextRef.current?.scrollIntoView({ block: 'center' });
