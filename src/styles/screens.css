@@ -245,7 +245,10 @@ button.plan-card { cursor: pointer; }
 .plan-reader-bar { padding: 8px 10px 8px 14px; }
 .plan-reader-bar .grow { display: grid; overflow: visible; white-space: normal; }
 .plan-reader-bar b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.plan-reader-bar .plan-sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plan-bar-count { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 13px; font-weight: 400; color: var(--muted); }
+.plan-bar-count .plan-bar-track { flex: none; width: 96px; }
+.plan-bar-count .plan-bar-track i { transition: width 0.2s ease-out; }
+@media (prefers-reduced-motion: reduce) { .plan-bar-count .plan-bar-track i { transition: none; } }
 
 .plan-day.peek { padding-left: 4px; }
 .plan-day.peek .plan-day-body { padding: 10px 0; }

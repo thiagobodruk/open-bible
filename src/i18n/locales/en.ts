@@ -394,7 +394,7 @@ const en = {
   planAgain: "Read again",
   planMarkRead: "Mark as read",
   planMarkUnread: "Mark as not read",
-  planBarLeft: "{left} of {total} left",
+  planCount: "{done} of {total}",
   planStart: "Start",
   planFirstReads: "First readings",
   planAndMore: "and {days} more",
