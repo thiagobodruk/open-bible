@@ -242,7 +242,7 @@ button.plan-card { cursor: pointer; }
 .menu-plan-bar .plan-bar-track { flex: none; width: 110px; }
 .menu-plan-cta { flex: none; max-width: 46%; }
 .menu-plan-cta span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.plan-reader-bar { padding: 8px 10px 8px 14px; }
+.plan-reader-bar { padding: 8px 6px 8px 14px; gap: 6px; }
 .plan-reader-bar .grow { display: grid; overflow: visible; white-space: normal; }
 .plan-reader-bar b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .plan-bar-count { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 13px; font-weight: 400; color: var(--muted); }

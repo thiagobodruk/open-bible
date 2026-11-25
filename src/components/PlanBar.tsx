@@ -1,4 +1,4 @@
-import { CaretRight, Check } from '@phosphor-icons/react';
+import { CaretRight, Check, X } from '@phosphor-icons/react';
 import { useStudy } from '../state/study';
 import { usePlans } from '../state/plans';
 import { useT } from '../i18n';
@@ -12,12 +12,15 @@ export function PlanBar() {
   const book = useStudy((s) => s.book);
   const chapter = useStudy((s) => s.chapter);
   const plans = usePlans((s) => s.plans);
+  const dismissed = usePlans((s) => s.dismissed);
   const plan = latestActive(plans.filter((p) => pendingIndex(p, book, chapter) >= 0));
   if (!plan) return null;
   const index = pendingIndex(plan, book, chapter);
   const readings = readingsOf(plan);
   const at = readings.findIndex((r) => index >= r.start && index < r.end);
   const r = readings[at];
+  const key = `${plan.id}:${at}`;
+  if (dismissed.includes(key)) return null;
   const total = r.end - r.start;
   // The count follows where the person is in the reading, however they got there (this button, swiping or the buttons at the foot of the chapter).
   // Chapters already marked on their own still count.
@@ -43,6 +46,7 @@ export function PlanBar() {
       ) : (
         <Button variant="primary" size="sm" icon={CaretRight} iconSide="right" onClick={advance}>{t('planNext')}</Button>
       )}
+      <button className="icon-btn" onClick={() => usePlans.getState().dismiss(key)} aria-label={t('close')}><X size={20} weight="light" /></button>
     </div>
   );
 }
