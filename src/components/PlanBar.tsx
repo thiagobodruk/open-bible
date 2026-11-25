@@ -34,6 +34,7 @@ export function PlanBar() {
   const finish = () => markPlan(t, plan.id, Array.from({ length: total }, (_, k) => r.start + k), true);
   return (
     <div className="listen-bar plan-reader-bar" role="region" aria-label={planTitle(t, plan)}>
+      <button className="icon-btn" onClick={() => usePlans.getState().dismiss(key)} aria-label={t('close')}><X size={20} weight="light" /></button>
       <span className="grow">
         <b>{planTitle(t, plan)} · {t('planDay', { n: at + 1 })}</b>
         <span className="plan-bar-count">
@@ -46,7 +47,6 @@ export function PlanBar() {
       ) : (
         <Button variant="primary" size="sm" icon={CaretRight} iconSide="right" onClick={advance}>{t('planNext')}</Button>
       )}
-      <button className="icon-btn" onClick={() => usePlans.getState().dismiss(key)} aria-label={t('close')}><X size={20} weight="light" /></button>
     </div>
   );
 }
