@@ -2,6 +2,13 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.31.0
+
+### Changed
+
+- Worker: aumentar o limite de tokens para a IA não responder vazio
+- Planos de leitura
+
 ## 1.30.1
 
 ### Changed
