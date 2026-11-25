@@ -29,8 +29,10 @@ export const planTitle = (t: Translator, p: Pick<Plan, 'preset' | 'name'>) => (p
 /** Opens the reader on the next chapter of the plan that is not read yet. */
 export function readPlan(plan: Plan) {
   const { next } = progressOf(plan);
-  const r = readingsOf(plan)[next < 0 ? 0 : next];
+  const day = next < 0 ? 0 : next;
+  const r = readingsOf(plan)[day];
   const at = firstUnread(plan, r);
+  usePlans.getState().undismiss(`${plan.id}:${day}`);
   trackFeature('plan_read');
   useUI.getState().close();
   useStudy.getState().goTo(at.book, at.chapter);
@@ -366,6 +368,7 @@ function PlanView({ plan, onClose, lead, onDelete, onAgain }: { plan: Plan; onCl
   const open = (i: number) => {
     const r = readings[i];
     const at = firstUnread(plan, r);
+    usePlans.getState().undismiss(`${plan.id}:${i}`);
     trackFeature('plan_read');
     useUI.getState().close();
     useStudy.getState().goTo(at.book, at.chapter);
