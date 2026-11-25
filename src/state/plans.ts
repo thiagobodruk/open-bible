@@ -7,6 +7,9 @@ interface PlansStore {
   plans: Plan[];
   /** Plan the sheet opens on, set by whoever opens it. The sheet takes it and clears it. */
   focus: string | null;
+  /** Readings whose bar in the reader the person closed ("planId:day"). Lasts until the app reloads. */
+  dismissed: string[];
+  dismiss: (key: string) => void;
   hydrate: () => Promise<void>;
   create: (init: { name: string; preset?: PresetId; items: string[]; days: number }) => Plan;
   remove: (id: string) => void;
@@ -24,6 +27,8 @@ export const usePlans = create<PlansStore>((set, get) => ({
   hydrated: false,
   plans: [],
   focus: null,
+  dismissed: [],
+  dismiss: (key) => set((s) => (s.dismissed.includes(key) ? s : { dismissed: [...s.dismissed, key] })),
 
   hydrate: async () => {
     try {
