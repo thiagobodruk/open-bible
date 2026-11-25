@@ -63,11 +63,14 @@ export function PlansSheet() {
   const plans = usePlans((s) => s.plans);
   const [view, setView] = useState<View>(() => {
     const focus = usePlans.getState().focus;
-    usePlans.setState({ focus: null });
     if (focus) return { k: 'plan', id: focus };
     // Nothing to list yet (no plan, active or finished): go straight to choosing one.
     return usePlans.getState().plans.length ? { k: 'list' } : { k: 'new' };
   });
+  // The plan to open on is taken once; clearing it here keeps the store from changing while rendering.
+  useEffect(() => {
+    usePlans.setState({ focus: null });
+  }, []);
   const back = (to: View) => (
     <button className="icon-btn dx-back" onClick={() => setView(to)} aria-label={t('back')}><CaretLeft size={22} weight="light" /></button>
   );

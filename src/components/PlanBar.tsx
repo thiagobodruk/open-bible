@@ -1,5 +1,6 @@
 import { CaretRight, Check, X } from '@phosphor-icons/react';
 import { useStudy } from '../state/study';
+import { useUI } from '../state/ui';
 import { usePlans } from '../state/plans';
 import { useT } from '../i18n';
 import { chaptersLeft, latestActive, parseItem, pendingIndex, readingsOf } from '../data/plans';
@@ -30,8 +31,12 @@ export function PlanBar() {
     const to = parseItem(plan.items[index + 1]);
     useStudy.getState().goTo(to.book, to.chapter);
   };
-  // The last chapter closes the whole reading.
-  const finish = () => markPlan(t, plan.id, Array.from({ length: total }, (_, k) => r.start + k), true);
+  // The last chapter closes the whole reading. The bar goes away with it and the plan opens with the day checked.
+  const finish = () => {
+    markPlan(t, plan.id, Array.from({ length: total }, (_, k) => r.start + k), true);
+    usePlans.setState({ focus: plan.id });
+    useUI.getState().open('plans');
+  };
   return (
     <div className="listen-bar plan-reader-bar" role="region" aria-label={planTitle(t, plan)}>
       <button className="icon-btn" onClick={() => usePlans.getState().dismiss(key)} aria-label={t('close')}><X size={20} weight="light" /></button>
