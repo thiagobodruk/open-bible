@@ -23,6 +23,7 @@ import { useRefBooks } from './AiText';
 import { useAsk } from '../state/ask';
 import { Empty } from './Empty';
 import { Button } from './Button';
+import { PromptField } from './PromptField';
 
 function Highlighted({ text, ranges }: { text: string; ranges: [number, number][] }) {
   const parts: React.ReactNode[] = [];
@@ -62,6 +63,8 @@ let sessionSelection: string[] = [];
 /** Last search, kept while the app is open so reopening the sheet shows the same results. Gone on reload. */
 let sessionQuery = '';
 let sessionLimit = PAGE_SIZE;
+
+const VARIANT = (() => { try { return localStorage.getItem('__v') || 'A'; } catch { return 'A'; } })();
 
 export function SearchSheet() {
   const t = useT();
@@ -273,6 +276,8 @@ export function SearchSheet() {
   }, [qq]);
 
   const errorKey = ({ offline: 'askOffline', limit: 'askRateLimited', daily: 'askDaily', busy: 'askBusy', failed: 'askError' } as const)[aiError ?? 'failed'];
+  // A verse found in several versions gets the AI note only once.
+  const noted = new Set<string>();
   const showAi = typed && chapters !== null && !ref && (aiMine || asking);
 
   return (
@@ -281,6 +286,13 @@ export function SearchSheet() {
       icon={MagnifyingGlass}
       onClose={close}
       tall
+      footer={
+        VARIANT === 'B' && aiMine && !busy && !failed && answer?.content ? (
+          <div className="ask-foot">
+            <PromptField placeholder={t('askFollowUp')} onSubmit={(q) => { useAsk.getState().followUp(q, uiLang); useUI.getState().open('ask'); }} />
+          </div>
+        ) : undefined
+      }
       pinned={
         <>
         <SearchField
@@ -372,7 +384,9 @@ export function SearchSheet() {
               : `${shown.length < hits.length ? t('searchShown', { n: shown.length, total: hits.length }) : t.n('result', hits.length)}${multi ? ` ${t('searchInVersions', { n: selected.length })}` : ''}`}
           </p>
           {shown.map((h) => {
-            const note = notes.get(hitKey(h));
+            const k = hitKey(h);
+            const note = noted.has(k) ? undefined : notes.get(k);
+            if (note) noted.add(k);
             return (
               <button key={`${h.versionId}.${h.book}.${h.chapter}.${h.verse}`} className="entry hit" onClick={() => open(h.book, h.chapter, h.verse, h.versionId)}>
                 <div className="ref">
@@ -448,13 +462,7 @@ export function SearchSheet() {
                 <WarningCircle size={14} weight="regular" aria-hidden="true" />
                 {t('askDisclaimer')}
               </p>
-              <Row
-                className="goto"
-                icon={Sparkle}
-                title={t('searchAiContinue')}
-                onClick={() => useUI.getState().open('ask')}
-                end={<CaretRight size={18} weight="light" color="var(--muted)" />}
-              />
+              {VARIANT === 'A' && <Button block icon={Sparkle} onClick={() => useUI.getState().open('ask')}>{t('searchAiContinue')}</Button>}
             </>
           )}
         </>
