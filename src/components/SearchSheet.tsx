@@ -23,6 +23,7 @@ import { useRefBooks } from './AiText';
 import { useAsk } from '../state/ask';
 import { Empty } from './Empty';
 import { Button } from './Button';
+import { PromptField } from './PromptField';
 
 function Highlighted({ text, ranges }: { text: string; ranges: [number, number][] }) {
   const parts: React.ReactNode[] = [];
@@ -281,6 +282,14 @@ export function SearchSheet() {
       icon={MagnifyingGlass}
       onClose={close}
       tall
+      // After an answer, the follow-up field of the Ask sheet stays at the bottom: asking there continues the conversation.
+      footer={
+        aiMine && !busy && !failed && answer?.content ? (
+          <div className="ask-foot">
+            <PromptField placeholder={t('askFollowUp')} onSubmit={(q) => { useAsk.getState().followUp(q, uiLang); useUI.getState().open('ask'); }} />
+          </div>
+        ) : undefined
+      }
       pinned={
         <>
         <SearchField
@@ -395,10 +404,14 @@ export function SearchSheet() {
       {showAi && (
         <>
           {!aiMine && !autoPending && (
-            <button className="ai-link" onClick={() => startAi(false)}>
-              <Sparkle size={18} weight="light" aria-hidden="true" />
-              {t('searchAiShow')}
-            </button>
+            <Row
+              className="goto"
+              icon={Sparkle}
+              eyebrow={t('searchAskEyebrow')}
+              title={t('searchAiShow')}
+              onClick={() => startAi(false)}
+              end={<CaretRight size={18} weight="light" color="var(--muted)" />}
+            />
           )}
           {aiMine && !failed && (busy || extras.length > 0) && (
             <h3 className="ai-h" role="status">
@@ -439,13 +452,10 @@ export function SearchSheet() {
             </div>
           )}
           {aiMine && !busy && !failed && answer?.content && (
-            <>
-              <p className="ask-note ai-foot">
-                <WarningCircle size={14} weight="regular" aria-hidden="true" />
-                {t('askDisclaimer')}
-              </p>
-              <button className="ai-link" onClick={() => useUI.getState().open('ask')}>{t('searchAiContinue')}</button>
-            </>
+            <p className="ask-note ai-foot">
+              <WarningCircle size={14} weight="regular" aria-hidden="true" />
+              {t('askDisclaimer')}
+            </p>
           )}
         </>
       )}

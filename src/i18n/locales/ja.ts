@@ -99,7 +99,6 @@ const ja: Messages = {
   searchAiLoading: '候補を探しています…',
   searchAiTitle: 'AI の候補',
   searchAiShow: 'AI の候補を見る',
-  searchAiContinue: 'AI との会話を続ける',
   searchAiNone: '検索に合う箇所は AI も見つけられませんでした。',
   searchVersions: '検索する訳',
   searchInVersions: '{n} 訳から',

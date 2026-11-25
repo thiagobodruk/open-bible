@@ -99,7 +99,6 @@ const zhCN: Messages = {
   searchAiLoading: '正在查找建议…',
   searchAiTitle: 'AI 建议',
   searchAiShow: '查看 AI 建议',
-  searchAiContinue: '继续与 AI 对话',
   searchAiNone: 'AI 没有找到与你的搜索相符的经文。',
   searchVersions: '在这些版本中搜索',
   searchInVersions: '共 {n} 个版本',

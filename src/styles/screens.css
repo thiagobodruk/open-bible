@@ -168,7 +168,6 @@ mark { background: var(--hl-yellow); color: inherit; border-radius: 3px; padding
 
 /* Search: AI suggestions */
 .ai-h { display: flex; align-items: center; gap: 8px; margin: 22px 4px 6px; font-size: 13px; font-weight: 600; color: var(--muted); }
-.ai-link { display: flex; align-items: center; gap: 8px; margin: 14px 4px 0; padding: 6px 0; font-size: 14px; font-weight: 600; color: var(--accent); }
 .ai-foot { margin: 10px 4px 0; }
 .entry .nt.ai { display: flex; align-items: flex-start; gap: 8px; }
 .entry .nt.ai svg { flex: none; margin-top: 3px; color: var(--muted); }

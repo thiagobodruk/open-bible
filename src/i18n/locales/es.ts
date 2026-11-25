@@ -99,7 +99,6 @@ const es: Messages = {
   searchAiLoading: 'Buscando sugerencias…',
   searchAiTitle: 'Sugerencias de la IA',
   searchAiShow: 'Ver sugerencias de la IA',
-  searchAiContinue: 'Seguir conversando con la IA',
   searchAiNone: 'La IA no encontró un pasaje que coincida con tu búsqueda.',
   searchVersions: 'Buscar en versiones',
   searchInVersions: 'en {n} versiones',
