@@ -1,15 +1,17 @@
-// Firestore sync: notes, highlights, liked devotionals, reading position and settings for users signed in with Google.
+// Firestore sync: notes, highlights, liked devotionals, reading plans, reading position and settings for users signed in with Google.
 // The device remains the source for reading: everything works offline and changes go to the cloud when there is a network.
 // For each item the most recent wins (updatedAt). Deleted items become markers (`deleted`) so the deletion reaches the other devices.
 import type { Firestore } from 'firebase/firestore';
+import { planStamp, sanitizePlan, type Plan } from './data/plans';
 import { dbDelete, dbPut } from './db';
+import { usePlans } from './state/plans';
 import { savePosition } from './state/position';
 import { DEFAULTS, useSettings, type Settings } from './state/settings';
 import { useStudy, type Highlight, type Like, type Note } from './state/study';
 import { getItem, getJson, removeItem, setItem, setJson } from './storage';
 
-type Col = 'notes' | 'highlights' | 'likes';
-type Item = Note | Highlight | Like;
+type Col = 'notes' | 'highlights' | 'likes' | 'plans';
+type Item = Note | Highlight | Like | Plan;
 type StudyState = ReturnType<typeof useStudy.getState>;
 
 const DIRTY = 'ob:sync-dirty';
@@ -23,12 +25,18 @@ const PREF_KEYS = ['theme', 'font', 'fontSize', 'lineHeight', 'margins', 'align'
 
 export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'offline' | 'error';
 
-const stamp = (x: { createdAt: number; updatedAt?: number }) => x.updatedAt ?? x.createdAt;
+const stamp = (x: Item) => ('startedAt' in x ? planStamp(x) : (x.updatedAt ?? x.createdAt));
 const dirtyKey = (col: Col, id: string) => `${col}/${id}`;
 
 /** What the device holds for a collection, by id. */
 const localItems = (st: StudyState, name: Col): Map<string, Item> =>
-  name === 'notes' ? new Map(st.notes.map((n) => [n.id, n])) : name === 'highlights' ? new Map(Object.entries(st.highlights)) : new Map(Object.entries(st.likes));
+  name === 'plans'
+    ? new Map(usePlans.getState().plans.map((p) => [p.id, p]))
+    : name === 'notes'
+      ? new Map(st.notes.map((n) => [n.id, n]))
+      : name === 'highlights'
+        ? new Map(Object.entries(st.highlights))
+        : new Map(Object.entries(st.likes));
 
 
 const withTimeout = <T>(p: Promise<T>) =>
@@ -116,10 +124,12 @@ export function stopSync() {
 
 async function wipeLocal() {
   const { highlights, notes, likes } = useStudy.getState();
+  const plans = usePlans.getState().plans;
   applying = true;
   try {
     useStudy.setState({ highlights: {}, notes: [], likes: {} });
-    await Promise.all([dbDelete('highlights', Object.keys(highlights)), dbDelete('notes', notes.map((n) => n.id)), dbDelete('likes', Object.keys(likes))]);
+    usePlans.setState({ plans: [] });
+    await Promise.all([dbDelete('highlights', Object.keys(highlights)), dbDelete('notes', notes.map((n) => n.id)), dbDelete('likes', Object.keys(likes)), dbDelete('plans', plans.map((p) => p.id))]);
   } catch {
     /* whatever is left is overwritten by the merge */
   } finally {
@@ -138,24 +148,31 @@ interface Remote<T> {
   data: T | null;
 }
 
-function parseRemote(id: string, raw: Record<string, unknown>): Remote<Item> {
+function parseRemote(id: string, raw: Record<string, unknown>, name: Col): Remote<Item> {
   const at = typeof raw.updatedAt === 'number' ? raw.updatedAt : 0;
   if (raw.deleted === true) return { id, deleted: true, at, data: null };
   const { deleted: _d, ...data } = raw;
+  if (name === 'plans') {
+    // A plan from the cloud is checked like one from a backup; one that does not pass is ignored.
+    const plan = sanitizePlan({ ...data, id });
+    return { id, deleted: false, at, data: plan };
+  }
   return { id, deleted: false, at, data: data as unknown as Item };
 }
 
 /** Pulls from the cloud everything newer than the local copy and applies it to the device. Then uploads what only exists here or is newer. */
 async function pullAll(s: Session) {
-  const [notesSnap, hlSnap, likesSnap, prefsSnap] = await withTimeout(
-    Promise.all([s.fs.getDocs(col(s, 'notes')), s.fs.getDocs(col(s, 'highlights')), s.fs.getDocs(col(s, 'likes')), s.fs.getDoc(s.fs.doc(s.db, 'users', s.uid, 'meta', 'prefs'))]),
+  const [notesSnap, hlSnap, likesSnap, plansSnap, prefsSnap] = await withTimeout(
+    Promise.all([s.fs.getDocs(col(s, 'notes')), s.fs.getDocs(col(s, 'highlights')), s.fs.getDocs(col(s, 'likes')), s.fs.getDocs(col(s, 'plans')), s.fs.getDoc(s.fs.doc(s.db, 'users', s.uid, 'meta', 'prefs'))]),
   );
-  const remoteNotes = notesSnap.docs.map((d) => parseRemote(d.id, d.data()));
-  const remoteHl = hlSnap.docs.map((d) => parseRemote(d.id, d.data()));
-  const remoteLikes = likesSnap.docs.map((d) => parseRemote(d.id, d.data()));
+  const remoteNotes = notesSnap.docs.map((d) => parseRemote(d.id, d.data(), 'notes'));
+  const remoteHl = hlSnap.docs.map((d) => parseRemote(d.id, d.data(), 'highlights'));
+  const remoteLikes = likesSnap.docs.map((d) => parseRemote(d.id, d.data(), 'likes'));
+  const remotePlans = plansSnap.docs.map((d) => parseRemote(d.id, d.data(), 'plans'));
   await applyRemote('notes', remoteNotes);
   await applyRemote('highlights', remoteHl);
   await applyRemote('likes', remoteLikes);
+  await applyRemote('plans', remotePlans);
 
   // What exists only on this device, or is newer than the cloud, needs to go up.
   const st = useStudy.getState();
@@ -163,10 +180,12 @@ async function pullAll(s: Session) {
   const rn = known(remoteNotes);
   const rh = known(remoteHl);
   const rl = known(remoteLikes);
+  const rp = known(remotePlans);
   const up: string[] = [];
   for (const n of st.notes) if ((rn.get(n.id)?.at ?? -1) < stamp(n)) up.push(dirtyKey('notes', n.id));
   for (const h of Object.values(st.highlights)) if ((rh.get(h.key)?.at ?? -1) < stamp(h)) up.push(dirtyKey('highlights', h.key));
   for (const l of Object.values(st.likes)) if ((rl.get(l.key)?.at ?? -1) < stamp(l)) up.push(dirtyKey('likes', l.key));
+  for (const p of usePlans.getState().plans) if ((rp.get(p.id)?.at ?? -1) < stamp(p)) up.push(dirtyKey('plans', p.id));
   markDirty(up);
 
   applyPrefs(prefsSnap.exists() ? (prefsSnap.data() as Record<string, unknown>) : null, true);
@@ -197,7 +216,8 @@ async function applyRemote(name: Col, items: Remote<Item>[]) {
   if (!put.length && !del.length) return;
   applying = true;
   try {
-    if (name === 'notes') useStudy.setState({ notes: [...local.values()] as Note[] });
+    if (name === 'plans') usePlans.setState({ plans: [...local.values()] as Plan[] });
+    else if (name === 'notes') useStudy.setState({ notes: [...local.values()] as Note[] });
     else if (name === 'highlights') useStudy.setState({ highlights: Object.fromEntries(local) as Record<string, Highlight> });
     else useStudy.setState({ likes: Object.fromEntries(local) as Record<string, Like> });
     if (put.length) await dbPut(name, put).catch(() => undefined);
@@ -239,7 +259,7 @@ async function flush(s: Session) {
   if (!dirty.length && !pendingPrefs) return;
   onStatus('syncing');
   const st = useStudy.getState();
-  const items = { notes: localItems(st, 'notes'), highlights: localItems(st, 'highlights'), likes: localItems(st, 'likes') };
+  const items = { notes: localItems(st, 'notes'), highlights: localItems(st, 'highlights'), likes: localItems(st, 'likes'), plans: localItems(st, 'plans') };
   const sent = new Map<string, unknown>();
   const now = Date.now();
   try {
@@ -319,6 +339,19 @@ function watchLocal(s: Session, cleanups: (() => void)[]) {
     if (now.book !== prev.book || now.chapter !== prev.chapter) queuePrefs();
   });
 
+  const offPlans = usePlans.subscribe((now, prev) => {
+    if (applying || now.plans === prev.plans) return;
+    const before = new Map(prev.plans.map((p) => [p.id, p]));
+    const after = new Map(now.plans.map((p) => [p.id, p]));
+    const dirty: string[] = [];
+    for (const [id, p] of after) if (before.get(id) !== p) dirty.push(dirtyKey('plans', id));
+    for (const id of before.keys()) if (!after.has(id)) dirty.push(dirtyKey('plans', id));
+    if (dirty.length) {
+      markDirty(dirty);
+      schedule();
+    }
+  });
+
   const queuePrefs = () => {
     touchPrefs();
     clearTimeout(prefsTimer);
@@ -333,7 +366,7 @@ function watchLocal(s: Session, cleanups: (() => void)[]) {
     if (PREF_KEYS.some((k) => now[k] !== prev[k])) queuePrefs();
   });
 
-  cleanups.push(offStudy, offSettings, () => {
+  cleanups.push(offStudy, offSettings, offPlans, () => {
     clearTimeout(flushTimer);
     clearTimeout(prefsTimer);
   });
@@ -349,7 +382,7 @@ function watchRemote(s: Session, cleanups: (() => void)[]) {
         if (!changes.length) return;
         void applyRemote(
           name,
-          changes.map((c) => parseRemote(c.doc.id, c.doc.data())),
+          changes.map((c) => parseRemote(c.doc.id, c.doc.data(), name)),
         );
       },
       () => undefined,
@@ -358,6 +391,7 @@ function watchRemote(s: Session, cleanups: (() => void)[]) {
     listen('notes'),
     listen('highlights'),
     listen('likes'),
+    listen('plans'),
     s.fs.onSnapshot(
       s.fs.doc(s.db, 'users', s.uid, 'meta', 'prefs'),
       (snap) => {

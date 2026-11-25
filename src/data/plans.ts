@@ -21,7 +21,12 @@ export interface Plan {
   lastDoneAt?: number;
   /** Set when every chapter is read. */
   finishedAt?: number;
+  /** Last change of any kind. Decides which copy wins when the plan syncs between devices. */
+  updatedAt?: number;
 }
+
+/** When the plan last changed: plans from before `updatedAt` existed fall back to the last read or the start. */
+export const planStamp = (p: Pick<Plan, 'updatedAt' | 'readAt' | 'startedAt'>) => p.updatedAt ?? p.readAt ?? p.startedAt;
 
 export interface Preset {
   id: PresetId;
@@ -158,6 +163,7 @@ export function newPlan(init: { name: string; preset?: PresetId; items: string[]
     days: effectiveDays(init.items.length, init.days),
     startedAt: now,
     done: [],
+    updatedAt: now,
   };
 }
 
@@ -170,7 +176,7 @@ export function withMarks(plan: Plan, indexes: number[], on: boolean, now = Date
     else set.delete(i);
   }
   const done = [...set].sort((a, b) => a - b);
-  const next: Plan = { ...plan, done, ...(on ? { readAt: now } : {}) };
+  const next: Plan = { ...plan, done, updatedAt: now, ...(on ? { readAt: now } : {}) };
   if (done.length === plan.items.length) next.finishedAt = plan.finishedAt ?? now;
   else delete next.finishedAt;
   const before = progressOf(plan).done;
@@ -217,6 +223,7 @@ export function sanitizePlan(raw: unknown): Plan | null {
     done: [...new Set(done)].sort((a, b) => a - b),
     ...(Number.isFinite(p.readAt) ? { readAt: p.readAt } : {}),
     ...(Number.isFinite(p.lastDoneAt) ? { lastDoneAt: p.lastDoneAt } : {}),
+    ...(Number.isFinite(p.updatedAt) ? { updatedAt: p.updatedAt } : {}),
   };
   if (plan.done.length === items.length) plan.finishedAt = Number.isFinite(p.finishedAt) ? (p.finishedAt as number) : Date.now();
   return plan;
