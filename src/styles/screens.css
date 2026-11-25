@@ -219,8 +219,12 @@ button.plan-card { cursor: pointer; }
 .plan-caps { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 6px; padding: 8px 0 12px; }
 .plan-caps button { height: 34px; border-radius: 8px; border: 1px solid var(--line); font-size: 13px; font-weight: 500; }
 .plan-caps button[aria-pressed='true'] { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
-.plan-foot { display: grid; gap: 8px; padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); font-size: 13px; line-height: 1.4; }
-.plan-foot .actions { display: flex; gap: 8px; }
+.plan-form { display: grid; gap: 12px; align-content: start; }
+.plan-form > * { min-width: 0; }
+.plan-form .plan-eyebrow { margin: 8px 0 -4px; }
+/* The Sheet footer already has the padding and the top border. */
+.plan-foot { display: grid; gap: 8px; font-size: 13px; line-height: 1.4; }
+.plan-foot .actions { display: flex; gap: 8px; margin-top: 0; }
 .plan-foot .actions .btn { flex: 1; white-space: nowrap; }
 .plan-days { display: grid; }
 .plan-day { display: flex; align-items: center; gap: 4px; padding: 2px 8px 2px 0; border-radius: var(--radius-sm); }

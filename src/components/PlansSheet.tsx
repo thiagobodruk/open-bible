@@ -172,6 +172,7 @@ function NewPlan({ onClose, lead, onCustom, onCreated }: { onClose: () => void; 
   };
   return (
     <Sheet title={t('plansNew')} icon={ListPlus} onClose={onClose} leading={lead}>
+      <div className="plan-form">
       <Row icon={PencilSimple} iconSize={24} className="plan-custom-row" title={t('plansCustom')} sub={t('plansCustomSub')} onClick={onCustom} />
       <h3 className="plan-eyebrow">{t('plansReady')}</h3>
       <ul>
@@ -185,6 +186,7 @@ function NewPlan({ onClose, lead, onCustom, onCreated }: { onClose: () => void; 
           );
         })}
       </ul>
+      </div>
     </Sheet>
   );
 }
@@ -232,6 +234,7 @@ function CustomPlan({ onClose, lead, onCreated }: { onClose: () => void; lead: R
       icon={PencilSimple}
       onClose={onClose}
       leading={lead}
+      tall
       footer={
         <div className="plan-foot">
           <span>
@@ -252,6 +255,7 @@ function CustomPlan({ onClose, lead, onCreated }: { onClose: () => void; lead: R
         </div>
       }
     >
+      <div className="plan-form">
       <h3 className="plan-eyebrow">{t('planDuration')}</h3>
       <div className="plan-chips">
         {DURATIONS.map((d) => (
@@ -302,6 +306,7 @@ function CustomPlan({ onClose, lead, onCreated }: { onClose: () => void; lead: R
           );
         })}
       </ul>
+      </div>
     </Sheet>
   );
 }
@@ -354,6 +359,7 @@ function PlanView({ plan, onClose, lead, onDelete, onAgain }: { plan: Plan; onCl
         </div>
       }
     >
+      <div className="plan-form">
       {finished ? (
         <div className="plan-card static plan-finished">
           <CheckCircle size={36} weight="fill" className="plan-ok" />
@@ -392,6 +398,7 @@ function PlanView({ plan, onClose, lead, onDelete, onAgain }: { plan: Plan; onCl
           );
         })}
       </ul>
+      </div>
     </Sheet>
   );
 }
