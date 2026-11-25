@@ -395,6 +395,9 @@ const en = {
   planMarkRead: "Mark as read",
   planMarkUnread: "Mark as not read",
   planBarLeft: "{left} of {total} left",
+  planStart: "Start",
+  planFirstReads: "First readings",
+  planAndMore: "and {days} more",
 };
 
 export default en;

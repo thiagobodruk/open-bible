@@ -246,3 +246,7 @@ button.plan-card { cursor: pointer; }
 .plan-reader-bar .grow { display: grid; overflow: visible; white-space: normal; }
 .plan-reader-bar b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .plan-reader-bar .plan-sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.plan-day.peek { padding-left: 4px; }
+.plan-day.peek .plan-day-body { padding: 10px 0; }
+.plan-form > .hint { margin: 0; }

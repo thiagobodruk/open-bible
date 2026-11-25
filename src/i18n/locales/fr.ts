@@ -397,6 +397,9 @@ const fr: Messages = {
   planMarkRead: "Marquer comme lu",
   planMarkUnread: "Marquer comme non lu",
   planBarLeft: "{left} sur {total} restants",
+  planStart: "Commencer",
+  planFirstReads: "Premières lectures",
+  planAndMore: "et {days} de plus",
 };
 
 export default fr;
