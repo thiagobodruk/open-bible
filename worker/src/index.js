@@ -15,7 +15,7 @@ const LANGS = {
   ja: 'Japanese',
 };
 
-const LIMITS = { question: 600, ref: 120, version: 80, text: 3000, history: 10, turn: 3000, related: 12, relatedItem: 260 };
+const LIMITS = { question: 600, ref: 120, version: 80, text: 3000, history: 10, turn: 3000, related: 12, relatedItem: 260, candidates: 10, candidateItem: 420 };
 const DEFAULT_MODEL = 'openai/gpt-oss-20b';
 const DEFAULT_DAILY_LIMIT = 30;
 
@@ -79,10 +79,20 @@ export function buildMessages(body) {
   const messages = [{ role: 'system', content: SYSTEM(language) }];
   const topic = body.mode === 'topic';
   if (topic) {
+    const candidates = (Array.isArray(body.passage?.candidates) ? body.passage.candidates : [])
+      .map((c) => text(c, LIMITS.candidateItem))
+      .filter(Boolean)
+      .slice(0, LIMITS.candidates);
     messages.push({
       role: 'system',
       content:
-        'The reader is searching the Bible by theme or question and has no passage open. Answer with the 4 to 6 passages that best fit, one bullet per passage: each line starts with "- ", then the reference in full in **bold** (Book chapter:verse, with the book name in the answer language, a single verse or a short range), then " - " and one short sentence on what the text says about the theme. Order them from the clearest to the broader ones. Use only passages you are sure exist and that really speak to the theme. No introduction and no closing summary; at most 160 words. If the request is not about the Bible, follow the SCOPE rule.',
+        'The reader is searching the Bible and has no passage open. The text may be a theme, a question, or a verse quoted from memory, possibly from another translation or with a few words changed. FIRST decide whether it quotes or closely paraphrases a verse; if so, that verse comes first in your list. Then add other passages only if they really answer the theme.\n' +
+        (candidates.length
+          ? 'The app already searched the reader\'s Bible and found these verses. Prefer them: pick from this list, and cite a passage outside it only if you are certain it exists and fits better.\n' +
+            candidates.map((c) => `- ${c}`).join('\n') +
+            '\n'
+          : '') +
+        'Answer with up to 5 passages, one bullet per passage: each line starts with "- ", then the reference in full in **bold** (Book chapter:verse, with the book name in the answer language, a single verse or a short range), then " - " and one short sentence on how the passage relates to what the reader wrote. Never list a passage only because it shares a word with the text; it must speak to the same idea. Use only passages you are sure exist. If nothing fits, reply with one short sentence saying you did not find a passage that matches. No introduction and no closing summary; at most 160 words. If the request is not about the Bible, follow the SCOPE rule.',
     });
   } else if (passage) {
     messages.push({

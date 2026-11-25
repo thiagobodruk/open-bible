@@ -1,11 +1,11 @@
 import { Fragment, useDeferredValue, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { CaretRight, Check, MagnifyingGlass, Sparkle } from '@phosphor-icons/react';
+import { ArrowClockwise, CaretRight, Check, MagnifyingGlass, Sparkle, WarningCircle } from '@phosphor-icons/react';
 import { SearchField } from './SearchField';
 import { Sheet } from './Sheet';
 import { loadSearchIndex, pruneSearchIndex, type IndexedChapter } from '../data/bible';
 import { abbrOf } from '../data/catalog';
 import { useBookName, useBooks } from '../hooks';
-import { highlightRanges, minChars, PAGE_SIZE, parseReference, searchVerses, type Hit } from '../search';
+import { approxRanges, highlightRanges, minChars, normalize, PAGE_SIZE, parseReference, searchApprox, searchVerses, significantStems, stemsFound, type Hit } from '../search';
 import { useLibrary } from '../state/library';
 import { trackFeature } from '../analytics';
 import { Chip } from './Chip';
@@ -18,20 +18,34 @@ import { refLabel } from '../ref';
 import { useT } from '../i18n';
 import { useScrollFade } from '../useScrollFade';
 import { aiEnabled, type AiPassage } from '../ai';
-import { looksLikePrompt } from '../aiSearch';
+import { AUTO_COVERAGE, AUTO_DELAY, autoAskLeft, CANDIDATES, countAutoAsk, looksLikePrompt, parseSuggestions } from '../aiSearch';
+import { useRefBooks } from './AiText';
 import { useAsk } from '../state/ask';
 import { Empty } from './Empty';
+import { Button } from './Button';
 
-function Highlighted({ hit, query }: { hit: Hit; query: string }) {
+function Highlighted({ text, ranges }: { text: string; ranges: [number, number][] }) {
   const parts: React.ReactNode[] = [];
   let at = 0;
-  highlightRanges(query, hit.text).forEach(([a, b], i) => {
-    parts.push(hit.text.slice(at, a), <mark key={i}>{hit.text.slice(a, b)}</mark>);
+  ranges.forEach(([a, b], i) => {
+    parts.push(text.slice(at, a), <mark key={i}>{text.slice(a, b)}</mark>);
     at = b;
   });
-  parts.push(hit.text.slice(at));
+  parts.push(text.slice(at));
   return <>{parts.map((p, i) => <Fragment key={i}>{p}</Fragment>)}</>;
 }
+
+/** What the AI says about a verse. */
+function AiNote({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="nt ai">
+      <Sparkle size={14} weight="light" aria-hidden="true" />
+      <span>{children}</span>
+    </div>
+  );
+}
+
+const hitKey = (h: { book: string; chapter: number; verse: number }) => `${h.book}.${h.chapter}.${h.verse}`;
 
 const watchOnline = (cb: () => void) => {
   addEventListener('online', cb);
@@ -115,7 +129,17 @@ export function SearchSheet() {
     () => (chapters ? searchVerses(dq, chapters.map((id) => ({ versionId: id, chapters: indexes[id] })), versionId) : []),
     [dq, chapters, indexes, versionId],
   );
-  const shown = hits.slice(0, limit);
+  const typed = dq.trim().length >= minChars(dq);
+  const tooShort = !typed && dq.trim().length > 0;
+  // No verse has every word: the ones with most of them, the best first.
+  const approx = useMemo(
+    () => (chapters && typed && !ref && hits.length === 0 ? searchApprox(dq, chapters.map((id) => ({ versionId: id, chapters: indexes[id] })), versionId) : { hits: [] as Hit[], coverage: 0 }),
+    [dq, chapters, indexes, versionId, hits, ref, typed],
+  );
+  const isApprox = hits.length === 0 && approx.hits.length > 0;
+  const shown = isApprox ? approx.hits : hits.slice(0, limit);
+  /** Share of the sentence's words in the best verse. Below the limit the AI is asked by itself. */
+  const coverage = hits.length > 0 ? 1 : approx.coverage;
 
   // A new search goes back to the first page.
   const lastQuery = useRef(`${dq}|${key}`);
@@ -165,22 +189,91 @@ export function SearchSheet() {
     });
   }, [ref, selected, indexes]);
 
-  // A sentence, not keywords: the field offers it to the AI. Nothing is sent before the reader confirms.
+  // A sentence, not keywords: the AI suggests passages below the verses. It asks by itself when the local search is weak.
   const uiLang = useSettings((s) => s.uiLang);
   const online = useOnline();
-  const canAsk = aiEnabled && online && !ref && q.trim().length >= 3;
+  const qq = q.trim();
+  const canAsk = aiEnabled && online && !ref && qq.length >= 3;
   const asking = canAsk && looksLikePrompt(q, uiLang);
-  const askAi = () => {
-    const question = q.trim();
-    if (!canAsk || !question) return;
-    trackFeature('ask_search');
-    const passage: AiPassage = { ref: '', version: abbrOf(versionId), text: '', topic: true };
-    useAsk.getState().start(question, passage, uiLang);
-    useUI.getState().open('ask');
-  };
 
-  const typed = dq.trim().length >= minChars(dq);
-  const tooShort = !typed && dq.trim().length > 0;
+  const aiBooks = useRefBooks();
+  const aiMessages = useAsk((s) => s.messages);
+  const aiStatus = useAsk((s) => s.status);
+  const aiError = useAsk((s) => s.error);
+  const aiPassage = useAsk((s) => s.passage);
+  // The conversation in the store belongs to this search when it began with the same text.
+  const aiMine = aiPassage?.topic === true && aiMessages[0]?.content === qq;
+  const answer = aiMine ? aiMessages[1] : undefined;
+  const busy = aiMine && aiMessages.length === 2 && (aiStatus === 'loading' || aiStatus === 'streaming');
+  const failed = aiMine && aiStatus === 'error';
+
+  // Text of the suggested verses comes from the installed version, never from the AI.
+  const [readingIndex, setReadingIndex] = useState<IndexedChapter[] | null>(null);
+  useEffect(() => {
+    let live = true;
+    loadSearchIndex(versionId).then((c) => live && setReadingIndex(c)).catch(() => undefined);
+    return () => {
+      live = false;
+    };
+  }, [versionId]);
+
+  const candidateHits = useMemo(() => (hits.length > 0 ? hits : approx.hits).slice(0, CANDIDATES), [hits, approx]);
+  const displayed = useMemo(() => new Set(shown.map(hitKey)), [shown]);
+  const suggestions = useMemo(() => (answer ? parseSuggestions(answer.content, aiBooks, !busy) : []), [answer, aiBooks, busy]);
+  // Verses the AI chose. A verse already in the list gets the note there; the others come below. A passage the local search
+  // did not find and that shares few words with a sentence that quotes a verse is dropped, since the AI may be off the topic.
+  const cards = useMemo(() => {
+    if (!readingIndex) return [];
+    const stems = significantStems(qq);
+    const candidateKeys = new Set(candidateHits.map(hitKey));
+    const seen = new Set<string>();
+    return suggestions.flatMap((s) => {
+      const { book, chapter, verse = 1, verseEnd } = s.target;
+      const key = hitKey({ book: book.id, chapter, verse });
+      const verses = readingIndex.find((c) => c.book === book.id && c.chapter === chapter)?.verses;
+      if (seen.has(key) || !verses || verse > verses.length) return [];
+      const last = Math.min(verseEnd ?? verse, verses.length);
+      const texts = verses.slice(verse - 1, last);
+      // Only a sentence that looks like a verse (the local search found candidates) is held to its words; a theme question is not.
+      const related = candidateKeys.has(key) || candidateKeys.size === 0 || stems.length < 4 || stemsFound(normalize(texts.join(' ')).norm, stems) >= Math.ceil(stems.length * 0.5);
+      if (!related) return [];
+      seen.add(key);
+      return [{ key, target: s.target, note: s.note, texts, first: verse, last }];
+    });
+  }, [suggestions, readingIndex, candidateHits, qq]);
+  const notes = useMemo(() => new Map(cards.filter((c) => displayed.has(c.key)).map((c) => [c.key, c.note])), [cards, displayed]);
+  const extras = cards.filter((c) => !displayed.has(c.key));
+
+  const startAi = (auto: boolean) => {
+    if (!canAsk || !qq) return;
+    trackFeature(auto ? 'ask_search_auto' : 'ask_search');
+    const candidates = candidateHits.map((h) => `${refLabel(nameIn(h.versionId, h.book), h.chapter, h.verse)} (${abbrOf(h.versionId)}): ${h.text.slice(0, 300)}`);
+    const passage: AiPassage = { ref: '', version: abbrOf(versionId), text: '', topic: true, candidates };
+    useAsk.getState().start(qq, passage, uiLang);
+  };
+  const startRef = useRef(startAi);
+  startRef.current = startAi;
+
+  // Weak local result for a sentence: ask the AI after a pause, within the daily limit. Strong results never spend a question.
+  const weak = asking && typed && chapters !== null && !aiMine && coverage < AUTO_COVERAGE;
+  const autoPending = weak && autoAskLeft() > 0;
+  useEffect(() => {
+    if (!weak) return;
+    const id = setTimeout(() => {
+      if (autoAskLeft() <= 0) return;
+      countAutoAsk();
+      startRef.current(true);
+    }, AUTO_DELAY);
+    return () => clearTimeout(id);
+  }, [weak, qq]);
+  // Typing again drops an answer still on its way for the old text.
+  useEffect(() => {
+    const s = useAsk.getState();
+    if ((s.status === 'loading' || s.status === 'streaming') && s.passage?.topic && s.messages[0]?.content !== qq) s.stop();
+  }, [qq]);
+
+  const errorKey = ({ offline: 'askOffline', limit: 'askRateLimited', daily: 'askDaily', busy: 'askBusy', failed: 'askError' } as const)[aiError ?? 'failed'];
+  const showAi = typed && chapters !== null && !ref && (aiMine || asking);
 
   return (
     <Sheet
@@ -198,7 +291,7 @@ export function SearchSheet() {
           placeholder={t('searchPlaceholder')}
           aria-label={t('searchLabel')}
           enterKeyHint={asking ? 'send' : 'search'}
-          ask={canAsk ? { active: asking, label: t('searchAsk'), onAsk: askAi } : undefined}
+          ask={canAsk ? { active: asking, label: t('searchAsk'), onAsk: () => !aiMine && startAi(false) } : undefined}
           autoCapitalize="none"
           autoCorrect="off"
           onKeyDown={(e) => {
@@ -206,7 +299,7 @@ export function SearchSheet() {
             e.preventDefault();
             // A recognized reference opens the passage; otherwise it dismisses the keyboard to show the results.
             if (ref) open(ref.book.id, ref.chapter, ref.verse);
-            else if (asking) askAi();
+            else if (asking && !aiMine) startAi(false);
             else e.currentTarget.blur();
           }}
         />
@@ -267,39 +360,92 @@ export function SearchSheet() {
 
       {typed && chapters === null && <Empty compact>{t('searchPreparing')}</Empty>}
 
-      {asking && (
-        <button className="row goto" onClick={askAi}>
-          <Sparkle size={24} weight="light" />
-          <span className="grow">
-            <span className="sub">{t('searchAskEyebrow')}</span>
-            <span className="title">{t('searchAskHint')}</span>
-          </span>
-        </button>
-      )}
-
-      {typed && chapters !== null && hits.length === 0 && !ref && !asking && (
+      {typed && chapters !== null && shown.length === 0 && !ref && !asking && !aiMine && (
         <Empty compact hint={t('searchNoneHint')}>{t('searchNone', { q: dq.trim() })}</Empty>
       )}
 
-      {hits.length > 0 && (
+      {shown.length > 0 && (
         <>
           <p className="hint" role="status">
-            {shown.length < hits.length ? t('searchShown', { n: shown.length, total: hits.length }) : t.n('result', hits.length)}
-            {multi && ` ${t('searchInVersions', { n: selected.length })}`}
+            {isApprox
+              ? t('searchApprox')
+              : `${shown.length < hits.length ? t('searchShown', { n: shown.length, total: hits.length }) : t.n('result', hits.length)}${multi ? ` ${t('searchInVersions', { n: selected.length })}` : ''}`}
           </p>
-          {shown.map((h) => (
-            <button key={`${h.versionId}.${h.book}.${h.chapter}.${h.verse}`} className="entry hit" onClick={() => open(h.book, h.chapter, h.verse, h.versionId)}>
-              <div className="ref">
-                {refLabel(nameIn(h.versionId, h.book), h.chapter, h.verse)}
-                {showVersion && <Chip>{abbrOf(h.versionId)}</Chip>}
-              </div>
-              <p className="txt"><Highlighted hit={h} query={dq} /></p>
-            </button>
-          ))}
-          {shown.length < hits.length && (
+          {shown.map((h) => {
+            const note = notes.get(hitKey(h));
+            return (
+              <button key={`${h.versionId}.${h.book}.${h.chapter}.${h.verse}`} className="entry hit" onClick={() => open(h.book, h.chapter, h.verse, h.versionId)}>
+                <div className="ref">
+                  {refLabel(nameIn(h.versionId, h.book), h.chapter, h.verse)}
+                  {showVersion && <Chip>{abbrOf(h.versionId)}</Chip>}
+                </div>
+                <p className="txt"><Highlighted text={h.text} ranges={isApprox ? approxRanges(dq, h.text) : highlightRanges(dq, h.text)} /></p>
+                {note && <AiNote>{note}</AiNote>}
+              </button>
+            );
+          })}
+          {!isApprox && shown.length < hits.length && (
             <button className="row center" onClick={() => setLimit((n) => n + PAGE_SIZE)}>
               {t('searchMore')}
             </button>
+          )}
+        </>
+      )}
+
+      {showAi && (
+        <>
+          {!aiMine && !autoPending && (
+            <button className="ai-link" onClick={() => startAi(false)}>
+              <Sparkle size={18} weight="light" aria-hidden="true" />
+              {t('searchAiShow')}
+            </button>
+          )}
+          {aiMine && !failed && (busy || extras.length > 0) && (
+            <h3 className="ai-h" role="status">
+              <Sparkle size={16} weight="light" aria-hidden="true" />
+              {extras.length > 0 ? t('searchAiTitle') : t('searchAiLoading')}
+            </h3>
+          )}
+          {extras.map((c) => (
+            <button key={c.key} className="entry hit" onClick={() => open(c.target.book.id, c.target.chapter, c.first, versionId, c.last)}>
+              <div className="ref">
+                {refLabel(bookName(c.target.book.id), c.target.chapter, c.first, c.last)}
+                {showVersion && <Chip>{abbrOf(versionId)}</Chip>}
+              </div>
+              <p className="txt">
+                {c.texts.map((v, i) => (
+                  <Fragment key={i}>
+                    {i > 0 && ' '}
+                    {c.last > c.first && <sup>{c.first + i} </sup>}
+                    {v}
+                  </Fragment>
+                ))}
+              </p>
+              {c.note && <AiNote>{c.note}</AiNote>}
+            </button>
+          ))}
+          {busy && (
+            <div aria-hidden="true">
+              <div className="sk" style={{ width: '94%' }} />
+              <div className="sk" style={{ width: '78%' }} />
+              {extras.length === 0 && <div className="sk" style={{ width: '86%' }} />}
+            </div>
+          )}
+          {aiMine && !busy && !failed && cards.length === 0 && <p className="hint">{t('searchAiNone')}</p>}
+          {failed && (
+            <div className="ask-error" role="alert">
+              <p>{t(errorKey)}</p>
+              {aiError !== 'daily' && <Button size="sm" icon={ArrowClockwise} onClick={() => useAsk.getState().retry(uiLang)}>{t('askRetry')}</Button>}
+            </div>
+          )}
+          {aiMine && !busy && !failed && answer?.content && (
+            <>
+              <p className="ask-note ai-foot">
+                <WarningCircle size={14} weight="regular" aria-hidden="true" />
+                {t('askDisclaimer')}
+              </p>
+              <button className="ai-link" onClick={() => useUI.getState().open('ask')}>{t('searchAiContinue')}</button>
+            </>
           )}
         </>
       )}
