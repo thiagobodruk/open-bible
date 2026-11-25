@@ -19,21 +19,16 @@ export function PlanBar() {
   const at = readings.findIndex((r) => index >= r.start && index < r.end);
   const r = readings[at];
   const total = r.end - r.start;
-  // Chapters of this reading already read, so the count and the bar grow as the person moves on.
-  const read = total - chaptersLeft(plan, r);
-  // Another chapter of this reading is still to read after this one: the button moves on to it instead of closing the reading.
-  let later = -1;
-  for (let i = index + 1; i < r.end; i++) {
-    if (!plan.done.includes(i)) {
-      later = i;
-      break;
-    }
-  }
+  // The count follows where the person is in the reading, however they got there (this button, swiping or the buttons at the foot of the chapter).
+  // Chapters already marked on their own still count.
+  const read = Math.max(index - r.start, total - chaptersLeft(plan, r));
+  const last = index === r.end - 1;
   const advance = () => {
-    markPlan(t, plan.id, [index], true);
-    const to = parseItem(plan.items[later]);
+    const to = parseItem(plan.items[index + 1]);
     useStudy.getState().goTo(to.book, to.chapter);
   };
+  // The last chapter closes the whole reading.
+  const finish = () => markPlan(t, plan.id, Array.from({ length: total }, (_, k) => r.start + k), true);
   return (
     <div className="listen-bar plan-reader-bar" role="region" aria-label={planTitle(t, plan)}>
       <span className="grow">
@@ -43,10 +38,10 @@ export function PlanBar() {
           <span>{t('planCount', { done: read, total })}</span>
         </span>
       </span>
-      {later >= 0 ? (
-        <Button variant="primary" size="sm" icon={CaretRight} iconSide="right" onClick={advance}>{t('planNext')}</Button>
+      {last ? (
+        <Button variant="primary" size="sm" icon={Check} iconSide="right" onClick={finish}>{t('planMarkRead')}</Button>
       ) : (
-        <Button variant="primary" size="sm" icon={Check} iconSide="right" onClick={() => markPlan(t, plan.id, [index], true)}>{t('planMarkRead')}</Button>
+        <Button variant="primary" size="sm" icon={CaretRight} iconSide="right" onClick={advance}>{t('planNext')}</Button>
       )}
     </div>
   );
