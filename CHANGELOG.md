@@ -2,6 +2,12 @@
 
 Versions follow [SemVer](https://semver.org/). This file is updated by the Release workflow, which joins the `## Changelog` sections of the PRs merged since the last version. Do not edit it in a PR.
 
+## 1.31.2
+
+### Changed
+
+- Planos de leitura: layout no iOS e prévia antes de iniciar
+
 ## 1.31.1
 
 ### Changed
