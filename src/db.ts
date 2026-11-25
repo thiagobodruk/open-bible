@@ -1,8 +1,8 @@
 // Minimal IndexedDB access. Everything the user generates lives here, only in this browser.
 const NAME = 'open-bible';
-const VERSION = 3;
+const VERSION = 4;
 
-export type StoreName = 'books' | 'versions' | 'highlights' | 'notes' | 'devotional' | 'likes';
+export type StoreName = 'books' | 'versions' | 'highlights' | 'notes' | 'devotional' | 'likes' | 'plans';
 
 let opened: Promise<IDBDatabase> | null = null;
 
@@ -20,6 +20,7 @@ function open(): Promise<IDBDatabase> {
       make('notes', { keyPath: 'id' });
       make('devotional'); // key: pack language
       make('likes', { keyPath: 'key' }); // liked devotionals, key: the text key of the day
+      make('plans', { keyPath: 'id' }); // reading plans
     };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => {

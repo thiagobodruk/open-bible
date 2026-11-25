@@ -2,6 +2,8 @@ import { BOOKS } from './data/books';
 
 const chaptersOf = new Map(BOOKS.map((b) => [b.id, b.chapters]));
 import { isDayKey } from './data/devotional';
+import { sanitizePlan, type Plan } from './data/plans';
+import { usePlans } from './state/plans';
 import { HL_COLORS, useStudy, vkey, type Highlight, type HlColor, type Like, type Note } from './state/study';
 
 const APP = 'open-bible';
@@ -16,11 +18,13 @@ export interface Backup {
   notes: Note[];
   /** Liked devotionals. Backups made before they existed do not have it. */
   likes?: Like[];
+  /** Reading plans. Backups made before they existed do not have it. */
+  plans?: Plan[];
 }
 
 export function buildBackup(): Backup {
   const { highlights, notes, likes } = useStudy.getState();
-  return { app: APP, schema: SCHEMA, exportedAt: new Date().toISOString(), highlights: Object.values(highlights), notes, likes: Object.values(likes) };
+  return { app: APP, schema: SCHEMA, exportedAt: new Date().toISOString(), highlights: Object.values(highlights), notes, likes: Object.values(likes), plans: usePlans.getState().plans };
 }
 
 export function downloadBackup() {
@@ -40,7 +44,7 @@ const isInt = (n: unknown): n is number => Number.isInteger(n) && (n as number) 
 const str = (v: unknown): v is string => typeof v === 'string';
 
 /** Reads a backup and returns only the valid records. Throws if the file is not an Open Bible backup. */
-export function parseBackup(text: string): { highlights: Highlight[]; notes: Note[]; likes: Like[]; skipped: number } {
+export function parseBackup(text: string): { highlights: Highlight[]; notes: Note[]; likes: Like[]; plans: Plan[]; skipped: number } {
   let raw: any;
   try {
     raw = JSON.parse(text);
@@ -101,5 +105,11 @@ export function parseBackup(text: string): { highlights: Highlight[]; notes: Not
       ...(Number.isFinite(l.updatedAt) ? { updatedAt: l.updatedAt } : {}),
     });
   }
-  return { highlights, notes, likes, skipped };
+  const plans: Plan[] = [];
+  for (const raw_ of Array.isArray(raw.plans) ? raw.plans : []) {
+    const plan = sanitizePlan(raw_);
+    if (plan) plans.push(plan);
+    else skipped++;
+  }
+  return { highlights, notes, likes, plans, skipped };
 }

@@ -298,7 +298,7 @@ body:has(.swipe-hint.ai) .ask-fab { z-index: 39; box-shadow: 0 0 0 0 var(--accen
   animation: rise 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 @media (hover: hover) { .ask-fab:hover { filter: brightness(1.08); } }
-.install-banner ~ .ask-fab, .listen-bar ~ .ask-fab { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+.install-banner ~ .ask-fab, .listen-bar ~ .ask-fab, .plan-reader-bar ~ .ask-fab { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
 
 /* Devocional */
 .dev { display: grid; gap: 16px; padding-bottom: 8px; }

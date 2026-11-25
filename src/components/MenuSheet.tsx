@@ -1,5 +1,5 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { DeviceMobile, GearSix, Notepad, ShareNetwork, SunHorizon, Translate, CaretRight, SignOut, UserCircle } from '@phosphor-icons/react';
+import { DeviceMobile, GearSix, ListChecks, Notepad, ShareNetwork, SunHorizon, Translate, CaretRight, SignOut, UserCircle } from '@phosphor-icons/react';
 import { accountAvailable, useAccount, warmAccount } from '../state/account';
 import { Sheet } from './Sheet';
 import { useUI } from '../state/ui';
@@ -10,6 +10,7 @@ import { checkForUpdate } from '../update';
 import { installAvailable, requestInstall, subscribeInstall } from '../install';
 import { shareOrCopy } from '../share';
 import { Row } from './Row';
+import { PlanCard } from './PlanCard';
 
 export function MenuSheet() {
   const t = useT();
@@ -58,6 +59,7 @@ export function MenuSheet() {
     ...(canSignIn ? [{ icon: UserCircle, label: t('signIn'), run: signIn }] : []),
     { icon: Notepad, label: t('study'), run: () => open('study') },
     { icon: SunHorizon, label: t('devotional'), run: () => open('devotional') },
+    { icon: ListChecks, label: t('plansTitle'), run: () => open('plans') },
     { icon: Translate, label: t('library'), run: () => open('library') },
     { icon: GearSix, label: t('settings'), run: () => nav('/settings') },
     { icon: ShareNetwork, label: t('shareApp'), run: share },
@@ -75,6 +77,7 @@ export function MenuSheet() {
 
   return (
     <Sheet title={t('menu')} hideTitle onClose={close}>
+      <PlanCard />
       <ul>
         {items.map(({ icon: Icon, label, run }) => (
           <li key={label}>
