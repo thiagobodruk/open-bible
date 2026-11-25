@@ -47,6 +47,9 @@ export function markPlan(t: Translator, id: string, indexes: number[], on: boole
   }
 }
 
+/** "1,189 chapters": the count with the language's thousands separator. */
+const chaptersText = (t: Translator, n: number) => t.n('planChapters', n, { n: new Intl.NumberFormat(t.lang).format(n) });
+
 const sameDay = (a: number, b = Date.now()) => new Date(a).toDateString() === new Date(b).toDateString();
 const byRecent = (a: Plan, b: Plan) => (b.readAt ?? b.startedAt) - (a.readAt ?? a.startedAt);
 
@@ -59,7 +62,9 @@ export function PlansSheet() {
   const [view, setView] = useState<View>(() => {
     const focus = usePlans.getState().focus;
     usePlans.setState({ focus: null });
-    return focus ? { k: 'plan', id: focus } : { k: 'list' };
+    if (focus) return { k: 'plan', id: focus };
+    // Nothing to list yet (no plan, active or finished): go straight to choosing one.
+    return usePlans.getState().plans.length ? { k: 'list' } : { k: 'new' };
   });
   const back = (to: View) => (
     <button className="icon-btn dx-back" onClick={() => setView(to)} aria-label={t('back')}><CaretLeft size={22} weight="light" /></button>
@@ -71,7 +76,7 @@ export function PlansSheet() {
     if ((view.k === 'plan' || view.k === 'delete') && !plan) setView({ k: 'list' });
   }, [view, plan]);
 
-  if (view.k === 'new') return <NewPlan onClose={close} lead={back({ k: 'list' })} onCustom={() => setView({ k: 'custom' })} onCreated={(id) => setView({ k: 'plan', id })} />;
+  if (view.k === 'new') return <NewPlan onClose={close} lead={plans.length ? back({ k: 'list' }) : undefined} onCustom={() => setView({ k: 'custom' })} onCreated={(id) => setView({ k: 'plan', id })} />;
   if (view.k === 'custom') return <CustomPlan onClose={close} lead={back({ k: 'new' })} onCreated={(id) => setView({ k: 'plan', id })} />;
   if (view.k === 'plan' && plan) return <PlanView plan={plan} onClose={close} lead={back({ k: 'list' })} onDelete={() => setView({ k: 'delete', id: plan.id })} onAgain={(id) => setView({ k: 'plan', id })} />;
   if (view.k === 'delete' && plan) {
@@ -84,7 +89,7 @@ export function PlansSheet() {
         onConfirm={() => {
           usePlans.getState().remove(plan.id);
           useUI.getState().notify(t('planDeleted'));
-          setView({ k: 'list' });
+          setView(usePlans.getState().plans.length ? { k: 'list' } : { k: 'new' });
         }}
       />
     );
@@ -175,7 +180,7 @@ function NewPlan({ onClose, lead, onCustom, onCreated }: { onClose: () => void; 
           const { days, avgText } = summaryOf(t, n, p.days);
           return (
             <li key={p.id}>
-              <Row title={t(PRESET_NAME[p.id])} sub={`${t.n('planChapters', n)} · ${t.n('planDays', days)} · ${avgText}`} onClick={() => create(p)} />
+              <Row title={t(PRESET_NAME[p.id])} sub={`${chaptersText(t, n)} · ${t.n('planDays', days)} · ${avgText}`} onClick={() => create(p)} />
             </li>
           );
         })}
@@ -232,7 +237,7 @@ function CustomPlan({ onClose, lead, onCreated }: { onClose: () => void; lead: R
           <span>
             {count ? (
               <>
-                <b>{t('planSummary', { chapters: t.n('planChapters', count), days: t.n('planDays', eff) })}</b>
+                <b>{t('planSummary', { chapters: chaptersText(t, count), days: t.n('planDays', eff) })}</b>
                 <br />
                 {avgText}
               </>
@@ -280,7 +285,7 @@ function CustomPlan({ onClose, lead, onCreated }: { onClose: () => void; lead: R
                 </button>
                 <button className="plan-book-name" onClick={() => setOpened(open ? null : b.id)} aria-expanded={open}>
                   <span className="title">{b.name}</span>
-                  <span className="sub">{state === 'all' ? t('planWholeBook') : state === 'part' ? t('planPartial', { n: set.size, c: b.chapters }) : t.n('planChapters', b.chapters)}</span>
+                  <span className="sub">{state === 'all' ? t('planWholeBook') : state === 'part' ? t('planPartial', { n: set.size, c: b.chapters }) : chaptersText(t, b.chapters)}</span>
                 </button>
                 <button className="icon-btn" aria-label={t(open ? 'planHideChapters' : 'planShowChapters', { name: b.name })} onClick={() => setOpened(open ? null : b.id)}>
                   {open ? <CaretUp size={18} weight="light" /> : <CaretDown size={18} weight="light" />}
@@ -355,7 +360,7 @@ function PlanView({ plan, onClose, lead, onDelete, onAgain }: { plan: Plan; onCl
           <b>{t('planFinishedTitle')}</b>
           <span className="plan-sub">{t('planFinishedOn', { date: fmt.format(plan.finishedAt!) })}</span>
           <Meter plan={plan} />
-          <p>{t('planCongrats', { chapters: t.n('planChapters', plan.items.length) })}</p>
+          <p>{t('planCongrats', { chapters: chaptersText(t, plan.items.length) })}</p>
         </div>
       ) : (
         <div className="plan-card static"><Meter plan={plan} /></div>
