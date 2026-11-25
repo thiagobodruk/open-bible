@@ -395,10 +395,14 @@ export function SearchSheet() {
       {showAi && (
         <>
           {!aiMine && !autoPending && (
-            <button className="ai-link" onClick={() => startAi(false)}>
-              <Sparkle size={18} weight="light" aria-hidden="true" />
-              {t('searchAiShow')}
-            </button>
+            <Row
+              className="goto"
+              icon={Sparkle}
+              eyebrow={t('searchAskEyebrow')}
+              title={t('searchAiShow')}
+              onClick={() => startAi(false)}
+              end={<CaretRight size={18} weight="light" color="var(--muted)" />}
+            />
           )}
           {aiMine && !failed && (busy || extras.length > 0) && (
             <h3 className="ai-h" role="status">
@@ -444,7 +448,13 @@ export function SearchSheet() {
                 <WarningCircle size={14} weight="regular" aria-hidden="true" />
                 {t('askDisclaimer')}
               </p>
-              <button className="ai-link" onClick={() => useUI.getState().open('ask')}>{t('searchAiContinue')}</button>
+              <Row
+                className="goto"
+                icon={Sparkle}
+                title={t('searchAiContinue')}
+                onClick={() => useUI.getState().open('ask')}
+                end={<CaretRight size={18} weight="light" color="var(--muted)" />}
+              />
             </>
           )}
         </>
