@@ -149,7 +149,7 @@ You need a free [Cloudflare account](https://dash.cloudflare.com/sign-up), Node 
    - `ALLOWED_ORIGINS`: the sites allowed to call the Worker, separated by commas. Use your site address (for example `https://<you>.github.io`). Add `http://localhost:5173` to test locally.
    - `MODEL`: the model name your service offers. A lighter model is cheaper and faster, a larger one answers better.
    - `API_URL`: the chat completions endpoint of your service. Uncomment it if you are not using the default one.
-   - `MAX_TOKENS`: the longest answer, including any thinking the model does first. 700 is enough for a short answer.
+   - `MAX_TOKENS`: the longest answer, including any thinking the model does first. Keep it high, about 2000: the model's hidden thinking counts too, and with too little room the answer can come back empty.
    - `[[ratelimits]]`: requests per IP per minute (6 by default). Remove the block to run without it.
 
 4. **Store your API key as a secret.** Paste it when asked. It is encrypted by Cloudflare and never written to a file or to this repository.
