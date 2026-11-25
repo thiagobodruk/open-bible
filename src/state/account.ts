@@ -51,6 +51,7 @@ export function warmAccount(): Promise<Loaded> {
         useAccount.setState({ user: profile });
         if (u) {
           void saveAcceptance(u.uid);
+          void saveIdentity(u);
           void startSync(u.uid).catch(() => undefined);
         }
         else stopSync();
@@ -62,6 +63,21 @@ export function warmAccount(): Promise<Loaded> {
     });
   }
   return loading;
+}
+
+let identityFor: string | null = null;
+
+/** Keeps the e-mail, name and last visit in the account's own document (`users/{uid}`), so people can be found in the Firebase console. Once per session. */
+async function saveIdentity(u: User) {
+  if (identityFor === u.uid) return;
+  identityFor = u.uid;
+  try {
+    const [{ getApps }, fs] = await Promise.all([import('firebase/app'), import('firebase/firestore')]);
+    await fs.setDoc(fs.doc(fs.getFirestore(getApps()[0]), 'users', u.uid), { email: u.email ?? null, name: u.displayName ?? null, lastSeenAt: Date.now() }, { merge: true });
+  } catch {
+    identityFor = null;
+    /* tries again on the next sign-in */
+  }
 }
 
 /** Writes the terms acceptance made on this device to Firestore, once per account. Failing here does not block sign-in. */
