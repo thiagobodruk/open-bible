@@ -131,7 +131,7 @@ export function payload(env, messages) {
     messages,
     stream: true,
     temperature: 0.3,
-    max_tokens: Number(env.MAX_TOKENS) || 700,
+    max_tokens: Number(env.MAX_TOKENS) || 2000,
     ...(model.includes('gpt-oss') ? { reasoning_effort: 'low', include_reasoning: false } : {}),
   };
 }
