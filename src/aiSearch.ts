@@ -1,5 +1,8 @@
 // Tells a plain keyword search from a request meant for the AI, such as "texts about perseverance".
-// It runs on the device, so nothing is sent until the reader chooses to ask.
+// It runs on the device. A weak local result also lets the search ask the AI by itself, within a daily limit.
+
+import { findReferences, type RefBook, type RefTarget } from './search';
+import { getJson, setItem } from './storage';
 
 /** Words that start a request or a question, per language (compared without accents). */
 const LEADS: Record<string, string[]> = {
@@ -27,4 +30,50 @@ export function looksLikePrompt(query: string, lang: string): boolean {
   if (/[぀-ヿ㐀-鿿]/.test(q)) return q.length >= 3 && leads.some((l) => q.startsWith(l));
   const words = q.split(/\s+/);
   return words.length >= 2 && leads.some((l) => (q === l || q.startsWith(`${l} `)) && words.length >= l.split(' ').length + 1);
+}
+
+/** Below this share of the sentence's words in the best verse, the local search is weak and the AI is asked by itself. */
+export const AUTO_COVERAGE = 0.8;
+/** Automatic questions per device per day. The rest of the daily quota stays for questions the reader asks. */
+export const AUTO_DAILY_CAP = 10;
+/** Pause after the last keystroke before the automatic question. */
+export const AUTO_DELAY = 1000;
+/** Verses of the local search sent to the AI as candidates. */
+export const CANDIDATES = 10;
+
+const AUTO_KEY = 'ob.autoAsk';
+const today = () => new Date().toISOString().slice(0, 10);
+
+/** Automatic questions still allowed today. */
+export function autoAskLeft(): number {
+  const u = getJson<{ day?: string; n?: number }>(AUTO_KEY, {});
+  return u.day === today() ? Math.max(0, AUTO_DAILY_CAP - (u.n ?? 0)) : AUTO_DAILY_CAP;
+}
+
+export function countAutoAsk() {
+  const u = getJson<{ day?: string; n?: number }>(AUTO_KEY, {});
+  setItem(AUTO_KEY, JSON.stringify({ day: today(), n: (u.day === today() ? u.n ?? 0 : 0) + 1 }));
+}
+
+export interface Suggestion {
+  target: RefTarget;
+  /** What the AI says about the passage. */
+  note: string;
+}
+
+/** The passages of a topic answer ("- **Book 1:2** - why"). While it streams, the last line may be incomplete and is left out. */
+export function parseSuggestions(text: string, books: RefBook[], complete: boolean): Suggestion[] {
+  const lines = text.split('\n');
+  if (!complete) lines.pop();
+  const out: Suggestion[] = [];
+  for (const raw of lines) {
+    const m = /^\s*[-*•]\s+(.*)$/.exec(raw);
+    if (!m) continue;
+    const line = m[1].replace(/\*\*/g, '');
+    const found = findReferences(line, books)[0];
+    if (!found || found.target.verse === undefined) continue;
+    const note = line.slice(found.end).replace(/^[\s\-–—:·,.]+/, '').trim();
+    out.push({ target: found.target, note });
+  }
+  return out;
 }

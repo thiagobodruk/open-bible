@@ -101,17 +101,11 @@ function Passage({ target, onOpen, onClose }: { target: RefTarget; onOpen: () =>
   );
 }
 
-/** Bible references found in a text become links that open a preview of the passage right below the line that holds them. One preview is open at a time. */
-export function useRefLinks() {
+/** Book names of the version and of the interface language, both pointing to the books the version has. Used to find references in AI text. */
+export function useRefBooks() {
   const uiLang = useSettings((s) => s.uiLang);
   const versionBooks = useBooks();
-  const close = useUI((s) => s.close);
-  const goTo = useStudy((s) => s.goTo);
-  // The link that is open, the line or list item that holds it (the preview goes right below it) and its passage.
-  const [opened, setOpened] = useState<{ id: string; line: string; target: RefTarget } | null>(null);
-
-  // Names from the version and from the interface language, both pointing to the books the version has.
-  const books = useMemo(() => {
+  return useMemo(() => {
     const extra = versionBooks.flatMap((b) => {
       const i = BOOKS.findIndex((x) => x.id === b.id);
       const name = i >= 0 ? localBookName(uiLang, i) : undefined;
@@ -119,6 +113,15 @@ export function useRefLinks() {
     });
     return [...versionBooks, ...extra];
   }, [versionBooks, uiLang]);
+}
+
+/** Bible references found in a text become links that open a preview of the passage right below the line that holds them. One preview is open at a time. */
+export function useRefLinks() {
+  const books = useRefBooks();
+  const close = useUI((s) => s.close);
+  const goTo = useStudy((s) => s.goTo);
+  // The link that is open, the line or list item that holds it (the preview goes right below it) and its passage.
+  const [opened, setOpened] = useState<{ id: string; line: string; target: RefTarget } | null>(null);
 
   const open = (r: RefTarget) => {
     // Scroll first: the verse focus triggered by goTo scrolls to the verse and must not be undone.

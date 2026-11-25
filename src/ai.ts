@@ -12,6 +12,8 @@ export interface AiPassage {
   related?: string[];
   /** A search by theme: there is no passage, and the AI answers with a list of passages. */
   topic?: boolean;
+  /** Verses the app's own search found for a theme search, each "Reference (VERSION): text". The AI picks from them. */
+  candidates?: string[];
 }
 
 export interface AiMessage {
@@ -44,7 +46,7 @@ export async function askAI({ question, passage, lang, history, signal, onText }
     res = await fetch(`${AI_URL.replace(/\/$/, '')}/ask`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ question, passage: { ref: passage.ref, version: passage.version, text: passage.text, related: passage.related }, mode: passage.topic ? 'topic' : undefined, lang, history }),
+      body: JSON.stringify({ question, passage: { ref: passage.ref, version: passage.version, text: passage.text, related: passage.related, candidates: passage.candidates }, mode: passage.topic ? 'topic' : undefined, lang, history }),
       signal,
     });
   } catch {
